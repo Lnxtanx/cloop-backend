@@ -1,0 +1,261 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model boards {
+  id          Int       @id @default(autoincrement())
+  code        String    @unique @db.VarChar(50)
+  name        String    @db.VarChar(100)
+  country     String?   @db.VarChar(100)
+  description String?
+  created_at  DateTime? @default(now()) @db.Timestamp(6)
+}
+
+model languages {
+  id          Int       @id @default(autoincrement())
+  code        String    @unique @db.VarChar(10)
+  name        String    @db.VarChar(100)
+  native_name String?   @db.VarChar(100)
+  is_active   Boolean?  @default(true)
+  created_at  DateTime? @default(now()) @db.Timestamp(6)
+}
+
+model users {
+  user_id                   Int                         @id @default(autoincrement())
+  name                      String                      @db.VarChar(100)
+  email                     String                      @unique @db.VarChar(100)
+  created_at                DateTime?                   @default(now()) @db.Timestamp(6)
+  num_chats                 Int?                        @default(0)
+  num_lessons               Int?                        @default(0)
+  grade_level               String?                     @db.VarChar(50)
+  board                     String?                     @db.VarChar(50)
+  subjects                  String[]
+  preferred_language        String?                     @db.VarChar(50)
+  study_goal                String?
+  avatar_url                String?
+  avatar_choice             String?                     @db.VarChar(50)
+  phone                     String?                     @db.VarChar(50)
+  expo_push_token           String?
+  admin_chat                admin_chat[]
+  chapters                  chapters[]
+  chat_goal_progress        chat_goal_progress[]
+  content_generation_status content_generation_status[]
+  learning_turns            learning_turns[]
+  normal_user_chat          normal_user_chat[]
+  topics                    topics[]
+  user_subjects             user_subjects[]
+}
+
+model subjects {
+  id                        Int                         @id @default(autoincrement())
+  code                      String?                     @unique
+  name                      String
+  category                  String?
+  chapters                  chapters[]
+  content_generation_status content_generation_status[]
+  learning_turns            learning_turns[]
+  topics                    topics[]
+  user_subjects             user_subjects[]
+}
+
+model chapters {
+  id                 Int       @id @default(autoincrement())
+  subject_id         Int
+  user_id            Int
+  title              String
+  content            String?
+  created_at         DateTime? @default(now()) @db.Timestamp(6)
+  total_topics       Int?      @default(0)
+  completed_topics   Int?      @default(0)
+  completion_percent Decimal?  @default(0.00) @db.Decimal(5, 2)
+  subjects           subjects  @relation(fields: [subject_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_chapters_subject")
+  users              users     @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_chapters_user")
+  topics             topics[]
+}
+
+model topics {
+  id                 Int           @id @default(autoincrement())
+  subject_id         Int
+  chapter_id         Int
+  user_id            Int
+  title              String
+  content            String?
+  created_at         DateTime?     @default(now()) @db.Timestamp(6)
+  is_completed       Boolean?      @default(false)
+  completion_percent Decimal?      @default(0.00) @db.Decimal(5, 2)
+  time_spent_seconds Int?          @default(0)
+  topic_goals        topic_goals[]
+  chapter_id_rel     chapters      @relation(fields: [chapter_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_topics_chapter")
+  subject_id_rel     subjects      @relation(fields: [subject_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_topics_subject")
+  users              users         @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_topics_user")
+}
+
+model topic_goals {
+  id                 Int                  @id @default(autoincrement())
+  topic_id           Int
+  title              String
+  description        String?
+  order              Int?
+  created_at         DateTime?            @default(now()) @db.Timestamp(6)
+  chat_goal_progress chat_goal_progress[] @relation("GoalToProgress")
+  learning_turns     learning_turns[]
+  topics             topics               @relation(fields: [topic_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_topic")
+}
+
+model admin_chat {
+  id                 Int                  @id @default(autoincrement())
+  user_id            Int
+  sender             String?              @db.VarChar(50)
+  message            String?
+  message_type       String?              @default("text") @db.VarChar(50)
+  diff_html          String?
+  options            String[]
+  images             String[]
+  videos             String[]
+  links              String[]
+  created_at         DateTime?            @default(now()) @db.Timestamp(6)
+  emoji              String?              @db.VarChar(10)
+  users              users                @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_admin_chat_user")
+  chat_goal_progress chat_goal_progress[] @relation("AdminChatToGoalProgress")
+  chat_process       chat_process[]       @relation("AdminChatToProcess")
+  learning_turns     learning_turns[]
+}
+
+model chat_process {
+  id                 Int                  @id @default(autoincrement())
+  chat_id            Int
+  user_message       String?
+  corrected_message  String?
+  ai_response        String?
+  wrong_message      String?
+  feedback           Json?
+  images             String[]
+  videos             String[]
+  links              String[]
+  created_at         DateTime?            @default(now()) @db.Timestamp(6)
+  updated_at         DateTime?            @default(now()) @db.Timestamp(6)
+  chat_goal_progress chat_goal_progress[] @relation("ProcessToGoalProgress")
+  admin_chat         admin_chat           @relation("AdminChatToProcess", fields: [chat_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_chat_process_admin_chat")
+}
+
+model chat_goal_progress {
+  id               Int           @id @default(autoincrement())
+  chat_id          Int
+  goal_id          Int
+  user_id          Int
+  is_completed     Boolean?      @default(false)
+  num_questions    Int?          @default(0)
+  num_correct      Int?          @default(0)
+  num_incorrect    Int?          @default(0)
+  last_question_id Int?
+  created_at       DateTime?     @default(now()) @db.Timestamp(6)
+  updated_at       DateTime?     @default(now()) @db.Timestamp(6)
+  admin_chat       admin_chat    @relation("AdminChatToGoalProgress", fields: [chat_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_chat_goal_progress_admin_chat")
+  chat_process     chat_process? @relation("ProcessToGoalProgress", fields: [last_question_id], references: [id], onUpdate: NoAction, map: "fk_chat_goal_progress_last_question")
+  topic_goals      topic_goals   @relation("GoalToProgress", fields: [goal_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_chat_goal_progress_topic_goal")
+  users            users         @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_chat_goal_progress_user")
+
+  @@unique([chat_id, goal_id, user_id])
+}
+
+model user_subjects {
+  id                 Int       @id @default(autoincrement())
+  user_id            Int
+  subject_id         Int
+  total_chapters     Int?      @default(0)
+  completed_chapters Int?      @default(0)
+  completion_percent Decimal?  @default(0.00) @db.Decimal(5, 2)
+  created_at         DateTime? @default(now()) @db.Timestamp(6)
+  subjects           subjects  @relation(fields: [subject_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_user_subjects_subject")
+  users              users     @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_user_subjects_user")
+
+  @@unique([user_id, subject_id])
+}
+
+model content_generation_status {
+  id                      Int       @id @default(autoincrement())
+  user_id                 Int
+  subject_id              Int
+  grade_level             String    @db.VarChar(50)
+  board                   String    @db.VarChar(50)
+  chapters_generated      Boolean?  @default(false)
+  topics_generated        Boolean?  @default(false)
+  generation_started_at   DateTime? @db.Timestamp(6)
+  generation_completed_at DateTime? @db.Timestamp(6)
+  status                  String?   @default("pending") @db.VarChar(50)
+  error_message           String?
+  created_at              DateTime? @default(now()) @db.Timestamp(6)
+  updated_at              DateTime? @default(now()) @db.Timestamp(6)
+  goals_generated         Boolean?  @default(false)
+  subjects                subjects  @relation(fields: [subject_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_content_gen_status_subject")
+  users                   users     @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_content_gen_status_user")
+
+  @@unique([user_id, subject_id, grade_level, board])
+  @@index([status], map: "idx_content_gen_status")
+  @@index([user_id], map: "idx_content_gen_user_id")
+}
+
+model grade_levels {
+  id   Int    @id @default(autoincrement())
+  name String @db.VarChar(100)
+}
+
+model normal_user_chat {
+  id           Int       @id @default(autoincrement())
+  user_id      Int
+  sender       String    @db.VarChar(50)
+  message      String?
+  message_type String?   @default("text") @db.VarChar(50)
+  images       String[]  @default([])
+  videos       String[]  @default([])
+  links        String[]  @default([])
+  emoji        String?   @db.VarChar(10)
+  created_at   DateTime? @default(now()) @db.Timestamp(6)
+  users        users     @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_normal_user_chat_user")
+
+  @@index([user_id], map: "idx_normal_user_chat_user_id")
+}
+
+model learning_turns {
+  id                   Int          @id @default(autoincrement())
+  user_id              Int
+  chat_id              Int
+  goal_id              Int?
+  topic_id             Int?
+  subject_id           Int?
+  user_name            String?
+  sender               String?
+  question_text        String?
+  user_answer_raw      String?
+  corrected_answer     String?
+  diff_html            String?
+  feedback_text        String?
+  feedback_json        Json?
+  error_type           String?
+  error_subtype        String?
+  is_correct           Boolean?     @default(false)
+  score_percent        Float?       @default(0)
+  response_time_sec    Float?       @default(0)
+  help_requested       String?      @db.VarChar(50)
+  explain_loop_count   Int?         @default(0)
+  num_retries          Int?         @default(0)
+  goal_progress_before Float?       @default(0)
+  goal_progress_after  Float?       @default(0)
+  mastery_score        Float?       @default(0)
+  difficulty_level     String?      @db.VarChar(50)
+  topic_title          String?
+  subject_name         String?
+  question_type        String?
+  created_at           DateTime?    @default(now()) @db.Timestamp(6)
+  updated_at           DateTime?    @default(now()) @db.Timestamp(6)
+  admin_chat           admin_chat   @relation(fields: [chat_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_learning_chat")
+  topic_goals          topic_goals? @relation(fields: [goal_id], references: [id], onUpdate: NoAction, map: "fk_learning_goal")
+  subjects             subjects?    @relation(fields: [subject_id], references: [id], onUpdate: NoAction, map: "fk_learning_subject")
+  users                users        @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_learning_user")
+}

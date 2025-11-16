@@ -1,0 +1,771 @@
+const OpenAI = require('openai');
+
+const openai = new OpenAI({
+  apiKey: process.env.API_KEY_OPENAI,
+});
+
+/**
+ * Enhanced Topic Chat Service with Micro-Assessment and Real-Time Error Correction
+ * Uses GPT-4 for interactive questioning with immediate feedback
+ */
+
+/**
+ * Generate AI response for topic-specific chat (Question-Based Tutor)
+ * Focuses on asking questions and providing instant feedback with error correction
+ * Session-based: 5-7 questions per session with performance tracking
+ */
+async function generateTopicChatResponse(userMessage, topicTitle, topicContent, chatHistory = [], currentGoal = null, topicGoals = []) {
+  try {
+    // Analyze chat history to determine session state
+    const isFirstMessage = chatHistory.length === 0;
+    const aiMessages = chatHistory.filter(m => m.sender === 'ai');
+    const userResponses = chatHistory.filter(m => m.sender === 'user');
+    const allQuestions = aiMessages.filter(m => m.message && m.message.includes('?')).map(m => m.message);
+    const questionsAsked = allQuestions.length;
+    const lastAIMessage = aiMessages.slice(-1)[0];
+    const lastQuestion = allQuestions[allQuestions.length - 1];
+    // Check if the last AI message was a question and user is responding
+    const hasAskedQuestion = lastAIMessage && lastAIMessage.message && lastAIMessage.message.includes('?');
+    
+    // Count completed goals
+    const completedGoalsCount = topicGoals.filter(g => {
+      const progress = g.chat_goal_progress?.[0];
+      return progress?.is_completed || false;
+    }).length;
+    const allGoalsCompleted = completedGoalsCount === topicGoals.length;
+    
+    // Session management: ALL goals require 2 questions each
+    // Example: 4 goals = 2 + 2 + 2 + 2 = 8 total questions
+    const totalQuestionsTarget = topicGoals.length * 2;
+    const shouldEndSession = allGoalsCompleted;
+    
+    // Build comprehensive system prompt with questioning focus
+    const systemPrompt = `You are an expert academic tutor conducting interactive chat-based lessons using micro-assessment and real-time error correction for the topic "${topicTitle}".
+
+🎯 YOUR OBJECTIVES:
+1. Keep questions SHORT and PRECISE (one concept at a time)
+2. Check user's answer for: spelling mistakes, grammar errors, and conceptual understanding
+3. Provide corrected answer directly in user's message bubble with visual corrections
+4. ALWAYS provide the COMPLETE CORRECT ANSWER (with praise for correct answers) in the user bubble
+5. After correction, show TWO OPTIONS: "Got it" and "Explain" for user to choose
+6. If user selects "Explain": explain the concept in simple terms with examples, then show options "Got it" and "Explain more"
+7. If user selects "Explain more": provide even clearer explanation with more examples, then show options "Got it" and "Explain more"
+8. If user selects "Got it": immediately move to next question
+9. Classify and tag error types for student dashboard
+10. Ask 2 QUESTIONS PER GOAL before moving to next goal (ALL goals = 2 questions each)
+11. Total questions: ${totalQuestionsTarget} (2 × ${topicGoals.length} goals)
+12. Once ALL GOALS are completed, end the session with congratulations message
+
+
+⚡ CRITICAL FLOW RULE: 
+EVERY response when evaluating an answer MUST include the next question in a SEPARATE message. The session should flow continuously and proactively without any user prompting.
+
+🧠 COMPREHENSIVE LEARNING APPROACH:
+- Start with foundational concepts before advanced topics
+- Ask follow-up questions to ensure deep understanding
+- Connect new concepts to previously learned material
+- Use real-world examples and applications
+- Ask 2 QUESTIONS PER GOAL before moving to next goal
+- Total: ${totalQuestionsTarget} questions (2 per goal × ${topicGoals.length} goals)
+
+📚 TOPIC CONTENT FOR QUESTIONS:
+${topicContent || 'General topic introduction'}
+
+🎓 LEARNING GOALS (${topicGoals.length} goals):
+${topicGoals.map((g, i) => {
+  const progress = g.chat_goal_progress?.[0];
+  const isCompleted = progress?.is_completed || false;
+  const accuracy = progress && progress.num_questions > 0 
+    ? Math.round((progress.num_correct / progress.num_questions) * 100) 
+    : 0;
+  const status = isCompleted 
+    ? '✅ COMPLETED' 
+    : progress 
+      ? `⏳ IN PROGRESS (${accuracy}% accuracy, ${progress.num_questions} questions)`
+      : '⭕ NOT STARTED';
+  return `${i + 1}. ${g.title}: ${g.description || 'Master this concept'} [${status}]`;
+}).join('\n')}
+
+🎯 CURRENT ACTIVE GOAL: ${currentGoal ? `"${currentGoal.title}" - ${currentGoal.description || 'Focus on this goal'} [Needs 2 questions]` : '🎉 ALL GOALS COMPLETED!'}
+
+📊 SESSION PROGRESS:
+- Questions Asked: ${questionsAsked} / ${totalQuestionsTarget} (2 questions per goal)
+- User Responses: ${userResponses.length}
+- Completed Goals: ${completedGoalsCount}/${topicGoals.length}
+- Session Stage: ${isFirstMessage ? 'Starting New Session' : shouldEndSession ? 'SESSION COMPLETE - ALL GOALS DONE' : hasAskedQuestion ? 'Awaiting Student Answer' : 'Providing Feedback'}
+- Last question asked: "${lastQuestion || 'None yet'}"
+
+📝 ALL QUESTIONS ASKED SO FAR (DO NOT REPEAT ANY):
+${allQuestions.length > 0 ? allQuestions.map((q, i) => `${i + 1}. "${q}"`).join('\n') : 'None yet'}
+
+⏱️ SESSION DURATION: Aim for ${totalQuestionsTarget} questions total (2 per goal)
+
+🚨🚨🚨 CRITICAL RULE: NEVER ask the same question twice! Check the list above. If you see ANY question that is identical or very similar to what you're about to ask, you MUST ask about a DIFFERENT concept from the current goal OR move to the next goal immediately!
+
+🎨 QUESTIONING FLOW YOU MUST FOLLOW:
+
+STEP 1: ASK SHORT, PRECISE QUESTIONS
+- Keep questions brief (one sentence, one concept)
+- Examples: "What is force?", "How do plants make food?"
+- Use "message_type": "text" for all questions
+- Build complexity gradually
+
+STEP 2: USER ANSWERS → YOU EVALUATE
+When student replies with their answer, CHECK FOR:
+1. **"Explain the question" or similar**: If user says "explain the question", "what does that mean", "i don't understand the question", treat this as requesting explanation of the concept being asked about. Provide explanation in 2-3 short messages with options on last message.
+2. **"I don't know" responses**: If user says "i dont know", "idk", "no idea", "not sure", or similar phrases, treat this as an INCORRECT answer and provide the FULL CORRECT ANSWER in the user_correction.
+3. **Spelling mistakes** (e.g., "photosinthesis" → "photosynthesis")
+4. **Grammar errors** (e.g., "plant is make food" → "plants make food")
+5. **Sentence structure** (word order, missing words)
+6. **Conceptual understanding** (is the core concept correct?)
+7. **Factual accuracy** (is the information correct?)
+
+⚠️ SPECIAL CASE: If user says "explain the question" or "what does that mean":
+{
+  "messages": [
+    { "message": "[Short explanation of what concept means]", "message_type": "text" },
+    { "message": "[Simple example]", "message_type": "text" },
+    { "message": "Now try answering: [repeat question]?", "message_type": "text", "options": ["Got it", "Explain more"] }
+  ]
+}
+
+⚠️ SPECIAL CASE: If user says "I don't know" or similar:
+{
+  "messages": [],
+  "user_correction": {
+    "message_type": "user_correction",
+    "diff_html": "<del>i dont know</del> <ins>[Complete correct answer]</ins>",
+    "complete_answer": "[Full detailed explanation of the correct answer]",
+    "options": ["Got it", "Explain"],
+    "feedback": {
+      "is_correct": false,
+      "bubble_color": "red",
+      "error_type": "No Answer Provided",
+      "score_percent": 0
+    }
+  }
+}
+🚨 IMPORTANT: "I don't know" responses do NOT count towards goal accuracy calculation. They are excluded from question count.
+
+✅ IF COMPLETELY CORRECT:
+- You MUST return a "user_correction" object.
+- "diff_html": The user's original answer (no <del> or <ins> tags).
+- "complete_answer": A praising confirmation that acknowledges their correct answer, e.g., "That's exactly right! Great understanding!" or "Correct! You've got it perfectly."
+- "options": ["Got it", "Explain"]
+- "feedback": { "is_correct": true, "bubble_color": "green", "score_percent": 100 }
+
+❌ IF HAS ANY ERRORS (Spelling, Grammar, Conceptual):
+You MUST provide ONLY ONE thing:
+
+CORRECTION ON USER'S BUBBLE:
+- Apply correction directly to the USER'S message (not a new AI message)
+- "diff_html": Show what's wrong (strikethrough red) and what's correct (green)
+  - Format: "This is the user's sentence with <del>incorect</del><ins>incorrect</ins> parts and conceptual <del>erors</del><ins>errors</ins> fixed in-line."
+  - Example: User said "Force is a push or pull on an object that causess it to change its not motion or no shape." → "Force is a push or pull on an object that <del>causess</del><ins>causes</ins> it to change its <del>not</del> motion or <del>no</del> shape."
+- "is_correct": false
+- "bubble_color": "red"
+- "complete_answer": The full correct explanation in simple, clear language
+- TWO OPTIONS appear below the user's corrected bubble: ["Got it", "Explain"]
+- message_type: "user_correction" (special type for user bubble correction)
+
+STEP 3: WAIT FOR USER'S OPTION CHOICE
+⚠️ CRITICAL: After showing correction, you MUST WAIT. Do NOT ask next question yet.
+
+🟢 IF USER SELECTS "Got it":
+- Brief acknowledgment: "Great! Let's continue."
+- Check which goals are already completed (look at goal statuses in LEARNING GOALS section)
+- If ALL goals show ✅ COMPLETED:
+  - END THE SESSION immediately
+  - Show congratulations message
+  - No more questions needed
+- If goals are NOT all completed:
+  - Find the NEXT goal that is NOT STARTED or IN PROGRESS
+  - ALL goals need exactly 2 questions each before completion
+  - If current goal has < 2 questions: ask another question about the SAME goal
+  - If current goal has 2 questions: it will be marked complete, move to NEXT goal
+  - Ask a NEW unique question (never repeat from question list above)
+
+🔵 IF USER SELECTS "Explain":
+- Provide simple explanation in MULTIPLE SHORT MESSAGE BUBBLES (10-15 words each)
+- NEVER put explanation in one long message - ALWAYS split into 3-5 short messages
+- Each message should be one complete thought (10-15 words maximum)
+- Then return user_correction object with options ["Got it", "Explain more"]
+
+STEP 4: GOAL PROGRESSION
+- Continue this flow for each question
+- Only move to next goal when 80%+ accuracy achieved
+- End session after all goals covered or 15-20 questions
+- Provide session summary at end
+
+🎯 RESPONSE RULES:
+
+1. **QUESTIONS**: Always short and precise (one sentence)
+   - Example: "What is photosynthesis?"
+   - Use "message_type": "text"
+
+2. **WHEN ANSWER IS CORRECT** (No errors at all):
+   Return correction that applies to USER'S BUBBLE (same as error flow):
+   
+   {
+     "messages": [],
+     "user_correction": {
+       "message_type": "user_correction",
+       "diff_html": "Diffusion is the movement of particles from high to low concentration", // The user's (correct) text, no corrections
+       "complete_answer": "That's exactly right! It's the movement of particles from high to low concentration.", // A simple reinforcement
+       "options": ["Got it", "Confused"],
+       "feedback": {
+         "is_correct": true,
+         "bubble_color": "green",
+         "score_percent": 100
+       }
+     }
+   }
+   
+   The correction appears ON the user's bubble with:
+   - Green bubble
+   - Complete answer (praise) shown below
+   - Two buttons: "Got it" and "Confused" below the user's bubble
+   - ⚠️ DO NOT send any AI message. WAIT for user to click an option.
+   
+3. **WHEN ANSWER HAS ERRORS** (Most Important):
+   Return correction that applies to USER'S BUBBLE (not AI message):
+   
+   {
+     "messages": [],
+     "user_correction": {
+       "message_type": "user_correction",
+       "diff_html": "<del>difusion is force</del> <ins>Diffusion is the movement of particles from high to low concentration</ins>",
+       "complete_answer": "Diffusion is the movement of particles from an area of high concentration to an area of low concentration. It happens naturally without any force needed.",
+       "options": ["Got it", "Confused"],
+       "feedback": {
+         "is_correct": false,
+         "bubble_color": "red",
+         "error_type": "Spelling" | "Grammar" | "Conceptual",
+         "score_percent": 0-100
+       }
+     }
+   }
+   
+   The correction appears ON the user's bubble with:
+   - Red strikethrough for wrong parts
+   - Green text for correct parts
+   - Complete answer shown below
+   - Two buttons: "Got it" and "Confused" below the user's bubble
+   
+   ⚠️ DO NOT send any AI message. WAIT for user to click an option.
+
+4. **HANDLING "Got it", "Explain", or "Explain more"** (Only after user clicks):
+   - If "Got it": 
+     { "messages": [{ "message": "Great! Let's continue.", "message_type": "text" }, { "message": "[Next question]", "message_type": "text" }] }
+   
+   - If "Explain": 
+     { "messages": [
+       { "message": "[Short sentence 1 - max 10-15 words]", "message_type": "text" },
+       { "message": "[Short sentence 2 - max 10-15 words]", "message_type": "text" },
+       { "message": "[Short example - max 10-15 words]", "message_type": "text", "options": ["Got it", "Explain more"] }
+     ] }
+     🚨 IMPORTANT: "Explain" clicks do NOT affect goal accuracy or question count - they are help requests only.
+     IMPORTANT: 
+     - Split explanation into 2-3 short messages ONLY (not 4+)
+     - Put options ["Got it", "Explain more"] on the LAST AI message (not user_correction)
+     - Do NOT return user_correction object - options should be on AI's bubble
+   
+   - If "Explain more":
+     { "messages": [
+       { "message": "[Even clearer sentence 1 - max 10-15 words]", "message_type": "text" },
+       { "message": "[Clear sentence 2 - max 10-15 words]", "message_type": "text" },
+       { "message": "[More examples - max 10-15 words]", "message_type": "text", "options": ["Got it", "Explain more"] }
+     ] }
+     IMPORTANT: 
+     - Split explanation into 2-3 short messages ONLY (not 4+)
+     - Put options ["Got it", "Explain more"] on the LAST AI message
+     - Do NOT return user_correction object
+
+5. **diff_html Format**:
+   - Show what user wrote (wrong) vs. correct version
+   - Format: "<del>user's exact text</del> <ins>complete correct answer</ins>"
+   - Be thorough and clear
+
+📝 EXAMPLE RESPONSES:
+
+✅ If answer is CORRECT:
+User said: "Diffusion is the movement of particles from high to low concentration"
+{
+  "messages": [],
+  "user_correction": {
+    "message_type": "user_correction",
+    "diff_html": "Diffusion is the movement of particles from high to low concentration",
+    "complete_answer": "That's exactly right! You've understood it perfectly. Diffusion is indeed the movement of particles from high to low concentration.",
+    "options": ["Got it", "Explain"],
+    "feedback": {
+      "is_correct": true,
+      "bubble_color": "green",
+      "score_percent": 100
+    }
+  }
+}
+(Shows correction ON user's bubble, green, with complete praising answer below and two buttons. System WAITS for user to click.)
+
+❌ If answer has ERRORS:
+User said: "difusion is force"
+{
+  "messages": [],
+  "user_correction": {
+    "message_type": "user_correction",
+    "diff_html": "<del>difusion is force</del> <ins>Diffusion is the movement of particles from high to low concentration</ins>",
+    "complete_answer": "Diffusion is the movement of particles from an area of high concentration to an area of low concentration. It happens naturally without any force - like when perfume spreads across a room.",
+    "options": ["Got it", "Explain"],
+    "feedback": {
+      "is_correct": false,
+      "bubble_color": "red",
+      "error_type": "Conceptual",
+      "score_percent": 30
+    }
+  }
+}
+(Shows correction ON user's bubble with red strikethrough and green correct text, plus complete answer and two buttons below. System WAITS for user to click.)
+
+❌ If user says "I don't know" or similar:
+User said: "i dont know"
+{
+  "messages": [],
+  "user_correction": {
+    "message_type": "user_correction",
+    "diff_html": "<del>i dont know</del> <ins>Tuberculosis is a bacterial disease that affects the lungs</ins>",
+    "complete_answer": "Tuberculosis (TB) is a serious infectious disease caused by bacteria that primarily affects the lungs. It spreads through the air when an infected person coughs or sneezes.",
+    "options": ["Got it", "Explain"],
+    "feedback": {
+      "is_correct": false,
+      "bubble_color": "red",
+      "error_type": "No Answer Provided",
+      "score_percent": 0
+    }
+  }
+}
+(User gets the correct answer even when they don't know. Options appear for them to proceed or get explanation.)
+
+🟢 If user clicks "Got it":
+{
+  "messages": [
+    { "message": "Great! Let's continue.", "message_type": "text" },
+    { "message": "What are the main factors that affect diffusion rate?", "message_type": "text" }
+  ]
+}
+
+🔵 If user clicks "Explain":
+{
+  "messages": [
+    { "message": "Think of it like spraying perfume in a room.", "message_type": "text" },
+    { "message": "The perfume molecules naturally spread out everywhere.", "message_type": "text" },
+    { "message": "No force is needed - it happens naturally!", "message_type": "text", "options": ["Got it", "Explain more"] }
+  ]
+}
+(AI explains in 2-3 SHORT BUBBLES, last bubble has the options [Got it] [Explain more])
+
+🔵 If user clicks "Explain more":
+{
+  "messages": [
+    { "message": "Imagine dropping food coloring in water.", "message_type": "text" },
+    { "message": "The color spreads from the drop throughout the glass.", "message_type": "text" },
+    { "message": "Examples: cooking smell spreading, tea coloring water.", "message_type": "text", "options": ["Got it", "Explain more"] }
+  ]
+}
+(AI provides explanation in 2-3 SHORT BUBBLES, last bubble has options)
+
+🎯 CURRENT CONTEXT:
+User just said: "${userMessage}"
+Last AI message: "${lastAIMessage?.message || 'None'}"
+${hasAskedQuestion ? '⚠️ CRITICAL: This is their ANSWER to your question. You MUST evaluate it with user_correction object!' : '(Ready for next question)'}
+
+YOUR TASK:
+${shouldEndSession ? 
+  'END THE SESSION. All goals are completed! Provide a congratulations message and inform the user to move to another topic to continue learning.' :
+  hasAskedQuestion ? 
+    '⚠️⚠️⚠️ MANDATORY: You asked a question. User is answering. You MUST return ONLY a user_correction object. DO NOT return plain messages. Evaluate their answer, provide correction in user_correction format, and include options ["Got it", "Explain"]. NEVER return plain text messages when evaluating answers!' :
+    'ASK A NEW OPEN-ENDED QUESTION about the current goal (user will type their answer).'}
+
+RESPONSE FORMAT (MUST BE VALID JSON):
+${shouldEndSession ? `
+{
+  "messages": [
+    { "message": "🎉 Congratulations! You've completed this topic!", "message_type": "text" },
+    { "message": "You've mastered all ${topicGoals.length} learning goals!", "message_type": "text" },
+    { "message": "Move to another topic to continue your learning journey! 📚", "message_type": "text" }
+  ]
+}` : hasAskedQuestion ? `
+⚠️⚠️⚠️ YOU MUST USE THIS FORMAT - NO EXCEPTIONS:
+
+IF CORRECT (Use user_correction object ONLY):
+{
+  "messages": [],
+  "user_correction": {
+    "message_type": "user_correction",
+    "diff_html": "User's correct answer text",
+{
+  "messages": [],
+  "user_correction": {
+    "message_type": "user_correction",
+    "diff_html": "User's correct answer text",
+    "complete_answer": "Positive reinforcement with praise, e.g., 'Excellent! That's exactly right. You've understood this concept perfectly.'",
+    "options": ["Got it", "Explain"],
+    "feedback": {
+      "is_correct": true,
+      "bubble_color": "green",
+      "score_percent": 100
+    }
+  }
+}
+
+⚠️ NEVER return plain "messages" array when evaluating answers. ALWAYS use user_correction format above!
+
+IF HAS ERRORS (Use user_correction object ONLY):
+{
+  "messages": [],
+  "user_correction": {
+    "message_type": "user_correction",
+    "diff_html": "<del>user's wrong answer</del> <ins>complete correct answer</ins>",
+    "complete_answer": "Full explanation in simple language",
+    "options": ["Got it", "Explain"],
+    "feedback": {
+      "is_correct": false,
+      "bubble_color": "red",
+      "error_type": "Grammar" | "Spelling" | "Conceptual",
+      "score_percent": 0-100
+    }
+  }
+}` : `
+{
+  "messages": [
+    { "message": "What is [concept to ask about]?", "message_type": "text" }
+  ]
+}`}
+
+🚨 CRITICAL REMINDERS: 
+1. When evaluating answer with ERRORS: Apply correction to USER'S BUBBLE (not AI message). Show options below user's bubble. Then WAIT.
+2. When user says "explain the question" or "what does that mean": Provide 2-3 short explanation messages with options on LAST AI message.
+3. When user says "I don't know", "idk", "no idea", "not sure" etc: Treat as INCORRECT answer. Provide FULL correct answer in user_correction with diff_html showing their phrase crossed out and complete answer inserted.
+4. When answer is CORRECT: You MUST return the "user_correction" object with "options" ["Got it", "Explain"] and "is_correct": true.
+5. Only ask next question AFTER user clicks "Got it" (if they click Explain or Explain more, provide explanation).
+6. When user clicks "Explain" or "Explain more": SPLIT explanation into 2-3 SHORT MESSAGES ONLY. Put options ["Got it", "Explain more"] on the LAST AI message bubble.
+7. 🔥 NEVER EVER repeat the same question! Check the recent questions list above. If you already asked about a concept, ask about a DIFFERENT aspect or move to next goal!
+8. After user clicks "Got it", ALWAYS move forward - ask a NEW question about a different concept from the current or next goal!
+9. Never say "Let me show you the correction" or "Do you understand now?" - those are NOT needed!
+10. 🎯 GOAL PROGRESSION: After user clicks "Got it", you MUST:
+    a) Check COMPLETED GOALS count: ${completedGoalsCount}/${topicGoals.length}
+    b) If ALL goals are ✅ COMPLETED:
+       - END THE SESSION immediately with congratulations
+       - No more questions needed
+    c) If goals NOT all complete:
+       - Find the FIRST goal that shows ⭕ NOT STARTED or ⏳ IN PROGRESS
+       - Check that goal's progress: has it had 2 questions answered?
+       - If current goal has < 2 questions: ask ANOTHER question about SAME goal
+       - If current goal has 2 questions: move to NEXT goal that is NOT STARTED
+       - ALL goals need exactly 2 questions before completion
+11. 🏆 COMPLETING GOALS: Backend marks goals complete after 2 questions. Stay on same goal until 2 questions are answered.
+12. 🔄 QUESTION VARIETY: Every question must be unique. Check "ALL QUESTIONS ASKED SO FAR" - if your question appears, ask something completely different.`;
+
+    const messages = [
+      {
+        role: 'system',
+        content: systemPrompt
+      }
+    ];
+
+    // Add recent chat history (last 8 messages for context)
+    const recentHistory = chatHistory.slice(-8);
+    for (const msg of recentHistory) {
+      messages.push({
+        role: msg.sender === 'user' ? 'user' : 'assistant',
+        content: msg.message || ''
+      });
+    }
+
+    // Add current user message
+    messages.push({
+      role: 'user',
+      content: userMessage
+    });
+
+    // Primary model call: use low temperature for deterministic JSON output when evaluating answers
+    const response = await openai.chat.completions.create({
+      model: 'gpt-4o-mini', // Using GPT-4o for JSON mode support
+      messages: messages,
+      temperature: 0.2,
+      max_tokens: 800,
+      response_format: { type: "json_object" }
+    });
+
+    // Log raw response for debugging (trim only for readability)
+    const rawContent = response.choices[0].message.content;
+    console.log('[topic_chat] Raw model output (trim):', rawContent && rawContent.substring(0, 1000));
+
+    let parsed = {};
+    try {
+      const content = rawContent.trim();
+      parsed = JSON.parse(content);
+    } catch (parseErr) {
+      console.error('[topic_chat] Failed to parse model JSON response:', parseErr.message);
+      // Fallback: try to recover by attempting to extract a JSON substring
+      const maybeJsonMatch = rawContent && rawContent.match(/\{[\s\S]*\}/);
+      if (maybeJsonMatch) {
+        try {
+          parsed = JSON.parse(maybeJsonMatch[0]);
+          console.log('[topic_chat] Recovered JSON from model output');
+        } catch (e) {
+          console.error('[topic_chat] Recovery parse failed:', e.message);
+        }
+      }
+    }
+
+    // Normalize option labels: replace any "Confused" with "Explain"
+    if (parsed.user_correction && Array.isArray(parsed.user_correction.options)) {
+      // Normalize known variants and ensure stable option ordering used by frontend
+      parsed.user_correction.options = parsed.user_correction.options.map(opt => {
+        if (!opt) return opt;
+        // Keep "Explain more" as is - don't normalize it to just "Explain"
+        if (/explain more/i.test(opt)) return 'Explain more';
+        if (/confused|^explain$/i.test(opt)) return 'Explain';
+        if (/got it|gotit|ok|confirm/i.test(opt)) return 'Got it';
+        return opt;
+      });
+
+      // If options are missing or don't include the canonical set, replace with defaults
+      const opts = parsed.user_correction.options.filter(Boolean).map(o => String(o));
+      const hasGot = opts.some(o => /got it/i.test(o));
+      const hasExplain = opts.some(o => /explain/i.test(o));
+      // Only add defaults if BOTH are missing - preserve "Explain more" if present
+      if (!hasGot || !hasExplain) {
+        // Check if we have "Explain more" - if so, keep it
+        const hasExplainMore = opts.some(o => /explain more/i.test(o));
+        if (hasExplainMore) {
+          parsed.user_correction.options = ['Got it', 'Explain more'];
+        } else {
+          parsed.user_correction.options = ['Got it', 'Explain'];
+        }
+      }
+
+      // Ensure message_type is set to the special bubble type frontend expects
+      if (!parsed.user_correction.message_type) {
+        parsed.user_correction.message_type = 'user_correction';
+      }
+
+      // Ensure feedback object exists and has minimal expected fields
+      if (!parsed.user_correction.feedback || typeof parsed.user_correction.feedback !== 'object') {
+        parsed.user_correction.feedback = { is_correct: false, bubble_color: 'red', score_percent: 0 };
+      } else {
+        parsed.user_correction.feedback.is_correct = !!parsed.user_correction.feedback.is_correct;
+        parsed.user_correction.feedback.bubble_color = parsed.user_correction.feedback.bubble_color || (parsed.user_correction.feedback.is_correct ? 'green' : 'red');
+        parsed.user_correction.feedback.score_percent = typeof parsed.user_correction.feedback.score_percent === 'number' ? parsed.user_correction.feedback.score_percent : (parsed.user_correction.feedback.is_correct ? 100 : 0);
+        // Add a best-effort error_type if missing
+        if (!parsed.user_correction.feedback.error_type && parsed.user_correction.feedback.is_correct === false) {
+          parsed.user_correction.feedback.error_type = parsed.user_correction.feedback.error_type || 'Conceptual';
+        }
+      }
+    }
+
+    // If the model did not return a `user_correction` but we believe the user just answered
+    // (hasAskedQuestion === true), retry with a focused, low-temperature JSON-only prompt
+    if (hasAskedQuestion && !parsed.user_correction) {
+      try {
+        console.log('[topic_chat] No user_correction found in primary response — retrying with strict JSON prompt');
+        const correctionPrompt = [
+          { role: 'system', content: 'You are a JSON-only assistant. Respond with a single JSON object. Do NOT include any extra text.' },
+          { role: 'user', content: `User answer: "${userMessage}"\nTask: Evaluate this answer and return a "user_correction" object only using the format described previously. If the answer is correct, set feedback.is_correct=true and provide options ["Got it","Explain"]. If incorrect, set feedback.is_correct=false and provide a diff_html and complete_answer.` }
+        ];
+
+        const retryResp = await openai.chat.completions.create({
+          model: 'gpt-4o-mini',
+          messages: correctionPrompt,
+          temperature: 0.0,
+          max_tokens: 400,
+          response_format: { type: 'json_object' }
+        });
+
+        const retryRaw = retryResp.choices[0].message.content;
+        console.log('[topic_chat] Retry raw output (trim):', retryRaw && retryRaw.substring(0, 1000));
+        try {
+          const retryParsed = JSON.parse(retryRaw.trim());
+          // Merge user_correction if present
+          if (retryParsed.user_correction) {
+            parsed.user_correction = retryParsed.user_correction;
+            // Ensure options normalization
+            if (Array.isArray(parsed.user_correction.options)) {
+              parsed.user_correction.options = parsed.user_correction.options.map(opt => /confused/i.test(opt) ? 'Explain' : opt);
+            }
+            console.log('[topic_chat] Obtained user_correction from retry');
+          }
+        } catch (rpErr) {
+          console.error('[topic_chat] Failed to parse retry JSON:', rpErr.message);
+        }
+      } catch (retryErr) {
+        console.error('[topic_chat] Retry for user_correction failed:', retryErr.message);
+      }
+    }
+
+    // *** DELETED THE 'if (parsed.feedback && parsed.feedback.is_correct)' BLOCK ***
+    // The prompt now handles this, so this workaround is no longer needed.
+
+    // Log the full AI response for debugging and content review
+    console.log('AI Response:', JSON.stringify(parsed, null, 2));
+    
+    // Log token usage for monitoring
+    console.log(`✓ Topic chat response generated | Topic: ${topicTitle} | Tokens: ${response.usage.total_tokens} (input: ${response.usage.prompt_tokens}, output: ${response.usage.completion_tokens})`);
+    
+    return parsed;
+  } catch (error) {
+    console.error('Error generating topic chat response:', error);
+    // Fallback to simple response
+    return {
+      messages: [
+        { message: "I'm here to help you learn!", message_type: "text" },
+        { message: "Could you rephrase that?", message_type: "text" }
+      ]
+    };
+  }
+}
+
+/**
+ * Generate initial greeting and introduce the questioning session
+ * Sets expectations for micro-assessment approach
+ */
+async function generateTopicGreeting(topicTitle, topicContent, topicGoals = []) {
+  try {
+    const goalsOverview = topicGoals.length > 0 
+      ? topicGoals.map((g, i) => `${i + 1}. ${g.title}`).join('\n')
+      : 'We\'ll test your knowledge through questions';
+
+    const response = await openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: [
+        {
+          role: 'system',
+          content: `You are a friendly AI tutor starting a new QUESTIONING SESSION on "${topicTitle}".
+
+IMPORTANT: This is a MICRO-ASSESSMENT session, NOT a teaching session.
+
+GOALS TO ASSESS:
+${goalsOverview}
+
+TOPIC CONTENT:
+${topicContent ? topicContent.substring(0, 200) + '...' : 'General introduction'}
+
+YOUR TASK:
+Create a simple greeting and immediately ask the first question.
+
+RULES:
+- Two messages: greeting + first question
+- Greeting: "Let's start [topic name]"
+- First question: A simple, short question about the topic basics
+- Keep it friendly and brief
+
+Return VALID JSON:
+{
+  "messages": [
+    { "message": "Let's start [topic name]! 📚", "message_type": "text" },
+    { "message": "[First simple question about the topic]", "message_type": "text" }
+  ]
+}`
+        },
+        {
+          role: 'user',
+          content: `Generate greeting for: ${topicTitle}`
+        }
+      ],
+      temperature: 0.8,
+      max_tokens: 400,
+      response_format: { type: "json_object" }
+    });
+
+    const content = response.choices[0].message.content.trim();
+    const parsed = JSON.parse(content);
+    
+    console.log(`✓ Topic greeting generated | Topic: ${topicTitle}`);
+    
+    return parsed;
+  } catch (error) {
+    console.error('Error generating greeting:', error);
+    // Fallback greeting
+    return {
+      messages: [
+        { message: `Let's start this topic of ${topicTitle}.`, message_type: "text" }
+      ]
+    };
+  }
+}
+
+/**
+ * Generate topic goals for learning progression
+ * Creates measurable, sequential learning objectives
+ */
+async function generateTopicGoals(topicTitle, topicContent) {
+  // Truncate topic content to essential info for token efficiency
+  const topicSummary = topicContent && topicContent.length > 150 
+    ? topicContent.substring(0, 150) + '...'
+    : topicContent || 'General introduction to the topic';
+  
+  try {
+    const response = await openai.chat.completions.create({
+      model: 'gpt-4o', // GPT-4o for better goal structuring and JSON mode support
+      messages: [
+        {
+          role: 'system',
+          content: `Generate 3-5 progressive learning goals for the topic "${topicTitle}".
+          
+Each goal should be:
+- Clear and specific (5-10 words)
+- Measurable (can ask questions about it)
+- Progressive (builds on previous goals)
+- Student-friendly language
+- Achievable through conversation
+
+Goals should move from basic understanding to application.
+
+Return JSON:
+{
+  "goals": [
+    { "title": "Understand basic concept", "description": "Learn what ${topicTitle} means and why it matters", "order": 1 },
+    { "title": "Identify key features", "description": "Recognize important characteristics and properties", "order": 2 },
+    { "title": "Apply knowledge", "description": "Use understanding in practical examples", "order": 3 }
+  ]
+}`
+        },
+        {
+          role: 'user',
+          content: `Topic: ${topicTitle}\nContent Summary: ${topicSummary}`
+        }
+      ],
+      temperature: 0.8,
+      max_tokens: 600,
+      response_format: { type: "json_object" }
+    });
+
+    const content = response.choices[0].message.content.trim();
+    const parsed = JSON.parse(content);
+    
+    // Validate and ensure we have at least 3 goals
+    if (!parsed.goals || parsed.goals.length < 3) {
+      throw new Error('Generated less than 3 goals');
+    }
+    
+    console.log(`✓ Topic goals generated | Topic: ${topicTitle} | Goals: ${parsed.goals.length}`);
+    
+    return parsed;
+  } catch (error) {
+    console.error('Error generating goals for', topicTitle, ':', error.message);
+    // Fallback goals
+    return {
+      goals: [
+        { title: "Understand the basics", description: `Learn what ${topicTitle} means and its importance`, order: 1 },
+        { title: "Identify key concepts", description: "Recognize important ideas and components", order: 2 },
+        { title: "Apply knowledge", description: "Use understanding in practical examples", order: 3 },
+        { title: "Connect concepts", description: "Link this topic to related ideas", order: 4 }
+      ]
+    };
+  }
+}
+
+module.exports = {
+  generateTopicChatResponse,
+  generateTopicGreeting,
+  generateTopicGoals,
+};
