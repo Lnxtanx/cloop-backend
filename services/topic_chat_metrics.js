@@ -344,40 +344,39 @@ function generateSessionSummaryMessage(topicTitle, metrics) {
     performance_level,
     top_error_types,
     weak_goals,
-    has_weak_areas
+    has_weak_areas,
+    goal_performance
   } = metrics;
+  // Build the new message format per design requirements.
+  // 1) Performance block
+  const score = overall_score_percent;
+  const correct = correct_answers;
+  const incorrect = incorrect_answers;
+  const noAnswer = Math.max(0, (total_questions || 0) - correct - incorrect);
 
-  // Build error summary
-  let errorSummary = '';
-  if (top_error_types.length > 0) {
-    errorSummary = '\n\n📊 Common Mistakes:\n' + 
-      top_error_types.slice(0, 3).map(e => `• ${e.type}: ${e.count} time${e.count > 1 ? 's' : ''} (${e.percent}%)`).join('\n');
-  }
+  // 2) Learning gaps: list each topic/subtopic where the student made mistakes.
+  // Use goal_performance if available; fall back to weak_goals or an empty list.
+  const performanceList = Array.isArray(goal_performance) ? goal_performance : [];
+  const gaps = performanceList.filter(g => (g.incorrect_answers || 0) > 0).map(g => g.goal_title || g.goal_name || 'Untitled');
+  const gapsText = gaps.length > 0 ? gaps.map(g => `• ${g}`).join('\n') : 'None';
 
-  // Build weak areas summary
-  let weakAreasSummary = '';
-  if (has_weak_areas) {
-    weakAreasSummary = '\n\n💡 Areas to Improve:\n' + 
-      weak_goals.map(g => `• ${g.goal_title} (${g.score_percent}%)`).join('\n');
-  }
+  // 3) Projected score: assume the listed gaps are closed (their incorrect answers become correct).
+  const gapsSource = Array.isArray(weak_goals) && weak_goals.length > 0 ? weak_goals : performanceList.filter(g => (g.incorrect_answers || 0) > 0);
+  let additionalCorrect = 0;
+  gapsSource.forEach(g => {
+    const asked = g.questions_asked || 0;
+    const corr = g.correct_answers || 0;
+    const deficit = Math.max(0, asked - corr);
+    additionalCorrect += deficit;
+  });
 
-  const congratsMessage = overall_score_percent >= 80 
-    ? `🎉 Outstanding work! You've mastered ${topicTitle}!`
-    : overall_score_percent >= 60
-    ? `👏 Great job! You've completed ${topicTitle}!`
-    : `✅ Well done! You've finished ${topicTitle}!`;
+  const projectedCorrect = Math.min((total_questions || 0), correct + additionalCorrect);
+  const projectedScore = (total_questions && total_questions > 0)
+    ? Math.round((projectedCorrect / total_questions) * 100)
+    : score;
 
-  return `${congratsMessage}
-
-📈 Your Performance: ${performance_level}
-⭐ Rating: ${'⭐'.repeat(star_rating)} (${overall_score_percent}%)
-
-📚 Session Summary:
-• Total Questions: ${total_questions}
-• Correct Answers: ${correct_answers} ✅
-• Incorrect Answers: ${incorrect_answers} ❌${errorSummary}${weakAreasSummary}
-
-${has_weak_areas ? '💪 Want to strengthen your weak areas? Click "Learn More" to practice!' : '🎓 You\'ve done an excellent job! Click "End Session" to finish.'}`;
+  // 4) Final action choices are static
+  return `⸻\n1. Your Performance\n• Score: ${score}%\n• Correct: ${correct}\n• Incorrect: ${incorrect}\n• No Answer: ${noAnswer}\n\n⸻\n2. Your Learning Gaps\n${gapsText}\n\n(Only list the gaps. No explanations.)\n\n⸻\n3. Closing these gaps will raise your score from ${score}% to ${projectedScore}% in this topic.\n\n⸻\n4. What would you like to do next?\n• Improve My Score\n• Go to Next Topic`;
 }
 
 module.exports = {

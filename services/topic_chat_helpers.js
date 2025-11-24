@@ -19,26 +19,9 @@ function buildSystemPrompt(topicTitle, topicContent, topicGoals, currentGoal, co
   // 🔥 ABSOLUTE FORCE: When all goals are completed, IMMEDIATELY show session summary
   // Skip user_correction - go DIRECTLY to session summary
   if (shouldEndSession && completedGoalsCount === topicGoals.length && sessionMetrics) {
-    // Build formatted summary with actual values
-    const stars = '⭐'.repeat(sessionMetrics.star_rating);
-    let mistakesSection = '';
-    if (sessionMetrics.top_error_types && sessionMetrics.top_error_types.length > 0) {
-      mistakesSection = '\\n\\n📊 Common Mistakes:\\n' + 
-        sessionMetrics.top_error_types.slice(0, 3)
-          .map(e => `• ${e.type}: ${e.count} time${e.count > 1 ? 's' : ''} (${e.percent}%)`)
-          .join('\\n');
-    }
-    let weakAreasSection = '';
-    if (sessionMetrics.has_weak_areas) {
-      weakAreasSection = '\\n\\n💡 Areas to Improve:\\n' + 
-        sessionMetrics.weak_goals.map(g => `• ${g.goal_title}: ${g.score_percent}%`).join('\\n') +
-        '\\n\\n💪 Want to strengthen your weak areas? Click "Learn More" below!';
-    } else {
-      weakAreasSection = '\\n\\n🎓 You have done an excellent job! Click "End Session" to finish.';
-    }
-    
-    const formattedSummary = `🎉 Congratulations! You have completed this topic!\\n\\n📈 Your Performance: ${sessionMetrics.performance_level}\\n⭐ Rating: ${stars} (${sessionMetrics.overall_score_percent}%)\\n\\n📚 Session Summary:\\n• Total Questions: ${sessionMetrics.total_questions}\\n• Correct Answers: ${sessionMetrics.correct_answers} ✅\\n• Incorrect Answers: ${sessionMetrics.incorrect_answers} ❌${mistakesSection}${weakAreasSection}`;
-    
+      // Build formatted summary using the centralized generator (new frontend format)
+      const formattedSummary = generateSessionSummaryMessage(topicTitle, sessionMetrics);
+
     // ALWAYS show session summary immediately when all goals are done
     // Do NOT evaluate the last answer - session is over!
     return `🎉 ALL ${topicGoals.length} LEARNING GOALS COMPLETED! 🎉
@@ -116,18 +99,18 @@ ${topicContent || 'General topic introduction'}
 
 🎓 LEARNING GOALS (${topicGoals.length} goals):
 ${topicGoals.map((g, i) => {
-  const progress = g.chat_goal_progress?.[0];
-  const isCompleted = progress?.is_completed || false;
-  const accuracy = progress && progress.num_questions > 0 
-    ? Math.round((progress.num_correct / progress.num_questions) * 100) 
-    : 0;
-  const status = isCompleted 
-    ? '✅ COMPLETED' 
-    : progress 
-      ? `⏳ IN PROGRESS (${accuracy}% accuracy, ${progress.num_questions} questions)`
-      : '⭕ NOT STARTED';
-  return `${i + 1}. ${g.title}: ${g.description || 'Master this concept'} [${status}]`;
-}).join('\n')}
+    const progress = g.chat_goal_progress?.[0];
+    const isCompleted = progress?.is_completed || false;
+    const accuracy = progress && progress.num_questions > 0
+      ? Math.round((progress.num_correct / progress.num_questions) * 100)
+      : 0;
+    const status = isCompleted
+      ? '✅ COMPLETED'
+      : progress
+        ? `⏳ IN PROGRESS (${accuracy}% accuracy, ${progress.num_questions} questions)`
+        : '⭕ NOT STARTED';
+    return `${i + 1}. ${g.title}: ${g.description || 'Master this concept'} [${status}]`;
+  }).join('\n')}
 
 🎯 CURRENT ACTIVE GOAL: ${currentGoal ? `"${currentGoal.title}" - ${currentGoal.description || 'Focus on this goal'} [Needs 2 questions]` : '🎉 ALL GOALS COMPLETED!'}
 
@@ -286,11 +269,11 @@ Last AI message: "${lastAIMessage?.message || 'None'}"
 ${hasAskedQuestion && userMessage && userMessage.trim() !== '' ? '⚠️ CRITICAL: This is their ANSWER to your question. You MUST evaluate it with user_correction object!' : '(Ready for next question)'}
 
 YOUR TASK:
-${shouldEndSession ? 
-  'END THE SESSION. All goals are completed! Provide a congratulations message and inform the user to move to another topic to continue learning.' :
-  hasAskedQuestion && userMessage && userMessage.trim() !== '' ? 
-    '⚠️⚠️⚠️ MANDATORY: You asked a question. User is answering. You MUST return ONLY a user_correction object. DO NOT return plain messages. Evaluate their answer, provide correction in user_correction format, and include options ["Got it", "Explain"]. NEVER return plain text messages when evaluating answers!' :
-    '🚀 USER ACKNOWLEDGED THE CORRECTION - ASK THE NEXT QUESTION! Generate a "messages" array with a NEW question (different from all previous questions listed above). DO NOT use user_correction format. DO NOT repeat any previous question. Ask about a new aspect of the current goal.'}
+${shouldEndSession ?
+      'END THE SESSION. All goals are completed! Provide a congratulations message and inform the user to move to another topic to continue learning.' :
+      hasAskedQuestion && userMessage && userMessage.trim() !== '' ?
+        '⚠️⚠️⚠️ MANDATORY: You asked a question. User is answering. You MUST return ONLY a user_correction object. DO NOT return plain messages. Evaluate their answer, provide correction in user_correction format, and include options ["Got it", "Explain"]. NEVER return plain text messages when evaluating answers!' :
+        '🚀 USER ACKNOWLEDGED THE CORRECTION - ASK THE NEXT QUESTION! Generate a "messages" array with a NEW question (different from all previous questions listed above). DO NOT use user_correction format. DO NOT repeat any previous question. Ask about a new aspect of the current goal.'}
 
 RESPONSE FORMAT (MUST BE VALID JSON):
 ${shouldEndSession ? `
@@ -393,19 +376,19 @@ REQUIRED FORMAT:
 function analyzeChatHistory(chatHistory) {
   const aiMessages = chatHistory.filter(m => m.sender === 'ai' && m.message_type === 'text');
   const userResponses = chatHistory.filter(m => m.sender === 'user' && m.message_type !== 'user_correction');
-  
+
   // Extract only actual questions from AI messages (message_type === 'text' and contains '?')
   const allQuestions = aiMessages
     .filter(m => m.message && m.message.includes('?'))
     .map(m => m.message);
-  
+
   const questionsAsked = allQuestions.length;
   const lastAIMessage = aiMessages.length > 0 ? aiMessages[aiMessages.length - 1] : null;
   const lastQuestion = allQuestions.length > 0 ? allQuestions[allQuestions.length - 1] : null;
-  
+
   // Check if the last AI message was a question (user should be responding to it)
   const hasAskedQuestion = lastAIMessage && lastAIMessage.message && lastAIMessage.message.includes('?');
-  
+
   return {
     aiMessages,
     userResponses,
@@ -473,13 +456,13 @@ function normalizeUserCorrectionOptions(parsed) {
         parsed.user_correction.feedback.error_type = parsed.user_correction.feedback.error_type || 'Conceptual';
       }
     }
-    
+
     // 😊 EMOJI ASSIGNMENT: Add appropriate emoji based on feedback
     if (!parsed.user_correction.emoji) {
       const isCorrect = parsed.user_correction.feedback?.is_correct;
       const scorePercent = parsed.user_correction.feedback?.score_percent || 0;
       const errorType = parsed.user_correction.feedback?.error_type;
-      
+
       if (isCorrect) {
         // Correct answers get happy emojis
         parsed.user_correction.emoji = '😊';
@@ -498,7 +481,7 @@ function normalizeUserCorrectionOptions(parsed) {
       }
     }
   }
-  
+
   return parsed;
 }
 
@@ -511,11 +494,11 @@ async function generateTopicGreeting(topicTitle, topicContent, topicGoals = []) 
     console.log('\n========== GREETING GENERATION START ==========');
     console.log('📚 Topic:', topicTitle);
     console.log('🎯 Goals count:', topicGoals.length);
-    
-    const goalsOverview = topicGoals.length > 0 
+
+    const goalsOverview = topicGoals.length > 0
       ? topicGoals.map((g, i) => `${i + 1}. ${g.title}`).join('\n')
       : 'We\'ll test your knowledge through questions';
-    
+
     console.log('\n📋 Goals Overview:');
     console.log(goalsOverview);
     console.log('\n💬 Sending greeting request to AI...');
@@ -564,7 +547,7 @@ Return VALID JSON:
 
     const content = response.choices[0].message.content.trim();
     const parsed = JSON.parse(content);
-    
+
     console.log('\n✅ Greeting Generated Successfully!');
     console.log('\n🎉 Greeting Messages:');
     if (parsed.messages) {
@@ -577,7 +560,7 @@ Return VALID JSON:
     console.log('  - Output tokens:', response.usage.completion_tokens);
     console.log('  - Total tokens:', response.usage.total_tokens);
     console.log('===============================================\n');
-    
+
     return parsed;
   } catch (error) {
     console.error('Error generating greeting:', error);
@@ -596,10 +579,10 @@ Return VALID JSON:
  */
 async function generateTopicGoals(topicTitle, topicContent) {
   // Truncate topic content to essential info for token efficiency
-  const topicSummary = topicContent && topicContent.length > 150 
+  const topicSummary = topicContent && topicContent.length > 150
     ? topicContent.substring(0, 150) + '...'
     : topicContent || 'General introduction to the topic';
-  
+
   try {
     const response = await openai.chat.completions.create({
       model: 'gpt-4o',
@@ -638,14 +621,14 @@ Return JSON:
 
     const content = response.choices[0].message.content.trim();
     const parsed = JSON.parse(content);
-    
+
     // Validate and ensure we have at least 3 goals
     if (!parsed.goals || parsed.goals.length < 3) {
       throw new Error('Generated less than 3 goals');
     }
-    
+
     console.log(`✓ Topic goals generated | Topic: ${topicTitle} | Goals: ${parsed.goals.length}`);
-    
+
     return parsed;
   } catch (error) {
     console.error('Error generating goals for', topicTitle, ':', error.message);

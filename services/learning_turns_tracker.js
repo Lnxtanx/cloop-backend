@@ -55,6 +55,14 @@ async function createLearningTurn(params) {
     console.log('✅ Is Correct:', params.is_correct);
     console.log('📊 Score:', params.score_percent + '%');
     console.log('🔍 Error Type:', params.error_type || 'None');
+    // Provide sane defaults for nullable fields: response time and help_requested
+    const responseTimeSec = (params.response_time_sec !== undefined && params.response_time_sec !== null)
+      ? params.response_time_sec
+      : 8; // dummy default seconds when source is null
+
+    const helpRequestedVal = (params.help_requested !== undefined && params.help_requested !== null)
+      ? params.help_requested
+      : 'no';
 
     const learningTurn = await prisma.learning_turns.create({
       data: {
@@ -88,10 +96,10 @@ async function createLearningTurn(params) {
         score_percent: params.score_percent || 0,
         
         // Timing
-        response_time_sec: params.response_time_sec || 0,
+        response_time_sec: responseTimeSec,
         
         // Engagement metrics
-        help_requested: params.help_requested || null,
+        help_requested: helpRequestedVal,
         explain_loop_count: params.explain_loop_count || 0,
         num_retries: params.num_retries || 0,
         

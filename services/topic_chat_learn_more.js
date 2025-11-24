@@ -29,11 +29,39 @@ function analyzeMistakesForLearnMore(weakGoals, allMistakes, errorTypeCounts) {
   console.log('❌ Total Mistakes:', allMistakes.length);
   console.log('📊 Error Types:', Object.keys(errorTypeCounts).join(', '));
 
-  // Categorize mistakes by error type
-  const conceptualErrors = allMistakes.filter(m => m.error_type === 'Conceptual');
-  const spellingErrors = allMistakes.filter(m => m.error_type === 'Spelling');
-  const grammarErrors = allMistakes.filter(m => m.error_type === 'Grammar');
-  const noAnswerErrors = allMistakes.filter(m => m.error_type === 'No Answer Provided');
+  // Categorize mistakes by error type - 12 error types reference
+  const ERROR_TYPES = [
+    "No Answer Provided",
+    "Confused Response",
+    "Conceptual",
+    "Application",
+    "Logical Reasoning",
+    "Calculation",
+    "Spelling",
+    "Grammar",
+    "Vocabulary Misuse",
+    "Incomplete Answer",
+    "Misinterpreted Question",
+    "Partially Correct"
+  ];
+
+  // Bucket mistakes by type
+  const errorBuckets = {};
+  ERROR_TYPES.forEach(type => {
+    errorBuckets[type] = allMistakes.filter(m => m.error_type === type);
+  });
+
+  // Convenience arrays for legacy logic
+  const conceptualErrors = errorBuckets['Conceptual'] || [];
+  const noAnswerErrors = errorBuckets['No Answer Provided'] || [];
+  const spellingErrors = errorBuckets['Spelling'] || [];
+  const grammarErrors = errorBuckets['Grammar'] || [];
+
+  // Counts per error type (used in prompt)
+  const errorTypeCountsFromData = {};
+  ERROR_TYPES.forEach(type => {
+    errorTypeCountsFromData[type] = (errorBuckets[type] || []).length;
+  });
 
   // Determine primary focus area
   let primaryFocus = 'conceptual';
@@ -92,7 +120,9 @@ function analyzeMistakesForLearnMore(weakGoals, allMistakes, errorTypeCounts) {
     conceptual_error_count: conceptualErrors.length,
     spelling_error_count: spellingErrors.length,
     grammar_error_count: grammarErrors.length,
-    no_answer_count: noAnswerErrors.length
+    no_answer_count: noAnswerErrors.length,
+    // full counts map for all recognized error types
+    error_type_counts: errorTypeCountsFromData
   };
 }
 
@@ -115,6 +145,9 @@ ${focus_areas.map((area, i) =>
    - ${area.mistake_count} mistakes made
    - Needs focus on: ${area.mistake_topics.slice(0, 2).map(t => t.error_type).join(', ')}`
 ).join('\n')}
+
+ERROR TYPE COUNTS:
+${Object.keys(learningPlan.error_type_counts || {}).length > 0 ? Object.entries(learningPlan.error_type_counts).map(([k,v]) => `- ${k}: ${v}`).join('\n') : 'None recorded'}
 
 🎓 PRIMARY FOCUS: ${primary_focus.toUpperCase()}
 Reason: ${focus_reason}
