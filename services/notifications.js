@@ -5,11 +5,10 @@ const sendPushNotification = async (userId, title, message, data = {}) => {
   try {
     const user = await prisma.users.findUnique({
       where: { user_id: parseInt(userId) },
-      select: { push_token: true, expo_push_token: true } // check both fields just in case
+      select: { expo_push_token: true }
     });
 
-    // Use expo_push_token if available (new field), fallback to push_token
-    const token = user?.expo_push_token || user?.push_token;
+    const token = user?.expo_push_token;
 
     if (token && Expo.isExpoPushToken(token)) {
       console.log(`Sending push to user ${userId} with token ${token}`);
