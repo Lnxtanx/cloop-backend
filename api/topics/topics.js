@@ -8,9 +8,9 @@ const prisma = require('../../lib/prisma')
 // Search topics with filters
 router.get('/search', authenticateToken, async (req, res) => {
 	let user_id = parseInt(req.user?.user_id)
-	const { q, subjectId, chapterId, status } = req.query
+	const { q, subjectId, chapterId, status, limit } = req.query // Added limit
 
-	console.log(`Search request: user_id=${user_id}, q="${q}", filters={subject:${subjectId}, chapter:${chapterId}, status:${status}}`)
+	console.log(`Search request: user_id=${user_id}, q="${q}", filters={subject:${subjectId}, chapter:${chapterId}, status:${status}}, limit=${limit}`)
 
 	if (!user_id) {
 		return res.status(401).json({ error: 'Authentication required' })
@@ -52,10 +52,12 @@ router.get('/search', authenticateToken, async (req, res) => {
 
 		console.log('Search WHERE clause:', JSON.stringify(whereClause, null, 2))
 
+		const resultLimit = limit ? parseInt(limit) : 5; // Default to 5 as requested (3-5)
+
 		const topics = await prisma.topics.findMany({
 			where: whereClause,
-			take: 20, // Limit results
-			orderBy: { updated_at: 'desc' },
+			take: resultLimit,
+			orderBy: { id: 'desc' }, // Use ID desc for consistent "newest" behavior if updated_at isn't reliable
 			include: {
 				chapters: {
 					select: { title: true }
