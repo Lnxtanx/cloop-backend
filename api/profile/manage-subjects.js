@@ -41,22 +41,11 @@ router.post('/add-subject', authenticateToken, async (req, res) => {
       return res.status(404).json({ error: 'Subject not found' });
     }
 
-    // Get user's grade and board for chapter count calculation
-    const user = await prisma.users.findUnique({
-      where: { user_id: user_id },
-      select: { grade_level: true, board: true }
-    });
-
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-
-    // Count existing chapters for this subject, grade, and board
+    // Count existing chapters for this subject and user
     const totalChapters = await prisma.chapters.count({
       where: {
         subject_id: subject_id,
-        grade_level: user.grade_level,
-        board: user.board
+        user_id: user_id
       }
     });
 

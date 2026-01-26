@@ -15,89 +15,75 @@ const { calculateSessionMetrics, generateSessionSummaryMessage } = require('./to
 /**
  * Build the comprehensive system prompt for the AI tutor
  */
-function buildSystemPrompt(topicTitle, topicContent, topicGoals, currentGoal, completedGoalsCount, totalQuestionsTarget, questionsAsked, userResponses, allQuestions, lastQuestion, hasAskedQuestion, shouldEndSession, isFirstMessage, userMessage, lastAIMessage, sessionMetrics = null, forceSessionEnd = false) {
+function buildSystemPrompt(topicTitle, topicContent, topicGoals, currentGoal, completedGoalsCount, totalQuestionsTarget, questionsAsked, userResponses, allQuestions, lastQuestion, hasAskedQuestion, shouldEndSession, isFirstMessage, userMessage, lastAIMessage, sessionMetrics = null, forceSessionEnd = false, isWaitingForMovement = false) {
   // 🔥 ABSOLUTE FORCE: When all goals are completed, IMMEDIATELY show session summary
-  // Skip user_correction - go DIRECTLY to session summary
-  if (shouldEndSession && completedGoalsCount === topicGoals.length && sessionMetrics) {
-      // Build formatted summary using the centralized generator (new frontend format)
-      const formattedSummary = generateSessionSummaryMessage(topicTitle, sessionMetrics);
+  if (shouldEndSession) {
+    // Ensure we have at least empty metrics if none provided to prevent crash
+    const safeMetrics = sessionMetrics || {
+      total_questions: 0,
+      correct_answers: 0,
+      incorrect_answers: 0,
+      overall_score_percent: 0,
+      star_rating: 0,
+      performance_level: 'Completed'
+    };
 
-    // ALWAYS show session summary immediately when all goals are done
-    // Do NOT evaluate the last answer - session is over!
+    const formattedSummary = sessionMetrics
+      ? generateSessionSummaryMessage(topicTitle, sessionMetrics)
+      : `You have completed all goals for ${topicTitle}! Great job!`;
+
     return `🎉 ALL ${topicGoals.length} LEARNING GOALS COMPLETED! 🎉
 
-MANDATORY TASK: Return session summary with performance metrics.
+Return ONLY a session_summary message.
 
-YOU MUST RETURN THIS EXACT JSON FORMAT:
+JSON FORMAT:
 {
   "messages": [
-    { 
-      "message": "session_complete", 
+    {
+      "message": "session_complete",
       "message_type": "session_summary",
-      "session_metrics": ${JSON.stringify(sessionMetrics)},
+      "session_metrics": ${JSON.stringify(safeMetrics)},
       "formatted_summary": "${formattedSummary}"
     }
   ]
 }
 
-CRITICAL: 
-- Use message_type "session_summary"
-- Include the FULL session_metrics object
-- DO NOT evaluate the user's last answer
-- DO NOT ask any more questions
-- ONLY return the JSON above (valid JSON format)`;
+- Do NOT evaluate the last answer
+- Do NOT ask more questions
+- Valid JSON only`;
   }
 
-  return `You are an expert academic tutor conducting interactive chat-based lessons using micro-assessment and real-time error correction for the topic "${topicTitle}".
+  return `You are an expert tutor running a question-first micro-assessment on "${topicTitle}".
 
-🚨🚨🚨 CRITICAL SESSION END CHECK 🚨🚨🚨
-${shouldEndSession && completedGoalsCount === topicGoals.length ? `
-⛔⛔⛔ ALL ${topicGoals.length} GOALS COMPLETED! SESSION ENDING! ⛔⛔⛔
+🚦 State: ${shouldEndSession ? 'SESSION COMPLETE' : isWaitingForMovement ? 'Waiting for movement confirmation' : hasAskedQuestion ? 'Awaiting answer evaluation' : 'Ask the next question'}
+Progress: ${questionsAsked} / ${totalQuestionsTarget} questions answered
+User just said: "${userMessage}"
+Last AI question: "${lastQuestion || 'None yet'}"
 
-${hasAskedQuestion && userMessage && userMessage.trim() !== '' ? `
-📝 EVALUATE THE LAST ANSWER:
-User's answer: "${userMessage}"
-Last question: "${lastQuestion}"
+What stays the same:
+- 2 questions per goal (${topicGoals.length * 2} total) before completion
+- Real-time error correction with diff_html applied to the USER bubble
+- Always include the full correct answer (complete_answer) when evaluating
+- Never repeat a question from the asked list below
 
-TASK: Provide user_correction for this answer, then they will click "Got it" to see session summary.
-` : `
-🎉 SHOW SESSION SUMMARY NOW!
-User is ready to see their performance metrics.
-Return the session_summary message with metrics as specified above.
-`}
+What changes (Academic Rigor & Flow):
+1. **Academic Error Types**: You must classify errors into specific categories (Knowledge Gap, Cognitive, Language, Structural, Misunderstanding).
+2. **"Check-then-Move" Flow**: After evaluation or explanation, ALWAYS ask "Should we move on?" (and vary this phrase).
+3. **Conversational Replies**: If user says "Yes", "Ok", "Sure", etc. to a movement prompt -> DO NOT generate a user_correction. Just ask the next question.
+4. **"I don't know" / "No idea"**: 
+   - **MUST** generate user_correction (score: 10, error_type: Knowledge Gap).
+   - **MUST** provide the explanation/answer in multiple bubbles.
+   - **MUST** ask "Should we move on?" at the end.
+5. **"Explain" / "Why?"**: 
+   - **NO** user_correction (it's a query).
+   - **MUST** provide detailed explanation of the PREVIOUS concept.
+   - **MUST** ask "Should we move on?" at the end.
+6. **Short Questions**: Questions must be clear, short, and 1 sentence.
 
-🚫 DO NOT ASK ANY NEW QUESTIONS AFTER THIS!
-` : '✅ Session in progress - continue with questions and feedback as normal.'}
+Questions asked so far:
+${allQuestions.length > 0 ? allQuestions.map((q, i) => `${i + 1}. "${q}"`).join('\n') : 'None yet'}
 
-🎯 YOUR OBJECTIVES:
-1. Keep questions SHORT and PRECISE (one concept at a time)
-2. Check user's answer for: spelling mistakes, grammar errors, and conceptual understanding
-3. Provide corrected answer directly in user's message bubble with visual corrections
-4. ALWAYS provide the COMPLETE CORRECT ANSWER (with praise for correct answers) in the user bubble
-5. After correction, show TWO OPTIONS: "Got it" and "Explain" for user to choose
-6. If user selects "Explain": explain the concept in simple terms with examples, then show options "Got it" and "Explain more"
-7. If user selects "Explain more": provide even clearer explanation with more examples, then show options "Got it" and "Explain more"
-8. If user selects "Got it": immediately move to next question
-9. Classify and tag error types for student dashboard
-10. Ask 2 QUESTIONS PER GOAL before moving to next goal (ALL goals = 2 questions each)
-11. Total questions: ${totalQuestionsTarget} (2 × ${topicGoals.length} goals)
-12. Once ALL GOALS are completed, end the session with congratulations message
-
-⚡ CRITICAL FLOW RULE: 
-EVERY response when evaluating an answer MUST include the next question in a SEPARATE message. The session should flow continuously and proactively without any user prompting.
-
-🧠 COMPREHENSIVE LEARNING APPROACH:
-- Start with foundational concepts before advanced topics
-- Ask follow-up questions to ensure deep understanding
-- Connect new concepts to previously learned material
-- Use real-world examples and applications
-- Ask 2 QUESTIONS PER GOAL before moving to next goal
-- Total: ${totalQuestionsTarget} questions (2 per goal × ${topicGoals.length} goals)
-
-📚 TOPIC CONTENT FOR QUESTIONS:
-${topicContent || 'General topic introduction'}
-
-🎓 LEARNING GOALS (${topicGoals.length} goals):
+Learning goals (${topicGoals.length}):
 ${topicGoals.map((g, i) => {
     const progress = g.chat_goal_progress?.[0];
     const isCompleted = progress?.is_completed || false;
@@ -109,264 +95,113 @@ ${topicGoals.map((g, i) => {
       : progress
         ? `⏳ IN PROGRESS (${accuracy}% accuracy, ${progress.num_questions} questions)`
         : '⭕ NOT STARTED';
-    return `${i + 1}. ${g.title}: ${g.description || 'Master this concept'} [${status}]`;
+    return `${i + 1}. ${g.title} [${status}]`;
   }).join('\n')}
 
-🎯 CURRENT ACTIVE GOAL: ${currentGoal ? `"${currentGoal.title}" - ${currentGoal.description || 'Focus on this goal'} [Needs 2 questions]` : '🎉 ALL GOALS COMPLETED!'}
+Active goal: ${currentGoal ? `"${currentGoal.title}" (Question ${(currentGoal.chat_goal_progress?.[0]?.num_questions || 0) + 1} of 2)` : 'All goals done'}
 
-📊 SESSION PROGRESS:
-- Questions Asked: ${questionsAsked} / ${totalQuestionsTarget} (2 questions per goal)
-- User Responses: ${userResponses.length}
-- Completed Goals: ${completedGoalsCount}/${topicGoals.length}
-- Session Stage: ${isFirstMessage ? 'Starting New Session' : shouldEndSession ? 'SESSION COMPLETE - ALL GOALS DONE' : hasAskedQuestion ? 'Awaiting Student Answer' : 'Providing Feedback'}
-- Last question asked: "${lastQuestion || 'None yet'}"
+LOGIC FLOW:
 
-📝 ALL QUESTIONS ASKED SO FAR (DO NOT REPEAT ANY):
-${allQuestions.length > 0 ? allQuestions.map((q, i) => `${i + 1}. "${q}"`).join('\n') : 'None yet'}
+0. 🛑 CRITICAL RULE:
+   - Do NOT say "That was the final question" or "We have covered all goals" UNLESS "Active goal" above says "All goals done".
+   - If "Active goal" is present, you MUST ask the question defined by that goal.
+   - You are NOT done until "Active goal" says "All goals done".
 
-⏱️ SESSION DURATION: Aim for ${totalQuestionsTarget} questions total (2 per goal)
+1. IF ALL GOALS COMPLETE (completedGoalsCount === topicGoals.length) AND NO sessionMetrics:
+   - **Evaluated Answer**: Valid strict JSON evaluation for user's last answer (if applicable).
+   - **Response**: "That was the final question! You have covered all the learning goals."
+   - **Message Type**: Set message_type to "movement_prompt".
 
-🚨🚨🚨 CRITICAL RULE: NEVER ask the same or similar questions!
-Before asking ANY question:
-1. Read ALL questions in the list above
-2. Check if your question is the SAME or asks about the SAME THING
-3. Examples of FORBIDDEN repetitions:
-   - "What are some popular constellations?" vs "What are examples of popular constellations?" = SAME!
-   - "What is force?" vs "Define force" = SAME!
-   - "What products does combustion produce?" vs "What are the main products of combustion?" = SAME!
-4. If you already asked about a concept, ask about a COMPLETELY DIFFERENT aspect
-5. Each question must explore a NEW concept or characteristic
+2. IF USER ANSWERED A QUESTION (hasAskedQuestion = true) AND NOT "I don't know":
+   - **Evaluated Answer**: Provide strict JSON evaluation (user_correction).
+   - **Response Message**: Brief feedback/praise, then ask: "Should we move on?" (Vary this: "Ready for the next one?", "Shall we proceed?").
+   - **Message Type**: Set message_type to "movement_prompt".
+   - **Do NOT** ask the next subject question yet.
 
-🎨 QUESTIONING FLOW YOU MUST FOLLOW:
+3. IF USER SAID "YES" / "OK" TO "Should we move on?" (Movement) OR "GOT IT":
+   - **NO EVALUATION**: Do NOT return user_correction. This is a conversation reply.
+   - **Transition**: Simply acknowledge (optional) and ask the **NEXT** question immediately.
+   - **FORMAT**: Use standard "messages" array.
 
-STEP 1: ASK SHORT, PRECISE QUESTIONS
-- Keep questions brief (one sentence, one concept)
-- Examples: "What is force?", "How do plants make food?"
-- Use "message_type": "text" for all questions
-- Build complexity gradually
+4. IF USER SAID "I DON'T KNOW" / "NO IDEA" / "SKIP":
+   - **Evaluated Answer**: **MUST** return user_correction: { is_correct: false, score_percent: 10, error_type: "Knowledge Gap" }.
+   - **Response**: Provide the answer/explanation split into 2-3 short messages.
+   - **End With**: A movement prompt phrase (e.g., "Ready for the next question?", "Does that make sense?").
+   - **Message Type**: Set message_type to "movement_prompt".
 
-STEP 2: USER ANSWERS → YOU EVALUATE
-When student replies with their answer, CHECK FOR:
-1. **"Explain the question" or similar**: If user says "explain the question", "what does that mean", "i don't understand the question", treat this as requesting explanation of the concept being asked about. Provide explanation in 2-3 short messages with options on last message.
-2. **"I don't know" responses**: If user says "i dont know", "idk", "no idea", "not sure", or similar phrases, treat this as an INCORRECT answer and provide the FULL CORRECT ANSWER in the user_correction.
-3. **Spelling mistakes** (e.g., "photosinthesis" → "photosynthesis")
-4. **Grammar errors** (e.g., "plant is make food" → "plants make food")
-5. **Sentence structure** (word order, missing words)
-6. **Conceptual understanding** (is the core concept correct?)
-7. **Factual accuracy** (is the information correct?)
+5. IF USER ASKED FOR EXPLANATION ("Explain", "Why?", "More info"):
+   - **No Evaluation**: Do NOT return user_correction.
+   - **Response**: Provide detailed explanation of the LAST question/concept in 2-3 short messages.
+   - **End With**: A movement prompt phrase (e.g., "Ready to move on?", "Is that clearer?").
+   - **Message Type**: Set message_type to "movement_prompt".
 
-⚠️ SPECIAL CASE: If user says "explain the question" or "what does that mean":
+ERROR TYPES (Must use one of these):
+A. Knowledge Gap: "No Answer Provided", "I Don't Know", "Confused / Unclear", "Off-Topic"
+B. Cognitive: "Conceptual Error", "Application Error", "Logical Reasoning Error", "Calculation Error"
+C. Language: "Grammar Error", "Spelling Error", "Vocabulary Misuse"
+D. Structural: "Incomplete Answer", "Missing Steps", "Incorrect Diagram", "Incorrect Units"
+E. Misunderstanding: "Misinterpreted Question", "Partially Correct"
+
+SCORING GUIDELINES:
+- 100%: Correct
+- 80-95%: Minor errors (Spelling, Grammar)
+- 60-75%: Partially correct
+- 40-55%: Major gaps / Misunderstanding
+- 20-35%: Mostly wrong
+- 10%: "I don't know" / "No Idea" (Honesty credit, but still wrong)
+- **STRICTLY** correct spelling/grammar typos in \`diff_html\` even if the answer is conceptually correct.
+- **IMPORTANT**: The \`diff_html\` must optionally contain the **ENTIRE** original sentence with corrections inline. Do NOT just return the corrected words.
+- Example: "The sky is bue." -> "The sky is <del>bue</del><ins>blue</ins>."
+- Example (Good): "woods,plastic are common sourece" -> "<del>woods</del><ins>Wood</ins> and <del>plastic</del><ins>plastics</ins> are common <del>sourece</del><ins>sources</ins>..."
+- 🛑 **NO HTML TAGS** except <del> and <ins>. NO <p>, <div>, <br>, etc.
+
+RESPONSE FORMATS (VALID JSON ONLY)
+
+1) Evaluating an answer (User answered):
 {
-  "messages": [
-    { "message": "[Short explanation of what concept means]", "message_type": "text" },
-    { "message": "[Simple example]", "message_type": "text" },
-    { "message": "Now try answering: [repeat question]?", "message_type": "text", "options": ["Got it", "Explain more"] }
-  ]
-}
-
-⚠️ SPECIAL CASE: If user says "I don't know" or similar:
-{
-  "messages": [],
+  "messages": [ 
+    { "message": "That's right! [Short feedback]. Should we move on?", "message_type": "movement_prompt" } 
+  ],
   "user_correction": {
     "message_type": "user_correction",
-    "diff_html": "<del>i dont know</del> <ins>[Complete correct answer TO THE QUESTION: '${lastQuestion}']</ins>",
-    "complete_answer": "[Full detailed explanation answering THIS SPECIFIC QUESTION: '${lastQuestion}']",
-    "options": ["Got it", "Explain"],
-    "emoji": "😓",
-    "feedback": {
-      "is_correct": false,
-      "bubble_color": "red",
-      "error_type": "No Answer Provided",
-      "score_percent": 10
-    }
-  }
-}
-🚨 CRITICAL: 
-- "I don't know" responses DO count as answered questions (marked incorrect with 10% score for honesty)
-- You MUST answer THE SPECIFIC QUESTION you just asked: "${lastQuestion}"
-- Do NOT give a generic answer - answer THAT EXACT QUESTION!
-
-📊 SCORING GUIDELINES (score_percent field):
-- 100%: Completely correct answer, excellent understanding
-- 80-95%: Mostly correct with minor spelling/grammar errors only
-- 60-75%: Partially correct with some conceptual gaps or moderate errors
-- 40-55%: Major conceptual errors but shows some understanding
-- 20-35%: Mostly incorrect but attempted to answer
-- 10%: "I don't know" / No answer (reward honesty)
-- 0%: Only for completely wrong/harmful/offensive answers
-
-🎯 NEVER give 0% for "I don't know" - always give 10% for honesty!
-
-✅ IF COMPLETELY CORRECT:
-- You MUST return a "user_correction" object.
-- "diff_html": The user's original answer (no <del> or <ins> tags).
-- "complete_answer": A praising confirmation that acknowledges their correct answer, e.g., "That's exactly right! Great understanding!" or "Correct! You've got it perfectly."
-- "options": ["Got it", "Explain"]
-- "feedback": { "is_correct": true, "bubble_color": "green", "score_percent": 100, "emoji": "😊" }
-- "emoji": Use a positive emoji like "😊", "🎉", "✨", "🌟", or "👏"
-
-❌ IF HAS ANY ERRORS (Spelling, Grammar, Conceptual):
-You MUST provide ONLY ONE thing:
-
-CORRECTION ON USER'S BUBBLE:
-- Apply correction directly to the USER'S message (not a new AI message)
-- "diff_html": Show what's wrong (strikethrough red) and what's correct (green)
-  - Format: "This is the user's sentence with <del>incorect</del><ins>incorrect</ins> parts and conceptual <del>erors</del><ins>errors</ins> fixed in-line."
-  - Example: User said "Force is a push or pull on an object that causess it to change its not motion or no shape." → "Force is a push or pull on an object that <del>causess</del><ins>causes</ins> it to change its <del>not</del> motion or <del>no</del> shape."
-- "is_correct": false
-- "bubble_color": "red"
-- "complete_answer": The full correct explanation in simple, clear language
-- TWO OPTIONS appear below the user's corrected bubble: ["Got it", "Explain"]
-- message_type: "user_correction" (special type for user bubble correction)
-- "emoji": Choose appropriate emoji based on error severity:
-  * Minor errors (spelling/grammar only): "😅" or "🤔"
-  * Moderate errors (partial understanding): "😔" or "😕"
-  * Major errors (wrong concept): "😢" or "😞"
-  * No answer ("I don't know"): "😓" or "😰"
-
-STEP 3: WAIT FOR USER'S OPTION CHOICE
-⚠️ CRITICAL: After showing correction, you MUST WAIT. Do NOT ask next question yet.
-
-🟢 IF USER SELECTS "Got it":
-- FIRST: Check if ALL ${topicGoals.length} goals show ✅ COMPLETED in the LEARNING GOALS section above
-- If YES (all goals completed):
-  - 🚫 DO NOT ask any new questions!
-  - 🚫 DO NOT say "Great! Let's continue."
-  - ✅ END THE SESSION immediately with session_summary
-  - Return ONLY:
-  {
-    "messages": [
-      { 
-        "message": "session_complete", 
-        "message_type": "session_summary",
-        "session_metrics": ${sessionMetrics ? JSON.stringify(sessionMetrics) : '{}'}
-      }
-    ]
-  }
-- If NO (goals still in progress):
-  - Brief acknowledgment: "Great! Let's continue."
-  - Find the NEXT goal that is NOT STARTED or IN PROGRESS
-  - ALL goals need exactly 2 questions each before completion
-  - If current goal has < 2 questions: ask another question about the SAME goal
-  - If current goal has 2 questions: it will be marked complete, move to NEXT goal
-  - Ask a NEW unique question (never repeat from question list above)
-
-🔵 IF USER SELECTS "Explain":
-- Provide simple explanation in MULTIPLE SHORT MESSAGE BUBBLES (10-15 words each)
-- NEVER put explanation in one long message - ALWAYS split into 3-5 short messages
-- Each message should be one complete thought (10-15 words maximum)
-- Then return user_correction object with options ["Got it", "Explain more"]
-
-STEP 4: GOAL PROGRESSION
-- Continue this flow for each question
-- Only move to next goal when 80%+ accuracy achieved
-- End session after all goals covered or 15-20 questions
-- Provide session summary at end
-
-🎯 CURRENT CONTEXT:
-User just said: "${userMessage}"
-Last AI message: "${lastAIMessage?.message || 'None'}"
-${hasAskedQuestion && userMessage && userMessage.trim() !== '' ? '⚠️ CRITICAL: This is their ANSWER to your question. You MUST evaluate it with user_correction object!' : '(Ready for next question)'}
-
-YOUR TASK:
-${shouldEndSession ?
-      'END THE SESSION. All goals are completed! Provide a congratulations message and inform the user to move to another topic to continue learning.' :
-      hasAskedQuestion && userMessage && userMessage.trim() !== '' ?
-        '⚠️⚠️⚠️ MANDATORY: You asked a question. User is answering. You MUST return ONLY a user_correction object. DO NOT return plain messages. Evaluate their answer, provide correction in user_correction format, and include options ["Got it", "Explain"]. NEVER return plain text messages when evaluating answers!' :
-        '🚀 USER ACKNOWLEDGED THE CORRECTION - ASK THE NEXT QUESTION! Generate a "messages" array with a NEW question (different from all previous questions listed above). DO NOT use user_correction format. DO NOT repeat any previous question. Ask about a new aspect of the current goal.'}
-
-RESPONSE FORMAT (MUST BE VALID JSON):
-${shouldEndSession ? `
-{
-  "messages": [
-    { "message": "🎉 Congratulations! You've completed this topic!", "message_type": "text" },
-    { "message": "You've mastered all ${topicGoals.length} learning goals!", "message_type": "text" },
-    { "message": "Move to another topic to continue your learning journey! 📚", "message_type": "text" }
-  ]
-}` : (hasAskedQuestion && userMessage && userMessage.trim() !== '') ? `
-⚠️⚠️⚠️ YOU MUST USE THIS FORMAT - NO EXCEPTIONS:
-
-IF CORRECT (Use user_correction object ONLY):
-{
-  "messages": [],
-  "user_correction": {
-    "message_type": "user_correction",
-    "diff_html": "User's correct answer text",
-    "complete_answer": "Positive reinforcement with praise, e.g., 'Excellent! That's exactly right. You've understood this concept perfectly.'",
-    "options": ["Got it", "Explain"],
+    "diff_html": null, 
+    "complete_answer": "Full correct answer text", 
     "emoji": "😊",
     "feedback": {
       "is_correct": true,
       "bubble_color": "green",
+      "error_type": null,
       "score_percent": 100
     }
   }
 }
 
-⚠️ NEVER return plain "messages" array when evaluating answers. ALWAYS use user_correction format above!
-
-IF HAS ERRORS (Use user_correction object ONLY):
+2) Moving on (User said "Yes" / "Got it"):
 {
-  "messages": [],
-  "user_correction": {
-    "message_type": "user_correction",
-    "diff_html": "<del>user's wrong answer</del> <ins>complete correct answer</ins>",
-    "complete_answer": "Full explanation in simple language",
-    "options": ["Got it", "Explain"],
-    "emoji": "😔",
-    "feedback": {
-      "is_correct": false,
-      "bubble_color": "red",
-      "error_type": "Grammar" | "Spelling" | "Conceptual",
-      "score_percent": 10-100 (give 10 points for "I don't know" responses, 0 only for completely wrong/harmful answers)
-    }
-  }
-}` : `
-🚀 USER CLICKED "GOT IT" - ASK THE NEXT QUESTION NOW!
-
-REQUIRED FORMAT:
-{
-  "messages": [
-    { "message": "What is [your NEW question here]?", "message_type": "text" }
-  ]
+  "messages": [ { "message": "Great. [Next Question]?", "message_type": "text" } ]
 }
 
-⚠️ DO NOT use user_correction format!
-⚠️ DO NOT repeat any question from the list above!
-⚠️ Ask about a DIFFERENT concept or characteristic!
-`}
+3) "I don't know" Handling:
+{
+  "messages": [ 
+    { "message": "No problem! Here is the answer:", "message_type": "text" },
+    { "message": "Crude oil is primarily composed of hydrocarbons.", "message_type": "text" },
+    { "message": "Ready for the next question?", "message_type": "movement_prompt" }
+  ],
+  "user_correction": {
+    "message_type": "user_correction",
+    "diff_html": null, 
+    "complete_answer": "Crude oil is primarily composed of hydrocarbons.", 
+    "emoji": "😓",
+    "feedback": { "is_correct": false, "bubble_color": "red", "error_type": "Knowledge Gap", "score_percent": 10 }
+  }
+}
 
-🚨 CRITICAL REMINDERS: 
-1. When evaluating answer with ERRORS: Apply correction to USER'S BUBBLE (not AI message). Show options below user's bubble. Then WAIT.
-2. When user says "explain the question" or "what does that mean": Provide 2-3 short explanation messages with options on LAST AI message.
-3. When user says "I don't know", "idk", "no idea", "not sure" etc: 
-   - Treat as INCORRECT answer that COUNTS as a question
-   - Give them 10 points (score_percent: 10) for honesty - they acknowledged not knowing
-   - You MUST provide the answer to THE LAST QUESTION YOU ASKED: "${lastQuestion}"
-   - In diff_html: show "<del>i dont know</del> <ins>[answer to: ${lastQuestion}]</ins>"
-   - In complete_answer: provide full explanation answering THAT SPECIFIC QUESTION
-   - DO NOT give a generic answer - answer the exact question you just asked!
-   - Error type: "No Answer Provided"
-   - Score: 10% (not 0% - reward honesty)
-4. When answer is CORRECT: You MUST return the "user_correction" object with "options" ["Got it", "Explain"] and "is_correct": true.
-5. Only ask next question AFTER user clicks "Got it" (if they click Explain or Explain more, provide explanation).
-6. When user clicks "Explain" or "Explain more": SPLIT explanation into 2-3 SHORT MESSAGES ONLY. Put options ["Got it", "Explain more"] on the LAST AI message bubble.
-7. 🔥 NEVER EVER repeat the same question! Check the recent questions list above. If you already asked about a concept, ask about a DIFFERENT aspect or move to next goal!
-8. After user clicks "Got it", ALWAYS move forward - ask a NEW question about a different concept from the current or next goal!
-9. Never say "Let me show you the correction" or "Do you understand now?" - those are NOT needed!
-10. 🎯 GOAL PROGRESSION: After user clicks "Got it", you MUST:
-    a) Check COMPLETED GOALS count: ${completedGoalsCount}/${topicGoals.length}
-    b) If ALL goals are ✅ COMPLETED:
-       - END THE SESSION immediately with congratulations
-       - No more questions needed
-    c) If goals NOT all complete:
-       - Find the FIRST goal that shows ⭕ NOT STARTED or ⏳ IN PROGRESS
-       - Check that goal's progress: has it had 2 questions answered?
-       - If current goal has < 2 questions: ask ANOTHER question about SAME goal
-       - If current goal has 2 questions: move to NEXT goal that is NOT STARTED
-       - ALL goals need exactly 2 questions before completion
-11. 🏆 COMPLETING GOALS: Backend marks goals complete after 2 questions. Stay on same goal until 2 questions are answered.
-12. 🔄 QUESTION VARIETY: Every question must be unique. Check "ALL QUESTIONS ASKED SO FAR" - if your question appears, ask something completely different.`;
+Absolute rules:
+- No options/quick replies in "messages" array
+- Never repeat a previous question
+- Keep each question one sentence, concrete
+- Split explanations into multiple small bubbles`;
 }
 
 /**
@@ -374,12 +209,13 @@ REQUIRED FORMAT:
  * 🔧 FIX: Properly identify AI questions from actual AI messages (not user correction text)
  */
 function analyzeChatHistory(chatHistory) {
-  const aiMessages = chatHistory.filter(m => m.sender === 'ai' && m.message_type === 'text');
+  const aiMessages = chatHistory.filter(m => m.sender === 'ai' && (m.message_type === 'text' || m.message_type === 'movement_prompt'));
   const userResponses = chatHistory.filter(m => m.sender === 'user' && m.message_type !== 'user_correction');
 
   // Extract only actual questions from AI messages (message_type === 'text' and contains '?')
+  // Exclude movement prompts from being counted as learning questions
   const allQuestions = aiMessages
-    .filter(m => m.message && m.message.includes('?'))
+    .filter(m => m.message && m.message.includes('?') && m.message_type !== 'movement_prompt')
     .map(m => m.message);
 
   const questionsAsked = allQuestions.length;
@@ -389,6 +225,9 @@ function analyzeChatHistory(chatHistory) {
   // Check if the last AI message was a question (user should be responding to it)
   const hasAskedQuestion = lastAIMessage && lastAIMessage.message && lastAIMessage.message.includes('?');
 
+  // NEW: Check if we are waiting for a movement confirmation (e.g. "Should we move on?")
+  const isWaitingForMovement = lastAIMessage && lastAIMessage.message_type === 'movement_prompt';
+
   return {
     aiMessages,
     userResponses,
@@ -396,7 +235,8 @@ function analyzeChatHistory(chatHistory) {
     questionsAsked,
     lastAIMessage,
     lastQuestion,
-    hasAskedQuestion: !!hasAskedQuestion
+    hasAskedQuestion: !!hasAskedQuestion,
+    isWaitingForMovement: !!isWaitingForMovement
   };
 }
 
@@ -404,33 +244,13 @@ function analyzeChatHistory(chatHistory) {
  * Normalize and validate user_correction options
  */
 function normalizeUserCorrectionOptions(parsed) {
-  if (parsed.user_correction && Array.isArray(parsed.user_correction.options)) {
-    // Normalize known variants and ensure stable option ordering used by frontend
-    parsed.user_correction.options = parsed.user_correction.options.map(opt => {
-      if (!opt) return opt;
-      // Keep "Explain more" as is - don't normalize it to just "Explain"
-      if (/explain more/i.test(opt)) return 'Explain more';
-      if (/confused|^explain$/i.test(opt)) return 'Explain';
-      if (/got it|gotit|ok|confirm/i.test(opt)) return 'Got it';
-      return opt;
-    });
-
-    // If options are missing or don't include the canonical set, replace with defaults
-    const opts = parsed.user_correction.options.filter(Boolean).map(o => String(o));
-    const hasGot = opts.some(o => /got it/i.test(o));
-    const hasExplain = opts.some(o => /explain/i.test(o));
-    // Only add defaults if BOTH are missing - preserve "Explain more" if present
-    if (!hasGot || !hasExplain) {
-      // Check if we have "Explain more" - if so, keep it
-      const hasExplainMore = opts.some(o => /explain more/i.test(o));
-      if (hasExplainMore) {
-        parsed.user_correction.options = ['Got it', 'Explain more'];
-      } else {
-        parsed.user_correction.options = ['Got it', 'Explain'];
-      }
+  if (parsed.user_correction) {
+    // Remove quick-reply options entirely (free-text flow now)
+    if (parsed.user_correction.options) {
+      delete parsed.user_correction.options;
     }
 
-    // Ensure message_type is set to the special bubble type frontend expects
+    // Ensure message_type is set
     if (!parsed.user_correction.message_type) {
       parsed.user_correction.message_type = 'user_correction';
     }
@@ -441,19 +261,15 @@ function normalizeUserCorrectionOptions(parsed) {
     } else {
       parsed.user_correction.feedback.is_correct = !!parsed.user_correction.feedback.is_correct;
       parsed.user_correction.feedback.bubble_color = parsed.user_correction.feedback.bubble_color || (parsed.user_correction.feedback.is_correct ? 'green' : 'red');
-      // Ensure score_percent is never 0 for incorrect answers - minimum 10 for "I don't know"
       if (typeof parsed.user_correction.feedback.score_percent === 'number') {
-        // If it's 0 and incorrect, change to 10
         if (parsed.user_correction.feedback.score_percent === 0 && !parsed.user_correction.feedback.is_correct) {
           parsed.user_correction.feedback.score_percent = 10;
         }
       } else {
-        // No score provided, set default based on correctness
         parsed.user_correction.feedback.score_percent = parsed.user_correction.feedback.is_correct ? 100 : 10;
       }
-      // Add a best-effort error_type if missing
       if (!parsed.user_correction.feedback.error_type && parsed.user_correction.feedback.is_correct === false) {
-        parsed.user_correction.feedback.error_type = parsed.user_correction.feedback.error_type || 'Conceptual';
+        parsed.user_correction.feedback.error_type = 'Conceptual';
       }
     }
 
@@ -464,19 +280,14 @@ function normalizeUserCorrectionOptions(parsed) {
       const errorType = parsed.user_correction.feedback?.error_type;
 
       if (isCorrect) {
-        // Correct answers get happy emojis
         parsed.user_correction.emoji = '😊';
-      } else if (scorePercent === 0) {
-        // No answer or completely wrong
+      } else if (scorePercent <= 10) {
         parsed.user_correction.emoji = '😓';
       } else if (scorePercent < 50) {
-        // Major errors
         parsed.user_correction.emoji = '😢';
       } else if (errorType === 'Spelling' || errorType === 'Grammar') {
-        // Minor spelling/grammar errors
         parsed.user_correction.emoji = '😅';
       } else {
-        // Moderate errors
         parsed.user_correction.emoji = '😔';
       }
     }
@@ -523,7 +334,7 @@ Create a simple greeting and immediately ask the first question.
 
 RULES:
 - Two messages: greeting + first question
-- Greeting: "Let's start [topic name]"
+- Greeting: "Let's start [topic name]! 📚" (or similar friendly intro)
 - First question: A simple, short question about the topic basics
 - Keep it friendly and brief
 

@@ -24,11 +24,11 @@ async function calculateSessionMetrics(userId, topicId, topicGoals) {
     console.log('👤 User ID:', userId);
     console.log('📚 Topic ID:', topicId);
     console.log('🎯 Total Goals:', topicGoals.length);
-    
+
     // Get all goal IDs for this topic
     const goalIds = topicGoals.map(g => g.id);
     console.log('📋 Goal IDs:', goalIds);
-    
+
     // PRIMARY SOURCE: chat_goal_progress (real-time counts)
     console.log('\n🔍 PRIMARY SOURCE: chat_goal_progress table...');
     const goalProgress = await prisma.chat_goal_progress.findMany({
@@ -52,16 +52,21 @@ async function calculateSessionMetrics(userId, topicId, topicGoals) {
 
     // SECONDARY SOURCE: learning_turns (detailed feedback with error types)
     console.log('\n🔍 SECONDARY SOURCE: learning_turns table...');
-    
-    // Get learning_turns for this topic's goals
-    const learningTurns = await prisma.learning_turns.findMany({
+
+    // Determine session size limit (2 questions per goal)
+    const sessionLimit = topicGoals.length * 2;
+    console.log(`\n🔍 Fetching last ${sessionLimit} learning turns for current session...`);
+
+    // Get learning_turns for this topic's goals (Limited to session size)
+    const learningTurnsRaw = await prisma.learning_turns.findMany({
       where: {
         user_id: userId,
         goal_id: { in: goalIds }
       },
       orderBy: {
-        created_at: 'asc'
+        created_at: 'desc' // Get most recent first
       },
+      take: sessionLimit, // Limit to session size
       select: {
         id: true,
         goal_id: true,
@@ -70,71 +75,37 @@ async function calculateSessionMetrics(userId, topicId, topicGoals) {
         error_subtype: true,
         score_percent: true,
         question_text: true,
-        user_answer_raw: true
+        user_answer_raw: true,
+        response_time_sec: true,
+        help_requested: true,
+        explain_loop_count: true
       }
     });
+
+    // Reverse to chronological order for processing
+    const learningTurns = learningTurnsRaw.reverse();
 
     console.log('📊 Learning Turns Found:', learningTurns.length);
 
     // Build evaluations from learning_turns directly
+    console.log('\n📊 BUILDING EVALUATIONS:');
+    let dataSource = 'learning_turns';
     let evaluations = [];
-    const errorTypesByGoal = {};
 
-    // Parse learning turns to get detailed error information
-    console.log('\n📋 PARSING LEARNING TURNS:');
-    let parsedCount = 0;
-    
+    // Parse learning turns to create evaluations list
     learningTurns.forEach((turn, index) => {
-      if (!errorTypesByGoal[turn.goal_id]) {
-        errorTypesByGoal[turn.goal_id] = [];
-      }
-      
       const errorType = turn.is_correct ? null : (turn.error_type || 'Unknown');
-      const scorePercent = turn.score_percent !== null && turn.score_percent !== undefined 
-        ? turn.score_percent 
+      const scorePercent = turn.score_percent !== null && turn.score_percent !== undefined
+        ? turn.score_percent
         : (turn.is_correct ? 100 : 10);
-      
-      errorTypesByGoal[turn.goal_id].push({
+
+      evaluations.push({
         is_correct: turn.is_correct || false,
         error_type: errorType,
         error_subtype: turn.error_subtype || null,
-        score_percent: scorePercent
+        score_percent: scorePercent,
+        goal_id: turn.goal_id
       });
-      
-      parsedCount++;
-      console.log(`   ${index + 1}. Goal ${turn.goal_id}: ${turn.is_correct ? '✅ CORRECT' : '❌ INCORRECT'} | Error: ${errorType || 'None'} | Score: ${scorePercent}%`);
-    });
-    
-    console.log(`\n📊 Learning Turns Parsing Summary:`);
-    console.log(`   ✅ Successfully parsed: ${parsedCount}`);
-    console.log(`   📋 Total records: ${learningTurns.length}`);
-
-    // Build evaluations using learning_turns data
-    console.log('\n📊 BUILDING EVALUATIONS:');
-    let dataSource = 'learning_turns';
-    
-    goalProgress.forEach(progress => {
-      const goalId = progress.goal_id;
-      const errorDetails = errorTypesByGoal[goalId] || [];
-      
-      console.log(`   Goal ${goalId}:`);
-      console.log(`      - Total Questions: ${progress.num_questions}`);
-      console.log(`      - Correct: ${progress.num_correct}`);
-      console.log(`      - Incorrect: ${progress.num_incorrect}`);
-      console.log(`      - Learning Turns: ${errorDetails.length}`);
-      
-      // Add evaluations from learning turns
-      errorDetails.forEach(detail => {
-        evaluations.push({
-          is_correct: detail.is_correct,
-          error_type: detail.error_type,
-          error_subtype: detail.error_subtype,
-          score_percent: detail.score_percent,
-          goal_id: goalId
-        });
-      });
-      
-      console.log(`      - Evaluations Added: ${errorDetails.length}`);
     });
 
     console.log('\n📊 DATA SOURCE USED:', dataSource.toUpperCase());
@@ -151,11 +122,11 @@ async function calculateSessionMetrics(userId, topicId, topicGoals) {
     const totalQuestions = evaluations.length;
     const correctAnswers = evaluations.filter(e => e.is_correct).length;
     const incorrectAnswers = totalQuestions - correctAnswers;
-    
+
     // Calculate average score from score_percent (not just correct/incorrect binary)
     const totalScore = evaluations.reduce((sum, e) => sum + (e.score_percent || 0), 0);
-    const overallScorePercent = totalQuestions > 0 
-      ? Math.round(totalScore / totalQuestions) 
+    const overallScorePercent = totalQuestions > 0
+      ? Math.round(totalScore / totalQuestions)
       : 0;
 
     console.log('\n📊 CALCULATED METRICS:');
@@ -177,7 +148,7 @@ async function calculateSessionMetrics(userId, topicId, topicGoals) {
     const errorTypeCounts = {};
     const errorSubtypeCounts = {};
     const incorrectEvals = evaluations.filter(e => !e.is_correct);
-    
+
     incorrectEvals.forEach(evaluation => {
       if (evaluation.error_type) {
         errorTypeCounts[evaluation.error_type] = (errorTypeCounts[evaluation.error_type] || 0) + 1;
@@ -201,17 +172,20 @@ async function calculateSessionMetrics(userId, topicId, topicGoals) {
         where: {
           user_id: userId,
           goal_id: goal.id
+        },
+        orderBy: {
+          updated_at: 'desc'
         }
       });
-      
+
       const questionsAsked = progress?.num_questions || 0;
       const correctCount = progress?.num_correct || 0;
       const incorrectCount = progress?.num_incorrect || 0;
       const goalScore = questionsAsked > 0 ? Math.round((correctCount / questionsAsked) * 100) : 0;
-      
+
       console.log(`   Goal ${goal.id}: "${goal.title}"`);
       console.log(`      Questions: ${questionsAsked}, Correct: ${correctCount}, Incorrect: ${incorrectCount}, Score: ${goalScore}%`);
-      
+
       goalPerformance.push({
         goal_id: goal.id,
         goal_title: goal.title,
@@ -269,22 +243,25 @@ async function calculateSessionMetrics(userId, topicId, topicGoals) {
       star_rating: starRating,
       performance_level: performanceLevel,
       performance_color: performanceColor,
-      
+
       // Time and engagement
-      avg_response_time_sec: avgResponseTime,
-      total_help_requests: totalHelpRequests,
-      total_explanations: totalExplanations,
-      
+      // Time and engagement (Calculated from learning turns)
+      avg_response_time_sec: learningTurns.length > 0
+        ? Math.round(learningTurns.reduce((sum, turn) => sum + (turn.response_time_sec || 0), 0) / learningTurns.length)
+        : 0,
+      total_help_requests: learningTurns.filter(t => t.help_requested === 'yes').length,
+      total_explanations: learningTurns.reduce((sum, t) => sum + (t.explain_loop_count || 0), 0),
+
       // Error analysis
       top_error_types: topErrorTypes,
       error_type_counts: errorTypeCounts,
       error_subtype_counts: errorSubtypeCounts,
-      
+
       // Goal-level performance
       goal_performance: goalPerformance,
       weak_goals: weakGoals,
       has_weak_areas: weakGoals.length > 0,
-      
+
       // Raw data for learn more mode
       all_mistakes: [] // Not available in current implementation
     };
@@ -335,9 +312,9 @@ async function calculateSessionMetrics(userId, topicId, topicGoals) {
  * This creates the final AI message shown when all goals are completed
  */
 function generateSessionSummaryMessage(topicTitle, metrics) {
-  const { 
-    total_questions, 
-    correct_answers, 
+  const {
+    total_questions,
+    correct_answers,
     incorrect_answers,
     overall_score_percent,
     star_rating,

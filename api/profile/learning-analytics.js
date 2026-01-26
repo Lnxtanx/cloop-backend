@@ -30,12 +30,12 @@ router.get('/topic/:topicId', authenticateToken, async (req, res) => {
         user_id: user_id
       },
       include: {
-        subject_id_rel: {
+        subjects: {
           select: {
             name: true
           }
         },
-        chapter_id_rel: {
+        chapters: {
           select: {
             title: true
           }
@@ -54,8 +54,8 @@ router.get('/topic/:topicId', authenticateToken, async (req, res) => {
       topic: {
         id: topic.id,
         title: topic.title,
-        subject: topic.subject_id_rel?.name,
-        chapter: topic.chapter_id_rel?.title,
+        subject: topic.subjects?.name,
+        chapter: topic.chapters?.title,
         is_completed: topic.is_completed,
         completion_percent: parseFloat(topic.completion_percent?.toString() || '0')
       },
@@ -279,6 +279,88 @@ router.get('/subject/:subjectId', authenticateToken, async (req, res) => {
       topic_title: turn.topic_title
     }));
 
+    // --- NEW: Time Analytics (Daily, Weekly, Monthly) ---
+    const now = new Date();
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const weekStart = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    const monthStart = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+
+    const studySessions = await prisma.study_sessions.findMany({
+      where: {
+        user_id: user_id,
+        subject_id: parseInt(subjectId),
+        start_time: { gte: monthStart } // Fetch last 30 days
+      },
+      select: {
+        start_time: true,
+        duration_seconds: true
+      }
+    });
+
+    let dailyTime = 0;
+    let weeklyTime = 0;
+    let monthlyTime = 0;
+
+    studySessions.forEach(session => {
+      const duration = session.duration_seconds || 0;
+      const startTime = new Date(session.start_time);
+
+      monthlyTime += duration;
+      if (startTime >= weekStart) weeklyTime += duration;
+      if (startTime >= todayStart) dailyTime += duration;
+    });
+
+    // --- NEW: Concepts Mastery & Recommendations ---
+    // Fetch ALL topics for this subject to include "Not Started"
+    const allTopics = await prisma.topics.findMany({
+      where: {
+        subject_id: parseInt(subjectId),
+        user_id: user_id
+      },
+      select: {
+        id: true,
+        title: true,
+        completion_percent: true,
+        is_completed: true,
+        time_spent_seconds: true // Use this for identifying "Not Started"
+      }
+    });
+
+    let masteredCount = 0;
+    let learningCount = 0;
+    let notStartedCount = 0;
+    const recommendedFocus = [];
+
+    allTopics.forEach(topic => {
+      // Find performance for this topic
+      const topicPerf = byTopic[topic.id];
+      const avgScore = topicPerf ? topicPerf.average_score : 0;
+      const hasActivity = topicPerf || (topic.time_spent_seconds > 60); // Considered started if > 1 min or has turns
+
+      if (!hasActivity) {
+        notStartedCount++;
+      } else if (avgScore >= 80 || topic.is_completed) {
+        masteredCount++;
+      } else {
+        learningCount++;
+
+        // Add to recommended focus if score is low or not completed
+        if (avgScore < 75) {
+          const potentialGain = Math.round((100 - avgScore) / 5) * 5; // Heuristic: gain is gap rounded to 5
+          recommendedFocus.push({
+            topic_id: topic.id,
+            title: topic.title,
+            current_score: avgScore,
+            potential_gain: potentialGain > 0 ? potentialGain : 5,
+            marks_value: 5 // Placeholder for marks weight
+          });
+        }
+      }
+    });
+
+    // Sort recommended focus by potential gain (desc)
+    recommendedFocus.sort((a, b) => b.potential_gain - a.potential_gain);
+
     return res.status(200).json({
       subject: subject,
       summary: {
@@ -290,6 +372,17 @@ router.get('/subject/:subjectId', authenticateToken, async (req, res) => {
         total_help_requests: totalHelpRequests,
         total_retries: totalRetries
       },
+      time_analytics: {
+        daily_seconds: dailyTime,
+        weekly_seconds: weeklyTime,
+        monthly_seconds: monthlyTime
+      },
+      concepts_mastery: {
+        mastered: masteredCount,
+        learning: learningCount,
+        not_started: notStartedCount
+      },
+      recommended_focus: recommendedFocus,
       error_analysis: {
         error_types: errorTypes,
         error_subtypes: errorSubtypes

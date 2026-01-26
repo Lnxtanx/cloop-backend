@@ -1,4 +1,4 @@
-const { 
+const {
   buildSystemPrompt,
   analyzeChatHistory,
   normalizeUserCorrectionOptions,
@@ -34,22 +34,23 @@ async function generateTopicChatResponse(userMessage, topicTitle, topicContent, 
       questionsAsked,
       lastAIMessage,
       lastQuestion,
-      hasAskedQuestion
+      hasAskedQuestion,
+      isWaitingForMovement
     } = analyzeChatHistory(chatHistory);
-    
+
     const isFirstMessage = chatHistory.length === 0;
-    
+
     // Count completed goals
     const completedGoalsCount = topicGoals.filter(g => {
       const progress = g.chat_goal_progress?.[0];
       return progress?.is_completed || false;
     }).length;
     const allGoalsCompleted = completedGoalsCount === topicGoals.length;
-    
+
     // Session management: ALL goals require 2 questions each
     const totalQuestionsTarget = topicGoals.length * 2;
     const shouldEndSession = allGoalsCompleted;
-    
+
     // 🆕 CALCULATE SESSION METRICS when all goals are completed
     // Calculate BEFORE checking for user input, so we always have metrics ready
     let sessionMetrics = null;
@@ -57,16 +58,16 @@ async function generateTopicChatResponse(userMessage, topicTitle, topicContent, 
       console.log('\n🎯 All goals completed - calculating session metrics...');
       sessionMetrics = await calculateSessionMetrics(userId, topicId, topicGoals);
     }
-    
+
     // 🔥 SESSION END HANDLING:
     // - If metrics exist, we should show session summary
     // - UNLESS user explicitly says "end the chat" or similar
     const userWantsToEnd = userMessage && (
-      /end.*(chat|session)/i.test(userMessage) || 
+      /end.*(chat|session)/i.test(userMessage) ||
       /finish|quit|exit|stop/i.test(userMessage)
     );
     const forceSessionEnd = shouldEndSession && sessionMetrics && userWantsToEnd;
-    
+
     if (shouldEndSession) {
       console.log('🔔 SESSION END DETECTED:');
       console.log('  - All Goals Completed:', allGoalsCompleted);
@@ -74,7 +75,7 @@ async function generateTopicChatResponse(userMessage, topicTitle, topicContent, 
       console.log('  - Has Session Metrics:', !!sessionMetrics);
       console.log('  - Force Session End:', forceSessionEnd);
     }
-    
+
     // Build comprehensive system prompt using helper
     const systemPrompt = buildSystemPrompt(
       topicTitle,
@@ -93,7 +94,8 @@ async function generateTopicChatResponse(userMessage, topicTitle, topicContent, 
       userMessage,
       lastAIMessage,
       sessionMetrics,
-      forceSessionEnd
+      forceSessionEnd,
+      isWaitingForMovement
     );
 
     const messages = [
@@ -144,50 +146,87 @@ async function generateTopicChatResponse(userMessage, topicTitle, topicContent, 
     console.log('======================================\n');
 
     // Primary model call: use low temperature for deterministic JSON output when evaluating answers
-    const response = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: messages,
-      temperature: 0.2,
-      max_tokens: shouldEndSession && sessionMetrics ? 3000 : 800,
-      response_format: { type: "json_object" }
-    });
-
-    // Log raw response for debugging
-    const rawContent = response.choices[0].message.content;
-    console.log('\n========== AI OUTPUT DETAILS ==========');
-    console.log('📤 Raw Model Output (first 1000 chars):', rawContent && rawContent.substring(0, 1000));
-
+    // Retry logic to handle occasional model hiccups (whitespace/truncation)
     let parsed = {};
-    try {
-      const content = rawContent.trim();
-      parsed = JSON.parse(content);
-    } catch (parseErr) {
-      console.error('[topic_chat] Failed to parse model JSON response:', parseErr.message);
-      // Fallback: try to recover by attempting to extract a JSON substring
-      const maybeJsonMatch = rawContent && rawContent.match(/\{[\s\S]*\}/);
-      if (maybeJsonMatch) {
-        try {
-          parsed = JSON.parse(maybeJsonMatch[0]);
-          console.log('[topic_chat] Recovered JSON from model output');
-        } catch (e) {
-          console.error('[topic_chat] Recovery parse failed:', e.message);
+    let response = null;
+    let attempts = 0;
+    const maxAttempts = 2;
+
+    while (attempts < maxAttempts) {
+      attempts++;
+      try {
+        response = await openai.chat.completions.create({
+          model: 'gpt-4o',
+          messages: messages,
+          temperature: 0.1,
+          max_tokens: 4000,
+          response_format: { type: "json_object" }
+        });
+
+        // Log raw response for debugging
+        const rawContent = response.choices[0].message.content;
+        console.log(`\n========== AI OUTPUT DETAILS (Attempt ${attempts}) ==========`);
+        console.log('📤 Raw Model Output (first 1000 chars):', rawContent && rawContent.substring(0, 1000));
+
+        const content = rawContent.trim();
+        parsed = JSON.parse(content);
+
+        // If successful, break the loop
+        break;
+
+      } catch (err) {
+        console.warn(`[topic_chat] Attempt ${attempts} failed: ${err.message}`);
+
+        // Try to recover by finding JSON substring if proper parse failed
+        if (err instanceof SyntaxError) {
+          // We can't access rawContent easily here without restructuring, 
+          // but strictly speaking, the previous implementation's recovery logic was outside the try/catch.
+          // We will keep it simple: just retry.
+        }
+
+        if (attempts === maxAttempts) {
+          console.error('[topic_chat] All attempts failed.');
+          // If it was the last attempt, allow it to fall through or throw
+          // The original code had specific error handling below, but let's throw to hit the outer catch
+          throw err;
         }
       }
+    }
+
+    // Recovery attempted inside loop (implicitly by retrying)
+    // The previous "substring recovery" was rarely useful if the model output pure whitespace.
+    // Retrying is better.
+
+    // Normalize single message response
+    if (parsed.message && !parsed.messages) {
+      console.log('[topic_chat] ⚠️ Normalizing single message object to array');
+      parsed.messages = [{
+        message: parsed.message,
+        message_type: parsed.message_type || 'text',
+        options: parsed.options,
+        emoji: parsed.emoji,
+        session_metrics: parsed.session_metrics,
+        diff_html: parsed.diff_html
+      }];
     }
 
     // Normalize user_correction options using helper
     parsed = normalizeUserCorrectionOptions(parsed);
 
-    // If the model did not return a `user_correction` but we believe the user just answered
     // (hasAskedQuestion === true), retry with a focused, low-temperature JSON-only prompt
     // SKIP this retry if userMessage is empty (means "Got it" was clicked and we're asking next question)
     // SKIP this retry if all goals are complete (session should end with metrics)
-    if (hasAskedQuestion && !parsed.user_correction && userMessage && userMessage.trim() !== '' && !shouldEndSession) {
+    // SKIP this retry iif we are waiting for movement (user just said "Yes" to "Move on?")
+
+    // 🔧 UPDATE: "I don't know" is now a valid answer we want to track (score 10), so we DO allow retry if missing.
+    const isIdk = /i don'?t know|no idea|unsure|skip|pass|no clue/i.test(userMessage || '');
+
+    if (hasAskedQuestion && !parsed.user_correction && userMessage && userMessage.trim() !== '' && !shouldEndSession && !isWaitingForMovement) {
       try {
         console.log('[topic_chat] ⚠️ No user_correction found but question was asked — retrying with strict JSON prompt');
         const correctionPrompt = [
           { role: 'system', content: 'You are a JSON-only assistant. Respond with a single JSON object. Do NOT include any extra text.' },
-          { role: 'user', content: `User answer: "${userMessage}"\nLast question asked: "${lastQuestion}"\n\nTask: Evaluate this answer and return a "user_correction" object only. If the answer is correct, set feedback.is_correct=true. If incorrect, set feedback.is_correct=false and provide diff_html and complete_answer. If user said "I don't know", provide the answer to the SPECIFIC question: "${lastQuestion}".` }
+          { role: 'user', content: `User answer: "${userMessage}"\nLast question asked: "${lastQuestion}"\n\nTask: Evaluate this answer and return a "user_correction" object only.\n\nRules:\n1. If correct: set feedback.is_correct=true, score_percent=100.\n2. If incorrect: set feedback.is_correct=false, score_percent=based on accuracy, provide diff_html and complete_answer.\n3. If "I don't know": set feedback.is_correct=false, feedback.score_percent=10, feedback.error_type="Knowledge Gap", and provide complete_answer for "${lastQuestion}".` }
         ];
 
         const retryResp = await openai.chat.completions.create({
@@ -221,7 +260,7 @@ async function generateTopicChatResponse(userMessage, topicTitle, topicContent, 
     console.log('  - Has messages array:', !!parsed.messages);
     console.log('  - Messages count:', parsed.messages ? parsed.messages.length : 0);
     console.log('  - Has user_correction:', !!parsed.user_correction);
-    
+
     if (parsed.messages && parsed.messages.length > 0) {
       console.log('\n💬 AI Messages:');
       parsed.messages.forEach((msg, i) => {
@@ -231,7 +270,7 @@ async function generateTopicChatResponse(userMessage, topicTitle, topicContent, 
         }
       });
     }
-    
+
     if (parsed.user_correction) {
       console.log('\n✏️ User Correction Details:');
       console.log('  - Is Correct:', parsed.user_correction.feedback?.is_correct);
@@ -242,15 +281,15 @@ async function generateTopicChatResponse(userMessage, topicTitle, topicContent, 
       console.log('  - Complete Answer:', parsed.user_correction.complete_answer ? parsed.user_correction.complete_answer.substring(0, 150) + '...' : 'N/A');
       console.log('  - Options:', parsed.user_correction.options ? `[${parsed.user_correction.options.join(', ')}]` : 'N/A');
     }
-    
+
     console.log('\n🔢 Token Usage:');
     console.log('  - Input tokens:', response.usage.prompt_tokens);
     console.log('  - Output tokens:', response.usage.completion_tokens);
     console.log('  - Total tokens:', response.usage.total_tokens);
     console.log('======================================\n');
-    
+
     console.log(`✓ Topic chat response generated | Topic: ${topicTitle}`);
-    
+
     return parsed;
   } catch (error) {
     console.error('Error generating topic chat response:', error);

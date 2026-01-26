@@ -35,12 +35,12 @@ router.get('/', authenticateToken, async (req, res) => {
         is_completed: true
       },
       include: {
-        subject_id_rel: {
+        subjects: {
           select: {
             name: true
           }
         },
-        chapter_id_rel: {
+        chapters: {
           select: {
             title: true
           }
@@ -68,8 +68,8 @@ router.get('/', authenticateToken, async (req, res) => {
     const topicDetails = topicIds.length > 0 ? await prisma.topics.findMany({
       where: { id: { in: topicIds } },
       include: {
-        subject_id_rel: { select: { name: true } },
-        chapter_id_rel: { select: { title: true } }
+        subjects: { select: { name: true } },
+        chapters: { select: { title: true } }
       }
     }) : [];
 
@@ -101,7 +101,7 @@ router.get('/', authenticateToken, async (req, res) => {
       total_chapters: userSubject.total_chapters || 0,
       completed_chapters: userSubject.completed_chapters || 0,
       completion_percent: parseFloat(userSubject.completion_percent?.toString() || '0'),
-      topics_completed: completedTopics.filter(topic => 
+      topics_completed: completedTopics.filter(topic =>
         topic.subject_id === userSubject.subject_id
       ).length
     }));
@@ -119,15 +119,15 @@ router.get('/', authenticateToken, async (req, res) => {
       strong_topics: strongTopics.map(topic => ({
         id: topic.id,
         title: topic.title,
-        subject: topic.subject_id_rel?.name || null,
-        chapter: topic.chapter_id_rel?.title || null,
+        subject: topic.subjects?.name || null,
+        chapter: topic.chapters?.title || null,
         completion_percent: parseFloat(topic.completion_percent?.toString() || '0')
       })),
       weak_topics: weakTopics.map(topic => ({
         id: topic.id,
         title: topic.title,
-        subject: topic.subject_id_rel?.name || null,
-        chapter: topic.chapter_id_rel?.title || null,
+        subject: topic.subjects?.name || null,
+        chapter: topic.chapters?.title || null,
         chat_count: topicCountsMap[topic.id] || 0
       })),
       activity: {
@@ -136,7 +136,7 @@ router.get('/', authenticateToken, async (req, res) => {
           .map(topic => ({
             id: topic.id,
             title: topic.title,
-            subject: topic.subject_id_rel?.name || null,
+            subject: topic.subjects?.name || null,
             chat_count: topicCountsMap[topic.id] || 0
           }))
           .sort((a, b) => b.chat_count - a.chat_count)

@@ -12,7 +12,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key'
 // New behavior: accept an email or phone and return the user if found (no password required)
 router.post('/', async (req, res) => {
 	console.log('Login request received:', req.body);
-	
+
 	const { emailOrPhone } = req.body
 	if (!emailOrPhone) {
 		console.log('Login error: emailOrPhone required');
@@ -21,7 +21,7 @@ router.post('/', async (req, res) => {
 
 	try {
 		console.log('Searching for user with:', emailOrPhone);
-		
+
 		// Try to find by email first, then by phone
 		const user = await prisma.users.findFirst({
 			where: {
@@ -48,7 +48,41 @@ router.post('/', async (req, res) => {
 		// Always generate a token since JWT_SECRET is required
 		const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' })
 		console.log('Login successful, token generated');
-		
+
+		// Create Welcome Notification
+		const notificationService = require('../../services/notifications');
+		try {
+			// Check if we already have a recent welcome notification to avoid spamming on re-logins
+			// For this request, we'll just create it as requested "when user loged"
+			await notificationService.createNotification(
+				user.user_id,
+				'Welcome back!',
+				`Hello ${user.name}, welcome back to Cloop!`,
+				'welcome'
+			);
+
+			// Create User Info Notification with delay
+			setTimeout(async () => {
+				const subjectText = user.subjects && user.subjects.length > 0
+					? `Your selected subjects: ${user.subjects.join(', ')}`
+					: 'You have not selected any subjects yet.';
+
+				try {
+					await notificationService.createNotification(
+						user.user_id,
+						'Your Profile',
+						`Name: ${user.name}\n${subjectText}\nGrade: ${user.grade_level || 'Not set'}`,
+						'info'
+					);
+				} catch (err) {
+					console.error('Error creating delayed notification:', err);
+				}
+			}, 2000); // 2 second delay
+		} catch (notifError) {
+			console.error('Error creating login notifications:', notifError);
+			// Don't block login if notification fails
+		}
+
 		return res.json({ token, user: payload })
 	} catch (err) {
 		console.error('Login server error:', err)

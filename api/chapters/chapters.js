@@ -60,13 +60,41 @@ router.get('/:subjectId', authenticateToken, async (req, res) => {
 				completed_topics: true,
 				completion_percent: true,
 				subject_id: true,
-				user_id: true
+				user_id: true,
+				topics: {
+					select: {
+						is_completed: true,
+						completion_percent: true
+					}
+				}
+			}
+		})
+
+		// Calculate progress dynamically
+		const chaptersWithProgress = chapters.map(chapter => {
+			const topics = chapter.topics || []
+			const total_topics = topics.length
+			const completed_topics = topics.filter(t => t.is_completed).length
+
+			let completion_percent = 0
+			if (total_topics > 0) {
+				const sumPercent = topics.reduce((acc, t) => acc + (Number(t.completion_percent) || 0), 0)
+				completion_percent = Number((sumPercent / total_topics).toFixed(2))
+			}
+
+			return {
+				...chapter,
+				total_topics,
+				completed_topics,
+				completion_percent,
+				// Remove topics from response if not needed by client to keep payload small
+				topics: undefined
 			}
 		})
 
 		return res.status(200).json({
 			subject: userSubject.subjects,
-			chapters: chapters
+			chapters: chaptersWithProgress
 		})
 	} catch (err) {
 		console.error('Error fetching chapters:', err)

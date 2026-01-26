@@ -175,11 +175,10 @@ ${hasAskedQuestion ? `
 Student just answered: "${userMessage}"
 Last question: "${lastQuestion}"
 
-EVALUATE their answer with user_correction format:
-- Check for understanding improvement
-- Provide encouraging feedback
-- Show corrections if needed
-- Include options: ["Got it", "Explain"]
+EVALUATE their answer with user_correction (no quick-reply options):
+- Inline corrections in diff_html
+- Complete, concise answer in complete_answer
+- Encourage them, then ask the NEXT follow-up question in messages
 ` : `
 ASK A TARGETED QUESTION about ${currentFocusArea.goal_title}:
 1. Focus on the concept they struggled with
@@ -193,12 +192,13 @@ ASK A TARGETED QUESTION about ${currentFocusArea.goal_title}:
 
 ${hasAskedQuestion ? `
 {
-  "messages": [],
+  "messages": [
+    { "message": "[Next, gentler targeted question]?", "message_type": "text" }
+  ],
   "user_correction": {
     "message_type": "user_correction",
     "diff_html": "${userMessage}",
     "complete_answer": "Encouraging feedback acknowledging improvement or explaining the concept",
-    "options": ["Got it", "Explain"],
     "emoji": "😊",
     "feedback": {
       "is_correct": true/false,
@@ -222,7 +222,7 @@ ${hasAskedQuestion ? `
 3. If they struggled with conceptual understanding, ask concept-based questions
 4. If they had spelling/grammar issues, focus on those aspects
 5. Build confidence - start with slightly easier variations
-6. Provide detailed explanations when they ask
+6. Provide detailed explanations when they ask (still no quick-reply buttons)
 7. After 3-4 questions per weak goal, suggest moving to next weak area or ending
 
 💡 ENCOURAGEMENT:
@@ -351,33 +351,13 @@ async function generateLearnMoreResponse(userMessage, topicTitle, topicContent, 
     const rawContent = response.choices[0].message.content;
     let parsed = JSON.parse(rawContent.trim());
 
-    // Normalize user_correction options
-    if (parsed.user_correction && Array.isArray(parsed.user_correction.options)) {
-      const opts = parsed.user_correction.options.map(opt => {
-        if (!opt) return opt;
-        if (/explain more/i.test(opt)) return 'Explain more';
-        if (/confused|^explain$/i.test(opt)) return 'Explain';
-        if (/got it|gotit|ok|confirm/i.test(opt)) return 'Got it';
-        return opt;
-      });
-
-      const hasGot = opts.some(o => /got it/i.test(o));
-      const hasExplain = opts.some(o => /explain/i.test(o));
-      if (!hasGot || !hasExplain) {
-        const hasExplainMore = opts.some(o => /explain more/i.test(o));
-        parsed.user_correction.options = hasExplainMore ? ['Got it', 'Explain more'] : ['Got it', 'Explain'];
-      }
-
-      if (!parsed.user_correction.message_type) {
-        parsed.user_correction.message_type = 'user_correction';
-      }
-
-      // Ensure feedback object
+    // Normalize user_correction for free-text flow (no options)
+    if (parsed.user_correction) {
+      if (parsed.user_correction.options) delete parsed.user_correction.options;
+      if (!parsed.user_correction.message_type) parsed.user_correction.message_type = 'user_correction';
       if (!parsed.user_correction.feedback) {
         parsed.user_correction.feedback = { is_correct: false, bubble_color: 'red', score_percent: 0 };
       }
-
-      // Add emoji if missing
       if (!parsed.user_correction.emoji) {
         const isCorrect = parsed.user_correction.feedback?.is_correct;
         parsed.user_correction.emoji = isCorrect ? '😊' : '🤔';

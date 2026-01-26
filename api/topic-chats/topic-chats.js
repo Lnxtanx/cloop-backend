@@ -14,6 +14,123 @@ function normalizeText(s) {
 	return s.replace(/\s+/g, ' ').trim().toLowerCase()
 }
 
+// GET /api/topic-chats/reports/recent
+// Fetch the 3 most recent detailed topic reports for the user
+router.get('/reports/recent', authenticateToken, async (req, res) => {
+	let user_id = req.user?.user_id;
+
+	if (!user_id) {
+		return res.status(401).json({ error: 'Authentication required' });
+	}
+
+	try {
+		const reports = await prisma.user_topic_reports.findMany({
+			where: {
+				user_id: user_id
+			},
+			orderBy: {
+				updated_at: 'desc'
+			},
+			take: 3,
+			include: {
+				topics: {
+					select: {
+						title: true,
+						chapters: {
+							select: {
+								title: true
+							}
+						},
+						subjects: {
+							select: {
+								id: true,
+								name: true
+							}
+						}
+					}
+				}
+			}
+		});
+
+		return res.status(200).json(reports);
+	} catch (err) {
+		console.error('Error fetching recent reports:', err);
+		return res.status(500).json({ error: 'Failed to fetch recent reports' });
+	}
+});
+// GET /api/topic-chats/reports/subject/:subjectId
+// Fetch all topic reports for a specific subject
+router.get('/reports/subject/:subjectId', authenticateToken, async (req, res) => {
+	let user_id = req.user?.user_id;
+	const { subjectId } = req.params;
+
+	if (!user_id) {
+		return res.status(401).json({ error: 'Authentication required' });
+	}
+
+	try {
+		const reports = await prisma.user_topic_reports.findMany({
+			where: {
+				user_id: user_id,
+				topics: {
+					subjects: {
+						id: parseInt(subjectId)
+					}
+				}
+			},
+			orderBy: {
+				updated_at: 'desc'
+			},
+			include: {
+				topics: {
+					select: {
+						title: true,
+						chapters: {
+							select: {
+								title: true
+							}
+						}
+					}
+				}
+			}
+		});
+
+		return res.status(200).json(reports);
+	} catch (err) {
+		console.error('Error fetching subject reports:', err);
+		return res.status(500).json({ error: 'Failed to fetch subject reports' });
+	}
+});
+
+// GET /api/topic-chats/:topicId/report
+// Fetch the persistent report for a specific topic
+router.get('/:topicId/report', authenticateToken, async (req, res) => {
+	let user_id = req.user?.user_id
+	const { topicId } = req.params
+
+	if (!user_id) {
+		return res.status(401).json({ error: 'Authentication required' })
+	}
+
+	try {
+		const report = await prisma.user_topic_reports.findFirst({
+			where: {
+				user_id: user_id,
+				topic_id: parseInt(topicId)
+			}
+		});
+
+		if (!report) {
+			return res.status(404).json({ message: 'No report found for this topic' });
+		}
+
+		return res.status(200).json(report);
+	} catch (err) {
+		console.error('Error fetching topic report:', err);
+		return res.status(500).json({ error: 'Failed to fetch report' });
+	}
+});
+
 // GET /api/topic-chats/:topicId
 // Fetch all chat messages for a specific topic
 router.get('/:topicId', authenticateToken, async (req, res) => {
@@ -43,14 +160,14 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 				user_id: user_id
 			},
 			include: {
-				chapter_id_rel: {
+				chapters: {
 					select: {
 						id: true,
 						title: true,
 						subject_id: true
 					}
 				},
-				subject_id_rel: {
+				subjects: {
 					select: {
 						id: true,
 						name: true,
@@ -102,7 +219,7 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 
 		// Build complete chat history from learning_turns
 		const chatMessages = []
-		
+
 		for (const turn of learningTurns) {
 			// Add AI question
 			if (turn.question_text) {
@@ -140,9 +257,9 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 
 			// Add correction/feedback if answer was incorrect or needs feedback
 			if (turn.diff_html || turn.corrected_answer || turn.feedback_text) {
-				const feedbackEmoji = turn.is_correct ? '😊' : 
-					turn.score_percent === 0 ? '😓' : 
-					turn.score_percent < 50 ? '😢' : '😅'
+				const feedbackEmoji = turn.is_correct ? '😊' :
+					turn.score_percent === 0 ? '😓' :
+						turn.score_percent < 50 ? '😢' : '😅'
 
 				chatMessages.push({
 					id: turn.chat_id + 20000, // Offset to avoid ID collision
@@ -194,12 +311,24 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 		// Admin chat contains session summaries, greetings, etc.
 		for (const msg of adminChatMessages) {
 			// Avoid duplicates - only add if not already in chatMessages
-			const isDuplicate = chatMessages.some(existing => 
-				existing.message === msg.message && 
+			const isDuplicate = chatMessages.some(existing =>
+				existing.message === msg.message &&
 				Math.abs(new Date(existing.created_at).getTime() - new Date(msg.created_at).getTime()) < 1000
 			)
-			
+
 			if (!isDuplicate) {
+				// 🔧 FIX: Unpack session_metrics from diff_html for session summaries
+				// This ensures persistence works on page reload
+				if (msg.message_type === 'session_summary' && msg.diff_html) {
+					try {
+						// Only try to parse if it looks like JSON/Object, otherwise leave as is
+						if (msg.diff_html.trim().startsWith('{')) {
+							msg.session_metrics = JSON.parse(msg.diff_html);
+						}
+					} catch (e) {
+						console.error('[topic-chats.js] Failed to parse session metrics from diff_html for msg', msg.id);
+					}
+				}
 				chatMessages.push(msg)
 			}
 		}
@@ -260,7 +389,7 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 		// If no messages and no goals, generate initial greeting
 		let needsGreeting = chatMessages.length === 0
 		let initialGreeting = null
-		
+
 		if (needsGreeting) {
 			console.log('\n========== CHAT SESSION START ==========');
 			console.log('📱 User:', user_id);
@@ -268,23 +397,23 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 			console.log('🎯 Goals Count:', topicGoals.length);
 			console.log('💬 Existing Messages:', chatMessages.length);
 			console.log('\n🎬 Generating initial greeting...');
-			
+
 			// Generate greeting with goals context
 			const greetingData = await generateTopicGreeting(topic.title, topic.content, topicGoals)
 			initialGreeting = greetingData.messages
-			
+
 			console.log('\n✅ Greeting Generated and Will Be Sent to Frontend:');
 			if (initialGreeting && initialGreeting.length > 0) {
 				initialGreeting.forEach((msg, i) => {
 					console.log(`  ${i + 1}. [${msg.message_type}]: ${msg.message}`);
 				});
 			}
-			
+
 			// 🔧 FIX: Store greeting messages in database immediately
 			// This ensures the first question is in chat history when user answers
 			if (initialGreeting && initialGreeting.length > 0 && topicGoals.length > 0) {
 				const firstGoal = topicGoals[0];
-				
+
 				// Store each greeting message in database
 				for (const msg of initialGreeting) {
 					// First create the admin_chat record
@@ -300,7 +429,7 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 							}
 						}
 					});
-					
+
 					// Then create or connect to chat_goal_progress using the chat_id
 					await prisma.chat_goal_progress.upsert({
 						where: {
@@ -321,7 +450,7 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 						}
 					});
 				}
-				
+
 				console.log('✅ Greeting messages stored in database');
 				console.log('=========================================\n');
 			} else {
@@ -334,7 +463,7 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 		// If no goals exist, generate them
 		if (topicGoals.length === 0) {
 			const goalsData = await generateTopicGoals(topic.title, topic.content)
-			
+
 			// Save generated goals
 			for (const goal of goalsData.goals) {
 				await prisma.topic_goals.create({
@@ -368,7 +497,7 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 				}
 			}
 		})
-		
+
 		// 🔧 FIX: Re-fetch chat messages after storing greeting
 		// This ensures greeting messages are included in the response
 		if (needsGreeting && initialGreeting && initialGreeting.length > 0) {
@@ -398,7 +527,7 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 					created_at: true
 				}
 			});
-			
+
 			// Replace chatMessages with updated list
 			chatMessages.length = 0;
 			chatMessages.push(...updatedChatMessages);
@@ -426,8 +555,8 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 				is_completed: topic.is_completed,
 				completion_percent: topic.completion_percent,
 				time_spent_seconds: topic.time_spent_seconds || 0,
-					chapter: topic.chapter_id_rel,
-					subject: topic.subject_id_rel
+				chapter: topic.chapters,
+				subject: topic.subjects
 			},
 			messages: chatMessages,
 			rawProcesses: rawProcesses,
@@ -465,25 +594,25 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 		console.log('📚 Topic ID:', topicId);
 		console.log('💬 User Message:', message ? message.substring(0, 100) : 'None');
 		console.log('📎 File:', file_url || 'None');
-		
+
 		// Verify user has access to this topic
 		const topic = await prisma.topics.findFirst({
 			where: {
 				id: parseInt(topicId),
 				user_id: user_id
 			},
-				include: {
-					chapter_id_rel: {
-						select: {
-							title: true
-						}
-					},
-					subject_id_rel: {
-						select: {
-							name: true
-						}
+			include: {
+				chapters: {
+					select: {
+						title: true
+					}
+				},
+				subjects: {
+					select: {
+						name: true
 					}
 				}
+			}
 		})
 
 		if (!topic) {
@@ -510,7 +639,7 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 			orderBy: {
 				created_at: 'desc'
 			},
-			take: 10,
+			take: 50,
 			select: {
 				sender: true,
 				message: true,
@@ -582,7 +711,7 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 		}
 
 		console.log(`🎯 Current Active Goal: ${currentGoal ? currentGoal.title : 'All goals completed!'}`)
-		
+
 		console.log('\n📋 Chat History Context (last 10):');
 		chatHistory.forEach((msg, i) => {
 			console.log(`  ${i + 1}. [${msg.sender}]: ${msg.message ? msg.message.substring(0, 80) : 'empty'}...`);
@@ -654,11 +783,11 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 					updated_at: 'desc'
 				}
 			})
-			
+
 			// Check if this answer will be the 2nd question for this goal (completing it)
 			const currentQuestions = existingProgress?.num_questions || 0
 			const willCompleteCurrentGoal = (currentQuestions + 1) >= 2 // 2 questions per goal
-			
+
 			if (willCompleteCurrentGoal) {
 				// Check how many goals are already complete
 				const completedGoals = await prisma.chat_goal_progress.findMany({
@@ -671,10 +800,10 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 					},
 					distinct: ['goal_id']
 				})
-				
+
 				// Will this complete ALL goals?
 				willCompleteAllGoals = (completedGoals.length + 1) >= topicGoals.length
-				
+
 				if (willCompleteAllGoals) {
 					console.log('🎯 DETECTED: This answer will complete ALL GOALS! Preparing session summary...')
 				}
@@ -741,7 +870,7 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 					message_type: 'user_correction',
 					diff_html: correctionMsg.message || null,
 					complete_answer: correctionMsg.complete_answer || correctionMsg.message || null,
-					options: correctionMsg.options || ['Got it', 'Explain'],
+					options: [],
 					feedback: correctionMsg.feedback || { is_correct: false, bubble_color: 'red' }
 				};
 
@@ -770,15 +899,9 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 							message: inferredUserCorrection.complete_answer || userMessage.message,
 							message_type: 'user_correction',
 							emoji: inferredUserCorrection.emoji || null,
-							options: inferredUserCorrection.options || []
+							options: []
 						}
 					})
-					// Reflect update in userMessage object for response
-					userMessage.diff_html = inferredUserCorrection.diff_html;
-					userMessage.message = inferredUserCorrection.complete_answer || userMessage.message;
-					userMessage.message_type = 'user_correction';
-					userMessage.emoji = inferredUserCorrection.emoji || null;
-					userMessage.options = inferredUserCorrection.options || [];
 				} catch (e) {
 					console.error('Failed to update admin_chat placeholder with inferred correction:', e.message)
 				}
@@ -809,348 +932,17 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 					message: userCorrection.complete_answer || userMessage.message,
 					message_type: 'user_correction',
 					emoji: userCorrection.emoji || null,
-					options: userCorrection.options || []
+					options: []
 				}
 			});
 
-			/**
-			 * POST /api/topic-chats/:topicId/option
-			 * Handle user selecting an option (e.g., "Got it" or "Explain") from a corrected bubble
-			 * This endpoint records the user's choice against the original chat_process and invokes the
-			 * topic chat generator so the AI can respond (acknowledgement or explanation + next question).
-			 */
-			router.post('/:topicId/option', authenticateToken, async (req, res) => {
-				let user_id = req.user?.user_id;
-				const { topicId } = req.params;
-				const { chatId, option } = req.body;
 
-				if (!user_id) {
-					return res.status(401).json({ error: 'Authentication required - please login' });
-				}
-
-				if (!topicId || isNaN(parseInt(topicId))) {
-					return res.status(400).json({ error: 'Valid topic ID is required' });
-				}
-
-				if (!chatId || !option) {
-					return res.status(400).json({ error: 'chatId and option are required' });
-				}
-
-				// Handle chatId - it might be a BigInt stored as string
-				let parsedChatId;
-				try {
-					parsedChatId = BigInt(chatId);
-					// Convert to number if it fits in safe integer range
-					if (parsedChatId <= Number.MAX_SAFE_INTEGER) {
-						parsedChatId = Number(parsedChatId);
-					}
-				} catch (e) {
-					return res.status(400).json({ error: 'Invalid chatId format' });
-				}
-
-				try {
-					// Verify user has access to this topic
-					const topic = await prisma.topics.findFirst({
-						where: {
-							id: parseInt(topicId),
-							user_id: user_id
-						}
-					});
-
-					if (!topic) {
-						return res.status(403).json({ error: 'Topic not found or user does not have access' });
-					}
-
-					// Skip chat validation - session summary messages may have auto-generated IDs
-					// Just proceed with the option handling
-
-					// Update the related chat_process feedback to record the selected option (if exists)
-					// Use try-catch since session summary might not have a chat_process
-					try {
-						const relatedProcess = await prisma.chat_process.findFirst({ 
-							where: { 
-								chat_id: typeof parsedChatId === 'number' ? parsedChatId : undefined
-							} 
-						});
-						if (relatedProcess) {
-							const existingFeedback = relatedProcess.feedback || {};
-							const updatedFeedback = { ...existingFeedback, option_selected: option };
-							await prisma.chat_process.update({
-								where: { id: relatedProcess.id },
-								data: { feedback: updatedFeedback }
-							});
-						}
-					} catch (e) {
-						console.log('No chat_process found for this message (might be session summary):', e.message);
-					}
-
-					// We'll compute goal progress after we determine the current goal (below) to avoid referencing it early.
-
-					// Build recent chat history for context (same as in message route)
-					const topicGoalsForHistory = await prisma.topic_goals.findMany({ where: { topic_id: parseInt(topicId) }, select: { id: true } });
-					const goalIdsForHistory = topicGoalsForHistory.map(g => g.id);
-
-					const recentMessages = await prisma.admin_chat.findMany({
-						where: {
-							chat_goal_progress: {
-								some: {
-									goal_id: { in: goalIdsForHistory },
-									user_id: user_id
-								}
-							}
-						},
-						orderBy: { created_at: 'desc' },
-						take: 10,
-						select: { sender: true, message: true, message_type: true }
-					});
-
-					const chatHistory = recentMessages.reverse();
-
-					// Fetch topic goals and current goal WITH progress data
-					const topicGoals = await prisma.topic_goals.findMany({ 
-						where: { topic_id: parseInt(topicId) }, 
-						orderBy: { order: 'asc' },
-						include: {
-							chat_goal_progress: {
-								where: { user_id: user_id },
-								orderBy: { updated_at: 'desc' },
-								take: 1
-							}
-						}
-					});
-					let currentGoal = null;
-					for (const goal of topicGoals) {
-						const progress = goal.chat_goal_progress?.[0];
-						if (!progress || !progress.is_completed) {
-							currentGoal = goal;
-							break;
-						}
-					}
-
-				// --- Check and update goal completion status (do NOT increment questions - that's done when answer is submitted) ---
-				if (currentGoal) {
-					try {
-						// Check current progress for this goal
-						let prog = await prisma.chat_goal_progress.findFirst({ where: { user_id: user_id, goal_id: currentGoal.id } });
-						
-						if (prog) {
-							// ALL goals require 2 questions to complete
-							const numQ = prog.num_questions || 0;
-							const numC = prog.num_correct || 0;
-							const percent = numQ > 0 ? Math.round((numC / numQ) * 100) : 0;
-							const requiredQuestions = 2;
-							// Mark completed only if 2 questions have been asked
-							const markCompleted = (numQ >= requiredQuestions);
-							
-							if (markCompleted && !prog.is_completed) {
-								await prisma.chat_goal_progress.update({ where: { id: prog.id }, data: { is_completed: true } });
-								console.log(`✅ Goal marked complete: ${currentGoal.title} (${numQ} questions, ${percent}% accuracy)`);
-							}
-						}							// Recompute topic completion percent
-							const allGoalsProgress = await prisma.chat_goal_progress.groupBy({
-								by: ['goal_id'],
-								where: { user_id: user_id, goal_id: { in: topicGoals.map(g => g.id) }, is_completed: true }
-							});
-							const completedGoalsCount = allGoalsProgress.length;
-							const totalGoalsCount = topicGoals.length;
-							const completionPercent = totalGoalsCount > 0 ? Math.round((completedGoalsCount / totalGoalsCount) * 100) : 0;
-							await prisma.topics.update({ where: { id: parseInt(topicId) }, data: { completion_percent: completionPercent, is_completed: completionPercent >= 50 } });
-
-							// Re-fetch goals with updated progress so AI sees latest completion status
-							const updatedTopicGoals = await prisma.topic_goals.findMany({ 
-								where: { topic_id: parseInt(topicId) }, 
-								orderBy: { order: 'asc' },
-								include: {
-									chat_goal_progress: {
-										where: { user_id: user_id },
-										orderBy: { updated_at: 'desc' },
-										take: 1
-									}
-								}
-							});
-							
-							// Re-determine current goal with updated completion status
-							let updatedCurrentGoal = null;
-							for (const goal of updatedTopicGoals) {
-								const progress = goal.chat_goal_progress?.[0];
-								if (!progress || !progress.is_completed) {
-									updatedCurrentGoal = goal;
-									break;
-								}
-							}
-							
-							console.log(`🎯 Updated Active Goal: ${updatedCurrentGoal ? updatedCurrentGoal.title : 'All goals completed!'}`);
-						} catch (e) {
-							console.error('Failed to update chat_goal_progress after option selection:', e.message);
-						}
-					}
-
-				// Call the topic chat generator with the option as the user reply (use updated goals/currentGoal if available)
-				const finalCurrentGoal = typeof updatedCurrentGoal !== 'undefined' ? updatedCurrentGoal : currentGoal;
-				const finalTopicGoals = typeof updatedTopicGoals !== 'undefined' ? updatedTopicGoals : topicGoals;
-				
-				// 📊 INCREMENT EXPLAIN COUNT - Track when user requests explanations
-				if (option === 'Explain' || option === 'Explain more') {
-					try {
-						// Find the most recent learning turn for this chat/goal to increment explain count
-						const recentLearningTurn = await prisma.learning_turns.findFirst({
-							where: {
-								user_id: user_id,
-								goal_id: finalCurrentGoal?.id,
-								chat_id: typeof parsedChatId === 'number' ? parsedChatId : undefined
-							},
-							orderBy: {
-								created_at: 'desc'
-							}
-						});
-
-						if (recentLearningTurn) {
-							await incrementExplainCount(recentLearningTurn.id);
-							console.log(`🔄 Incremented explain count for learning turn ${recentLearningTurn.id}`);
-						}
-					} catch (explainCountError) {
-						console.error('❌ Failed to increment explain count:', explainCountError);
-						// Don't fail the request if this fails
-					}
-				}
-
-				let aiResponse;
-				try {
-					// If user clicked "Got it", ask for next question without sending "Got it" as user message
-					// If user clicked "Explain", provide detailed explanation
-					if (option === 'Got it') {
-						// User acknowledged the correction - ask AI for the next question
-						// Add a system message to prompt for next question
-						const modifiedHistory = [...chatHistory, { sender: 'system', message: 'IMPORTANT: The user has acknowledged the previous correction. Do NOT repeat the previous question or treat this as an answer. Ask a NEW question about the current goal to continue the lesson. Generate a "messages" array with the next question - do NOT use user_correction format.' }];
-						aiResponse = await generateTopicChatResponse('', topic.title, topic.content || 'No additional content provided', modifiedHistory, finalCurrentGoal, finalTopicGoals);
-					} else if (option === 'Explain' || option === 'Explain more') {
-						// User wants more explanation - add instruction to explain the concept in detail
-						const modifiedHistory = [...chatHistory, { sender: 'system', message: `IMPORTANT: The user clicked "${option}". Provide a clear, detailed explanation of the concept with examples. Use 2-3 short messages. The LAST message should include options: ["Got it", "Explain more"]. Do NOT ask a new question yet - focus on explaining the previous correction thoroughly.` }];
-						aiResponse = await generateTopicChatResponse('', topic.title, topic.content || 'No additional content provided', modifiedHistory, finalCurrentGoal, finalTopicGoals);
-					} else {
-						// Other option - send it to AI
-						aiResponse = await generateTopicChatResponse(option, topic.title, topic.content || 'No additional content provided', chatHistory, finalCurrentGoal, finalTopicGoals);
-					}
-				} catch (aiError) {
-					console.error('Error generating AI response for option selection:', aiError);
-					aiResponse = { messages: [ { message: "I'm having trouble right now.", message_type: 'text' } ] };
-				}					// Duplicate-question fallback in option flow (retry once)
-					try {
-						const lastAi = chatHistory.slice().reverse().find(m => m.sender === 'ai');
-						if (aiResponse && Array.isArray(aiResponse.messages) && lastAi) {
-							const candidate = aiResponse.messages.find(m => m.message && m.message.includes('?')) || aiResponse.messages[0];
-							if (candidate && candidate.message) {
-								const candText = normalizeText(candidate.message);
-								const lastText = normalizeText(lastAi.message);
-								if (candText && lastText && candText === lastText) {
-									chatHistory.push({ sender: 'system', message: 'Do NOT repeat the previous AI question. Rephrase or ask a different sub-question about the same goal.' });
-									try {
-										// 🔧 FIX: Use empty string for "Got it" option in retry, not the option text itself
-										const retryUserMessage = (option === 'Got it') ? '' : option;
-										const retryResp = await generateTopicChatResponse(retryUserMessage, topic.title, topic.content || 'No additional content provided', chatHistory, currentGoal, topicGoals);
-										if (retryResp) aiResponse = retryResp;
-									} catch (retryErr) {
-										console.error('Retry for duplicate question in option flow failed:', retryErr);
-									}
-								}
-							}
-						}
-					} catch (e) {
-						console.error('Error during duplicate-question fallback check (option):', e);
-					}
-
-				// Save AI messages returned
-				const aiMessages = [];
-				for (let i = 0; i < (aiResponse.messages || []).length; i++) {
-					const aiMsg = aiResponse.messages[i];
-					
-					// 🔧 FIX: If this is the LAST message and there's a user_correction with options, add those options to this message
-					const isLastMessage = (i === (aiResponse.messages || []).length - 1);
-					const optionsToUse = isLastMessage && aiResponse.user_correction?.options 
-						? aiResponse.user_correction.options 
-						: (aiMsg.options || []);
-					
-					const savedAiMessage = await prisma.admin_chat.create({
-						data: {
-							user_id: user_id,
-							sender: 'ai',
-							message: aiMsg.message,
-							message_type: aiMsg.message_type || 'text',
-							options: optionsToUse,
-							diff_html: null,
-							emoji: aiMsg.emoji || null,
-							images: aiMsg.images || [],
-							videos: aiMsg.videos || [],
-							links: aiMsg.links || []
-						},
-						select: {
-							id: true, sender: true, message: true, message_type: true, options: true, diff_html: true, emoji: true, images: true, videos: true, links: true, created_at: true
-						}
-					});
-					aiMessages.push(savedAiMessage);
-					
-					// 🔧 FIX: Link AI message to current goal so it appears in chat history
-					if (finalCurrentGoal) {
-						try {
-							const existingLink = await prisma.chat_goal_progress.findFirst({
-								where: {
-									chat_id: savedAiMessage.id,
-									goal_id: finalCurrentGoal.id,
-									user_id: user_id
-								}
-							});
-
-							if (!existingLink) {
-								const goalProgress = await prisma.chat_goal_progress.findFirst({
-									where: {
-										user_id: user_id,
-										goal_id: finalCurrentGoal.id
-									}
-								});
-
-								if (!goalProgress) {
-									await prisma.chat_goal_progress.create({
-										data: {
-											chat_id: savedAiMessage.id,
-											goal_id: finalCurrentGoal.id,
-											user_id: user_id,
-											is_completed: false,
-											num_questions: 0,
-											num_correct: 0,
-											num_incorrect: 0
-										}
-									});
-								}
-							}
-						} catch (linkErr) {
-							console.error('Error linking AI message to goal in option flow:', linkErr.message);
-						}
-					}
-				}					// Also return updated goals so frontend can refresh the progress bar
-					const updatedGoalsForClient = await prisma.topic_goals.findMany({
-						where: { topic_id: parseInt(topicId) },
-						orderBy: { order: 'asc' },
-						include: {
-							chat_goal_progress: {
-								where: { user_id: user_id },
-								orderBy: { created_at: 'desc' },
-								take: 1
-							}
-						}
-					});
-
-					return res.status(201).json({ aiMessages, userCorrection: aiResponse.user_correction || null, feedback: aiResponse.feedback || null, goals: updatedGoalsForClient });
-				} catch (err) {
-					console.error('Error handling option selection:', err);
-					return res.status(500).json({ error: 'Server error while processing option' });
-				}
-			});
 
 			// Refresh the userMessage object to reflect changes
 			userMessage.diff_html = userCorrection.diff_html;
 			userMessage.message = userCorrection.complete_answer || userMessage.message;
 			userMessage.message_type = 'user_correction';
-			userMessage.options = userCorrection.options || [];
+			userMessage.options = [];
 			userMessage.emoji = userCorrection.emoji || null;
 		} else {
 			// No explicit user_correction returned: still update chat_process with AI response if present
@@ -1234,26 +1026,29 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 					})
 
 					if (!existingLink) {
-						const goalProgress = await prisma.chat_goal_progress.findFirst({
+						// ALWAYS create a link for this specific AI message to the current goal
+						// This ensures the message appears when fetching history for this goal
+						const currentStats = await prisma.chat_goal_progress.findFirst({
 							where: {
 								user_id: user_id,
 								goal_id: currentGoal.id
+							},
+							orderBy: {
+								updated_at: 'desc'
+							}
+						});
+
+						await prisma.chat_goal_progress.create({
+							data: {
+								chat_id: savedAiMessage.id,
+								goal_id: currentGoal.id,
+								user_id: user_id,
+								is_completed: currentStats ? currentStats.is_completed : false,
+								num_questions: currentStats ? currentStats.num_questions : 0,
+								num_correct: currentStats ? currentStats.num_correct : 0,
+								num_incorrect: currentStats ? currentStats.num_incorrect : 0
 							}
 						})
-
-						if (!goalProgress) {
-							await prisma.chat_goal_progress.create({
-								data: {
-									chat_id: savedAiMessage.id,
-									goal_id: currentGoal.id,
-									user_id: user_id,
-									is_completed: false,
-									num_questions: 0,
-									num_correct: 0,
-									num_incorrect: 0
-								}
-							})
-						}
 					}
 				} catch (linkErr) {
 					console.error('Error linking AI message to goal:', linkErr.message)
@@ -1299,6 +1094,14 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 					.find(m => m.sender === 'ai' && m.message_type === 'text' && m.message && m.message.includes('?'));
 				const questionText = lastAIQuestion ? lastAIQuestion.message : null;
 
+				// Calculate response time (seconds since last AI message)
+				let responseTimeSec = 0;
+				if (lastAIQuestion && lastAIQuestion.created_at) {
+					const aiTime = new Date(lastAIQuestion.created_at).getTime();
+					const userTime = new Date().getTime();
+					responseTimeSec = Math.max(0, Math.round((userTime - aiTime) / 1000));
+				}
+
 				// Calculate mastery score based on recent performance
 				const masteryScore = await calculateMasteryScore(user_id, currentGoal.id);
 
@@ -1336,7 +1139,7 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 					error_subtype: null, // Could be extracted from more detailed feedback
 					is_correct: isCorrectAnswer,
 					score_percent: userCorrection.feedback.score_percent || (isCorrectAnswer ? 100 : 0),
-					response_time_sec: 0, // Could be tracked by frontend and sent
+					response_time_sec: responseTimeSec, // ✅ Added real tracking
 					help_requested: null, // Could be tracked if user explicitly asks for help
 					explain_loop_count: 0, // Will be incremented when user clicks "Explain"
 					num_retries: 0, // Could track if same question is asked again
@@ -1345,7 +1148,7 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 					mastery_score: masteryScore,
 					difficulty_level: 'medium', // Could be dynamically determined
 					topic_title: topic.title,
-					subject_name: topic.subject_id_rel?.name || null,
+					subject_name: topic.subjects?.name || null,
 					question_type: 'open_ended'
 				});
 
@@ -1360,10 +1163,10 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 				const newNumQuestions = existingProgress.num_questions + (isActualAnswer ? 1 : 0)
 				const newNumCorrect = existingProgress.num_correct + (isCorrectAnswer ? 1 : 0)
 				const newNumIncorrect = existingProgress.num_incorrect + (isActualAnswer && !isCorrectAnswer ? 1 : 0)
-				
+
 				// Calculate accuracy
 				const accuracyPercent = newNumQuestions > 0 ? Math.round((newNumCorrect / newNumQuestions) * 100) : 0
-				
+
 				// ALL goals need 2 questions to complete
 				const requiredQuestions = 2
 				const shouldComplete = newNumQuestions >= requiredQuestions
@@ -1386,11 +1189,11 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 				const numQuestions = isActualAnswer ? 1 : 0
 				const numCorrect = isCorrectAnswer ? 1 : 0
 				const numIncorrect = (isActualAnswer && !isCorrectAnswer) ? 1 : 0
-				
+
 				// ALL goals need 2 questions to complete
 				const requiredQuestions = 2
 				const shouldComplete = numQuestions >= requiredQuestions
-				
+
 				await prisma.chat_goal_progress.upsert({
 					where: {
 						chat_id_goal_id_user_id: {
@@ -1435,7 +1238,7 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 			})
 
 			completedGoalsCount = completedGoals.length
-			const completionPercent = totalGoalsCount > 0 
+			const completionPercent = totalGoalsCount > 0
 				? Math.round((completedGoalsCount / totalGoalsCount) * 100)
 				: 0
 
@@ -1448,7 +1251,7 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 			})
 
 			console.log(`🎯 Topic Progress | Completed Goals: ${completedGoalsCount}/${totalGoalsCount} | Completion: ${completionPercent}%`)
-			
+
 			// 🔧 FIX: Re-fetch goals with UPDATED progress so subsequent AI calls see correct completion status
 			const updatedGoalsAfterProgress = await prisma.topic_goals.findMany({
 				where: {
@@ -1469,11 +1272,11 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 					}
 				}
 			})
-			
+
 			// Replace topicGoals with updated data so AI sees correct state
 			topicGoals.length = 0
 			topicGoals.push(...updatedGoalsAfterProgress)
-			
+
 			// Re-determine currentGoal with updated completion status
 			currentGoal = null
 			for (const goal of topicGoals) {
@@ -1483,13 +1286,13 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 					break
 				}
 			}
-			
+
 			console.log(`🎯 Updated Active Goal: ${currentGoal ? currentGoal.title : 'All goals completed!'}`)
-			
-			// 🔥 AUTO-GENERATE SESSION SUMMARY: If ALL goals are now complete, automatically show session summary
+
+			// 🔥 SESSION SUMMARY LOGIC: Only generate if ALL goals complete
 			if (completedGoalsCount >= totalGoalsCount && !currentGoal) {
-				console.log('\n🎉 ALL GOALS COMPLETED! Auto-generating session summary...\n')
-				
+				console.log('\n🎉 ALL GOALS COMPLETED! Generating session summary...\n')
+
 				try {
 					// Generate session summary with updated goals
 					const summaryResponse = await generateTopicChatResponse(
@@ -1502,44 +1305,75 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 						user_id,
 						parseInt(topicId)
 					)
-					
-					// Save session summary message
+
 					if (summaryResponse && summaryResponse.messages) {
 						for (const summaryMsg of summaryResponse.messages) {
-							// Store session_metrics in the message for frontend to parse
-							const messageData = {
-								user_id: user_id,
-								sender: 'ai',
-								message: summaryMsg.formatted_summary || summaryMsg.message || 'session_complete',
-								message_type: summaryMsg.message_type || 'session_summary',
-								options: summaryMsg.options || ['End Session', 'Learn More'],
-								diff_html: JSON.stringify(summaryMsg.session_metrics || {}), // Store metrics in diff_html as JSON
-								emoji: summaryMsg.emoji || '🎉',
-								images: summaryMsg.images || [],
-								videos: summaryMsg.videos || [],
-								links: summaryMsg.links || []
+							const metricsData = summaryMsg.session_metrics || summaryResponse.session_metrics;
+							// Ensure top-level session_summary is populated for the response
+							if (metricsData && !aiResponse.session_summary) {
+								aiResponse.session_summary = metricsData;
 							}
-							
-							const savedSummaryMessage = await prisma.admin_chat.create({
-								data: messageData,
-								select: {
-									id: true,
-									sender: true,
-									message: true,
-									message_type: true,
-									options: true,
-									diff_html: true,
-									emoji: true,
-									images: true,
-									videos: true,
-									links: true,
-									created_at: true
+
+							// Save to user_topic_reports ONLY if this specific message is the summary
+							// OR if we haven't saved it yet (simple flag or message type check)
+							if (metricsData && summaryMsg.message_type === 'session_summary') {
+								try {
+									await prisma.user_topic_reports.upsert({
+										where: {
+											user_id_topic_id: {
+												user_id: user_id,
+												topic_id: parseInt(topicId)
+											}
+										},
+										update: {
+											total_questions: metricsData.total_questions || 0,
+											correct_answers: metricsData.correct_answers || 0,
+											incorrect_answers: metricsData.incorrect_answers || 0,
+											score_percent: metricsData.overall_score_percent || 0,
+											star_rating: metricsData.star_rating || 0,
+											performance_level: metricsData.performance_level || 'Unknown',
+											metrics_json: metricsData,
+											updated_at: new Date()
+										},
+										create: {
+											user_id: user_id,
+											topic_id: parseInt(topicId),
+											total_questions: metricsData.total_questions || 0,
+											correct_answers: metricsData.correct_answers || 0,
+											incorrect_answers: metricsData.incorrect_answers || 0,
+											score_percent: metricsData.overall_score_percent || 0,
+											star_rating: metricsData.star_rating || 0,
+											performance_level: metricsData.performance_level || 'Unknown',
+											metrics_json: metricsData
+										}
+									});
+									console.log('✅ Saved user_topic_report to database');
+								} catch (reportErr) {
+									console.error('❌ Failed to save user_topic_report:', reportErr);
 								}
-							})
-							
-							// Add to aiMessages array so it's returned to frontend
-							aiMessages.push(savedSummaryMessage)
-							console.log('✅ Session summary message saved and added to response')
+							}
+
+							// Save to admin_chat (Persistent)
+							const savedSummaryMsg = await prisma.admin_chat.create({
+								data: {
+									user_id: user_id,
+									sender: 'ai',
+									message: summaryMsg.formatted_summary || summaryMsg.message || 'Session Summary',
+									message_type: 'session_summary',
+									options: summaryMsg.options || ['End Session', 'Learn More'],
+									diff_html: JSON.stringify(metricsData || {}),
+									emoji: summaryMsg.emoji || '🎉',
+									images: summaryMsg.images || [],
+									videos: summaryMsg.videos || [],
+									links: summaryMsg.links || []
+								}
+							});
+
+							// Add to aiMessages for frontend response
+							aiMessages.push({
+								...savedSummaryMsg,
+								session_summary: metricsData // Ensure frontend gets the object
+							});
 						}
 					}
 				} catch (summaryError) {
@@ -1572,7 +1406,8 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 			feedback: aiResponse.feedback || (userCorrection?.feedback) || null,
 			userCorrection: userCorrection || null,
 			session_summary: aiResponse.session_summary || null,
-			all_goals_completed: completedGoalsCount >= totalGoalsCount // Add flag for frontend
+			all_goals_completed: completedGoalsCount >= totalGoalsCount, // Add flag for frontend
+			goals: topicGoals // Include updated goals for frontend UI
 		})
 	} catch (err) {
 		console.error('Error sending topic chat message:', err)
@@ -1580,24 +1415,56 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 	}
 })
 
-// POST /api/topic-chats/:topicId/update-time
-// Update time spent on topic without sending a message
-router.post('/:topicId/update-time', authenticateToken, async (req, res) => {
-	let user_id = req.user?.user_id
-	const { topicId } = req.params
-	const { session_time_seconds } = req.body
 
-	// For production, always require authenticated user
+/**
+ * POST /api/topic-chats/:topicId/option
+ * Handle user selecting an option (e.g., "Got it" or "Explain") from a corrected bubble
+ */
+router.post('/:topicId/option', authenticateToken, async (req, res) => {
+	let user_id = req.user?.user_id;
+	const { topicId } = req.params;
+	const { chatId, option } = req.body;
+
 	if (!user_id) {
-		return res.status(401).json({ error: 'Authentication required - please login' })
+		return res.status(401).json({ error: 'Authentication required - please login' });
 	}
 
 	if (!topicId || isNaN(parseInt(topicId))) {
-		return res.status(400).json({ error: 'Valid topic ID is required' })
+		return res.status(400).json({ error: 'Valid topic ID is required' });
 	}
 
-	if (!session_time_seconds || session_time_seconds <= 0) {
-		return res.status(400).json({ error: 'Valid session time is required' })
+	if (!option) {
+		return res.status(400).json({ error: 'Option is required' });
+	}
+
+	// Handle chatId - it might be a BigInt stored as string
+	// Handle chatId - it might be a BigInt stored as string or a float (optimistic ID)
+	let parsedChatId;
+	try {
+		if (chatId !== undefined && chatId !== null) {
+			// Handle float format (e.g. 1736077383456.432) often sent by frontend for optimistic updates
+			const numId = Number(chatId);
+			if (!isNaN(numId)) {
+				parsedChatId = BigInt(Math.floor(numId));
+			} else {
+				parsedChatId = BigInt(chatId);
+			}
+
+			// Convert to number if it fits in safe integer range
+			if (parsedChatId <= Number.MAX_SAFE_INTEGER) {
+				parsedChatId = Number(parsedChatId);
+			}
+
+			// 🔧 FIX: Check for Postgres INT4 max value (2147483647)
+			// If userId is optimistic (timestamp-like), it will exceed this and crash Prisma
+			if (parsedChatId > 2147483647) {
+				console.warn('⚠️ ChatId exceeds INT4 limit (likely optimistic ID):', parsedChatId);
+				parsedChatId = null; // Skip DB lookup
+			}
+		}
+	} catch (e) {
+		console.warn('⚠️ Invalid chatId format received:', chatId, e.message);
+		// Proceed without parsedChatId (skipping feedback linking) rather than crashing
 	}
 
 	try {
@@ -1607,21 +1474,377 @@ router.post('/:topicId/update-time', authenticateToken, async (req, res) => {
 				id: parseInt(topicId),
 				user_id: user_id
 			}
+		});
+
+		if (!topic) {
+			return res.status(403).json({ error: 'Topic not found or user does not have access' });
+		}
+
+		// Update the related chat_process feedback to record the selected option (if exists)
+		try {
+			if (parsedChatId) {
+				const relatedProcess = await prisma.chat_process.findFirst({
+					where: {
+						chat_id: typeof parsedChatId === 'number' ? parsedChatId : undefined
+					}
+				});
+				if (relatedProcess) {
+					const existingFeedback = relatedProcess.feedback || {};
+					const updatedFeedback = { ...existingFeedback, option_selected: option };
+					await prisma.chat_process.update({
+						where: { id: relatedProcess.id },
+						data: { feedback: updatedFeedback }
+					});
+				}
+			}
+		} catch (e) {
+			console.log('No chat_process found for this message (might be session summary):', e.message);
+		}
+
+		// Build recent chat history for context
+		const topicGoalsForHistory = await prisma.topic_goals.findMany({ where: { topic_id: parseInt(topicId) }, select: { id: true } });
+		const goalIdsForHistory = topicGoalsForHistory.map(g => g.id);
+
+		const recentMessages = await prisma.admin_chat.findMany({
+			where: {
+				chat_goal_progress: {
+					some: {
+						goal_id: { in: goalIdsForHistory },
+						user_id: user_id
+					}
+				}
+			},
+			orderBy: { created_at: 'desc' },
+			take: 50,
+			select: { sender: true, message: true, message_type: true }
+		});
+
+		const chatHistory = recentMessages.reverse();
+
+		// Fetch topic goals and current goal WITH progress data
+		const topicGoals = await prisma.topic_goals.findMany({
+			where: { topic_id: parseInt(topicId) },
+			orderBy: { order: 'asc' },
+			include: {
+				chat_goal_progress: {
+					where: { user_id: user_id },
+					orderBy: { updated_at: 'desc' },
+					take: 1
+				}
+			}
+		});
+		let currentGoal = null;
+		for (const goal of topicGoals) {
+			const progress = goal.chat_goal_progress?.[0];
+			if (!progress || !progress.is_completed) {
+				currentGoal = goal;
+				break;
+			}
+		}
+
+		// --- Check and update goal completion status ---
+		if (currentGoal) {
+			try {
+				// Check current progress for this goal
+				let prog = await prisma.chat_goal_progress.findFirst({ where: { user_id: user_id, goal_id: currentGoal.id } });
+
+				if (prog) {
+					// ALL goals require 2 questions to complete
+					const numQ = prog.num_questions || 0;
+					const numC = prog.num_correct || 0;
+					const percent = numQ > 0 ? Math.round((numC / numQ) * 100) : 0;
+					const requiredQuestions = 2;
+					// Mark completed only if 2 questions have been asked
+					const markCompleted = (numQ >= requiredQuestions);
+
+					if (markCompleted && !prog.is_completed) {
+						await prisma.chat_goal_progress.update({ where: { id: prog.id }, data: { is_completed: true } });
+					}
+				}
+				// Recompute topic completion percent
+				const allGoalsProgress = await prisma.chat_goal_progress.groupBy({
+					by: ['goal_id'],
+					where: { user_id: user_id, goal_id: { in: topicGoals.map(g => g.id) }, is_completed: true }
+				});
+				const completedGoalsCount = allGoalsProgress.length;
+				const totalGoalsCount = topicGoals.length;
+				const completionPercent = totalGoalsCount > 0 ? Math.round((completedGoalsCount / totalGoalsCount) * 100) : 0;
+				await prisma.topics.update({ where: { id: parseInt(topicId) }, data: { completion_percent: completionPercent, is_completed: completionPercent >= 50 } });
+
+				// Re-fetch goals with updated progress
+				const updatedTopicGoals = await prisma.topic_goals.findMany({
+					where: { topic_id: parseInt(topicId) },
+					orderBy: { order: 'asc' },
+					include: {
+						chat_goal_progress: {
+							where: { user_id: user_id },
+							orderBy: { updated_at: 'desc' },
+							take: 1
+						}
+					}
+				});
+
+				// Re-determine current goal
+				let updatedCurrentGoal = null;
+				for (const goal of updatedTopicGoals) {
+					const progress = goal.chat_goal_progress?.[0];
+					if (!progress || !progress.is_completed) {
+						updatedCurrentGoal = goal;
+						break;
+					}
+				}
+			} catch (e) {
+				console.error('Failed to update chat_goal_progress after option selection:', e.message);
+			}
+		}
+
+		// Call the topic chat generator
+		const finalCurrentGoal = currentGoal; // Simplified for now, should ideally be updatedCurrentGoal if available
+		const finalTopicGoals = topicGoals;
+
+		// 📊 INCREMENT EXPLAIN COUNT
+		if (option === 'Explain' || option === 'Explain more') {
+			try {
+				if (parsedChatId) {
+					const recentLearningTurn = await prisma.learning_turns.findFirst({
+						where: {
+							user_id: user_id,
+							goal_id: finalCurrentGoal?.id,
+							chat_id: typeof parsedChatId === 'number' ? parsedChatId : undefined
+						},
+						orderBy: { created_at: 'desc' }
+					});
+
+					if (recentLearningTurn) {
+						await incrementExplainCount(recentLearningTurn.id);
+					}
+				}
+			} catch (explainCountError) {
+				console.error('❌ Failed to increment explain count:', explainCountError);
+			}
+		}
+
+		// --- HANDLE "End Session" SPECIALLY ---
+		if (option === 'End Session') {
+			console.log('🛑 User requested to user: End Session');
+			return res.status(200).json({
+				aiMessages: [{
+					sender: 'ai',
+					message: 'Session ended.',
+					message_type: 'text',
+					options: [],
+					created_at: new Date().toISOString()
+				}],
+				goals: topicGoals
+			});
+		}
+
+		let aiResponse;
+		try {
+			if (option === 'Got it') {
+				const modifiedHistory = [...chatHistory, { sender: 'system', message: 'IMPORTANT: The user has acknowledged the previous correction. Do NOT repeat the previous question or treat this as an answer. Ask a NEW question about the current goal to continue the lesson. Generate a "messages" array with the next question - do NOT use user_correction format.' }];
+				aiResponse = await generateTopicChatResponse('', topic.title, topic.content || 'No additional content provided', modifiedHistory, finalCurrentGoal, finalTopicGoals);
+			} else if (option === 'Explain' || option === 'Explain more') {
+				const modifiedHistory = [...chatHistory, { sender: 'system', message: `IMPORTANT: The user clicked "${option}". Provide a clear, detailed explanation of the concept with examples. Use 2-3 short messages. The LAST message should include options: ["Got it", "Explain more"]. Do NOT ask a new question yet - focus on explaining the previous correction thoroughly.` }];
+				aiResponse = await generateTopicChatResponse('', topic.title, topic.content || 'No additional content provided', modifiedHistory, finalCurrentGoal, finalTopicGoals);
+			} else {
+				aiResponse = await generateTopicChatResponse(option, topic.title, topic.content || 'No additional content provided', chatHistory, finalCurrentGoal, finalTopicGoals);
+			}
+		} catch (aiError) {
+			console.error('Error generating AI response for option selection:', aiError);
+			aiResponse = { messages: [{ message: "I'm having trouble right now.", message_type: 'text' }] };
+		}
+
+		// Save AI messages
+		const aiMessages = [];
+		for (let i = 0; i < (aiResponse.messages || []).length; i++) {
+			const aiMsg = aiResponse.messages[i];
+			const savedAiMessage = await prisma.admin_chat.create({
+				data: {
+					user_id: user_id,
+					sender: 'ai',
+					message: aiMsg.message,
+					message_type: aiMsg.message_type || 'text',
+					options: aiMsg.options || [],
+					images: aiMsg.images || [],
+					videos: aiMsg.videos || [],
+					links: aiMsg.links || []
+				}
+			});
+			aiMessages.push(savedAiMessage);
+
+			if (finalCurrentGoal) {
+				// Link logic...
+				try {
+					const existingLink = await prisma.chat_goal_progress.findFirst({
+						where: {
+							chat_id: savedAiMessage.id,
+							goal_id: finalCurrentGoal.id,
+							user_id: user_id
+						}
+					});
+
+					if (!existingLink) {
+						// ALWAYS create a link for this specific AI message to the current goal
+						// This ensures the message appears when fetching history for this goal
+						// We copy the current stats from the existing goal progress (if any) or start fresh
+						const currentStats = await prisma.chat_goal_progress.findFirst({
+							where: {
+								user_id: user_id,
+								goal_id: finalCurrentGoal.id
+							},
+							orderBy: {
+								updated_at: 'desc'
+							}
+						});
+
+						await prisma.chat_goal_progress.create({
+							data: {
+								chat_id: savedAiMessage.id,
+								goal_id: finalCurrentGoal.id,
+								user_id: user_id,
+								is_completed: currentStats ? currentStats.is_completed : false,
+								num_questions: currentStats ? currentStats.num_questions : 0,
+								num_correct: currentStats ? currentStats.num_correct : 0,
+								num_incorrect: currentStats ? currentStats.num_incorrect : 0
+							}
+						});
+					}
+				} catch (e) { }
+			}
+		}
+
+		// Return updated goals
+		const updatedGoalsForClient = await prisma.topic_goals.findMany({
+			where: { topic_id: parseInt(topicId) },
+			orderBy: { order: 'asc' },
+			include: {
+				chat_goal_progress: {
+					where: { user_id: user_id },
+					orderBy: { created_at: 'desc' },
+					take: 1
+				}
+			}
+		});
+
+		return res.status(201).json({ aiMessages, userCorrection: aiResponse.user_correction || null, feedback: aiResponse.feedback || null, goals: updatedGoalsForClient });
+	} catch (err) {
+		console.error('Error handling option selection:', err);
+		return res.status(500).json({ error: 'Server error while processing option' });
+	}
+});
+
+// POST /api/topic-chats/:topicId/update-time
+// Update time spent on topic with session tracking
+router.post('/:topicId/update-time', authenticateToken, async (req, res) => {
+	let user_id = req.user?.user_id
+	const { topicId } = req.params
+	const { session_time_seconds } = req.body
+
+	if (!user_id) {
+		return res.status(401).json({ error: 'Authentication required - please login' })
+	}
+
+	if (!topicId || isNaN(parseInt(topicId))) {
+		return res.status(400).json({ error: 'Valid topic ID is required' })
+	}
+
+	if (session_time_seconds === undefined || session_time_seconds < 0) {
+		return res.status(400).json({ error: 'Valid session time is required' })
+	}
+
+	try {
+		// Verify user has access to this topic
+		const topic = await prisma.topics.findFirst({
+			where: {
+				id: parseInt(topicId),
+				user_id: user_id
+			},
+			select: {
+				id: true,
+				subject_id: true
+			}
 		})
 
 		if (!topic) {
 			return res.status(403).json({ error: 'Topic not found or user does not have access' })
 		}
 
-		// Update topic time spent
-		await prisma.topics.update({
-			where: { id: parseInt(topicId) },
-			data: {
-				time_spent_seconds: {
-					increment: Math.floor(session_time_seconds)
+		// Find a recent active session (updated within last 2 minutes)
+		// This handles the heartbeat logic
+		const twoMinutesAgo = new Date(Date.now() - 2 * 60 * 1000);
+
+		let activeSession = await prisma.study_sessions.findFirst({
+			where: {
+				user_id: user_id,
+				topic_id: parseInt(topicId),
+				end_time: {
+					gte: twoMinutesAgo
 				}
+			},
+			orderBy: {
+				end_time: 'desc'
 			}
-		})
+		});
+
+		let deltaSeconds = 0;
+
+		if (activeSession) {
+			// Check if this is a continuation (monotonic increase)
+			if (session_time_seconds >= activeSession.duration_seconds) {
+				deltaSeconds = session_time_seconds - activeSession.duration_seconds;
+
+				// Update existing session
+				await prisma.study_sessions.update({
+					where: { id: activeSession.id },
+					data: {
+						duration_seconds: session_time_seconds,
+						end_time: new Date()
+					}
+				});
+			} else {
+				// Time went backwards (page reload?) -> Start new session
+				deltaSeconds = session_time_seconds;
+
+				await prisma.study_sessions.create({
+					data: {
+						user_id: user_id,
+						topic_id: parseInt(topicId),
+						subject_id: topic.subject_id,
+						start_time: new Date(),
+						end_time: new Date(),
+						duration_seconds: session_time_seconds
+					}
+				});
+			}
+		} else {
+			// No active session -> Create new one
+			deltaSeconds = session_time_seconds;
+
+			await prisma.study_sessions.create({
+				data: {
+					user_id: user_id,
+					topic_id: parseInt(topicId),
+					subject_id: topic.subject_id,
+					start_time: new Date(),
+					end_time: new Date(),
+					duration_seconds: session_time_seconds
+				}
+			});
+		}
+
+		// Update aggregated time on topic (only adding the new delta)
+		// This fixes the double-counting bug
+		if (deltaSeconds > 0) {
+			await prisma.topics.update({
+				where: { id: parseInt(topicId) },
+				data: {
+					time_spent_seconds: {
+						increment: Math.floor(deltaSeconds)
+					}
+				}
+			});
+		}
 
 		return res.status(200).json({ success: true })
 	} catch (err) {
@@ -1647,10 +1870,10 @@ router.post('/:topicId/learn-more', authenticateToken, async (req, res) => {
 
 	try {
 		const { calculateSessionMetrics } = require('../../services/topic_chat_metrics')
-		const { 
-			analyzeMistakesForLearnMore, 
-			generateLearnMoreGreeting, 
-			generateLearnMoreResponse 
+		const {
+			analyzeMistakesForLearnMore,
+			generateLearnMoreGreeting,
+			generateLearnMoreResponse
 		} = require('../../services/topic_chat_learn_more')
 
 		console.log('\n========== LEARN MORE REQUEST ==========');
@@ -1856,6 +2079,7 @@ router.post('/:topicId/learn-more', authenticateToken, async (req, res) => {
 		return res.status(500).json({ error: 'Server error in Learn More mode' })
 	}
 })
+
 
 module.exports = router
 

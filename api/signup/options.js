@@ -9,9 +9,7 @@ router.get('/', async (req, res) => {
 	try {
 		// Fetch all options in parallel (use models defined in schema.prisma)
 		const [grades, boards, subjects, languages] = await Promise.all([
-			prisma.grade_levels.findMany({
-				orderBy: { name: 'asc' }
-			}),
+			prisma.grade_levels.findMany({}), // Fetch all grades without DB sort, we will sort in JS
 			prisma.boards.findMany({
 				orderBy: { name: 'asc' }
 			}),
@@ -22,6 +20,19 @@ router.get('/', async (req, res) => {
 				orderBy: { name: 'asc' }
 			})
 		])
+
+		// Custom sort for grades (e.g. "Grade 10" should come after "Grade 9", not "Grade 1")
+		grades.sort((a, b) => {
+			const getNum = (str) => {
+				const match = str.match(/\d+/);
+				return match ? parseInt(match[0], 10) : 0;
+			};
+			const numA = getNum(a.name);
+			const numB = getNum(b.name);
+
+			if (numA !== numB) return numA - numB;
+			return a.name.localeCompare(b.name);
+		});
 
 		return res.status(200).json({
 			// Return only grade names as an array of strings. Frontend expects only the name now.
