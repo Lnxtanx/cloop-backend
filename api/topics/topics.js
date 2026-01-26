@@ -4,6 +4,71 @@ const { authenticateToken } = require('../../middleware/auth')
 
 const prisma = require('../../lib/prisma')
 
+// GET /api/topics/search
+// Search topics with filters
+router.get('/search', authenticateToken, async (req, res) => {
+	let user_id = req.user?.user_id
+	const { q, subjectId, chapterId, status } = req.query
+
+	if (!user_id) {
+		return res.status(401).json({ error: 'Authentication required' })
+	}
+
+	try {
+		const whereClause = {
+			user_id: user_id,
+		}
+
+		// Text search
+		if (q && q.trim().length > 0) {
+			whereClause.OR = [
+				{ title: { contains: q, mode: 'insensitive' } },
+				{ content: { contains: q, mode: 'insensitive' } } // Optional: search content too
+			]
+		}
+
+		// Filters
+		if (subjectId) {
+			whereClause.subject_id = parseInt(subjectId)
+		}
+
+		if (chapterId) {
+			whereClause.chapter_id = parseInt(chapterId)
+		}
+
+		if (status) {
+			if (status === 'completed') {
+				whereClause.is_completed = true
+			} else if (status === 'in_progress') {
+				whereClause.is_completed = false
+				whereClause.completion_percent = { gt: 0 }
+			} else if (status === 'not_started') {
+				whereClause.is_completed = false
+				whereClause.completion_percent = 0
+			}
+		}
+
+		const topics = await prisma.topics.findMany({
+			where: whereClause,
+			take: 20, // Limit results
+			orderBy: { updated_at: 'desc' },
+			include: {
+				chapters: {
+					select: { title: true }
+				},
+				subjects: {
+					select: { name: true }
+				}
+			}
+		})
+
+		return res.json(topics)
+	} catch (err) {
+		console.error('Error searching topics:', err)
+		return res.status(500).json({ error: 'Search failed' })
+	}
+})
+
 // GET /api/topics/:chapterId
 // Fetch all topics for a specific chapter and user
 router.get('/:chapterId', authenticateToken, async (req, res) => {
