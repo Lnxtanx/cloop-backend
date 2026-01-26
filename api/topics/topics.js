@@ -7,8 +7,10 @@ const prisma = require('../../lib/prisma')
 // GET /api/topics/search
 // Search topics with filters
 router.get('/search', authenticateToken, async (req, res) => {
-	let user_id = req.user?.user_id
+	let user_id = parseInt(req.user?.user_id)
 	const { q, subjectId, chapterId, status } = req.query
+
+	console.log(`Search request: user_id=${user_id}, q="${q}", filters={subject:${subjectId}, chapter:${chapterId}, status:${status}}`)
 
 	if (!user_id) {
 		return res.status(401).json({ error: 'Authentication required' })
@@ -22,17 +24,17 @@ router.get('/search', authenticateToken, async (req, res) => {
 		// Text search
 		if (q && q.trim().length > 0) {
 			whereClause.OR = [
-				{ title: { contains: q, mode: 'insensitive' } },
-				{ content: { contains: q, mode: 'insensitive' } } // Optional: search content too
+				{ title: { contains: q.trim(), mode: 'insensitive' } },
+				{ content: { contains: q.trim(), mode: 'insensitive' } }
 			]
 		}
 
 		// Filters
-		if (subjectId) {
-			whereClause.subject_id = parseInt(subjectId)
+		if (subjectId && !isNaN(parseInt(subjectId))) {
+			whereClause.subject_id = parseInt(subjectId) // Ensure it's an integer
 		}
 
-		if (chapterId) {
+		if (chapterId && !isNaN(parseInt(chapterId))) {
 			whereClause.chapter_id = parseInt(chapterId)
 		}
 
@@ -44,9 +46,11 @@ router.get('/search', authenticateToken, async (req, res) => {
 				whereClause.completion_percent = { gt: 0 }
 			} else if (status === 'not_started') {
 				whereClause.is_completed = false
-				whereClause.completion_percent = 0
+				whereClause.completion_percent = { equals: 0 } // Explicitly 0
 			}
 		}
+
+		console.log('Search WHERE clause:', JSON.stringify(whereClause, null, 2))
 
 		const topics = await prisma.topics.findMany({
 			where: whereClause,
@@ -62,6 +66,7 @@ router.get('/search', authenticateToken, async (req, res) => {
 			}
 		})
 
+		console.log(`Search results found: ${topics.length}`)
 		return res.json(topics)
 	} catch (err) {
 		console.error('Error searching topics:', err)
