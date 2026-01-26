@@ -1,6 +1,7 @@
 const prisma = require('../lib/prisma');
 const { runContentGenerationPipeline, generateMissingGoals } = require('./content-pipeline');
 const { notifyContentGenerationStatus } = require('./notifications');
+const { processEngagementNotifications } = require('./engagement-notifications');
 
 console.log('[background-processor] Prisma loaded:', typeof prisma, 'has contentGenerationStatus:', typeof prisma?.contentGenerationStatus);
 
@@ -35,6 +36,18 @@ async function startContinuousProcessing() {
     await processPendingTasks();
   }, POLLING_INTERVAL);
 
+  // Engagement Notification Loop (Check every 1 hour)
+  // We check frequently, but the internal logic handles the 2-hour cooldown per user
+  const ENGAGEMENT_INTERVAL = 60 * 60 * 1000; // 1 hour
+  setInterval(() => {
+    processEngagementNotifications();
+  }, ENGAGEMENT_INTERVAL);
+
+  // Run on start for demo purposes (optional)
+  setTimeout(() => {
+    processEngagementNotifications();
+  }, 10000); // Wait 10s after startup
+
   console.log('✓ Continuous processor started\n');
 }
 
@@ -47,7 +60,7 @@ async function stopContinuousProcessing() {
     processingInterval = null;
     console.log('\n⏹️  Continuous processor stopped');
   }
-  
+
   // Disconnect Prisma client
   if (prisma) {
     try {
@@ -98,15 +111,15 @@ async function processPendingTasks() {
       // No pending tasks, check for missing goals
       console.log('📋 No pending content generation tasks');
       console.log('🔍 [background-processor] Checking for topics without goals...');
-      
+
       const missingGoalsResult = await generateMissingGoals();
-      
+
       if (missingGoalsResult.generated > 0) {
         console.log(`✅ Generated goals for ${missingGoalsResult.generated} topics\n`);
       } else {
         console.log('✅ All topics have goals\n');
       }
-      
+
       return;
     }
 
@@ -122,7 +135,7 @@ async function processPendingTasks() {
 
         if (!user) {
           console.log(`❌ User ${task.user_id} not found, skipping...`);
-          
+
           // Mark as failed
           await prisma.content_generation_status.update({
             where: { id: task.id },
@@ -142,7 +155,7 @@ async function processPendingTasks() {
 
         console.log(`\n🚀 Processing: ${user.name} - ${task.subjects.name}`);
         console.log(`   Grade: ${user.grade_level}, Board: ${user.board}`);
-        
+
         // Send start notification
         await notifyContentGenerationStatus(
           task.user_id,
@@ -156,7 +169,7 @@ async function processPendingTasks() {
         if (result.success) {
           console.log(`✅ Successfully completed: ${task.subjects.name}`);
           console.log(`   Chapters: ${result.chaptersCount}, Topics: ${result.topicsCount || 0}`);
-          
+
           // Send completion notification
           await notifyContentGenerationStatus(
             task.user_id,
@@ -176,7 +189,7 @@ async function processPendingTasks() {
       } catch (error) {
         console.error(`\n❌ Failed: User ${task.user_id}, Subject ${task.subjects.name}`);
         console.error(`   Error: ${error.message}`);
-        
+
         // Send failure notification
         await notifyContentGenerationStatus(
           task.user_id,
@@ -184,7 +197,7 @@ async function processPendingTasks() {
           task.subjects.name,
           { error: error.message }
         );
-        
+
         // Mark as failed in database
         await prisma.content_generation_status.update({
           where: { id: task.id },
