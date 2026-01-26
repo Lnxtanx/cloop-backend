@@ -1,6 +1,33 @@
 const prisma = require('../lib/prisma');
 
-const createNotification = async (userId, title, message, type = 'info') => {
+// Helper to send push notification
+const sendPushNotification = async (userId, title, message, data = {}) => {
+  try {
+    const user = await prisma.users.findUnique({
+      where: { user_id: parseInt(userId) },
+      select: { push_token: true, expo_push_token: true } // check both fields just in case
+    });
+
+    // Use expo_push_token if available (new field), fallback to push_token
+    const token = user?.expo_push_token || user?.push_token;
+
+    if (token && Expo.isExpoPushToken(token)) {
+      console.log(`Sending push to user ${userId} with token ${token}`);
+      await expo.sendPushNotificationsAsync([{
+        to: token,
+        sound: 'default',
+        title: title,
+        body: message,
+        data: data,
+        priority: 'high',
+      }]);
+    }
+  } catch (error) {
+    console.error('Error sending push notification:', error);
+  }
+};
+
+const createNotification = async (userId, title, message, type = 'info', data = {}) => {
   try {
     const notification = await prisma.notifications.create({
       data: {
@@ -11,6 +38,10 @@ const createNotification = async (userId, title, message, type = 'info') => {
         is_read: false
       }
     });
+
+    // Send push notification automatically
+    await sendPushNotification(userId, title, message, { type, ...data });
+
     return notification;
   } catch (error) {
     console.error('Error creating notification:', error);
@@ -136,29 +167,8 @@ const notifyContentGenerationStatus = async (userId, status, subjectName, data =
       return;
   }
 
-  // 1. Save to Database
-  await createNotification(userId, title, message, type);
-
-  // 2. Send Push Notification (if user has token)
-  try {
-    const user = await prisma.users.findUnique({
-      where: { user_id: parseInt(userId) },
-      select: { push_token: true }
-    });
-
-    if (user?.push_token && Expo.isExpoPushToken(user.push_token)) {
-      await expo.sendPushNotificationsAsync([{
-        to: user.push_token,
-        sound: 'default',
-        title: title,
-        body: message,
-        data: { subjectName, status, ...data },
-      }]);
-    }
-  } catch (error) {
-    console.error('Error sending push notification:', error);
-    // Don't fail the pipeline just because push failed
-  }
+  // Save to Database AND Send Push (handled by createNotification now)
+  await createNotification(userId, title, message, type, { subjectName, status, ...data });
 };
 
 module.exports = {
