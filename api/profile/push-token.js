@@ -1,7 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { PrismaClient } = require('@prisma/client')
-const prisma = new PrismaClient()
+const prisma = require('../../lib/prisma')
 const { authenticateToken } = require('../../middleware/auth')
 
 // POST /api/profile/push-token
