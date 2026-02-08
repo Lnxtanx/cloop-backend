@@ -24,7 +24,8 @@
     "jsonwebtoken": "^9.0.2",
     "openai": "^6.2.0",
     "p-limit": "^4.0.0",
-    "pg": "^8.16.3"
+    "pg": "^8.16.3",
+    "ws": "^8.19.0"
   },
   "devDependencies": {
     "prisma": "^6.16.3"
