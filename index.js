@@ -95,11 +95,13 @@ const prisma = require('./lib/prisma')
 // Handle WebSocket upgrade requests
 server.on('upgrade', (request, socket, head) => {
 	const { pathname, query } = url.parse(request.url, true)
+	console.log('[Voice WS] Upgrade request received for path:', pathname)
 
 	if (pathname === '/api/voice-chat/stream') {
 		// Authenticate via token in query string
 		const token = query.token
 		if (!token) {
+			console.error('[Voice WS] No token provided')
 			socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n')
 			socket.destroy()
 			return
@@ -108,8 +110,10 @@ server.on('upgrade', (request, socket, head) => {
 		try {
 			const decoded = jwt.verify(token, process.env.JWT_SECRET)
 			request.user = decoded
+			console.log('[Voice WS] Token verified for user:', decoded.user_id)
 
 			wss.handleUpgrade(request, socket, head, (ws) => {
+				console.log('[Voice WS] Upgrade successful, emitting connection')
 				wss.emit('connection', ws, request)
 			})
 		} catch (err) {
@@ -118,6 +122,7 @@ server.on('upgrade', (request, socket, head) => {
 			socket.destroy()
 		}
 	} else {
+		console.log('[Voice WS] Unknown path, destroying socket:', pathname)
 		socket.destroy()
 	}
 })
@@ -131,13 +136,23 @@ wss.on('connection', async (clientWs, request) => {
 	let transcripts = []
 
 	try {
+		// Check if OpenAI API key is configured
+		if (!process.env.API_KEY_OPENAI) {
+			throw new Error('OpenAI API key not configured on server')
+		}
+		console.log('[Voice WS] OpenAI API key present, length:', process.env.API_KEY_OPENAI.length)
+
 		const voiceService = getVoiceService()
+		console.log('[Voice WS] Voice service loaded')
 
 		// Build user context
 		const userContext = await voiceService.buildMinimalContext(userId)
+		console.log('[Voice WS] User context built')
 
 		// Connect to OpenAI Realtime API
+		console.log('[Voice WS] Connecting to OpenAI Realtime API...')
 		openaiWs = await voiceService.createRealtimeSession(userId, userContext)
+		console.log('[Voice WS] OpenAI connection established')
 
 		// Setup message handler to relay between client and OpenAI
 		voiceService.setupMessageHandler(openaiWs, clientWs, userId, (sender, text) => {
