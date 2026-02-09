@@ -166,6 +166,7 @@ wss.on('connection', async (clientWs, request) => {
 				const msg = JSON.parse(data.toString())
 
 				switch (msg.type) {
+					case 'audio.append':
 					case 'audio':
 						// Client sending audio data
 						voiceService.sendAudio(openaiWs, msg.audio)
