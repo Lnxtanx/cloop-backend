@@ -68,8 +68,9 @@ app.use('/api/normal-chat', require('./api/normal-chat/normal-chat'))
 app.use('/api/content-generation', require('./api/content-generation/content-generation'))
 app.use('/api/saved-topics', require('./api/saved-topics/saved-topics'))
 app.use('/api/notifications', require('./api/notifications/notifications'))
-// Voice Chat REST routes
-app.use('/api/voice-chat', require('./api/voice-chat/voice-chat'))
+// Voice Chat REST routes (Legacy - Moved to Python Service)
+// app.use('/api/voice-chat', require('./api/voice-chat/voice-chat'))
+app.use('/api/internal/tools', require('./api/internal/tools'))
 
 const PORT = process.env.PORT || 4000
 const HOST = process.env.HOST || '0.0.0.0' // Listen on all network interfaces
@@ -77,168 +78,21 @@ const HOST = process.env.HOST || '0.0.0.0' // Listen on all network interfaces
 // Create HTTP server for both Express and WebSocket
 const server = http.createServer(app)
 
-// Create WebSocket server for voice chat
-const wss = new WebSocket.Server({ noServer: true })
+// Create WebSocket server (Legacy - Removed)
+// const wss = new WebSocket.Server({ noServer: true })
 
 // Voice realtime service (lazy loaded to avoid circular deps)
-let voiceRealtimeService = null
-const getVoiceService = () => {
-	if (!voiceRealtimeService) {
-		voiceRealtimeService = require('./services/voice-realtime')
-	}
-	return voiceRealtimeService
-}
+// let voiceRealtimeService = null
 
 // Prisma for storing transcripts
 const prisma = require('./lib/prisma')
 
 // Handle WebSocket upgrade requests
-server.on('upgrade', (request, socket, head) => {
-	const { pathname, query } = url.parse(request.url, true)
-	console.log('[Voice WS] Upgrade request received for path:', pathname)
-
-	if (pathname === '/api/voice-chat/stream') {
-		// Authenticate via token in query string
-		const token = query.token
-		if (!token) {
-			console.error('[Voice WS] No token provided')
-			socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n')
-			socket.destroy()
-			return
-		}
-
-		try {
-			const decoded = jwt.verify(token, process.env.JWT_SECRET)
-			request.user = decoded
-			console.log('[Voice WS] Token verified for user:', decoded.user_id)
-
-			wss.handleUpgrade(request, socket, head, (ws) => {
-				console.log('[Voice WS] Upgrade successful, emitting connection')
-				wss.emit('connection', ws, request)
-			})
-		} catch (err) {
-			console.error('[Voice WS] Auth error:', err.message)
-			socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n')
-			socket.destroy()
-		}
-	} else {
-		console.log('[Voice WS] Unknown path, destroying socket:', pathname)
-		socket.destroy()
-	}
-})
-
-// Handle WebSocket connections for voice chat
-wss.on('connection', async (clientWs, request) => {
-	const userId = request.user?.user_id
-	console.log(`[Voice WS] Client connected: user_${userId}`)
-
-	let openaiWs = null
-	let transcripts = []
-
-	try {
-		// Check if OpenAI API key is configured
-		if (!process.env.API_KEY_OPENAI) {
-			throw new Error('OpenAI API key not configured on server')
-		}
-		console.log('[Voice WS] OpenAI API key present, length:', process.env.API_KEY_OPENAI.length)
-
-		const voiceService = getVoiceService()
-		console.log('[Voice WS] Voice service loaded')
-
-		// Build user context
-		const userContext = await voiceService.buildMinimalContext(userId)
-		console.log('[Voice WS] User context built')
-
-		// Connect to OpenAI Realtime API
-		console.log('[Voice WS] Connecting to OpenAI Realtime API...')
-		openaiWs = await voiceService.createRealtimeSession(userId, userContext)
-		console.log('[Voice WS] OpenAI connection established')
-
-		// Setup message handler to relay between client and OpenAI
-		voiceService.setupMessageHandler(openaiWs, clientWs, userId, (sender, text) => {
-			// Collect transcripts for saving
-			transcripts.push({ sender, message: text, timestamp: new Date() })
-		})
-
-		// Handle messages from client
-		clientWs.on('message', (data) => {
-			try {
-				const msg = JSON.parse(data.toString())
-
-				switch (msg.type) {
-					case 'audio.append':
-					case 'audio':
-						// Client sending audio data
-						voiceService.sendAudio(openaiWs, msg.audio)
-						break
-
-					case 'commit':
-						// Client signals end of speech (manual mode)
-						voiceService.commitAudio(openaiWs)
-						break
-
-					case 'cancel':
-						// Client wants to interrupt AI
-						voiceService.cancelResponse(openaiWs)
-						break
-
-					case 'ping':
-						clientWs.send(JSON.stringify({ type: 'pong' }))
-						break
-
-					default:
-						console.log('[Voice WS] Unknown message type:', msg.type)
-				}
-			} catch (err) {
-				console.error('[Voice WS] Message parse error:', err)
-			}
-		})
-
-		clientWs.on('close', async () => {
-			console.log(`[Voice WS] Client disconnected: user_${userId}`)
-			voiceService.closeSession(openaiWs)
-
-			// Save transcripts to database
-			if (transcripts.length > 0) {
-				try {
-					for (const t of transcripts) {
-						await prisma.normal_user_chat.create({
-							data: {
-								user_id: userId,
-								sender: t.sender,
-								message: t.message,
-								message_type: 'voice_transcript',
-								images: [],
-								videos: [],
-								links: []
-							}
-						})
-					}
-					console.log(`[Voice WS] Saved ${transcripts.length} transcripts for user_${userId}`)
-				} catch (saveErr) {
-					console.error('[Voice WS] Failed to save transcripts:', saveErr)
-				}
-			}
-		})
-
-		clientWs.on('error', (err) => {
-			console.error('[Voice WS] Client error:', err)
-			voiceService.closeSession(openaiWs)
-		})
-
-	} catch (err) {
-		console.error('[Voice WS] Connection setup error:', err)
-		clientWs.send(JSON.stringify({
-			type: 'error',
-			message: 'Failed to establish voice connection: ' + err.message
-		}))
-		clientWs.close()
-	}
-})
+// WebSocket handling for voice chat has been moved to Python microservice
+// wss.handleUpgrade and wss.on('connection') logic removed.
 
 server.listen(PORT, HOST, async () => {
 	console.log(`\n🚀 Backend server listening on ${HOST}:${PORT}`)
-	console.log(`🎙️ Voice WebSocket available at ws://${HOST}:${PORT}/api/voice-chat/stream`)
 	console.log(`Environment: ${process.env.NODE_ENV || 'development'}`)
 	console.log('='.repeat(60))
 
