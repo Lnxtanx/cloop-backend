@@ -78,7 +78,13 @@ What changes (Academic Rigor & Flow):
    - **NO** user_correction (it's a query).
    - **MUST** provide detailed explanation of the PREVIOUS concept.
    - **MUST** ask "Should we move on?" at the end.
-6. **Short Questions**: Questions must be clear, short, and 1 sentence.
+6. **COGNITIVE QUESTION DESIGN**: 
+   - DO NOT ask straightforward "What is X?" or "Define Y" questions. 
+   - Focus on testing actual comprehension by using one of these formats:
+     a) "What If": Present a hypothetical scenario where a variable is changed (e.g., "If X was removed, what would happen?").
+     b) Real-World Application: Present a brief practical scenario and ask the user to apply the concept.
+     c) Defend/Critique: Ask the user to explain WHY something works, or identify the flaw in a hypothetical statement.
+   - The question must still be exactly 1 sentence long and highly focused.
 
 Questions asked so far:
 ${allQuestions.length > 0 ? allQuestions.map((q, i) => `${i + 1}. "${q}"`).join('\n') : 'None yet'}
@@ -404,19 +410,19 @@ async function generateTopicGoals(topicTitle, topicContent) {
           
 Each goal should be:
 - Clear and specific (5-10 words)
-- Measurable (can ask questions about it)
+- Measurable (can ask analytical/cognitive questions about it)
 - Progressive (builds on previous goals)
-- Student-friendly language
+- Action-oriented and challenging (e.g., "Analyze", "Evaluate", "Apply")
 - Achievable through conversation
 
-Goals should move from basic understanding to application.
+Goals MUST focus on higher-order cognitive skills rather than simple memorization.
 
 Return JSON:
 {
   "goals": [
-    { "title": "Understand basic concept", "description": "Learn what ${topicTitle} means and why it matters", "order": 1 },
-    { "title": "Identify key features", "description": "Recognize important characteristics and properties", "order": 2 },
-    { "title": "Apply knowledge", "description": "Use understanding in practical examples", "order": 3 }
+    { "title": "Analyze the core concept", "description": "Examine what ${topicTitle} means in different contexts", "order": 1 },
+    { "title": "Evaluate key characteristics", "description": "Assess and critique important properties and their impact", "order": 2 },
+    { "title": "Apply knowledge to scenarios", "description": "Use understanding to solve practical, real-world examples", "order": 3 }
   ]
 }`
         },
@@ -446,10 +452,10 @@ Return JSON:
     // Fallback goals
     return {
       goals: [
-        { title: "Understand the basics", description: `Learn what ${topicTitle} means and its importance`, order: 1 },
-        { title: "Identify key concepts", description: "Recognize important ideas and components", order: 2 },
-        { title: "Apply knowledge", description: "Use understanding in practical examples", order: 3 },
-        { title: "Connect concepts", description: "Link this topic to related ideas", order: 4 }
+        { title: "Analyze the core concept", description: `Examine what ${topicTitle} means in different contexts`, order: 1 },
+        { title: "Evaluate key characteristics", description: "Assess and critique important properties and their impact", order: 2 },
+        { title: "Apply knowledge to scenarios", description: "Use understanding to solve practical, real-world examples", order: 3 },
+        { title: "Connect and critique concepts", description: "Critique how this topic connects to related ideas", order: 4 }
       ]
     };
   }
