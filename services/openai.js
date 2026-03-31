@@ -2,10 +2,19 @@ const OpenAI = require('openai');
 
 let openai = null;
 try {
-  openai = new OpenAI({ apiKey: process.env.API_KEY_OPENAI });
+  const apiKey = process.env.API_KEY_OPENAI || process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    throw new Error('OPENAI_API_KEY or API_KEY_OPENAI environment variable not set');
+  }
+  openai = new OpenAI({ 
+    apiKey: apiKey,
+    timeout: 35000, // 35 second timeout for API calls
+    maxRetries: 2    // Retry failed requests up to 2 times
+  });
+  console.log('✅ OpenAI client initialized successfully');
 } catch (err) {
   // Do not throw here to allow module to be required in environments without API key
-  console.warn('OpenAI client not initialized. Set API_KEY_OPENAI to enable API calls.');
+  console.warn('⚠️ OpenAI client not initialized:', err.message);
   openai = null;
 }
 

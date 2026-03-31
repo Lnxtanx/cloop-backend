@@ -830,14 +830,16 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 				parseInt(topicId)
 			)
 		} catch (aiError) {
-			console.error('Error generating AI response:', aiError)
-			// Fallback response
-			aiResponse = {
-				messages: [
-					{ message: "I'm having trouble right now.", message_type: "text" },
-					{ message: "Could you try again?", message_type: "text" }
-				]
-			}
+			console.error('❌ Error generating AI response:', aiError.message)
+			console.error('Stack:', aiError.stack)
+			
+			// Return error response immediately (don't proceed)
+			return res.status(500).json({ 
+				error: 'Failed to generate AI response',
+				details: process.env.NODE_ENV === 'development' ? aiError.message : undefined,
+				retryable: true,
+				message: 'The AI service encountered an issue. Please try your message again.'
+			})
 		}
 
 		// Duplicate-question fallback (retry once) — if the model returns a question identical

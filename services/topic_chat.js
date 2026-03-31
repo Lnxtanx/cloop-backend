@@ -150,45 +150,64 @@ async function generateTopicChatResponse(userMessage, topicTitle, topicContent, 
     let parsed = {};
     let response = null;
     let attempts = 0;
-    const maxAttempts = 2;
+    const maxAttempts = 3;
+    let lastError = null;
 
     while (attempts < maxAttempts) {
       attempts++;
       try {
+        console.log(`[topic_chat] 🚀 Attempt ${attempts}/${maxAttempts} - Calling OpenAI API...`);
+        
         response = await openai.chat.completions.create({
-          model: 'gpt-4o',
+          model: 'gpt-4o-mini',
           messages: messages,
           temperature: 0.1,
           max_tokens: 4000,
-          response_format: { type: "json_object" }
+          response_format: { type: "json_object" },
+          timeout: 30000 // 30 second timeout
         });
 
-        // Log raw response for debugging
+        // Validate response exists
+        if (!response?.choices?.[0]?.message?.content) {
+          throw new Error('Empty response from OpenAI API');
+        }
+
         const rawContent = response.choices[0].message.content;
-        console.log(`\n========== AI OUTPUT DETAILS (Attempt ${attempts}) ==========`);
-        console.log('📤 Raw Model Output (first 1000 chars):', rawContent && rawContent.substring(0, 1000));
+        console.log(`[topic_chat] 📤 Raw Output (first 500 chars): ${rawContent?.substring(0, 500) || 'EMPTY'}`);
 
-        const content = rawContent.trim();
+        // Validate content is not empty
+        const content = rawContent?.trim();
+        if (!content || content === '' || content === '{}') {
+          throw new Error(`OpenAI returned empty or invalid JSON: "${content}"`);
+        }
+
+        // Try to parse JSON
         parsed = JSON.parse(content);
+        
+        // Validate parsed object has expected structure
+        if (!parsed.messages && !parsed.message) {
+          console.warn('[topic_chat] ⚠️ Response missing both "messages" and "message" fields');
+          // Still continue, normalization will handle it
+        }
 
-        // If successful, break the loop
+        console.log(`[topic_chat] ✅ Successfully parsed JSON on attempt ${attempts}`);
         break;
 
       } catch (err) {
-        console.warn(`[topic_chat] Attempt ${attempts} failed: ${err.message}`);
-
-        // Try to recover by finding JSON substring if proper parse failed
-        if (err instanceof SyntaxError) {
-          // We can't access rawContent easily here without restructuring, 
-          // but strictly speaking, the previous implementation's recovery logic was outside the try/catch.
-          // We will keep it simple: just retry.
+        lastError = err;
+        console.warn(`[topic_chat] ❌ Attempt ${attempts} failed: ${err.message}`);
+        
+        // Log more details for debugging
+        if (response?.choices?.[0]?.message?.content) {
+          console.warn(`[topic_chat] Response content: "${response.choices[0].message.content.substring(0, 200)}"...`);
         }
 
-        if (attempts === maxAttempts) {
-          console.error('[topic_chat] All attempts failed.');
-          // If it was the last attempt, allow it to fall through or throw
-          // The original code had specific error handling below, but let's throw to hit the outer catch
-          throw err;
+        if (attempts < maxAttempts) {
+          console.log(`[topic_chat] 🔄 Retrying in 1 second...`);
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        } else {
+          console.error(`[topic_chat] 💥 All ${maxAttempts} attempts failed. Throwing error.`);
+          throw lastError;
         }
       }
     }
