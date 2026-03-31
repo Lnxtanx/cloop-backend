@@ -163,8 +163,7 @@ async function generateTopicChatResponse(userMessage, topicTitle, topicContent, 
           messages: messages,
           temperature: 0.1,
           max_tokens: 4000,
-          response_format: { type: "json_object" },
-          timeout: 30000 // 30 second timeout
+          response_format: { type: "json_object" }
         });
 
         // Validate response exists

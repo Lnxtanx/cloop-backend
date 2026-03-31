@@ -2,6 +2,7 @@ const OpenAI = require('openai');
 
 const openai = new OpenAI({
   apiKey: process.env.API_KEY_OPENAI,
+  timeout: parseInt(process.env.OPENAI_TIMEOUT_MS || '30000', 10),
 });
 
 /**
