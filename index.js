@@ -26,6 +26,7 @@ const corsOptions = {
 			'http://localhost:3000',
 			// Production - Add your frontend URLs here
 			process.env.FRONTEND_URL,
+			'https://learn.cloopapp.com',
 		].filter(Boolean)
 
 		// Allow all local network IPs for development

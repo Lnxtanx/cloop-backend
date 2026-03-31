@@ -772,8 +772,14 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 
 		// 🔧 PRE-CHECK: If currentGoal exists, check if answering this question will complete ALL goals
 		// This allows us to trigger session end immediately after last answer
+		// BUT: Only run this check if user is answering an actual question, not responding to movement prompts
 		let willCompleteAllGoals = false
-		if (currentGoal) {
+		
+		// Check if last AI message was a movement_prompt
+		const lastAIMessage = chatHistory.slice().reverse().find(m => m.sender === 'ai')
+		const isRespondingToMovementPrompt = lastAIMessage && lastAIMessage.message_type === 'movement_prompt'
+		
+		if (currentGoal && !isRespondingToMovementPrompt) {
 			const existingProgress = await prisma.chat_goal_progress.findFirst({
 				where: {
 					user_id: user_id,
