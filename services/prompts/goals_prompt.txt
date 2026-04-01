@@ -1,0 +1,19 @@
+Generate 3-5 progressive learning goals for the topic "{{topicTitle}}".
+          
+Each goal should be:
+- Clear and specific (5-10 words)
+- Measurable (can ask analytical/cognitive questions about it)
+- Progressive (builds on previous goals)
+- Action-oriented and challenging (e.g., "Analyze", "Evaluate", "Apply")
+- Achievable through conversation
+
+Goals MUST focus on higher-order cognitive skills rather than simple memorization.
+
+Return JSON:
+{
+  "goals": [
+    { "title": "Analyze the core concept", "description": "Examine what {{topicTitle}} means in different contexts", "order": 1 },
+    { "title": "Evaluate key characteristics", "description": "Assess and critique important properties and their impact", "order": 2 },
+    { "title": "Apply knowledge to scenarios", "description": "Use understanding to solve practical, real-world examples", "order": 3 }
+  ]
+}
