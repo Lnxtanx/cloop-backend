@@ -77,18 +77,14 @@ JSON FORMAT:
         : '⭕ NOT STARTED';
     return `${i + 1}. ${g.title} [${status}]`;
   }).join('\n');
-  // Detect current phase for the active goal by scanning recent chat history
-  // Look for the last AI message that had an exam-style question pattern
-  // Heuristic: if the goal's num_questions >= 2 AND recent messages look like definitions/recall → exam phase
-  // More reliable: check if any AI message in last 10 contains "Define" / "State" / "Name" patterns
-  const recentAiMsgs = chatHistory.filter(m => m.sender === 'ai' && m.message_type === 'text').slice(-10);
+  // Detect current phase using allQuestions (array of question strings available in scope)
   const examKeywords = /^(define|state|name|what is|which of|fill in|write the formula|list)/i;
   const conceptKeywords = /if |why|how is|what would|when|which friction|does.*more|does.*less/i;
   let detectedPhase = 'CONCEPT_UNDERSTANDING';
-  if (recentAiMsgs.length >= 2) {
-    const lastFew = recentAiMsgs.slice(-3).map(m => m.message || '');
-    const examCount = lastFew.filter(m => examKeywords.test(m.trim())).length;
-    const conceptCount = lastFew.filter(m => conceptKeywords.test(m.trim())).length;
+  if (allQuestions.length >= 2) {
+    const lastFew = allQuestions.slice(-3);
+    const examCount = lastFew.filter(q => examKeywords.test(q.trim())).length;
+    const conceptCount = lastFew.filter(q => conceptKeywords.test(q.trim())).length;
     if (examCount > conceptCount) detectedPhase = 'EXAM_READINESS';
   }
   const numQuestionsForCurrentGoal = currentGoal?.chat_goal_progress?.[0]?.num_questions || 0;
