@@ -770,52 +770,6 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 			}
 		})
 
-		// 🔧 PRE-CHECK: If currentGoal exists, check if answering this question will complete ALL goals
-		// This allows us to trigger session end immediately after last answer
-		// BUT: Only run this check if user is answering an actual question, not responding to movement prompts
-		let willCompleteAllGoals = false
-		
-		// Check if last AI message was a movement_prompt
-		const lastAIMessage = chatHistory.slice().reverse().find(m => m.sender === 'ai')
-		const isRespondingToMovementPrompt = lastAIMessage && lastAIMessage.message_type === 'movement_prompt'
-		
-		if (currentGoal && !isRespondingToMovementPrompt) {
-			const existingProgress = await prisma.chat_goal_progress.findFirst({
-				where: {
-					user_id: user_id,
-					goal_id: currentGoal.id
-				},
-				orderBy: {
-					updated_at: 'desc'
-				}
-			})
-
-			// Check if this answer will be the 2nd question for this goal (completing it)
-			const currentQuestions = existingProgress?.num_questions || 0
-			const willCompleteCurrentGoal = (currentQuestions + 1) >= 2 // 2 questions per goal
-
-			if (willCompleteCurrentGoal) {
-				// Check how many goals are already complete
-				const completedGoals = await prisma.chat_goal_progress.findMany({
-					where: {
-						user_id: user_id,
-						goal_id: {
-							in: topicGoals.map(g => g.id)
-						},
-						is_completed: true
-					},
-					distinct: ['goal_id']
-				})
-
-				// Will this complete ALL goals?
-				willCompleteAllGoals = (completedGoals.length + 1) >= topicGoals.length
-
-				if (willCompleteAllGoals) {
-					console.log('🎯 DETECTED: This answer will complete ALL GOALS! Preparing session summary...')
-				}
-			}
-		}
-
 		// Generate AI response using agentic tutor
 		let aiResponse
 		try {
@@ -1129,6 +1083,11 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 					select: { name: true }
 				});
 
+				// Extract phase info from AI evaluation block
+				const aiEvaluation = aiResponse.evaluation || {};
+				const questionMode = aiEvaluation.question_mode || 'concept';
+				const conceptClarityScore = aiEvaluation.concept_clarity_score !== undefined ? aiEvaluation.concept_clarity_score : null;
+
 				// Create learning turn record
 				await createLearningTurn({
 					user_id: user_id,
@@ -1144,20 +1103,20 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 					feedback_text: userCorrection.complete_answer || null,
 					feedback_json: userCorrection.feedback,
 					error_type: userCorrection.feedback.error_type || null,
-					error_subtype: null, // Could be extracted from more detailed feedback
+					error_subtype: null,
 					is_correct: isCorrectAnswer,
 					score_percent: userCorrection.feedback.score_percent || (isCorrectAnswer ? 100 : 0),
-					response_time_sec: responseTimeSec, // ✅ Added real tracking
-					help_requested: null, // Could be tracked if user explicitly asks for help
-					explain_loop_count: 0, // Will be incremented when user clicks "Explain"
-					num_retries: 0, // Could track if same question is asked again
+					response_time_sec: responseTimeSec,
+					help_requested: null,
+					explain_loop_count: 0,
+					num_retries: 0,
 					goal_progress_before: progressBefore,
 					goal_progress_after: progressAfter,
 					mastery_score: masteryScore,
-					difficulty_level: 'medium', // Could be dynamically determined
+					difficulty_level: 'medium',
 					topic_title: topic.title,
 					subject_name: topic.subjects?.name || null,
-					question_type: 'open_ended'
+					question_type: questionMode // 'concept' or 'exam'
 				});
 
 				console.log('✅ Learning turn record created successfully');
@@ -1165,6 +1124,10 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 				console.error('❌ Failed to create learning turn record:', learningTurnError);
 				// Don't fail the request if learning turn creation fails
 			}
+
+			// Phase-based goal completion: goal is complete when AI signals next_step_type = 'predict_score'
+			// This replaces the old hardcoded "2 questions per goal" rule
+			const aiSignalsGoalComplete = aiResponse.evaluation?.next_step_type === 'predict_score'
 
 			if (existingProgress) {
 				// Update existing progress
@@ -1175,9 +1138,8 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 				// Calculate accuracy
 				const accuracyPercent = newNumQuestions > 0 ? Math.round((newNumCorrect / newNumQuestions) * 100) : 0
 
-				// ALL goals need 2 questions to complete
-				const requiredQuestions = 2
-				const shouldComplete = newNumQuestions >= requiredQuestions
+				// Goal is complete when AI signals both concept + exam phases are done
+				const shouldComplete = aiSignalsGoalComplete || existingProgress.is_completed
 
 				await prisma.chat_goal_progress.update({
 					where: { id: existingProgress.id },
@@ -1191,16 +1153,13 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 					}
 				})
 
-				console.log(`📊 Goal Progress Updated | Goal: ${currentGoal.title} | Questions: ${newNumQuestions} | Correct: ${newNumCorrect} | Accuracy: ${accuracyPercent}% | Completed: ${shouldComplete}`)
+				console.log(`📊 Goal Progress Updated | Goal: ${currentGoal.title} | Questions: ${newNumQuestions} | Correct: ${newNumCorrect} | Accuracy: ${accuracyPercent}% | Completed: ${shouldComplete} | AI Signal: ${aiSignalsGoalComplete}`)
 			} else {
 				// This shouldn't happen if we created the link earlier, but handle it
 				const numQuestions = isActualAnswer ? 1 : 0
 				const numCorrect = isCorrectAnswer ? 1 : 0
 				const numIncorrect = (isActualAnswer && !isCorrectAnswer) ? 1 : 0
-
-				// ALL goals need 2 questions to complete
-				const requiredQuestions = 2
-				const shouldComplete = numQuestions >= requiredQuestions
+				const shouldComplete = aiSignalsGoalComplete
 
 				await prisma.chat_goal_progress.upsert({
 					where: {
@@ -1230,7 +1189,7 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 				})
 
 				const accuracyPercent = numQuestions > 0 ? (isCorrectAnswer ? 100 : 0) : 0
-				console.log(`📊 Goal Progress Created | Goal: ${currentGoal.title} | Questions: ${numQuestions} | Correct: ${numCorrect} | Accuracy: ${accuracyPercent}% | Completed: ${shouldComplete}`)
+				console.log(`📊 Goal Progress Created | Goal: ${currentGoal.title} | Questions: ${numQuestions} | Correct: ${numCorrect} | Accuracy: ${accuracyPercent}% | Completed: ${shouldComplete} | AI Signal: ${aiSignalsGoalComplete}`)
 			}
 
 			// Update topic completion based on completed goals
@@ -1254,7 +1213,7 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 				where: { id: parseInt(topicId) },
 				data: {
 					completion_percent: completionPercent,
-					is_completed: completionPercent >= 50
+					is_completed: completionPercent >= 100
 				}
 			})
 
@@ -1557,17 +1516,9 @@ router.post('/:topicId/option', authenticateToken, async (req, res) => {
 				let prog = await prisma.chat_goal_progress.findFirst({ where: { user_id: user_id, goal_id: currentGoal.id } });
 
 				if (prog) {
-					// ALL goals require 2 questions to complete
-					const numQ = prog.num_questions || 0;
-					const numC = prog.num_correct || 0;
-					const percent = numQ > 0 ? Math.round((numC / numQ) * 100) : 0;
-					const requiredQuestions = 2;
-					// Mark completed only if 2 questions have been asked
-					const markCompleted = (numQ >= requiredQuestions);
-
-					if (markCompleted && !prog.is_completed) {
-						await prisma.chat_goal_progress.update({ where: { id: prog.id }, data: { is_completed: true } });
-					}
+					// Goal completion is now driven by AI phase signals (predict_score),
+					// not by a fixed question count. No auto-mark here.
+					// is_completed is set directly in the message handler above.
 				}
 				// Recompute topic completion percent
 				const allGoalsProgress = await prisma.chat_goal_progress.groupBy({
@@ -1577,7 +1528,7 @@ router.post('/:topicId/option', authenticateToken, async (req, res) => {
 				const completedGoalsCount = allGoalsProgress.length;
 				const totalGoalsCount = topicGoals.length;
 				const completionPercent = totalGoalsCount > 0 ? Math.round((completedGoalsCount / totalGoalsCount) * 100) : 0;
-				await prisma.topics.update({ where: { id: parseInt(topicId) }, data: { completion_percent: completionPercent, is_completed: completionPercent >= 50 } });
+				await prisma.topics.update({ where: { id: parseInt(topicId) }, data: { completion_percent: completionPercent, is_completed: completionPercent >= 100 } });
 
 				// Re-fetch goals with updated progress
 				const updatedTopicGoals = await prisma.topic_goals.findMany({

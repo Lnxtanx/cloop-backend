@@ -18,7 +18,7 @@ const { calculateSessionMetrics, generateSessionSummaryMessage } = require('./to
 /**
  * Build the comprehensive system prompt for the AI tutor
  */
-function buildSystemPrompt(topicTitle, topicContent, topicGoals, currentGoal, completedGoalsCount, totalQuestionsTarget, questionsAsked, userResponses, allQuestions, lastQuestion, hasAskedQuestion, shouldEndSession, isFirstMessage, userMessage, lastAIMessage, sessionMetrics = null, forceSessionEnd = false, isWaitingForMovement = false) {
+function buildSystemPrompt(topicTitle, topicContent, topicGoals, currentGoal, completedGoalsCount, totalQuestionsTarget, questionsAsked, userResponses, allQuestions, lastQuestion, hasAskedQuestion, shouldEndSession, isFirstMessage, userMessage, lastAIMessage, sessionMetrics = null) {
   // 🔥 ABSOLUTE FORCE: When all goals are completed, IMMEDIATELY show session summary
   if (shouldEndSession) {
     // Ensure we have at least empty metrics if none provided to prevent crash
@@ -61,7 +61,7 @@ JSON FORMAT:
   let promptTemplate = fs.readFileSync(promptPath, 'utf8');
 
   // Prepare variables for replacement
-  const state = shouldEndSession ? 'SESSION COMPLETE' : isWaitingForMovement ? 'Waiting for movement confirmation' : hasAskedQuestion ? 'Awaiting answer evaluation' : 'Ask the next question';
+  const state = shouldEndSession ? 'SESSION COMPLETE' : hasAskedQuestion ? 'Awaiting answer evaluation' : 'Ask the next question';
   const topicGoalsLength = topicGoals.length;
   const allQuestionsStr = allQuestions.length > 0 ? allQuestions.map((q, i) => `${i + 1}. "${q}"`).join('\n') : 'None yet';
   const learningGoals = topicGoals.map((g, i) => {
@@ -77,7 +77,24 @@ JSON FORMAT:
         : '⭕ NOT STARTED';
     return `${i + 1}. ${g.title} [${status}]`;
   }).join('\n');
-  const activeGoal = currentGoal ? `"${currentGoal.title}" (Question ${(currentGoal.chat_goal_progress?.[0]?.num_questions || 0) + 1} of 2)` : 'All goals done';
+  // Detect current phase for the active goal by scanning recent chat history
+  // Look for the last AI message that had an exam-style question pattern
+  // Heuristic: if the goal's num_questions >= 2 AND recent messages look like definitions/recall → exam phase
+  // More reliable: check if any AI message in last 10 contains "Define" / "State" / "Name" patterns
+  const recentAiMsgs = chatHistory.filter(m => m.sender === 'ai' && m.message_type === 'text').slice(-10);
+  const examKeywords = /^(define|state|name|what is|which of|fill in|write the formula|list)/i;
+  const conceptKeywords = /if |why|how is|what would|when|which friction|does.*more|does.*less/i;
+  let detectedPhase = 'CONCEPT_UNDERSTANDING';
+  if (recentAiMsgs.length >= 2) {
+    const lastFew = recentAiMsgs.slice(-3).map(m => m.message || '');
+    const examCount = lastFew.filter(m => examKeywords.test(m.trim())).length;
+    const conceptCount = lastFew.filter(m => conceptKeywords.test(m.trim())).length;
+    if (examCount > conceptCount) detectedPhase = 'EXAM_READINESS';
+  }
+  const numQuestionsForCurrentGoal = currentGoal?.chat_goal_progress?.[0]?.num_questions || 0;
+  const activeGoal = currentGoal
+    ? `"${currentGoal.title}" | Phase: ${detectedPhase} | Questions answered for this goal: ${numQuestionsForCurrentGoal}`
+    : 'All goals done';
 
   // Replace placeholders
   const prompt = promptTemplate
@@ -97,16 +114,14 @@ JSON FORMAT:
 
 /**
  * Analyze chat history to extract questions and determine session state
- * 🔧 FIX: Properly identify AI questions from actual AI messages (not user correction text)
  */
 function analyzeChatHistory(chatHistory) {
-  const aiMessages = chatHistory.filter(m => m.sender === 'ai' && (m.message_type === 'text' || m.message_type === 'movement_prompt'));
+  const aiMessages = chatHistory.filter(m => m.sender === 'ai' && m.message_type === 'text');
   const userResponses = chatHistory.filter(m => m.sender === 'user' && m.message_type !== 'user_correction');
 
-  // Extract only actual questions from AI messages (message_type === 'text' and contains '?')
-  // Exclude movement prompts from being counted as learning questions
+  // Extract actual questions from AI messages (text type containing '?')
   const allQuestions = aiMessages
-    .filter(m => m.message && m.message.includes('?') && m.message_type !== 'movement_prompt')
+    .filter(m => m.message && m.message.includes('?'))
     .map(m => m.message);
 
   const questionsAsked = allQuestions.length;
@@ -116,9 +131,6 @@ function analyzeChatHistory(chatHistory) {
   // Check if the last AI message was a question (user should be responding to it)
   const hasAskedQuestion = lastAIMessage && lastAIMessage.message && lastAIMessage.message.includes('?');
 
-  // NEW: Check if we are waiting for a movement confirmation (e.g. "Should we move on?")
-  const isWaitingForMovement = lastAIMessage && lastAIMessage.message_type === 'movement_prompt';
-
   return {
     aiMessages,
     userResponses,
@@ -126,8 +138,7 @@ function analyzeChatHistory(chatHistory) {
     questionsAsked,
     lastAIMessage,
     lastQuestion,
-    hasAskedQuestion: !!hasAskedQuestion,
-    isWaitingForMovement: !!isWaitingForMovement
+    hasAskedQuestion: !!hasAskedQuestion
   };
 }
 

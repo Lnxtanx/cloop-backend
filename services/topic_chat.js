@@ -34,8 +34,7 @@ async function generateTopicChatResponse(userMessage, topicTitle, topicContent, 
       questionsAsked,
       lastAIMessage,
       lastQuestion,
-      hasAskedQuestion,
-      isWaitingForMovement
+      hasAskedQuestion
     } = analyzeChatHistory(chatHistory);
 
     const isFirstMessage = chatHistory.length === 0;
@@ -59,21 +58,10 @@ async function generateTopicChatResponse(userMessage, topicTitle, topicContent, 
       sessionMetrics = await calculateSessionMetrics(userId, topicId, topicGoals);
     }
 
-    // 🔥 SESSION END HANDLING:
-    // - If metrics exist, we should show session summary
-    // - UNLESS user explicitly says "end the chat" or similar
-    const userWantsToEnd = userMessage && (
-      /end.*(chat|session)/i.test(userMessage) ||
-      /finish|quit|exit|stop/i.test(userMessage)
-    );
-    const forceSessionEnd = shouldEndSession && sessionMetrics && userWantsToEnd;
-
     if (shouldEndSession) {
       console.log('🔔 SESSION END DETECTED:');
       console.log('  - All Goals Completed:', allGoalsCompleted);
-      console.log('  - User Wants to End:', userWantsToEnd);
       console.log('  - Has Session Metrics:', !!sessionMetrics);
-      console.log('  - Force Session End:', forceSessionEnd);
     }
 
     // Build comprehensive system prompt using helper
@@ -93,9 +81,7 @@ async function generateTopicChatResponse(userMessage, topicTitle, topicContent, 
       isFirstMessage,
       userMessage,
       lastAIMessage,
-      sessionMetrics,
-      forceSessionEnd,
-      isWaitingForMovement
+      sessionMetrics
     );
 
     const messages = [
@@ -239,7 +225,7 @@ async function generateTopicChatResponse(userMessage, topicTitle, topicContent, 
     // 🔧 UPDATE: "I don't know" is now a valid answer we want to track (score 10), so we DO allow retry if missing.
     const isIdk = /i don'?t know|no idea|unsure|skip|pass|no clue/i.test(userMessage || '');
 
-    if (hasAskedQuestion && !parsed.user_correction && userMessage && userMessage.trim() !== '' && !shouldEndSession && !isWaitingForMovement) {
+    if (hasAskedQuestion && !parsed.user_correction && userMessage && userMessage.trim() !== '' && !shouldEndSession) {
       try {
         console.log('[topic_chat] ⚠️ No user_correction found but question was asked — retrying with strict JSON prompt');
         const correctionPrompt = [
