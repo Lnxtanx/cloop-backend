@@ -1021,6 +1021,8 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 		// Update goal progress if user_correction feedback is provided
 		let completedGoalsCount = 0 // Track for session end detection
 		let totalGoalsCount = topicGoals.length // Track total goals
+		let justCompletedGoal = null // Captured when AI signals predict_score
+		let scorePrediction = null // Computed after goal progress update
 		if (userCorrection && userCorrection.feedback && currentGoal) {
 			// Update chat_process with feedback
 			await prisma.chat_process.update({
@@ -1128,6 +1130,7 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 			// Phase-based goal completion: goal is complete when AI signals next_step_type = 'predict_score'
 			// This replaces the old hardcoded "2 questions per goal" rule
 			const aiSignalsGoalComplete = aiResponse.evaluation?.next_step_type === 'predict_score'
+			if (aiSignalsGoalComplete) justCompletedGoal = currentGoal
 
 			if (existingProgress) {
 				// Update existing progress
@@ -1256,6 +1259,24 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 
 			console.log(`🎯 Updated Active Goal: ${currentGoal ? currentGoal.title : 'All goals completed!'}`)
 
+			// Compute score_prediction when AI signals goal completion (reliable DB-based fallback)
+			if (aiSignalsGoalComplete && justCompletedGoal) {
+				const aiSp = aiResponse.score_prediction
+				const updatedGoalData = updatedGoalsAfterProgress.find(g => g.id === justCompletedGoal.id)
+				const progressData = updatedGoalData?.chat_goal_progress?.[0]
+				const totalQ = progressData?.num_questions || 0
+				const totalC = progressData?.num_correct || 0
+				const accuracy = totalQ > 0 ? totalC / totalQ : 0
+				scorePrediction = {
+					goal_id: justCompletedGoal.id,
+					goal_title: justCompletedGoal.title,
+					concept_score: aiSp?.concept_score ?? accuracy,
+					exam_score: aiSp?.exam_score ?? accuracy,
+					predicted_score: aiSp?.predicted_score ?? Math.round(accuracy * 100),
+				}
+				console.log(`🏆 Score Prediction | Goal: ${justCompletedGoal.title} | Predicted: ${scorePrediction.predicted_score}%`)
+			}
+
 			// 🔥 SESSION SUMMARY LOGIC: Only generate if ALL goals complete
 			if (completedGoalsCount >= totalGoalsCount && !currentGoal) {
 				console.log('\n🎉 ALL GOALS COMPLETED! Generating session summary...\n')
@@ -1349,6 +1370,61 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 			}
 		}
 
+		// AUTO-CONTINUE: If goal just completed but AI forgot to ask next goal's first question,
+		// trigger a follow-up call so the conversation doesn't stall
+		if (aiSignalsGoalComplete && currentGoal && completedGoalsCount < totalGoalsCount) {
+			const lastAiMsg = aiMessages[aiMessages.length - 1]
+			const lastMsgHasQuestion = lastAiMsg && lastAiMsg.message && lastAiMsg.message.includes('?')
+
+			if (!lastMsgHasQuestion) {
+				console.log(`\n🔄 AUTO-CONTINUE: Triggering follow-up for next goal "${currentGoal.title}"`)
+				try {
+					const updatedHistory = [
+						...chatHistory,
+						{ sender: 'user', message, message_type: 'text', created_at: new Date().toISOString() },
+						...aiMessages.map(m => ({ sender: 'ai', message: m.message, message_type: m.message_type || 'text', created_at: m.created_at }))
+					]
+
+					const followUpResponse = await generateTopicChatResponse(
+						`Start ${currentGoal.title}`,
+						topic.title,
+						topic.content || 'No additional content provided',
+						updatedHistory,
+						currentGoal,
+						topicGoals
+					)
+
+					if (followUpResponse && followUpResponse.messages) {
+						for (const fuMsg of followUpResponse.messages) {
+							const savedFuMsg = await prisma.admin_chat.create({
+								data: {
+									user_id: user_id,
+									sender: 'ai',
+									message: fuMsg.message,
+									message_type: fuMsg.message_type || 'text',
+									options: fuMsg.options || [],
+									diff_html: null,
+									emoji: fuMsg.emoji || null,
+									images: [],
+									videos: [],
+									links: []
+								},
+								select: {
+									id: true, sender: true, message: true, message_type: true,
+									options: true, diff_html: true, emoji: true,
+									images: true, videos: true, links: true, created_at: true
+								}
+							})
+							aiMessages.push(savedFuMsg)
+							console.log(`  ↪ Follow-up [${fuMsg.message_type}]: ${fuMsg.message.substring(0, 70)}`)
+						}
+					}
+				} catch (fuErr) {
+					console.error('❌ Auto-continue follow-up failed:', fuErr.message)
+				}
+			}
+		}
+
 		// Update user's chat count
 		await prisma.users.update({
 			where: { user_id: user_id },
@@ -1373,6 +1449,7 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 			feedback: aiResponse.feedback || (userCorrection?.feedback) || null,
 			userCorrection: userCorrection || null,
 			session_summary: aiResponse.session_summary || null,
+			score_prediction: scorePrediction || null,
 			all_goals_completed: completedGoalsCount >= totalGoalsCount, // Add flag for frontend
 			goals: topicGoals // Include updated goals for frontend UI
 		})

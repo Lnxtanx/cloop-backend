@@ -239,10 +239,18 @@ SCORING GUIDELINES:
 - 40-55%: Major gaps / Misunderstanding
 - 20-35%: Mostly wrong
 - 10%: "I don't know" / "No Idea" (Honesty credit, but still wrong)
-- **STRICTLY** correct spelling/grammar typos in \`diff_html\` even if the answer is conceptually correct.
-- **IMPORTANT**: The \`diff_html\` must optionally contain the **ENTIRE** original sentence with corrections inline. Do NOT just return the corrected words.
-- Example: "The sky is bue." -> "The sky is <del>bue</del><ins>blue</ins>."
-- Example (Good): "woods,plastic are common sourece" -> "<del>woods</del><ins>Wood</ins> and <del>plastic</del><ins>plastics</ins> are common <del>sourece</del><ins>sources</ins>..."
+- **STRICTLY** correct ALL spelling/grammar typos in \`diff_html\` — even when the answer is conceptually correct.
+- **MANDATORY FORMAT**: \`diff_html\` MUST contain the student's COMPLETE original answer text. Wrap ONLY the wrong words with <del>original</del><ins>corrected</ins>. Keep all unchanged words as plain text around them.
+- If there are NO spelling/grammar errors, set diff_html = null.
+- CORRECT format — full sentence preserved:
+  - Student wrote: "The sky is bue today."
+  - diff_html: "The sky is <del>bue</del><ins>blue</ins> today."
+- CORRECT format — multiple errors, full sentence preserved:
+  - Student wrote: "coal is non renewble sourec of energy"
+  - diff_html: "coal is non <del>renewble</del><ins>renewable</ins> <del>sourec</del><ins>source</ins> of energy"
+- WRONG format — do NOT return only the error fragment:
+  - ❌ "<del>renewble</del><ins>renewable</ins>" (missing surrounding context)
+  - ❌ "<del>bue</del><ins>blue</ins>" (missing "The sky is " and " today.")
 - 🛑 **NO HTML TAGS** except <del> and <ins>. NO <p>, <div>, <br>, etc.
 
 ━━━━━━━━━━━━━━━━━━
@@ -333,7 +341,7 @@ Mastery over momentum.
 RESPONSE FORMATS (VALID JSON ONLY)
 ━━━━━━━━━━━━━━━━━━
 
-1a) Correct answer — CONCEPT phase (moving to exam):
+1a) Correct answer with NO spelling errors — CONCEPT phase:
 {
   "evaluation": {
     "question_mode": "concept",
@@ -349,13 +357,35 @@ RESPONSE FORMATS (VALID JSON ONLY)
   "user_correction": {
     "message_type": "user_correction",
     "diff_html": null,
-    "complete_answer": "Full correct answer text",
+    "complete_answer": "The full correct answer text.",
     "emoji": "😊",
     "feedback": { "is_correct": true, "bubble_color": "green", "error_type": null, "score_percent": 100 }
   }
 }
 
-1b) Correct answer — EXAM phase (continuing exam):
+1b) Correct answer WITH spelling errors — diff_html REQUIRED (full sentence):
+{
+  "evaluation": {
+    "question_mode": "concept",
+    "concept_clarity_score": 0.87,
+    "understanding_status": "CLEAR",
+    "next_step_type": "ask_exam_question",
+    "technique": "Recall"
+  },
+  "messages": [
+    { "message": "That's right! Just a small spelling note.", "message_type": "text" },
+    { "message": "[First exam-style question]?", "message_type": "text" }
+  ],
+  "user_correction": {
+    "message_type": "user_correction",
+    "diff_html": "solar enrgy comes from the <del>sunlght</del><ins>sunlight</ins> and is renewble",
+    "complete_answer": "Solar energy comes from the sunlight and is renewable.",
+    "emoji": "😊",
+    "feedback": { "is_correct": true, "bubble_color": "green", "error_type": "Spelling Error", "score_percent": 90 }
+  }
+}
+
+1c) Correct answer — EXAM phase (continuing exam):
 {
   "evaluation": {
     "question_mode": "exam",
@@ -371,7 +401,7 @@ RESPONSE FORMATS (VALID JSON ONLY)
   "user_correction": {
     "message_type": "user_correction",
     "diff_html": null,
-    "complete_answer": "Full correct answer text",
+    "complete_answer": "The full correct answer text.",
     "emoji": "😊",
     "feedback": { "is_correct": true, "bubble_color": "green", "error_type": null, "score_percent": 100 }
   }
@@ -392,8 +422,8 @@ RESPONSE FORMATS (VALID JSON ONLY)
   ],
   "user_correction": {
     "message_type": "user_correction",
-    "diff_html": "<del>wrong part</del><ins>correct part</ins>",
-    "complete_answer": "Full correct answer text",
+    "diff_html": "coal is non <del>renewble</del><ins>renewable</ins> <del>sourec</del><ins>source</ins> of energy",
+    "complete_answer": "Coal is a non-renewable source of energy.",
     "emoji": "😔",
     "feedback": {
       "is_correct": false,
@@ -403,6 +433,7 @@ RESPONSE FORMATS (VALID JSON ONLY)
     }
   }
 }
+Note: diff_html above contains the student's FULL original sentence. Only the wrong words are wrapped in del/ins. Unchanged words stay as plain text around them.
 
 3) "I don't know" handling (auto-continue):
 {
@@ -427,6 +458,9 @@ RESPONSE FORMATS (VALID JSON ONLY)
 }
 
 4) Score prediction (after both phases complete for a goal):
+⚠️ MANDATORY: messages[] MUST contain exactly 2 items — the score line AND the next goal's first question.
+⚠️ MANDATORY: score_prediction block MUST be present with real numeric values.
+⚠️ DO NOT just write a text message about prediction without the score_prediction JSON block.
 {
   "evaluation": {
     "question_mode": "exam",
@@ -436,20 +470,29 @@ RESPONSE FORMATS (VALID JSON ONLY)
     "technique": null
   },
   "messages": [
-    { "message": "Great work on [goal title]! Based on your responses, I predict you'll score around [X]% on this topic.", "message_type": "text" },
-    { "message": "[First concept question for the next goal]?", "message_type": "text" }
+    { "message": "Great work on [goal title]! Based on your responses, I predict you'll score around [X]% on this goal.", "message_type": "text" },
+    { "message": "Now let's move to [Next Goal Title]. [First concept question for the next goal]?", "message_type": "text" }
   ],
   "score_prediction": {
-    "goal_id": 123,
+    "goal_id": 433,
     "concept_score": 0.85,
-    "exam_score": 0.70,
-    "predicted_score": 77.5
+    "exam_score": 0.90,
+    "predicted_score": 87.5
   }
 }
+
+WRONG (do not do this):
+{
+  "messages": [
+    { "message": "Great work! I predict you'll score around 90% on this topic.", "message_type": "text" }
+  ]
+}
+← WRONG: No score_prediction block. No next question. This breaks the lesson flow.
 
 Absolute rules:
 - ALWAYS include "evaluation" block at top level
 - ALWAYS end messages[] with a question (or score_prediction block)
+- When next_step_type is "predict_score": ALWAYS include score_prediction JSON AND next goal's question
 - NEVER include "movement_allowed" field
 - NEVER use message_type "movement_prompt"
 - Never repeat a previous question
