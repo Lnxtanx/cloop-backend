@@ -1023,6 +1023,7 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 		let totalGoalsCount = topicGoals.length // Track total goals
 		let justCompletedGoal = null // Captured when AI signals predict_score
 		let scorePrediction = null // Computed after goal progress update
+		let aiSignalsGoalComplete = false // Hoisted so auto-continue block can access it
 		if (userCorrection && userCorrection.feedback && currentGoal) {
 			// Update chat_process with feedback
 			await prisma.chat_process.update({
@@ -1129,7 +1130,7 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 
 			// Phase-based goal completion: goal is complete when AI signals next_step_type = 'predict_score'
 			// This replaces the old hardcoded "2 questions per goal" rule
-			const aiSignalsGoalComplete = aiResponse.evaluation?.next_step_type === 'predict_score'
+			aiSignalsGoalComplete = aiResponse.evaluation?.next_step_type === 'predict_score'
 			if (aiSignalsGoalComplete) justCompletedGoal = currentGoal
 
 			if (existingProgress) {
