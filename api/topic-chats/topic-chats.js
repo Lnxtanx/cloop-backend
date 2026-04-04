@@ -770,6 +770,22 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 			}
 		})
 
+		// Backend safeguard: if current goal already has ≥5 questions answered, force predict_score
+		const questionsForCurrentGoal = currentGoal?.chat_goal_progress?.[0]?.num_questions || 0
+		if (currentGoal && questionsForCurrentGoal >= 5) {
+			const nextGoal = topicGoals.find(g => {
+				const p = g.chat_goal_progress?.[0]
+				return !p || !p.is_completed
+			})
+			const nextGoalHint = (nextGoal && nextGoal.id !== currentGoal.id) ? ` Then immediately ask the first concept question for the next goal: "${nextGoal.title}".` : ''
+			chatHistory.push({
+				sender: 'system',
+				message: `OVERRIDE: The student has already answered ${questionsForCurrentGoal} questions for "${currentGoal.title}". This goal is COMPLETE. You MUST return evaluation.next_step_type="predict_score" with a valid score_prediction block.${nextGoalHint} Do NOT ask another question for the current goal.`,
+				message_type: 'system'
+			})
+			console.log(`⚡ FORCE PREDICT_SCORE injected: goal "${currentGoal.title}" has ${questionsForCurrentGoal} questions answered`)
+		}
+
 		// Generate AI response using agentic tutor
 		let aiResponse
 		try {

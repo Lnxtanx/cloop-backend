@@ -88,8 +88,9 @@ JSON FORMAT:
     if (examCount > conceptCount) detectedPhase = 'EXAM_READINESS';
   }
   const numQuestionsForCurrentGoal = currentGoal?.chat_goal_progress?.[0]?.num_questions || 0;
+  const shouldForcePredictScore = numQuestionsForCurrentGoal >= 5;
   const activeGoal = currentGoal
-    ? `"${currentGoal.title}" | Phase: ${detectedPhase} | Questions answered for this goal: ${numQuestionsForCurrentGoal}`
+    ? `"${currentGoal.title}" | Phase: ${detectedPhase} | Questions answered for this goal: ${numQuestionsForCurrentGoal}${shouldForcePredictScore ? ' ← MANDATORY: student has answered enough — you MUST return next_step_type="predict_score" NOW' : ''}`
     : 'All goals done';
 
   // Replace placeholders
@@ -109,15 +110,26 @@ JSON FORMAT:
 }
 
 /**
+ * Detect whether an AI message is a question/prompt the student should answer.
+ * Covers both '?' questions and imperative exam forms like "Define X." / "Name two X."
+ */
+function isAIQuestion(message) {
+  if (!message || typeof message !== 'string') return false;
+  if (message.includes('?')) return true;
+  // Imperative exam prompts that don't use '?'
+  return /^(define|state|name|list|write|give|mention|identify|explain|describe|fill in|calculate|compare)\b/i.test(message.trim());
+}
+
+/**
  * Analyze chat history to extract questions and determine session state
  */
 function analyzeChatHistory(chatHistory) {
   const aiMessages = chatHistory.filter(m => m.sender === 'ai' && m.message_type === 'text');
   const userResponses = chatHistory.filter(m => m.sender === 'user' && m.message_type !== 'user_correction');
 
-  // Extract actual questions from AI messages (text type containing '?')
+  // Extract questions — includes '?' questions AND imperative forms ("Define X.", "Name two X.")
   const allQuestions = aiMessages
-    .filter(m => m.message && m.message.includes('?'))
+    .filter(m => isAIQuestion(m.message))
     .map(m => m.message);
 
   const questionsAsked = allQuestions.length;
@@ -125,7 +137,7 @@ function analyzeChatHistory(chatHistory) {
   const lastQuestion = allQuestions.length > 0 ? allQuestions[allQuestions.length - 1] : null;
 
   // Check if the last AI message was a question (user should be responding to it)
-  const hasAskedQuestion = lastAIMessage && lastAIMessage.message && lastAIMessage.message.includes('?');
+  const hasAskedQuestion = lastAIMessage && isAIQuestion(lastAIMessage.message);
 
   return {
     aiMessages,
