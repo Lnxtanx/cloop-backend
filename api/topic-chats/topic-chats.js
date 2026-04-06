@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const { authenticateToken } = require('../../middleware/auth')
 const { generateTopicChatResponse, generateTopicGreeting, generateTopicGoals } = require('../../services/topic_chat')
+const { openai } = require('../../services/topic_chat_helpers')
 const { createLearningTurn, incrementExplainCount, calculateMasteryScore } = require('../../services/learning_turns_tracker')
 
 const prisma = require('../../lib/prisma')
@@ -189,107 +190,17 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 
 		const topicGoalIds = topicGoalsForIds.map(g => g.id)
 
-		// 🔧 FIX: Fetch ALL chat messages for this topic using learning_turns
-		// learning_turns stores the complete Q&A history with better tracking
-		const learningTurns = await prisma.learning_turns.findMany({
-			where: {
-				topic_id: parseInt(topicId),
-				user_id: user_id
-			},
-			orderBy: {
-				created_at: 'asc'
-			},
-			select: {
-				id: true,
-				chat_id: true,
-				question_text: true,
-				user_answer_raw: true,
-				corrected_answer: true,
-				diff_html: true,
-				is_correct: true,
-				score_percent: true,
-				error_type: true,
-				feedback_text: true,
-				sender: true,
-				created_at: true
-			}
-		})
-
-		console.log('📊 Learning Turns Found:', learningTurns.length);
-
-		// Build complete chat history from learning_turns
-		const chatMessages = []
-
-		for (const turn of learningTurns) {
-			// Add AI question
-			if (turn.question_text) {
-				chatMessages.push({
-					id: turn.chat_id,
-					sender: 'ai',
-					message: turn.question_text,
-					message_type: 'text',
-					options: [],
-					diff_html: null,
-					emoji: null,
-					images: [],
-					videos: [],
-					links: [],
-					created_at: turn.created_at
-				})
-			}
-
-			// Add user answer (raw)
-			if (turn.user_answer_raw) {
-				chatMessages.push({
-					id: turn.chat_id + 10000, // Offset to avoid ID collision
-					sender: 'user',
-					message: turn.user_answer_raw,
-					message_type: 'text',
-					options: [],
-					diff_html: null,
-					emoji: null,
-					images: [],
-					videos: [],
-					links: [],
-					created_at: turn.created_at
-				})
-			}
-
-			// Add correction/feedback if answer was incorrect or needs feedback
-			if (turn.diff_html || turn.corrected_answer || turn.feedback_text) {
-				const feedbackEmoji = turn.is_correct ? '😊' :
-					turn.score_percent === 0 ? '😓' :
-						turn.score_percent < 50 ? '😢' : '😅'
-
-				chatMessages.push({
-					id: turn.chat_id + 20000, // Offset to avoid ID collision
-					sender: 'ai',
-					message: turn.corrected_answer || turn.feedback_text || '',
-					message_type: 'user_correction',
-					options: ['Got it', 'Explain'],
-					diff_html: turn.diff_html || '',
-					emoji: feedbackEmoji,
-					images: [],
-					videos: [],
-					links: [],
-					created_at: turn.created_at
-				})
-			}
-		}
-
-		// Also fetch admin_chat messages (for session summary and other AI messages)
+		// PRIMARY source: admin_chat — has real timestamps and real IDs for every message
+		// This includes user messages (sender='user') and all AI messages
+		// Session summary + performance text are linked to the last goal at save time, so they appear here too
 		const adminChatMessages = await prisma.admin_chat.findMany({
 			where: {
 				user_id: user_id,
 				chat_goal_progress: {
-					some: {
-						goal_id: { in: topicGoalIds }
-					}
+					some: { goal_id: { in: topicGoalIds } }
 				}
 			},
-			orderBy: {
-				created_at: 'asc'
-			},
+			orderBy: { created_at: 'asc' },
 			select: {
 				id: true,
 				sender: true,
@@ -305,38 +216,76 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 			}
 		})
 
-		console.log('💬 Admin Chat Messages Found:', adminChatMessages.length);
+		// ENRICHMENT source: learning_turns — provides diff_html and feedback for user messages
+		const learningTurns = await prisma.learning_turns.findMany({
+			where: { topic_id: parseInt(topicId), user_id: user_id },
+			select: {
+				chat_id: true,
+				diff_html: true,
+				is_correct: true,
+				score_percent: true,
+				error_type: true,
+				corrected_answer: true,
+				feedback_text: true,
+			}
+		})
 
-		// Merge admin_chat messages with learning_turns messages
-		// Admin chat contains session summaries, greetings, etc.
+		// Build lookup map: admin_chat.id → learning_turn enrichment data
+		const turnByMessageId = new Map()
+		for (const turn of learningTurns) {
+			if (turn.chat_id) turnByMessageId.set(turn.chat_id, turn)
+		}
+
+		console.log('💬 Admin Chat Messages Found:', adminChatMessages.length)
+		console.log('📊 Learning Turns Found:', learningTurns.length)
+
+		// Build final message list from admin_chat, enriching user messages with learning_turn data
+		const seenIds = new Set()
+		const chatMessages = []
+
 		for (const msg of adminChatMessages) {
-			// Avoid duplicates - only add if not already in chatMessages
-			const isDuplicate = chatMessages.some(existing =>
-				existing.message === msg.message &&
-				Math.abs(new Date(existing.created_at).getTime() - new Date(msg.created_at).getTime()) < 1000
-			)
+			if (seenIds.has(msg.id)) continue
+			seenIds.add(msg.id)
 
-			if (!isDuplicate) {
-				// 🔧 FIX: Unpack session_metrics from diff_html for session summaries
-				// This ensures persistence works on page reload
+			if (msg.sender === 'user') {
+				// Look up correction data for this user message
+				const turn = turnByMessageId.get(msg.id)
+				if (turn && (turn.diff_html || turn.is_correct !== undefined)) {
+					const emoji = turn.is_correct ? '😊' :
+						(turn.score_percent === 0 ? '😓' : turn.score_percent < 50 ? '😢' : '😅')
+					chatMessages.push({
+						...msg,
+						message_type: 'user_correction',
+						diff_html: turn.diff_html || null,
+						emoji: emoji,
+						feedback: {
+							is_correct: turn.is_correct,
+							score_percent: turn.score_percent,
+							error_type: turn.error_type || null,
+						}
+					})
+				} else {
+					chatMessages.push(msg)
+				}
+			} else {
+				// AI message — unpack session_metrics from diff_html for session_summary type
 				if (msg.message_type === 'session_summary' && msg.diff_html) {
 					try {
-						// Only try to parse if it looks like JSON/Object, otherwise leave as is
 						if (msg.diff_html.trim().startsWith('{')) {
-							msg.session_metrics = JSON.parse(msg.diff_html);
+							msg.session_metrics = JSON.parse(msg.diff_html)
 						}
 					} catch (e) {
-						console.error('[topic-chats.js] Failed to parse session metrics from diff_html for msg', msg.id);
+						// leave as-is
 					}
 				}
 				chatMessages.push(msg)
 			}
 		}
 
-		// Sort all messages by created_at
+		// Already ordered by created_at from Prisma, but re-sort to be safe after enrichment
 		chatMessages.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
 
-		console.log('✅ Total Chat Messages:', chatMessages.length);
+		console.log('✅ Total Chat Messages:', chatMessages.length)
 
 		// Fetch raw chat_process entries for compatibility (if needed by frontend)
 		const rawProcesses = await prisma.chat_process.findMany({
@@ -1374,12 +1323,99 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 								}
 							});
 
+							// Link session_summary to the last completed goal so GET history finds it
+							const lastCompletedGoal = updatedGoalsAfterProgress.slice().reverse().find(g => g.chat_goal_progress?.[0]?.is_completed)
+							if (lastCompletedGoal) {
+								try {
+									await prisma.chat_goal_progress.create({
+										data: {
+											chat_id: savedSummaryMsg.id,
+											goal_id: lastCompletedGoal.id,
+											user_id: user_id,
+											is_completed: true,
+											num_questions: lastCompletedGoal.chat_goal_progress?.[0]?.num_questions || 0,
+											num_correct: lastCompletedGoal.chat_goal_progress?.[0]?.num_correct || 0,
+											num_incorrect: lastCompletedGoal.chat_goal_progress?.[0]?.num_incorrect || 0,
+										}
+									})
+								} catch (_) {} // ignore if duplicate
+							}
+
 							// Add to aiMessages for frontend response
 							aiMessages.push({
 								...savedSummaryMsg,
 								session_summary: metricsData // Ensure frontend gets the object
 							});
 						}
+					}
+
+					// Generate a 2-3 line performance analysis text bubble (shown after summary card)
+					try {
+						const goalBreakdown = updatedGoalsAfterProgress.map(g => {
+							const p = g.chat_goal_progress?.[0]
+							const acc = p && p.num_questions > 0 ? Math.round((p.num_correct / p.num_questions) * 100) : 0
+							return `${g.title}: ${acc}% accuracy (${p?.num_correct || 0}/${p?.num_questions || 0} correct)`
+						}).join(', ')
+						const overallScore = aiResponse.session_summary?.overall_score_percent || 0
+
+						const perfPrompt = `You are a supportive academic tutor. A student just finished a topic session.
+
+Overall score: ${overallScore}%
+Goal breakdown: ${goalBreakdown}
+
+Write a SHORT 2-3 sentence performance summary for the student.
+- Mention what they did well
+- Identify 1-2 specific weak areas (low accuracy goals)
+- Give one concrete improvement tip
+- Warm, encouraging tone
+- DO NOT start with "Great job" or "Well done"
+- Return plain text only, no JSON, no bullet points`
+
+						const perfResp = await openai.chat.completions.create({
+							model: 'gpt-4o-mini',
+							messages: [{ role: 'user', content: perfPrompt }],
+							temperature: 0.7,
+							max_tokens: 150
+						})
+						const perfText = perfResp.choices[0].message.content.trim()
+
+						if (perfText) {
+							const savedPerfMsg = await prisma.admin_chat.create({
+								data: {
+									user_id: user_id,
+									sender: 'ai',
+									message: perfText,
+									message_type: 'text',
+									options: [],
+									diff_html: null,
+									emoji: null,
+									images: [],
+									videos: [],
+									links: []
+								}
+							})
+							// Link to last completed goal so GET history finds it on reload
+							const lastCompletedGoal = updatedGoalsAfterProgress.slice().reverse().find(g => g.chat_goal_progress?.[0]?.is_completed)
+							if (lastCompletedGoal) {
+								try {
+									await prisma.chat_goal_progress.create({
+										data: {
+											chat_id: savedPerfMsg.id,
+											goal_id: lastCompletedGoal.id,
+											user_id: user_id,
+											is_completed: true,
+											num_questions: lastCompletedGoal.chat_goal_progress?.[0]?.num_questions || 0,
+											num_correct: lastCompletedGoal.chat_goal_progress?.[0]?.num_correct || 0,
+											num_incorrect: lastCompletedGoal.chat_goal_progress?.[0]?.num_incorrect || 0,
+										}
+									})
+								} catch (_) {} // ignore duplicate
+							}
+							aiMessages.push(savedPerfMsg)
+							console.log('✅ Performance analysis bubble saved')
+						}
+					} catch (perfErr) {
+						console.error('❌ Failed to generate performance analysis:', perfErr.message)
 					}
 				} catch (summaryError) {
 					console.error('Error generating session summary:', summaryError)
