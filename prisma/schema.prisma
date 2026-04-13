@@ -54,6 +54,7 @@ model users {
   topics                    topics[]
   user_subjects             user_subjects[]
   user_topic_reports        user_topic_reports[]
+  feedback                  feedback[]
 }
 
 model subjects {
@@ -324,4 +325,17 @@ model notifications {
   is_read    Boolean  @default(false)
   created_at DateTime @default(now()) @db.Timestamp(6)
   users      users    @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+}
+
+model feedback {
+  id         Int      @id @default(autoincrement())
+  user_id    Int?
+  rating     Int
+  feedback   String   @db.Text
+  category   String   @default("general") @db.VarChar(50)
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  users      users?   @relation(fields: [user_id], references: [user_id], onDelete: SetNull)
+
+  @@index([user_id], map: "idx_feedback_user_id")
+  @@index([created_at], map: "idx_feedback_created_at")
 }
