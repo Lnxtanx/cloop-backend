@@ -241,7 +241,7 @@ async function generateLearnMoreGreeting(topicTitle, learningPlan) {
     const weakestGoal = focus_areas[0]; // Lowest scoring goal
 
     const response = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
+      model: 'gpt-5',
       messages: [
         {
           role: 'system',
@@ -341,7 +341,7 @@ async function generateLearnMoreResponse(userMessage, topicTitle, topicContent, 
     console.log('=========================================\n');
 
     const response = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
+      model: 'gpt-5',
       messages: messages,
       temperature: 0.2,
       max_tokens: 800,

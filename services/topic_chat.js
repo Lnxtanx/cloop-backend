@@ -145,7 +145,7 @@ async function generateTopicChatResponse(userMessage, topicTitle, topicContent, 
         console.log(`[topic_chat] 🚀 Attempt ${attempts}/${maxAttempts} - Calling OpenAI API...`);
         
         response = await openai.chat.completions.create({
-          model: 'gpt-4o-mini',
+          model: 'gpt-5',
           messages: messages,
           temperature: 0.1,
           max_tokens: 4000,
@@ -234,7 +234,7 @@ async function generateTopicChatResponse(userMessage, topicTitle, topicContent, 
         ];
 
         const retryResp = await openai.chat.completions.create({
-          model: 'gpt-4o-mini',
+          model: 'gpt-5',
           messages: correctionPrompt,
           temperature: 0.0,
           max_tokens: 400,

@@ -1372,7 +1372,7 @@ Write a SHORT 2-3 sentence performance summary for the student.
 - Return plain text only, no JSON, no bullet points`
 
 						const perfResp = await openai.chat.completions.create({
-							model: 'gpt-4o-mini',
+							model: 'gpt-5',
 							messages: [{ role: 'user', content: perfPrompt }],
 							temperature: 0.7,
 							max_tokens: 150

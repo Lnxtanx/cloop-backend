@@ -53,7 +53,7 @@ Return ONLY the JSON array, no additional text.`;
 
   try {
     const response = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo', // Cost-effective for structured content generation
+      model: 'gpt-5', // Cost-effective for structured content generation
       messages: [
         {
           role: 'system',
@@ -111,7 +111,7 @@ Return ONLY the JSON array, no additional text.`;
 
   try {
     const response = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo', // Cost-effective for structured content generation
+      model: 'gpt-5', // Cost-effective for structured content generation
       messages: [
         {
           role: 'system',
@@ -153,7 +153,7 @@ async function generateTopicGoals(topicTitle, topicContent) {
 
   try {
     const response = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
+      model: 'gpt-5',
       messages: [
         {
           role: 'system',

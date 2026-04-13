@@ -238,7 +238,7 @@ async function generateTopicGreeting(topicTitle, topicContent, topicGoals = []) 
       .replace(/\{\{topicSummary\}\}/g, topicSummary);
 
     const response = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
+      model: 'gpt-5',
       messages: [
         {
           role: 'system',
@@ -301,7 +301,7 @@ async function generateTopicGoals(topicTitle, topicContent) {
     const systemPrompt = promptTemplate.replace(/\{\{topicTitle\}\}/g, topicTitle);
 
     const response = await openai.chat.completions.create({
-      model: 'gpt-4o',
+      model: 'gpt-5',
       messages: [
         {
           role: 'system',

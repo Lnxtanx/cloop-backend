@@ -356,7 +356,7 @@ async function runContentGenerationPipeline(userId, subjectId) {
 		console.log(`User: ${userId}, Subject: ${subject.name}`);
 		console.log(`Chapters: ${chapters.length}, Topics: ${totalTopicsCount}, Goals: ${totalGoalsCount}`);
 		console.log(`📊 Total API Calls: ${1 + chapters.length + totalTopicsCount} (1 chapters + ${chapters.length} topics + ${totalTopicsCount} goals)`);
-		console.log(`💡 Optimized with GPT-3.5-turbo & content truncation`);
+		console.log(`💡 Optimized with GPT-5 & content truncation`);
 		console.log(`=====================================\n`);
 
 		return {
