@@ -65,7 +65,7 @@ Return ONLY the JSON array, no additional text.`;
         }
       ],
       temperature: 0.7,
-      max_tokens: 1500, // Reduced from 2000 - sufficient for chapter list
+      max_completion_tokens: 1500, // Reduced from 2000 - sufficient for chapter list
     });
 
     const content = response.choices[0].message.content.trim();
@@ -123,7 +123,7 @@ Return ONLY the JSON array, no additional text.`;
         }
       ],
       temperature: 0.7,
-      max_tokens: 2000, // Reduced from 3000 - sufficient for topic list
+      max_completion_tokens: 2000, // Reduced from 3000 - sufficient for topic list
     });
 
     const content = response.choices[0].message.content.trim();
@@ -165,7 +165,7 @@ async function generateTopicGoals(topicTitle, topicContent) {
         }
       ],
       temperature: 0.7,
-      max_tokens: 800,
+      max_completion_tokens: 800,
     });
 
     const content = response.choices[0].message.content.trim();

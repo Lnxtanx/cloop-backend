@@ -250,7 +250,7 @@ async function generateTopicGreeting(topicTitle, topicContent, topicGoals = []) 
         }
       ],
       temperature: 0.8,
-      max_tokens: 400,
+      max_completion_tokens: 400,
       response_format: { type: "json_object" }
     });
 
@@ -313,7 +313,7 @@ async function generateTopicGoals(topicTitle, topicContent) {
         }
       ],
       temperature: 0.8,
-      max_tokens: 600,
+      max_completion_tokens: 600,
       response_format: { type: "json_object" }
     });
 

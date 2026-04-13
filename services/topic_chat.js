@@ -148,7 +148,7 @@ async function generateTopicChatResponse(userMessage, topicTitle, topicContent, 
           model: 'gpt-5',
           messages: messages,
           temperature: 0.1,
-          max_tokens: 4000,
+          max_completion_tokens: 4000,
           response_format: { type: "json_object" }
         });
 
@@ -237,7 +237,7 @@ async function generateTopicChatResponse(userMessage, topicTitle, topicContent, 
           model: 'gpt-5',
           messages: correctionPrompt,
           temperature: 0.0,
-          max_tokens: 400,
+          max_completion_tokens: 400,
           response_format: { type: 'json_object' }
         });
 

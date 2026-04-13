@@ -1375,7 +1375,7 @@ Write a SHORT 2-3 sentence performance summary for the student.
 							model: 'gpt-5',
 							messages: [{ role: 'user', content: perfPrompt }],
 							temperature: 0.7,
-							max_tokens: 150
+							max_completion_tokens: 150
 						})
 						const perfText = perfResp.choices[0].message.content.trim()
 

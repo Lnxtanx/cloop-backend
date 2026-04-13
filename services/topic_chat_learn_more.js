@@ -272,7 +272,7 @@ Return VALID JSON:
         }
       ],
       temperature: 0.8,
-      max_tokens: 400,
+      max_completion_tokens: 400,
       response_format: { type: "json_object" }
     });
 
@@ -344,7 +344,7 @@ async function generateLearnMoreResponse(userMessage, topicTitle, topicContent, 
       model: 'gpt-5',
       messages: messages,
       temperature: 0.2,
-      max_tokens: 800,
+      max_completion_tokens: 800,
       response_format: { type: "json_object" }
     });
 
