@@ -50,6 +50,10 @@ app.use(express.json())
 app.use('/api/signup', require('./api/signup/signup'))
 app.use('/api/signup/options', require('./api/signup/options'))
 app.use('/api/login', require('./api/login/login'))
+
+// Feedback routes
+app.use('/api/feedback', require('./api/feedback/feedback'))
+
 // Profile routes
 app.use('/api/profile', require('./api/profile/get-profile'))
 app.use('/api/profile', require('./api/profile/update'))

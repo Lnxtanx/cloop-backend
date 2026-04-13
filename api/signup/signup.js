@@ -7,12 +7,16 @@ const router = express.Router()
 const prisma = require('../../lib/prisma')
 
 // POST /api/signup/
-// body: { name, email, phone?, grade_level?, board?, subjects?, preferred_language?, study_goal? }
-// Now stores references to database table IDs and creates user_subjects entries
+// body: { name, guestId?, grade_level?, board?, subjects?, preferred_language?, study_goal? }
+// For demo: Guest ID is auto-generated if not provided, email/phone not required
 router.post('/', async (req, res) => {
-	const { name, email, phone, grade_level, board, subjects, preferred_language, study_goal } = req.body
-	if (!name || !email) {
-		return res.status(400).json({ error: 'name and email are required' })
+	const { name, guestId, grade_level, board, subjects, preferred_language, study_goal } = req.body
+	
+	// Generate Guest ID if not provided
+	const finalGuestId = guestId || `GUEST-${Math.floor(10000 + Math.random() * 90000)}`;
+	
+	if (!name) {
+		return res.status(400).json({ error: 'name is required' })
 	}
 
 	try {
@@ -52,12 +56,12 @@ router.post('/', async (req, res) => {
 			languageName = languageRecord.name;
 		}
 
-		// Create the user
+		// Create the user (store Guest ID in email field)
 		const user = await prisma.users.create({
 			data: {
 			name,
-			email,
-			phone,
+			email: finalGuestId, // Store Guest ID in email field
+			phone: null, // No phone required for demo
 			// Store the grade name as the user's grade_level (per frontend change)
 			grade_level: gradeRecord ? gradeRecord.name : null,
 			board: boardName,
@@ -120,7 +124,10 @@ router.post('/', async (req, res) => {
 			// Don't fail signup if content generation setup fails
 		}
 
-		return res.status(201).json({ user })
+		return res.status(201).json({ 
+			user,
+			guestId: finalGuestId, // Return the Guest ID to frontend
+		})
 
 	} catch (err) {
 		// handle unique email error from Prisma
