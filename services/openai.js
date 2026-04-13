@@ -31,6 +31,31 @@ function truncateContent(content, maxLength = 200) {
 }
 
 /**
+ * Helper to clean and extract valid JSON from GPT-5 responses
+ * GPT-5 often wraps JSON in markdown blocks or adds conversational text
+ */
+function cleanJsonResponse(text) {
+  if (!text) return '{}';
+  
+  // 1. Remove markdown code blocks (```json ... ``` or ``` ... ```)
+  let cleaned = text.replace(/```(?:json)?\s*([\s\S]*?)\s*```/g, '$1').trim();
+  
+  // 2. If it starts with { or [, return it
+  if (cleaned.startsWith('{') || cleaned.startsWith('[')) {
+    return cleaned;
+  }
+  
+  // 3. Try to extract JSON from mixed text
+  const jsonMatch = cleaned.match(/(\{[\s\S]*\}|\[[\s\S]*\])/);
+  if (jsonMatch) {
+    return jsonMatch[0];
+  }
+  
+  // 4. Fallback: return original (will fail parsing but gives better error)
+  return cleaned;
+}
+
+/**
  * Generate chapters for a specific subject, grade, and board
  */
 async function generateChapters(gradeLevel, board, subject) {
@@ -53,7 +78,7 @@ Return ONLY the JSON array, no additional text.`;
 
   try {
     const response = await openai.chat.completions.create({
-      model: 'gpt-5', // Cost-effective for structured content generation
+      model: 'gpt-5',
       messages: [
         {
           role: 'system',
@@ -65,20 +90,29 @@ Return ONLY the JSON array, no additional text.`;
         }
       ],
       temperature: 1,
-      max_completion_tokens: 1500, // Reduced from 2000 - sufficient for chapter list
+      max_completion_tokens: 2000,
     });
 
-    const content = response.choices[0].message.content.trim();
-    // Remove markdown code blocks if present
-    const jsonContent = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    const rawContent = response.choices[0].message.content;
+    console.log('📦 Raw GPT-5 response (first 200 chars):', rawContent?.substring(0, 200));
+    
+    const jsonContent = cleanJsonResponse(rawContent);
+    console.log('🧹 Cleaned JSON (first 200 chars):', jsonContent?.substring(0, 200));
+    
+    if (!jsonContent || jsonContent === '{}' || jsonContent.length < 10) {
+      throw new Error('GPT-5 returned empty or invalid JSON response');
+    }
+    
     const chapters = JSON.parse(jsonContent);
-    
-    // Log token usage for monitoring
-    console.log(`✓ Chapters generated | Tokens: ${response.usage.total_tokens} (input: ${response.usage.prompt_tokens}, output: ${response.usage.completion_tokens})`);
-    
+
+    if (!Array.isArray(chapters) || chapters.length === 0) {
+      throw new Error('Generated chapters is not a valid array or empty');
+    }
+
+    console.log(`✓ Chapters generated | Count: ${chapters.length} | Tokens: ${response.usage.total_tokens}`);
     return chapters;
   } catch (error) {
-    console.error('Error generating chapters:', error);
+    console.error('❌ Error generating chapters:', error.message);
     throw new Error(`Failed to generate chapters: ${error.message}`);
   }
 }
@@ -88,9 +122,8 @@ Return ONLY the JSON array, no additional text.`;
  */
 async function generateTopics(gradeLevel, board, subject, chapterTitle, chapterContent) {
   if (!openai) throw new Error('OpenAI client not initialized. Set API_KEY_OPENAI environment variable.');
-  // Truncate chapter content to save tokens - we only need a brief summary
   const chapterSummary = truncateContent(chapterContent, 150);
-  
+
   const prompt = `You are an educational content expert. Generate a comprehensive list of topics and exercises for the following chapter:
 - Grade/Class: ${gradeLevel}
 - Board: ${board}
@@ -111,7 +144,7 @@ Return ONLY the JSON array, no additional text.`;
 
   try {
     const response = await openai.chat.completions.create({
-      model: 'gpt-5', // Cost-effective for structured content generation
+      model: 'gpt-5',
       messages: [
         {
           role: 'system',
@@ -123,20 +156,26 @@ Return ONLY the JSON array, no additional text.`;
         }
       ],
       temperature: 1,
-      max_completion_tokens: 2000, // Reduced from 3000 - sufficient for topic list
+      max_completion_tokens: 2500,
     });
 
-    const content = response.choices[0].message.content.trim();
-    // Remove markdown code blocks if present
-    const jsonContent = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    const rawContent = response.choices[0].message.content;
+    const jsonContent = cleanJsonResponse(rawContent);
+    
+    if (!jsonContent || jsonContent === '{}' || jsonContent.length < 10) {
+      throw new Error('GPT-5 returned empty or invalid JSON response');
+    }
+    
     const topics = JSON.parse(jsonContent);
-    
-    // Log token usage for monitoring
-    console.log(`✓ Topics generated | Tokens: ${response.usage.total_tokens} (input: ${response.usage.prompt_tokens}, output: ${response.usage.completion_tokens})`);
-    
+
+    if (!Array.isArray(topics) || topics.length === 0) {
+      throw new Error('Generated topics is not a valid array or empty');
+    }
+
+    console.log(`✓ Topics generated | Count: ${topics.length} | Tokens: ${response.usage.total_tokens}`);
     return topics;
   } catch (error) {
-    console.error('Error generating topics:', error);
+    console.error('❌ Error generating topics:', error.message);
     throw new Error(`Failed to generate topics: ${error.message}`);
   }
 }
@@ -149,7 +188,13 @@ async function generateTopicGoals(topicTitle, topicContent) {
   if (!openai) throw new Error('OpenAI client not initialized. Set API_KEY_OPENAI environment variable.');
   const topicSummary = truncateContent(topicContent, 250);
 
-  const prompt = `You are an expert curriculum designer. For the following topic, generate a list of clear, measurable learning goals (minimum 4). Use specific action verbs (e.g., identify, describe, analyze, demonstrate). Provide the response as a JSON object with the shape:\n{ "goals": [ { "title": "Goal title (short)", "description": "One-sentence measurable description" }, ... ] }\n\nTopic: ${topicTitle}\nSummary: ${topicSummary}\n\nReturn ONLY valid JSON.`;
+  const prompt = `You are an expert curriculum designer. For the following topic, generate a list of clear, measurable learning goals (minimum 4). Use specific action verbs (e.g., identify, describe, analyze, demonstrate). Provide the response as a JSON object with the shape:
+{ "goals": [ { "title": "Goal title (short)", "description": "One-sentence measurable description" }, ... ] }
+
+Topic: ${topicTitle}
+Summary: ${topicSummary}
+
+Return ONLY valid JSON.`;
 
   try {
     const response = await openai.chat.completions.create({
@@ -165,22 +210,26 @@ async function generateTopicGoals(topicTitle, topicContent) {
         }
       ],
       temperature: 1,
-      max_completion_tokens: 800,
+      max_completion_tokens: 1000,
     });
 
-    const content = response.choices[0].message.content.trim();
-    const jsonContent = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    const rawContent = response.choices[0].message.content;
+    const jsonContent = cleanJsonResponse(rawContent);
+    
+    if (!jsonContent || jsonContent === '{}' || jsonContent.length < 10) {
+      throw new Error('GPT-5 returned empty or invalid JSON response');
+    }
 
     let parsed = null;
     try {
       parsed = JSON.parse(jsonContent);
     } catch (err) {
-      // If parsing fails, try to recover by extracting the first JSON-looking substring
-      const match = jsonContent.match(/\{[\s\S]*\}/);
+      // Recovery: try to extract JSON from mixed text
+      const match = jsonContent.match(/(\{[\s\S]*\}|\[[\s\S]*\])/);
       if (match) {
         parsed = JSON.parse(match[0]);
       } else {
-        throw err;
+        throw new Error(`Failed to parse JSON: ${err.message}`);
       }
     }
 
@@ -200,11 +249,14 @@ async function generateTopicGoals(topicTitle, topicContent) {
       description: (g.description || g.desc || '').toString().trim(),
     })).filter(g => g.title || g.description);
 
-    console.log(`✓ Goals generated | Tokens: ${response.usage.total_tokens} (input: ${response.usage.prompt_tokens}, output: ${response.usage.completion_tokens})`);
+    if (goalsArray.length === 0) {
+      throw new Error('No valid goals extracted from response');
+    }
 
+    console.log(`✓ Goals generated | Count: ${goalsArray.length} | Tokens: ${response.usage.total_tokens}`);
     return { goals: goalsArray };
   } catch (error) {
-    console.error('Error generating topic goals:', error);
+    console.error('❌ Error generating topic goals:', error.message);
     throw new Error(`Failed to generate topic goals: ${error.message}`);
   }
 }
