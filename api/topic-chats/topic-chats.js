@@ -1374,7 +1374,7 @@ Write a SHORT 2-3 sentence performance summary for the student.
 						const perfResp = await openai.chat.completions.create({
 							model: 'gpt-5',
 							messages: [{ role: 'user', content: perfPrompt }],
-							temperature: 0.7,
+							temperature: 1,
 							max_completion_tokens: 150
 						})
 						const perfText = perfResp.choices[0].message.content.trim()

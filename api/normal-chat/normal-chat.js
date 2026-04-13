@@ -119,7 +119,7 @@ router.post('/message', authenticateToken, async (req, res) => {
 					}
 				],
 				max_completion_tokens: 500,
-				temperature: 0.7,
+				temperature: 1,
 			})
 
 			if (completion.choices && completion.choices[0] && completion.choices[0].message) {

@@ -147,7 +147,7 @@ async function generateTopicChatResponse(userMessage, topicTitle, topicContent, 
         response = await openai.chat.completions.create({
           model: 'gpt-5',
           messages: messages,
-          temperature: 0.1,
+          temperature: 1,
           max_completion_tokens: 4000,
           response_format: { type: "json_object" }
         });
@@ -236,7 +236,7 @@ async function generateTopicChatResponse(userMessage, topicTitle, topicContent, 
         const retryResp = await openai.chat.completions.create({
           model: 'gpt-5',
           messages: correctionPrompt,
-          temperature: 0.0,
+          temperature: 1,
           max_completion_tokens: 400,
           response_format: { type: 'json_object' }
         });

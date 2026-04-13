@@ -271,7 +271,7 @@ Return VALID JSON:
           content: 'Generate Learn More greeting'
         }
       ],
-      temperature: 0.8,
+      temperature: 1,
       max_completion_tokens: 400,
       response_format: { type: "json_object" }
     });
@@ -343,7 +343,7 @@ async function generateLearnMoreResponse(userMessage, topicTitle, topicContent, 
     const response = await openai.chat.completions.create({
       model: 'gpt-5',
       messages: messages,
-      temperature: 0.2,
+      temperature: 1,
       max_completion_tokens: 800,
       response_format: { type: "json_object" }
     });

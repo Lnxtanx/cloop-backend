@@ -249,7 +249,7 @@ async function generateTopicGreeting(topicTitle, topicContent, topicGoals = []) 
           content: `Generate greeting for: ${topicTitle}`
         }
       ],
-      temperature: 0.8,
+      temperature: 1,
       max_completion_tokens: 400,
       response_format: { type: "json_object" }
     });
@@ -312,7 +312,7 @@ async function generateTopicGoals(topicTitle, topicContent) {
           content: `Topic: ${topicTitle}\nContent Summary: ${topicSummary}`
         }
       ],
-      temperature: 0.8,
+      temperature: 1,
       max_completion_tokens: 600,
       response_format: { type: "json_object" }
     });

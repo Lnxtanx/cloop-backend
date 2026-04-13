@@ -64,7 +64,7 @@ Return ONLY the JSON array, no additional text.`;
           content: prompt
         }
       ],
-      temperature: 0.7,
+      temperature: 1,
       max_completion_tokens: 1500, // Reduced from 2000 - sufficient for chapter list
     });
 
@@ -122,7 +122,7 @@ Return ONLY the JSON array, no additional text.`;
           content: prompt
         }
       ],
-      temperature: 0.7,
+      temperature: 1,
       max_completion_tokens: 2000, // Reduced from 3000 - sufficient for topic list
     });
 
@@ -164,7 +164,7 @@ async function generateTopicGoals(topicTitle, topicContent) {
           content: prompt
         }
       ],
-      temperature: 0.7,
+      temperature: 1,
       max_completion_tokens: 800,
     });
 
