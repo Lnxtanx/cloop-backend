@@ -85,12 +85,13 @@ async function processPendingTasks() {
   try {
     isProcessing = true;
 
-    // Find all pending or failed tasks
+    // Find all pending or failed tasks (only retry failed tasks that were last updated >5 min ago to avoid rapid retry loops)
+    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
     const pendingTasks = await prisma.content_generation_status.findMany({
       where: {
         OR: [
           { status: 'pending' },
-          { status: 'failed' }
+          { status: 'failed', updated_at: { lt: fiveMinutesAgo } }
         ]
       },
       include: {

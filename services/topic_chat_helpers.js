@@ -4,7 +4,8 @@ const path = require('path');
 
 const openai = new OpenAI({
   apiKey: process.env.API_KEY_OPENAI,
-  timeout: parseInt(process.env.OPENAI_TIMEOUT_MS || '30000', 10),
+  timeout: parseInt(process.env.OPENAI_TIMEOUT_MS || '120000', 10),
+  maxRetries: 2,
 });
 
 /**
@@ -250,7 +251,7 @@ async function generateTopicGreeting(topicTitle, topicContent, topicGoals = []) 
         }
       ],
       temperature: 1,
-      max_completion_tokens: 400,
+      max_completion_tokens: 2048,
       response_format: { type: "json_object" }
     });
 
@@ -313,7 +314,7 @@ async function generateTopicGoals(topicTitle, topicContent) {
         }
       ],
       temperature: 1,
-      max_completion_tokens: 600,
+      max_completion_tokens: 4096,
       response_format: { type: "json_object" }
     });
 

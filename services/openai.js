@@ -6,9 +6,9 @@ try {
   if (!apiKey) {
     throw new Error('OPENAI_API_KEY or API_KEY_OPENAI environment variable not set');
   }
-  openai = new OpenAI({ 
+  openai = new OpenAI({
     apiKey: apiKey,
-    timeout: 35000, // 35 second timeout for API calls
+    timeout: 120000, // 2 minute timeout for GPT-5 reasoning calls
     maxRetries: 2    // Retry failed requests up to 2 times
   });
   console.log('✅ OpenAI client initialized successfully');
@@ -65,16 +65,12 @@ async function generateChapters(gradeLevel, board, subject) {
 - Board: ${board}
 - Subject: ${subject}
 
-Please provide a JSON array of chapters with the following structure:
-[
-  {
-    "title": "Chapter title",
-    "content": "Brief description of what this chapter covers"
-  }
-]
+Please provide a JSON object with a "chapters" array, where each chapter has:
+- "title": "Chapter title"
+- "content": "Brief description of what this chapter covers"
 
 Make sure the chapters follow the official ${board} curriculum for ${gradeLevel} ${subject}.
-Return ONLY the JSON array, no additional text.`;
+Return ONLY valid JSON.`;
 
   try {
     const response = await openai.chat.completions.create({
@@ -82,7 +78,7 @@ Return ONLY the JSON array, no additional text.`;
       messages: [
         {
           role: 'system',
-          content: 'You are an expert educational content generator that creates structured curriculum content. Always respond with valid JSON only.'
+          content: 'You are an expert educational content generator that creates structured curriculum content. Always respond with valid JSON only. Output a JSON object with a "chapters" array.'
         },
         {
           role: 'user',
@@ -90,26 +86,47 @@ Return ONLY the JSON array, no additional text.`;
         }
       ],
       temperature: 1,
-      max_completion_tokens: 2000,
+      max_completion_tokens: 16384,
+      response_format: { type: 'json_object' },
     });
 
-    const rawContent = response.choices[0].message.content;
-    console.log('📦 Raw GPT-5 response (first 200 chars):', rawContent?.substring(0, 200));
-    
+    const choice = response.choices[0];
+    const rawContent = choice.message.content;
+    const finishReason = choice.finish_reason;
+    const refusal = choice.message.refusal;
+
+    console.log('📦 GPT-5 response | finish_reason:', finishReason, '| tokens:', response.usage?.total_tokens);
+    console.log('📦 Raw GPT-5 response (first 300 chars):', rawContent?.substring(0, 300));
+
+    if (refusal) {
+      throw new Error(`GPT-5 refused to generate: ${refusal}`);
+    }
+
+    if (finishReason === 'length') {
+      throw new Error('GPT-5 response was truncated (hit max_completion_tokens limit). Consider increasing the limit.');
+    }
+
+    if (!rawContent || rawContent.trim().length === 0) {
+      throw new Error(`GPT-5 returned empty response content (finish_reason: ${finishReason})`);
+    }
+
     const jsonContent = cleanJsonResponse(rawContent);
-    console.log('🧹 Cleaned JSON (first 200 chars):', jsonContent?.substring(0, 200));
-    
+    console.log('🧹 Cleaned JSON (first 300 chars):', jsonContent?.substring(0, 300));
+
     if (!jsonContent || jsonContent === '{}' || jsonContent.length < 10) {
       throw new Error('GPT-5 returned empty or invalid JSON response');
     }
-    
-    const chapters = JSON.parse(jsonContent);
+
+    let parsed = JSON.parse(jsonContent);
+
+    // Handle both array and { chapters: [...] } formats
+    let chapters = Array.isArray(parsed) ? parsed : (parsed.chapters || parsed.data || []);
 
     if (!Array.isArray(chapters) || chapters.length === 0) {
       throw new Error('Generated chapters is not a valid array or empty');
     }
 
-    console.log(`✓ Chapters generated | Count: ${chapters.length} | Tokens: ${response.usage.total_tokens}`);
+    console.log(`✓ Chapters generated | Count: ${chapters.length} | Tokens: ${response.usage?.total_tokens}`);
     return chapters;
   } catch (error) {
     console.error('❌ Error generating chapters:', error.message);
@@ -131,16 +148,12 @@ async function generateTopics(gradeLevel, board, subject, chapterTitle, chapterC
 - Chapter: ${chapterTitle}
 - Chapter Summary: ${chapterSummary}
 
-Please provide a JSON array of topics/exercises with the following structure:
-[
-  {
-    "title": "Topic/Exercise title",
-    "content": "Brief description of the topic (2-3 sentences)"
-  }
-]
+Please provide a JSON object with a "topics" array, where each topic has:
+- "title": "Topic/Exercise title"
+- "content": "Brief description of the topic (2-3 sentences)"
 
 Make sure the topics follow the official ${board} curriculum and cover all important aspects of this chapter.
-Return ONLY the JSON array, no additional text.`;
+Return ONLY valid JSON.`;
 
   try {
     const response = await openai.chat.completions.create({
@@ -148,7 +161,7 @@ Return ONLY the JSON array, no additional text.`;
       messages: [
         {
           role: 'system',
-          content: 'You are an expert educational content generator that creates structured curriculum content. Always respond with valid JSON only.'
+          content: 'You are an expert educational content generator that creates structured curriculum content. Always respond with valid JSON only. Output a JSON object with a "topics" array.'
         },
         {
           role: 'user',
@@ -156,23 +169,45 @@ Return ONLY the JSON array, no additional text.`;
         }
       ],
       temperature: 1,
-      max_completion_tokens: 2500,
+      max_completion_tokens: 16384,
+      response_format: { type: 'json_object' },
     });
 
-    const rawContent = response.choices[0].message.content;
+    const choice = response.choices[0];
+    const rawContent = choice.message.content;
+    const finishReason = choice.finish_reason;
+    const refusal = choice.message.refusal;
+
+    console.log('📦 GPT-5 response | finish_reason:', finishReason, '| tokens:', response.usage?.total_tokens);
+
+    if (refusal) {
+      throw new Error(`GPT-5 refused to generate: ${refusal}`);
+    }
+
+    if (finishReason === 'length') {
+      throw new Error('GPT-5 response was truncated (hit max_completion_tokens limit). Consider increasing the limit.');
+    }
+
+    if (!rawContent || rawContent.trim().length === 0) {
+      throw new Error(`GPT-5 returned empty response content (finish_reason: ${finishReason})`);
+    }
+
     const jsonContent = cleanJsonResponse(rawContent);
-    
+
     if (!jsonContent || jsonContent === '{}' || jsonContent.length < 10) {
       throw new Error('GPT-5 returned empty or invalid JSON response');
     }
-    
-    const topics = JSON.parse(jsonContent);
+
+    let parsed = JSON.parse(jsonContent);
+
+    // Handle both array and { topics: [...] } formats
+    let topics = Array.isArray(parsed) ? parsed : (parsed.topics || parsed.data || []);
 
     if (!Array.isArray(topics) || topics.length === 0) {
       throw new Error('Generated topics is not a valid array or empty');
     }
 
-    console.log(`✓ Topics generated | Count: ${topics.length} | Tokens: ${response.usage.total_tokens}`);
+    console.log(`✓ Topics generated | Count: ${topics.length} | Tokens: ${response.usage?.total_tokens}`);
     return topics;
   } catch (error) {
     console.error('❌ Error generating topics:', error.message);
@@ -210,12 +245,31 @@ Return ONLY valid JSON.`;
         }
       ],
       temperature: 1,
-      max_completion_tokens: 1000,
+      max_completion_tokens: 8192,
+      response_format: { type: 'json_object' },
     });
 
-    const rawContent = response.choices[0].message.content;
+    const choice = response.choices[0];
+    const rawContent = choice.message.content;
+    const finishReason = choice.finish_reason;
+    const refusal = choice.message.refusal;
+
+    console.log('📦 GPT-5 response | finish_reason:', finishReason, '| tokens:', response.usage?.total_tokens);
+
+    if (refusal) {
+      throw new Error(`GPT-5 refused to generate: ${refusal}`);
+    }
+
+    if (finishReason === 'length') {
+      throw new Error('GPT-5 response was truncated (hit max_completion_tokens limit). Consider increasing the limit.');
+    }
+
+    if (!rawContent || rawContent.trim().length === 0) {
+      throw new Error(`GPT-5 returned empty response content (finish_reason: ${finishReason})`);
+    }
+
     const jsonContent = cleanJsonResponse(rawContent);
-    
+
     if (!jsonContent || jsonContent === '{}' || jsonContent.length < 10) {
       throw new Error('GPT-5 returned empty or invalid JSON response');
     }

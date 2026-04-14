@@ -2,6 +2,8 @@ const OpenAI = require('openai');
 
 const openai = new OpenAI({
   apiKey: process.env.API_KEY_OPENAI,
+  timeout: 120000,
+  maxRetries: 2,
 });
 
 /**
@@ -272,7 +274,7 @@ Return VALID JSON:
         }
       ],
       temperature: 1,
-      max_completion_tokens: 400,
+      max_completion_tokens: 2048,
       response_format: { type: "json_object" }
     });
 
@@ -344,7 +346,7 @@ async function generateLearnMoreResponse(userMessage, topicTitle, topicContent, 
       model: 'gpt-5',
       messages: messages,
       temperature: 1,
-      max_completion_tokens: 800,
+      max_completion_tokens: 4096,
       response_format: { type: "json_object" }
     });
 

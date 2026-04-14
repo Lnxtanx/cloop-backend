@@ -8,6 +8,8 @@ const prisma = require('../../lib/prisma')
 const OpenAI = require('openai')
 const openai = new OpenAI({
   apiKey: process.env.API_KEY_OPENAI,
+  timeout: 120000,
+  maxRetries: 2,
 })
 
 // GET /api/normal-chat/
@@ -118,11 +120,19 @@ router.post('/message', authenticateToken, async (req, res) => {
 						content: message
 					}
 				],
-				max_completion_tokens: 500,
+				max_completion_tokens: 2048,
 				temperature: 1,
 			})
 
 			if (completion.choices && completion.choices[0] && completion.choices[0].message) {
+					const content = completion.choices[0].message.content
+					const finishReason = completion.choices[0].finish_reason
+					if (!content || content.trim().length === 0) {
+						console.error('GPT-5 returned empty content, finish_reason:', finishReason)
+						aiResponseText = "I'm having trouble formulating a response right now. Could you please try again?"
+					} else {
+						aiResponseText = content
+					}
 				aiResponseText = completion.choices[0].message.content
 			}
 		} catch (openaiError) {
