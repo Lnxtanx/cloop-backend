@@ -1,12 +1,6 @@
-const OpenAI = require('openai');
+const { invokeModel, extractJson } = require('./bedrock-client');
 const fs = require('fs');
 const path = require('path');
-
-const openai = new OpenAI({
-  apiKey: process.env.API_KEY_OPENAI,
-  timeout: parseInt(process.env.OPENAI_TIMEOUT_MS || '120000', 10),
-  maxRetries: 2,
-});
 
 /**
  * Topic Chat Helper Functions
@@ -14,7 +8,7 @@ const openai = new OpenAI({
  */
 
 // Import metrics helper for session completion
-const { calculateSessionMetrics, generateSessionSummaryMessage } = require('./topic_chat_metrics');
+const { calculateSessionMetrics, generateSessionSummaryMessage } = require('../topic_chat_metrics');
 
 /**
  * Build the comprehensive system prompt for the AI tutor
@@ -38,7 +32,7 @@ function buildSystemPrompt(topicTitle, topicContent, topicGoals, currentGoal, co
 
     return `🎉 ALL ${topicGoals.length} LEARNING GOALS COMPLETED! 🎉
 
-Return ONLY a session_summary message.
+Return ONLY a session_summary message in JSON format.
 
 JSON FORMAT:
 {
@@ -54,7 +48,7 @@ JSON FORMAT:
 
 - Do NOT evaluate the last answer
 - Do NOT ask more questions
-- Valid JSON only`;
+- Valid JSON only. Do not include any conversational text outside the JSON.`;
   }
 
   // Read the prompt template
@@ -78,7 +72,8 @@ JSON FORMAT:
         : '⭕ NOT STARTED';
     return `${i + 1}. ${g.title} [${status}]`;
   }).join('\n');
-  // Detect current phase using allQuestions (array of question strings available in scope)
+  
+  // Detect current phase
   const examKeywords = /^(define|state|name|what is|which of|fill in|write the formula|list)/i;
   const conceptKeywords = /if |why|how is|what would|when|which friction|does.*more|does.*less/i;
   let detectedPhase = 'CONCEPT_UNDERSTANDING';
@@ -95,7 +90,7 @@ JSON FORMAT:
     : 'All goals done';
 
   // Replace placeholders
-  const prompt = promptTemplate
+  let prompt = promptTemplate
     .replace(/\{\{topicTitle\}\}/g, topicTitle)
     .replace(/\{\{state\}\}/g, state)
     .replace(/\{\{questionsAsked\}\}/g, questionsAsked)
@@ -107,17 +102,18 @@ JSON FORMAT:
     .replace(/\{\{learningGoals\}\}/g, learningGoals)
     .replace(/\{\{activeGoal\}\}/g, activeGoal);
 
+  // Add a reminder for Bedrock/Claude to output JSON only
+  prompt += '\n\nIMPORTANT: ALWAYS respond with a single valid JSON object. Do NOT include any markdown formatting, preamble, or commentary outside the JSON.';
+
   return prompt;
 }
 
 /**
  * Detect whether an AI message is a question/prompt the student should answer.
- * Covers both '?' questions and imperative exam forms like "Define X." / "Name two X."
  */
 function isAIQuestion(message) {
   if (!message || typeof message !== 'string') return false;
   if (message.includes('?')) return true;
-  // Imperative exam prompts that don't use '?'
   return /^(define|state|name|list|write|give|mention|identify|explain|describe|fill in|calculate|compare)\b/i.test(message.trim());
 }
 
@@ -128,7 +124,6 @@ function analyzeChatHistory(chatHistory) {
   const aiMessages = chatHistory.filter(m => m.sender === 'ai' && m.message_type === 'text');
   const userResponses = chatHistory.filter(m => m.sender === 'user' && m.message_type !== 'user_correction');
 
-  // Extract questions — includes '?' questions AND imperative forms ("Define X.", "Name two X.")
   const allQuestions = aiMessages
     .filter(m => isAIQuestion(m.message))
     .map(m => m.message);
@@ -137,7 +132,6 @@ function analyzeChatHistory(chatHistory) {
   const lastAIMessage = aiMessages.length > 0 ? aiMessages[aiMessages.length - 1] : null;
   const lastQuestion = allQuestions.length > 0 ? allQuestions[allQuestions.length - 1] : null;
 
-  // Check if the last AI message was a question (user should be responding to it)
   const hasAskedQuestion = lastAIMessage && isAIQuestion(lastAIMessage.message);
 
   return {
@@ -156,17 +150,14 @@ function analyzeChatHistory(chatHistory) {
  */
 function normalizeUserCorrectionOptions(parsed) {
   if (parsed.user_correction) {
-    // Remove quick-reply options entirely (free-text flow now)
     if (parsed.user_correction.options) {
       delete parsed.user_correction.options;
     }
 
-    // Ensure message_type is set
     if (!parsed.user_correction.message_type) {
       parsed.user_correction.message_type = 'user_correction';
     }
 
-    // Ensure feedback object exists and has minimal expected fields
     if (!parsed.user_correction.feedback || typeof parsed.user_correction.feedback !== 'object') {
       parsed.user_correction.feedback = { is_correct: false, bubble_color: 'red', score_percent: 10 };
     } else {
@@ -184,7 +175,6 @@ function normalizeUserCorrectionOptions(parsed) {
       }
     }
 
-    // 😊 EMOJI ASSIGNMENT: Add appropriate emoji based on feedback
     if (!parsed.user_correction.emoji) {
       const isCorrect = parsed.user_correction.feedback?.is_correct;
       const scorePercent = parsed.user_correction.feedback?.score_percent || 0;
@@ -209,72 +199,33 @@ function normalizeUserCorrectionOptions(parsed) {
 
 /**
  * Generate initial greeting and introduce the questioning session
- * Sets expectations for micro-assessment approach
  */
 async function generateTopicGreeting(topicTitle, topicContent, topicGoals = []) {
   try {
-    console.log('\n========== GREETING GENERATION START ==========');
-    console.log('📚 Topic:', topicTitle);
-    console.log('🎯 Goals count:', topicGoals.length);
-
     const goalsOverview = topicGoals.length > 0
       ? topicGoals.map((g, i) => `${i + 1}. ${g.title}`).join('\n')
       : 'We\'ll test your knowledge through questions';
 
-    console.log('\n📋 Goals Overview:');
-    console.log(goalsOverview);
-    console.log('\n💬 Sending greeting request to AI...');
-
-    // Read the prompt template
     const promptPath = path.join(__dirname, 'prompts', 'greeting_prompt.txt');
     let promptTemplate = fs.readFileSync(promptPath, 'utf8');
 
-    // Prepare variables
     const topicSummary = topicContent ? topicContent.substring(0, 200) + '...' : 'General introduction';
 
-    // Replace placeholders
     const systemPrompt = promptTemplate
       .replace(/\{\{topicTitle\}\}/g, topicTitle)
       .replace(/\{\{goalsOverview\}\}/g, goalsOverview)
       .replace(/\{\{topicSummary\}\}/g, topicSummary);
 
-    const response = await openai.chat.completions.create({
-      model: 'gpt-5',
-      messages: [
-        {
-          role: 'system',
-          content: systemPrompt
-        },
-        {
-          role: 'user',
-          content: `Generate greeting for: ${topicTitle}`
-        }
-      ],
-      temperature: 1,
-      max_completion_tokens: 2048,
-      response_format: { type: "json_object" }
-    });
+    const responseText = await invokeModel(systemPrompt, [{ role: 'user', content: `Generate greeting for: ${topicTitle}` }]);
+    const parsed = extractJson(responseText);
 
-    const content = response.choices[0].message.content.trim();
-    const parsed = JSON.parse(content);
-
-    console.log('\n✅ Greeting Generated Successfully!');
-    console.log('\n🎉 Greeting Messages:');
-    if (parsed.messages) {
-      parsed.messages.forEach((msg, i) => {
-        console.log(`  ${i + 1}. [${msg.message_type}]: ${msg.message}`);
-      });
+    if (!parsed) {
+      throw new Error('Failed to extract valid JSON greeting from Bedrock');
     }
-    console.log('\n🔢 Token Usage:');
-    console.log('  - Input tokens:', response.usage.prompt_tokens);
-    console.log('  - Output tokens:', response.usage.completion_tokens);
-    console.log('  - Total tokens:', response.usage.total_tokens);
-    console.log('===============================================\n');
 
     return parsed;
   } catch (error) {
     console.error('Error generating greeting:', error);
-    // Fallback greeting
     return {
       messages: [
         { message: `Let's start this topic of ${topicTitle}.`, message_type: "text" }
@@ -285,53 +236,28 @@ async function generateTopicGreeting(topicTitle, topicContent, topicGoals = []) 
 
 /**
  * Generate topic goals for learning progression
- * Creates measurable, sequential learning objectives
  */
 async function generateTopicGoals(topicTitle, topicContent) {
-  // Truncate topic content to essential info for token efficiency
   const topicSummary = topicContent && topicContent.length > 150
     ? topicContent.substring(0, 150) + '...'
     : topicContent || 'General introduction to the topic';
 
   try {
-    // Read the prompt template
     const promptPath = path.join(__dirname, 'prompts', 'goals_prompt.txt');
     let promptTemplate = fs.readFileSync(promptPath, 'utf8');
 
-    // Replace placeholders
     const systemPrompt = promptTemplate.replace(/\{\{topicTitle\}\}/g, topicTitle);
 
-    const response = await openai.chat.completions.create({
-      model: 'gpt-5',
-      messages: [
-        {
-          role: 'system',
-          content: systemPrompt
-        },
-        {
-          role: 'user',
-          content: `Topic: ${topicTitle}\nContent Summary: ${topicSummary}`
-        }
-      ],
-      temperature: 1,
-      max_completion_tokens: 4096,
-      response_format: { type: "json_object" }
-    });
+    const responseText = await invokeModel(systemPrompt, [{ role: 'user', content: `Topic: ${topicTitle}\nContent Summary: ${topicSummary}` }]);
+    const parsed = extractJson(responseText);
 
-    const content = response.choices[0].message.content.trim();
-    const parsed = JSON.parse(content);
-
-    // Validate and ensure we have at least 3 goals
-    if (!parsed.goals || parsed.goals.length < 3) {
-      throw new Error('Generated less than 3 goals');
+    if (!parsed || !parsed.goals || parsed.goals.length < 3) {
+      throw new Error('Invalid or insufficient goals generated');
     }
-
-    console.log(`✓ Topic goals generated | Topic: ${topicTitle} | Goals: ${parsed.goals.length}`);
 
     return parsed;
   } catch (error) {
     console.error('Error generating goals for', topicTitle, ':', error.message);
-    // Fallback goals
     return {
       goals: [
         { title: "Analyze the core concept", description: `Examine what ${topicTitle} means in different contexts`, order: 1 },
@@ -349,7 +275,6 @@ module.exports = {
   normalizeUserCorrectionOptions,
   generateTopicGreeting,
   generateTopicGoals,
-  openai,
   calculateSessionMetrics,
   generateSessionSummaryMessage
 };

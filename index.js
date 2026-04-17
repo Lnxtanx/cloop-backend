@@ -73,6 +73,8 @@ app.use('/api/normal-chat', require('./api/normal-chat/normal-chat'))
 app.use('/api/content-generation', require('./api/content-generation/content-generation'))
 app.use('/api/saved-topics', require('./api/saved-topics/saved-topics'))
 app.use('/api/notifications', require('./api/notifications/notifications'))
+// Practice Tests routes
+app.use('/api/practice-tests', require('./api/practice-tests/practice-tests'))
 // Voice Chat REST routes (Legacy - Moved to Python Service)
 // app.use('/api/voice-chat', require('./api/voice-chat/voice-chat'))
 app.use('/api/internal/tools', require('./api/internal/tools'))

@@ -1,5 +1,5 @@
 const prisma = require('../lib/prisma');
-const { generateChapters, generateTopics, generateTopicGoals } = require('./openai');
+const { generateChapters, generateTopics, generateTopicGoals } = require('./ai/curriculum');
 const { notifyContentGenerationStatus } = require('./notifications');
 
 /**

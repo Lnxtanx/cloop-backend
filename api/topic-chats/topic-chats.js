@@ -1,8 +1,8 @@
 const express = require('express')
 const router = express.Router()
 const { authenticateToken } = require('../../middleware/auth')
-const { generateTopicChatResponse, generateTopicGreeting, generateTopicGoals } = require('../../services/topic_chat')
-const { openai } = require('../../services/topic_chat_helpers')
+const { generateTopicChatResponse, generateTopicGreeting, generateTopicGoals } = require('../../services/ai/topic-chat')
+const { invokeModel } = require('../../services/ai/bedrock-client')
 const { createLearningTurn, incrementExplainCount, calculateMasteryScore } = require('../../services/learning_turns_tracker')
 
 const prisma = require('../../lib/prisma')
@@ -1371,13 +1371,10 @@ Write a SHORT 2-3 sentence performance summary for the student.
 - DO NOT start with "Great job" or "Well done"
 - Return plain text only, no JSON, no bullet points`
 
-						const perfResp = await openai.chat.completions.create({
-							model: 'gpt-5',
-							messages: [{ role: 'user', content: perfPrompt }],
+						const perfText = await invokeModel(perfPrompt, [{ role: 'user', content: 'Generate summary' }], {
 							temperature: 1,
-							max_completion_tokens: 150
+							maxTokens: 150
 						})
-						const perfText = perfResp.choices[0].message.content.trim()
 
 						if (perfText) {
 							const savedPerfMsg = await prisma.admin_chat.create({
@@ -1963,7 +1960,7 @@ router.post('/:topicId/learn-more', authenticateToken, async (req, res) => {
 			analyzeMistakesForLearnMore,
 			generateLearnMoreGreeting,
 			generateLearnMoreResponse
-		} = require('../../services/topic_chat_learn_more')
+		} = require('../../services/ai/learn-more')
 
 		console.log('\n========== LEARN MORE REQUEST ==========');
 		console.log('👤 User:', user_id);

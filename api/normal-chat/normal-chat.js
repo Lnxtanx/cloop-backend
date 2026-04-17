@@ -4,13 +4,8 @@ const { authenticateToken } = require('../../middleware/auth')
 
 const prisma = require('../../lib/prisma')
 
-// OpenAI integration
-const OpenAI = require('openai')
-const openai = new OpenAI({
-  apiKey: process.env.API_KEY_OPENAI,
-  timeout: 120000,
-  maxRetries: 2,
-})
+// Bedrock integration
+const { invokeModel } = require('../../services/ai/bedrock-client')
 
 // GET /api/normal-chat/
 // Fetch all normal chat messages for a user
@@ -97,46 +92,23 @@ router.post('/message', authenticateToken, async (req, res) => {
 		let aiResponseText = 'I apologize, but I encountered an issue generating a response. Please try again.'
 		
 		try {
-			const completion = await openai.chat.completions.create({
-				model: "gpt-5",
-				messages: [
-					{
-						role: "system",
-						content: `You are Cloop AI, a helpful and friendly educational assistant. You help students with their studies across various subjects. 
+			const systemPrompt = `You are Cloop AI, a helpful and friendly educational assistant. You help students with their studies across various subjects. 
 						
-						Key traits:
-						- Be encouraging and supportive
-						- Provide clear, easy-to-understand explanations
-						- Ask follow-up questions to ensure understanding
-						- Relate concepts to real-world examples when possible
-						- Maintain a positive, learning-focused tone
-						- Keep responses concise but comprehensive
-						- If you don't know something, admit it and suggest how to find the answer
-						
-						The student's message: "${message}"`
-					},
-					{
-						role: "user",
-						content: message
-					}
-				],
-				max_completion_tokens: 2048,
-				temperature: 1,
-			})
+			Key traits:
+			- Be encouraging and supportive
+			- Provide clear, easy-to-understand explanations
+			- Ask follow-up questions to ensure understanding
+			- Relate concepts to real-world examples when possible
+			- Maintain a positive, learning-focused tone
+			- Keep responses concise but comprehensive
+			- If you don't know something, admit it and suggest how to find the answer`
 
-			if (completion.choices && completion.choices[0] && completion.choices[0].message) {
-					const content = completion.choices[0].message.content
-					const finishReason = completion.choices[0].finish_reason
-					if (!content || content.trim().length === 0) {
-						console.error('GPT-5 returned empty content, finish_reason:', finishReason)
-						aiResponseText = "I'm having trouble formulating a response right now. Could you please try again?"
-					} else {
-						aiResponseText = content
-					}
-				aiResponseText = completion.choices[0].message.content
-			}
-		} catch (openaiError) {
-			console.error('OpenAI API error:', openaiError)
+			aiResponseText = await invokeModel(systemPrompt, [{ role: 'user', content: message }], {
+				maxTokens: 2048,
+				temperature: 0.7
+			})
+		} catch (bedrockError) {
+			console.error('Bedrock API error:', bedrockError)
 			// Fallback to a friendly error message
 			aiResponseText = "I'm having trouble connecting to my knowledge base right now. Could you please try asking your question again? I'm here to help! 🤖📚"
 		}

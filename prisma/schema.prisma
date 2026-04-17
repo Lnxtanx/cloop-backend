@@ -55,6 +55,37 @@ model users {
   user_subjects             user_subjects[]
   user_topic_reports        user_topic_reports[]
   feedback                  feedback[]
+  practice_tests            practice_tests[]
+}
+
+model practice_tests {
+  id               Int       @id @default(autoincrement())
+  user_id          Int
+  exam_type        String    @db.VarChar(50) // 'NEET', 'JEE_MAIN', 'JEE_ADVANCED', etc.
+  subject          String?   @db.VarChar(100)
+  total_questions  Int       @default(15)
+  score            Int?      @default(0)
+  time_taken_sec   Int?      @default(0)
+  status           String    @default("in_progress") @db.VarChar(20) // 'in_progress', 'completed'
+  created_at       DateTime? @default(now()) @db.Timestamp(6)
+  completed_at     DateTime? @db.Timestamp(6)
+  
+  users            users     @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  practice_questions practice_questions[]
+}
+
+model practice_questions {
+  id               Int       @id @default(autoincrement())
+  test_id          Int
+  question_text    String    @db.Text
+  options          Json      // Array of strings: ["A", "B", "C", "D"]
+  correct_answer   String    // The correct option string
+  explanation      String?   @db.Text
+  user_answer      String?   // The option chosen by user
+  is_correct       Boolean?
+  created_at       DateTime? @default(now()) @db.Timestamp(6)
+  
+  practice_tests   practice_tests @relation(fields: [test_id], references: [id], onDelete: Cascade)
 }
 
 model subjects {

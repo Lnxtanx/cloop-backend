@@ -1,21 +1,9 @@
-const OpenAI = require('openai');
-
-const openai = new OpenAI({
-  apiKey: process.env.API_KEY_OPENAI,
-  timeout: 120000,
-  maxRetries: 2,
-});
+const { invokeModel, extractJson } = require('./bedrock-client');
 
 /**
  * Topic Chat Learn More Service
  * Handles "Learn More" mode after session completion
  * Analyzes user mistakes and asks targeted questions on weak topics
- * 
- * Features:
- * - Analyze mistake patterns from session
- * - Generate targeted questions for weak goals
- * - Focus on specific error types (conceptual, spelling, grammar)
- * - Provide deeper explanations for challenging concepts
  */
 
 /**
@@ -27,11 +15,7 @@ const openai = new OpenAI({
  */
 function analyzeMistakesForLearnMore(weakGoals, allMistakes, errorTypeCounts) {
   console.log('\n========== ANALYZING MISTAKES FOR LEARN MORE ==========');
-  console.log('🎯 Weak Goals:', weakGoals.length);
-  console.log('❌ Total Mistakes:', allMistakes.length);
-  console.log('📊 Error Types:', Object.keys(errorTypeCounts).join(', '));
-
-  // Categorize mistakes by error type - 12 error types reference
+  
   const ERROR_TYPES = [
     "No Answer Provided",
     "Confused Response",
@@ -47,31 +31,26 @@ function analyzeMistakesForLearnMore(weakGoals, allMistakes, errorTypeCounts) {
     "Partially Correct"
   ];
 
-  // Bucket mistakes by type
   const errorBuckets = {};
   ERROR_TYPES.forEach(type => {
     errorBuckets[type] = allMistakes.filter(m => m.error_type === type);
   });
 
-  // Convenience arrays for legacy logic
   const conceptualErrors = errorBuckets['Conceptual'] || [];
   const noAnswerErrors = errorBuckets['No Answer Provided'] || [];
   const spellingErrors = errorBuckets['Spelling'] || [];
   const grammarErrors = errorBuckets['Grammar'] || [];
 
-  // Counts per error type (used in prompt)
   const errorTypeCountsFromData = {};
   ERROR_TYPES.forEach(type => {
     errorTypeCountsFromData[type] = (errorBuckets[type] || []).length;
   });
 
-  // Determine primary focus area
   let primaryFocus = 'conceptual';
-  let focusReason = 'understanding core concepts';
+  let focusReason = 'strengthening conceptual understanding';
   
   if (conceptualErrors.length > allMistakes.length * 0.4) {
     primaryFocus = 'conceptual';
-    focusReason = 'strengthening conceptual understanding';
   } else if (noAnswerErrors.length > allMistakes.length * 0.3) {
     primaryFocus = 'knowledge_gaps';
     focusReason = 'filling knowledge gaps';
@@ -83,7 +62,6 @@ function analyzeMistakesForLearnMore(weakGoals, allMistakes, errorTypeCounts) {
     focusReason = 'refining grammar and sentence structure';
   }
 
-  // Create focus areas with specific topics to review
   const focusAreas = weakGoals.map(goal => {
     const goalMistakes = allMistakes.filter(m => m.goal_id === goal.goal_id);
     const mistakeTopics = goalMistakes.map(m => ({
@@ -103,16 +81,7 @@ function analyzeMistakesForLearnMore(weakGoals, allMistakes, errorTypeCounts) {
       mistake_topics: mistakeTopics,
       priority: goal.score_percent < 50 ? 'high' : 'medium'
     };
-  }).sort((a, b) => a.score_percent - b.score_percent); // Sort by lowest score first
-
-  console.log('\n📋 Learning Plan:');
-  console.log('  - Primary Focus:', primaryFocus);
-  console.log('  - Reason:', focusReason);
-  console.log('  - Focus Areas:', focusAreas.length);
-  focusAreas.forEach((area, i) => {
-    console.log(`    ${i + 1}. ${area.goal_title} (${area.score_percent}%, ${area.mistake_count} mistakes, ${area.priority} priority)`);
-  });
-  console.log('======================================================\n');
+  }).sort((a, b) => a.score_percent - b.score_percent);
 
   return {
     primary_focus: primaryFocus,
@@ -123,14 +92,12 @@ function analyzeMistakesForLearnMore(weakGoals, allMistakes, errorTypeCounts) {
     spelling_error_count: spellingErrors.length,
     grammar_error_count: grammarErrors.length,
     no_answer_count: noAnswerErrors.length,
-    // full counts map for all recognized error types
     error_type_counts: errorTypeCountsFromData
   };
 }
 
 /**
  * Generate Learn More session prompt
- * Creates targeted questions based on user's mistakes
  */
 function buildLearnMoreSystemPrompt(topicTitle, topicContent, learningPlan, currentFocusArea, questionsAskedInLearnMore, lastQuestion, hasAskedQuestion, userMessage) {
   const { focus_areas, primary_focus, focus_reason } = learningPlan;
@@ -139,17 +106,11 @@ function buildLearnMoreSystemPrompt(topicTitle, topicContent, learningPlan, curr
 
 🎯 LEARN MORE MODE ACTIVE 🎯
 
-The student completed this topic but struggled with certain areas. Your goal is to help them strengthen their weak points through targeted practice.
-
 📊 STUDENT'S WEAK AREAS:
 ${focus_areas.map((area, i) => 
   `${i + 1}. ${area.goal_title} (Score: ${area.score_percent}%, Priority: ${area.priority.toUpperCase()})
-   - ${area.mistake_count} mistakes made
-   - Needs focus on: ${area.mistake_topics.slice(0, 2).map(t => t.error_type).join(', ')}`
+   - ${area.mistake_count} mistakes made`
 ).join('\n')}
-
-ERROR TYPE COUNTS:
-${Object.keys(learningPlan.error_type_counts || {}).length > 0 ? Object.entries(learningPlan.error_type_counts).map(([k,v]) => `- ${k}: ${v}`).join('\n') : 'None recorded'}
 
 🎓 PRIMARY FOCUS: ${primary_focus.toUpperCase()}
 Reason: ${focus_reason}
@@ -164,8 +125,7 @@ Student's Previous Errors in this area:
 ${currentFocusArea.mistake_topics.slice(0, 3).map((m, i) => 
   `${i + 1}. Question: "${m.question}"
    Student answered: "${m.user_answer || 'No answer'}"
-   Correct answer: "${m.correct_answer}"
-   Error type: ${m.error_type}`
+   Correct answer: "${m.correct_answer}"`
 ).join('\n\n')}
 ` : 'Starting Learn More session'}
 
@@ -176,62 +136,9 @@ ${questionsAskedInLearnMore.length > 0 ? questionsAskedInLearnMore.map((q, i) =>
 ${hasAskedQuestion ? `
 Student just answered: "${userMessage}"
 Last question: "${lastQuestion}"
+EVALUATE their answer with user_correction.` : `ASK A TARGETED QUESTION about ${currentFocusArea.goal_title}:`}
 
-EVALUATE their answer with user_correction (no quick-reply options):
-- Inline corrections in diff_html
-- Complete, concise answer in complete_answer
-- Encourage them, then ask the NEXT follow-up question in messages
-` : `
-ASK A TARGETED QUESTION about ${currentFocusArea.goal_title}:
-1. Focus on the concept they struggled with
-2. Ask in a DIFFERENT way than before
-3. Make it slightly easier to build confidence
-4. Keep it SHORT (one sentence, one concept)
-5. NEVER repeat questions from the list above
-`}
-
-🎨 RESPONSE FORMAT (VALID JSON ONLY):
-
-${hasAskedQuestion ? `
-{
-  "messages": [
-    { "message": "[Next, gentler targeted question]?", "message_type": "text" }
-  ],
-  "user_correction": {
-    "message_type": "user_correction",
-    "diff_html": "${userMessage}",
-    "complete_answer": "Encouraging feedback acknowledging improvement or explaining the concept",
-    "emoji": "😊",
-    "feedback": {
-      "is_correct": true/false,
-      "bubble_color": "green"/"red",
-      "score_percent": 0-100,
-      "error_type": "Conceptual"/"Spelling"/"Grammar"
-    }
-  }
-}
-` : `
-{
-  "messages": [
-    { "message": "Let's work on ${currentFocusArea.goal_title}. [Ask targeted question]?", "message_type": "text" }
-  ]
-}
-`}
-
-🚨 CRITICAL RULES:
-1. NEVER repeat questions - check the list above
-2. Ask questions that address their SPECIFIC mistakes
-3. If they struggled with conceptual understanding, ask concept-based questions
-4. If they had spelling/grammar issues, focus on those aspects
-5. Build confidence - start with slightly easier variations
-6. Provide detailed explanations when they ask (still no quick-reply buttons)
-7. After 3-4 questions per weak goal, suggest moving to next weak area or ending
-
-💡 ENCOURAGEMENT:
-- Acknowledge their effort to learn more
-- Celebrate improvements
-- Be patient and supportive
-- Focus on growth, not just correctness`;
+ALWAYS respond with valid JSON only. Do NOT include markdown or any commentary outside the JSON.`;
 }
 
 /**
@@ -240,46 +147,23 @@ ${hasAskedQuestion ? `
 async function generateLearnMoreGreeting(topicTitle, learningPlan) {
   try {
     const { focus_areas, focus_reason } = learningPlan;
-    const weakestGoal = focus_areas[0]; // Lowest scoring goal
+    const weakestGoal = focus_areas[0];
 
-    const response = await openai.chat.completions.create({
-      model: 'gpt-5',
-      messages: [
-        {
-          role: 'system',
-          content: `You are a supportive tutor starting a "Learn More" session for "${topicTitle}".
-
+    const systemPrompt = `You are a supportive tutor starting a "Learn More" session for "${topicTitle}".
 The student wants to improve on areas where they struggled:
 - Weakest area: ${weakestGoal.goal_title} (${weakestGoal.score_percent}%)
 - Focus: ${focus_reason}
 
-Create a brief, encouraging message:
-1. Welcome them back
-2. Acknowledge their desire to improve
-3. Mention what you'll focus on
-4. Ask the first targeted question about their weakest area
+Create a brief, encouraging greeting and ask the first targeted question.
+Return VALID JSON ONLY.`;
 
-Return VALID JSON:
-{
-  "messages": [
-    { "message": "Great decision to keep learning! 💪", "message_type": "text" },
-    { "message": "Let's strengthen your understanding of ${weakestGoal.goal_title}.", "message_type": "text" },
-    { "message": "[First targeted question about ${weakestGoal.goal_title}]?", "message_type": "text" }
-  ]
-}`
-        },
-        {
-          role: 'user',
-          content: 'Generate Learn More greeting'
-        }
-      ],
-      temperature: 1,
-      max_completion_tokens: 2048,
-      response_format: { type: "json_object" }
-    });
+    const userPrompt = 'Generate Learn More greeting and first question.';
 
-    const content = response.choices[0].message.content.trim();
-    return JSON.parse(content);
+    const responseText = await invokeModel(systemPrompt, [{ role: 'user', content: userPrompt }]);
+    const parsed = extractJson(responseText);
+
+    if (!parsed) throw new Error('Failed to parse greeting JSON');
+    return parsed;
   } catch (error) {
     console.error('Error generating Learn More greeting:', error);
     return {
@@ -293,11 +177,9 @@ Return VALID JSON:
 
 /**
  * Generate Learn More chat response
- * Similar to regular chat but focused on weak areas
  */
 async function generateLearnMoreResponse(userMessage, topicTitle, topicContent, learningPlan, currentFocusArea, chatHistory = [], questionsAskedInLearnMore = []) {
   try {
-    // Analyze chat history
     const aiMessages = chatHistory.filter(m => m.sender === 'ai' && m.message_type === 'text');
     const allQuestions = aiMessages
       .filter(m => m.message && m.message.includes('?'))
@@ -318,11 +200,7 @@ async function generateLearnMoreResponse(userMessage, topicTitle, topicContent, 
       userMessage
     );
 
-    const messages = [
-      { role: 'system', content: systemPrompt }
-    ];
-
-    // Add recent history
+    const messages = [];
     const recentHistory = chatHistory.slice(-6);
     for (const msg of recentHistory) {
       messages.push({
@@ -331,29 +209,13 @@ async function generateLearnMoreResponse(userMessage, topicTitle, topicContent, 
       });
     }
 
-    messages.push({
-      role: 'user',
-      content: userMessage
-    });
+    messages.push({ role: 'user', content: userMessage });
 
-    console.log('\n========== LEARN MORE AI CALL ==========');
-    console.log('📚 Focus Area:', currentFocusArea?.goal_title);
-    console.log('💬 User Message:', userMessage);
-    console.log('🔍 Questions Asked:', questionsAskedInLearnMore.length);
-    console.log('=========================================\n');
+    const responseText = await invokeModel(systemPrompt, messages);
+    let parsed = extractJson(responseText);
 
-    const response = await openai.chat.completions.create({
-      model: 'gpt-5',
-      messages: messages,
-      temperature: 1,
-      max_completion_tokens: 4096,
-      response_format: { type: "json_object" }
-    });
+    if (!parsed) throw new Error('Failed to parse response JSON');
 
-    const rawContent = response.choices[0].message.content;
-    let parsed = JSON.parse(rawContent.trim());
-
-    // Normalize user_correction for free-text flow (no options)
     if (parsed.user_correction) {
       if (parsed.user_correction.options) delete parsed.user_correction.options;
       if (!parsed.user_correction.message_type) parsed.user_correction.message_type = 'user_correction';
@@ -366,14 +228,12 @@ async function generateLearnMoreResponse(userMessage, topicTitle, topicContent, 
       }
     }
 
-    console.log('✅ Learn More response generated');
     return parsed;
   } catch (error) {
     console.error('Error generating Learn More response:', error);
     return {
       messages: [
-        { message: "Let's keep practicing! 💪", message_type: "text" },
-        { message: "Could you try answering that again?", message_type: "text" }
+        { message: "Let's keep practicing! 💪", message_type: "text" }
       ]
     };
   }
