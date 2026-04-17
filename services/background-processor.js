@@ -3,7 +3,7 @@ const { runContentGenerationPipeline, generateMissingGoals } = require('./conten
 const { notifyContentGenerationStatus } = require('./notifications');
 const { processEngagementNotifications } = require('./engagement-notifications');
 
-console.log('[background-processor] Prisma loaded:', typeof prisma, 'has contentGenerationStatus:', typeof prisma?.contentGenerationStatus);
+console.log('[background-processor] Prisma loaded:', typeof prisma, 'has content_generation_status:', typeof prisma?.content_generation_status);
 
 let isProcessing = false;
 let processingInterval = null;
@@ -16,13 +16,13 @@ async function startContinuousProcessing() {
   console.log('\n🔄 Starting continuous content generation processor...');
   console.log(`⏰ Polling interval: ${POLLING_INTERVAL / 1000} seconds\n`);
 
-  console.log('[startContinuousProcessing] Prisma before connect:', typeof prisma, 'has contentGenerationStatus:', typeof prisma?.contentGenerationStatus);
+  console.log('[startContinuousProcessing] Prisma before connect:', typeof prisma, 'has content_generation_status:', typeof prisma?.content_generation_status);
 
   // Initialize and connect Prisma
   try {
     await prisma.$connect();
     console.log('✓ Database connection established');
-    console.log('[startContinuousProcessing] Prisma after connect:', typeof prisma, 'has contentGenerationStatus:', typeof prisma?.contentGenerationStatus);
+    console.log('[startContinuousProcessing] Prisma after connect:', typeof prisma, 'has content_generation_status:', typeof prisma?.content_generation_status);
   } catch (error) {
     console.error('❌ Failed to connect to database:', error);
     throw error;

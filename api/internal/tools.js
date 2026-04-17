@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { executeTool } = require('../../services/ai-tools')
+const { executeTool } = require('../../services/ai/tools')
 const jwt = require('jsonwebtoken')
 
 // Middleware to verify internal or admin access
