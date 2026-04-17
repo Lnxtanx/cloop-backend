@@ -2,11 +2,18 @@ const { BedrockRuntimeClient, ConverseCommand } = require('@aws-sdk/client-bedro
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '../../.env') });
 
+console.log(`[Bedrock] Initializing client in region: ${process.env.AWS_REGION || 'us-east-1'}`);
+if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
+    console.warn('[Bedrock] ⚠️ WARNING: AWS credentials missing in environment variables!');
+} else {
+    console.log('[Bedrock] ✅ AWS credentials found (ID starts with: ' + process.env.AWS_ACCESS_KEY_ID.substring(0, 5) + '...)');
+}
+
 const client = new BedrockRuntimeClient({
     region: process.env.AWS_REGION || 'us-east-1',
     credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID?.trim(),
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY?.trim()
     }
 });
 
