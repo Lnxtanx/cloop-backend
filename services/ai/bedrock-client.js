@@ -18,7 +18,7 @@ const client = new BedrockRuntimeClient({
  * @returns {Promise<string>} - Model response text
  */
 async function invokeModel(systemPrompt, messages, options = {}) {
-    const modelId = options.modelId || process.env.BEDROCK_MODEL_ID || 'anthropic.claude-3-haiku-20240307-v1:0';
+    const modelId = options.modelId || process.env.BEDROCK_MODEL_ID || 'deepseek.v3.2';
     
     // Format messages for Bedrock Converse API if they are just strings
     const formattedMessages = messages.map(msg => {

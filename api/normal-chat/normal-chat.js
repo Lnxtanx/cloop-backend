@@ -108,7 +108,12 @@ router.post('/message', authenticateToken, async (req, res) => {
 				temperature: 0.7
 			})
 		} catch (bedrockError) {
-			console.error('Bedrock API error:', bedrockError)
+			console.error('[Normal Chat] Bedrock API error details:', {
+				message: bedrockError.message,
+				code: bedrockError.code,
+				name: bedrockError.name,
+				stack: bedrockError.stack
+			})
 			// Fallback to a friendly error message
 			aiResponseText = "I'm having trouble connecting to my knowledge base right now. Could you please try asking your question again? I'm here to help! 🤖📚"
 		}
