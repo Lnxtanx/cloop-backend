@@ -17,22 +17,27 @@ async function generatePracticeQuestions(examType, subject, chapters = []) {
     
     Context: ${chapterContext}
     
-    Rules:
-    1. The difficulty level must match the actual ${examType} standards.
+    CRITICAL RULES:
+    1. The difficulty level must match ${examType} standards.
     2. Each question must have exactly 4 options.
-    3. There must be exactly one correct answer.
-    4. Provide a clear, concise explanation for the correct answer.
-    5. Respond ONLY with a valid JSON object containing a "questions" array.
+    3. Provide exactly ONE correct answer which MUST match one of the options exactly.
+    4. The "explanation" field MUST BE BRIEF (max 2 sentences). Do NOT include your internal reasoning, debates, or calculations in the JSON.
+    5. Respond ONLY with a valid JSON object. No preamble, no post-text.
     
-    JSON Structure for each question:
+    JSON Structure:
     {
-        "question_text": "The actual question goes here?",
-        "options": ["Option A", "Option B", "Option C", "Option D"],
-        "correct_answer": "Option A",
-        "explanation": "Brief explanation of why Option A is correct."
+        "questions": [
+            {
+                "question_text": "...",
+                "options": ["...", "...", "...", "..."],
+                "correct_answer": "...",
+                "explanation": "..."
+            }
+        ]
     }`;
 
-    const userPrompt = `Generate 15 ${examType} practice MCQs for ${subject}. ${chapters && chapters.length > 0 ? 'Focus on specified chapters.' : ''}`;
+    const userPrompt = `Generate 15 ${examType} MCQs for ${subject}. ${chapters && chapters.length > 0 ? 'Focus on: ' + chapters.join(', ') : ''} 
+    Keep explanations extremely short. Return ONLY valid JSON.`;
 
     try {
         console.log(`[PracticeTest] 🚀 Generating 15 questions for ${examType} - ${subject}`);
