@@ -9,7 +9,11 @@ const { generatePracticeQuestions } = require('../../services/ai/practice-test')
  * Generates a 15-question MCQ test for a specific exam and subject
  */
 router.post('/generate', authenticateToken, async (req, res) => {
-    const { exam_type, subject } = req.body;
+    // Increase timeout for AI generation (5 minutes)
+    req.setTimeout(300000);
+    res.setTimeout(300000);
+    
+    const { exam_type, subject, chapter_ids } = req.body; // chapter_ids: [number]
     const user_id = req.user.user_id;
 
     if (!exam_type || !subject) {
@@ -17,7 +21,15 @@ router.post('/generate', authenticateToken, async (req, res) => {
     }
 
     try {
-        const questions = await generatePracticeQuestions(exam_type, subject);
+        let chapterTitles = [];
+        if (chapter_ids && Array.isArray(chapter_ids) && chapter_ids.length > 0) {
+            const chapters = await prisma.standard_chapters.findMany({
+                where: { id: { in: chapter_ids.map(id => parseInt(id)) } }
+            });
+            chapterTitles = chapters.map(c => c.title);
+        }
+
+        const questions = await generatePracticeQuestions(exam_type, subject, chapterTitles);
 
         // Save the test session and questions to the database
         const practiceTest = await prisma.practice_tests.create({
@@ -29,6 +41,16 @@ router.post('/generate', authenticateToken, async (req, res) => {
                 status: 'in_progress'
             }
         });
+
+        // Link chapters if provided
+        if (chapter_ids && chapter_ids.length > 0) {
+            await prisma.practice_test_chapters.createMany({
+                data: chapter_ids.map(cid => ({
+                    test_id: practiceTest.id,
+                    chapter_id: parseInt(cid)
+                }))
+            });
+        }
 
         // Bulk insert questions linked to this test
         const savedQuestions = await prisma.practice_questions.createMany({
@@ -149,6 +171,7 @@ router.post('/:id/submit', authenticateToken, async (req, res) => {
  */
 router.get('/history', authenticateToken, async (req, res) => {
     const user_id = req.user.user_id;
+    console.log(`[PracticeHistory] 📋 Fetching history for user: ${user_id}`);
 
     try {
         const history = await prisma.practice_tests.findMany({
@@ -156,9 +179,10 @@ router.get('/history', authenticateToken, async (req, res) => {
             orderBy: { created_at: 'desc' }
         });
 
+        console.log(`[PracticeHistory] ✅ Found ${history.length} records`);
         return res.status(200).json(history);
     } catch (error) {
-        console.error('Error fetching practice test history:', error);
+        console.error('[PracticeHistory] ❌ Error:', error);
         return res.status(500).json({ error: 'Failed to fetch test history' });
     }
 });
@@ -175,7 +199,7 @@ router.get('/:id', authenticateToken, async (req, res) => {
         const practiceTest = await prisma.practice_tests.findFirst({
             where: { id: parseInt(id), user_id: user_id },
             include: {
-                practice_questions: {
+                questions: {
                     orderBy: { id: 'asc' }
                 }
             }
@@ -194,7 +218,7 @@ router.get('/:id', authenticateToken, async (req, res) => {
             time_taken_sec: practiceTest.time_taken_sec,
             status: practiceTest.status,
             completed_at: practiceTest.completed_at,
-            questions: practiceTest.practice_questions.map(q => ({
+            questions: practiceTest.questions.map(q => ({
                 id: q.id,
                 question_text: q.question_text,
                 options: q.options,

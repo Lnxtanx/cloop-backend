@@ -4,11 +4,18 @@ const { invokeModel, extractJson } = require('./bedrock-client');
  * Generate a practice test with 15 MCQs for a specific exam type and subject
  * @param {string} examType - 'NEET', 'IIT-JEE', etc.
  * @param {string} subject - 'Biology', 'Physics', 'Chemistry', 'Mathematics'
+ * @param {Array<string>} chapters - Optional list of chapter titles to focus on
  * @returns {Promise<Array>} - Array of 15 question objects
  */
-async function generatePracticeQuestions(examType, subject) {
+async function generatePracticeQuestions(examType, subject, chapters = []) {
+    const chapterContext = chapters && chapters.length > 0 
+        ? `Focus strictly on the following chapters: ${chapters.join(', ')}.`
+        : `Cover the entire syllabus for ${subject}.`;
+
     const systemPrompt = `You are an expert exam paper setter for ${examType}. 
     Your task is to generate exactly 15 high-quality Multiple Choice Questions (MCQs) for the subject: ${subject}.
+    
+    Context: ${chapterContext}
     
     Rules:
     1. The difficulty level must match the actual ${examType} standards.
@@ -25,7 +32,7 @@ async function generatePracticeQuestions(examType, subject) {
         "explanation": "Brief explanation of why Option A is correct."
     }`;
 
-    const userPrompt = `Generate 15 ${examType} practice MCQs for ${subject}.`;
+    const userPrompt = `Generate 15 ${examType} practice MCQs for ${subject}. ${chapters && chapters.length > 0 ? 'Focus on specified chapters.' : ''}`;
 
     try {
         console.log(`[PracticeTest] 🚀 Generating 15 questions for ${examType} - ${subject}`);

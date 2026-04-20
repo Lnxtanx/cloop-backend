@@ -71,7 +71,44 @@ model practice_tests {
   completed_at     DateTime? @db.Timestamp(6)
   
   users            users     @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
-  practice_questions practice_questions[]
+  questions        practice_questions[]
+  selected_chapters practice_test_chapters[]
+}
+
+model practice_test_chapters {
+  id           Int               @id @default(autoincrement())
+  test_id      Int
+  chapter_id   Int
+  practice_test practice_tests  @relation(fields: [test_id], references: [id], onDelete: Cascade)
+  chapter       standard_chapters @relation(fields: [chapter_id], references: [id], onDelete: Cascade)
+
+  @@unique([test_id, chapter_id])
+}
+
+model standard_exams {
+  id          Int      @id @default(autoincrement())
+  code        String   @unique @db.VarChar(50) // 'NEET', 'JEE_MAIN', 'KCET'
+  name        String   @db.VarChar(100)
+  description String?  @db.Text
+  created_at  DateTime? @default(now()) @db.Timestamp(6)
+  subjects    standard_subjects[]
+}
+
+model standard_subjects {
+  id          Int      @id @default(autoincrement())
+  exam_id     Int
+  name        String   @db.VarChar(100) // 'Physics', 'Biology'
+  exam        standard_exams @relation(fields: [exam_id], references: [id], onDelete: Cascade)
+  chapters    standard_chapters[]
+}
+
+model standard_chapters {
+  id          Int      @id @default(autoincrement())
+  subject_id  Int
+  title       String   @db.VarChar(200) // 'Human Reproduction', 'Thermodynamics'
+  order       Int?
+  subject     standard_subjects @relation(fields: [subject_id], references: [id], onDelete: Cascade)
+  practice_tests practice_test_chapters[]
 }
 
 model practice_questions {

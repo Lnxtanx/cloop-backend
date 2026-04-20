@@ -75,6 +75,7 @@ app.use('/api/saved-topics', require('./api/saved-topics/saved-topics'))
 app.use('/api/notifications', require('./api/notifications/notifications'))
 // Practice Tests routes
 app.use('/api/practice-tests', require('./api/practice-tests/practice-tests'))
+app.use('/api/standard-exams', require('./api/practice-tests/standard-exams'))
 // Voice Chat REST routes (Legacy - Moved to Python Service)
 // app.use('/api/voice-chat', require('./api/voice-chat/voice-chat'))
 app.use('/api/internal/tools', require('./api/internal/tools'))
