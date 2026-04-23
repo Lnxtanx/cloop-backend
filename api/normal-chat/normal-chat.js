@@ -135,12 +135,15 @@ router.post('/message', authenticateToken, async (req, res) => {
 		// Generate AI response with history
 		let aiResponseText = "I'm here to help!"
 		try {
-			// Fetch last 10 messages for context
-			const history = await prisma.normal_user_chat.findMany({
+			// Fetch last 11 messages (including the one just sent)
+			const historyRaw = await prisma.normal_user_chat.findMany({
 				where: { session_id: current_session_id },
-				orderBy: { created_at: 'asc' },
-				take: 11 // Current message is already saved, so take 10 previous + 1 current
+				orderBy: { created_at: 'desc' },
+				take: 11
 			})
+
+			// Reverse to get chronological order
+			const history = historyRaw.reverse()
 
 			const messages = history.map(msg => ({
 				role: msg.sender === 'ai' ? 'assistant' : 'user',
@@ -149,9 +152,14 @@ router.post('/message', authenticateToken, async (req, res) => {
 
 			const systemPrompt = `You are Cloop AI, a helpful educational assistant for competitive exams like NEET, JEE, and KCET. 
 			Be supportive, clear, and concise. 
-			When explaining technical concepts, use simple analogies.
-			ALWAYS format math formulas using LaTeX notation like $[ formula ]$ or $$ formula $$ for better rendering.
-			Example: $[ \text{Strain} = \frac{\Delta L}{L} ]$`
+			When explaining technical concepts, use simple analogies and structured formatting.
+			
+			MATH FORMATTING RULES:
+			- ALWAYS use LaTeX for mathematical and scientific formulas.
+			- Use single dollar signs $...$ for inline math (e.g. $E=mc^2$).
+			- Use double dollar signs $$...$$ for block math on a new line.
+			- NEVER use ( ) or [ ] for math formulas.
+			- Example: The formula for strain is $$\text{Strain} = \frac{\Delta L}{L}$$`
 
 			aiResponseText = await invokeModel(systemPrompt, messages, {
 				maxTokens: 2048,

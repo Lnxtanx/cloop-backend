@@ -10,16 +10,13 @@ router.get('/overview', authenticateToken, async (req, res) => {
     const user_id = req.user.user_id;
 
     try {
-        // 1. Get all standard exams
         const allExams = await prisma.standard_exams.findMany();
-        
-        // 2. Get user's completed tests
         const tests = await prisma.practice_tests.findMany({
-            where: { user_id: user_id, status: 'completed' },
+            where: { user_id, status: 'completed' },
             orderBy: { created_at: 'desc' }
         });
 
-        // 3. Format Recent Tests (top 5)
+        // 1. Format Recent Tests
         const recent_tests = tests.slice(0, 5).map(t => ({
             id: t.id,
             title: `${t.exam_type}: ${t.subject}`,
@@ -30,28 +27,32 @@ router.get('/overview', authenticateToken, async (req, res) => {
             created_at: t.created_at
         }));
 
-        // 4. Calculate Readiness for ALL exams
-        const exams_readiness = allExams.map(exam => {
+        // 2. Calculate Predicted Score for ALL exams
+        const exams_data = allExams.map(exam => {
             const examTests = tests.filter(t => t.exam_type === exam.code);
-            let avg_score = 0;
+            
+            let predicted_score = 0;
             if (examTests.length > 0) {
-                const totalCorrect = examTests.reduce((sum, t) => sum + (t.score || 0), 0);
-                const totalQ = examTests.reduce((sum, t) => sum + (t.total_questions || 0), 0);
-                avg_score = Math.round((totalCorrect / totalQ) * 100);
+                // Weighted Logic: Recent tests carry more weight (60% weight for last 3 tests)
+                const recentTests = examTests.slice(0, 3);
+                const recentAvg = (recentTests.reduce((s, t) => s + (t.score / t.total_questions), 0) / recentTests.length) * 100;
+                const overallAvg = (examTests.reduce((s, t) => s + (t.score / t.total_questions), 0) / examTests.length) * 100;
+                
+                predicted_score = Math.round((recentAvg * 0.6) + (overallAvg * 0.4));
             }
 
             return {
                 exam_type: exam.code,
                 name: exam.name,
-                avg_score_percent: avg_score || 0, // Fallback to 0 if no tests
+                predicted_score: predicted_score || 0,
                 total_tests: examTests.length
             };
         });
 
         return res.status(200).json({
-            has_data: true,
+            has_data: tests.length > 0,
             recent_tests,
-            exams: exams_readiness
+            exams: exams_data
         });
     } catch (error) {
         console.error('[PracticeAnalytics] Overview error:', error);
@@ -77,27 +78,37 @@ router.get('/exam/:examCode', authenticateToken, async (req, res) => {
             include: { subjects: true }
         });
 
-        // 2. Subject Breakdown - Get subjects from standard syllabus OR from test history
-        const uniqueSubjects = new Set();
-        if (examMeta && examMeta.subjects.length > 0) {
-            examMeta.subjects.forEach(s => uniqueSubjects.add(s.name));
-        }
-        // Fallback: Add any subjects found in actual tests
+        if (!examMeta) return res.status(404).json({ error: 'Exam not found' });
+
+        // 1. REAL Time Analytics (Actual calculations)
+        const now = new Date();
+        const oneDayAgo = new Date(now.getTime() - (24 * 60 * 60 * 1000));
+        const oneWeekAgo = new Date(now.getTime() - (7 * 24 * 60 * 60 * 1000));
+
+        let daily_sec = 0, weekly_sec = 0, total_sec = 0;
+        let total_q = 0, total_c = 0;
+
+        tests.forEach(t => {
+            total_sec += (t.time_taken_sec || 0);
+            total_q += t.total_questions;
+            total_c += (t.score || 0);
+            
+            const testDate = new Date(t.created_at);
+            if (testDate > oneDayAgo) daily_sec += (t.time_taken_sec || 0);
+            if (testDate > oneWeekAgo) weekly_sec += (t.time_taken_sec || 0);
+        });
+
+        // 2. Subject Breakdown
+        const uniqueSubjects = new Set(examMeta.subjects.map(s => s.name));
         tests.forEach(t => { if(t.subject) uniqueSubjects.add(t.subject); });
 
         const subject_stats = Array.from(uniqueSubjects).map(subName => {
             const subTests = tests.filter(t => t.subject === subName);
             let sub_score = 0;
             if (subTests.length > 0) {
-                const sCorrect = subTests.reduce((sum, t) => sum + (t.score || 0), 0);
-                const sTotal = subTests.reduce((sum, t) => sum + (t.total_questions || 0), 0);
-                sub_score = Math.round((sCorrect / sTotal) * 100);
+                sub_score = Math.round((subTests.reduce((sum, t) => sum + (t.score || 0), 0) / subTests.reduce((sum, t) => sum + (t.total_questions || 0), 0)) * 100);
             }
-            return {
-                name: subName,
-                score_percent: sub_score || 0,
-                has_data: subTests.length > 0
-            };
+            return { name: subName, score_percent: sub_score || 0 };
         });
 
         // 3. Error Analysis
@@ -106,8 +117,8 @@ router.get('/exam/:examCode', authenticateToken, async (req, res) => {
             t.questions.forEach(q => {
                 if (!q.is_correct && q.explanation) {
                     const text = q.explanation.toLowerCase();
-                    if (text.includes('calculate') || text.includes('math')) error_types.Calculation++;
-                    else if (text.includes('apply') || text.includes('method')) error_types.Application++;
+                    if (text.includes('calculate') || text.includes('math') || text.includes('value')) error_types.Calculation++;
+                    else if (text.includes('apply') || text.includes('formula') || text.includes('method')) error_types.Application++;
                     else error_types.Conceptual++;
                 }
             });
@@ -117,32 +128,32 @@ router.get('/exam/:examCode', authenticateToken, async (req, res) => {
         const chapter_mastery = {};
         tests.forEach(t => {
             t.selected_chapters.forEach(sc => {
-                if (!chapter_mastery[sc.chapter.title]) {
-                    chapter_mastery[sc.chapter.title] = { title: sc.chapter.title, correct: 0, total: 0 };
-                }
-                chapter_mastery[sc.chapter.title].correct += (t.score / t.total_questions);
-                chapter_mastery[sc.chapter.title].total += 1;
+                const title = sc.chapter.title;
+                if (!chapter_mastery[title]) chapter_mastery[title] = { title, correct: 0, total: 0 };
+                chapter_mastery[title].correct += (t.score / t.total_questions);
+                chapter_mastery[title].total += 1;
             });
         });
+
+        const sortedChapters = Object.values(chapter_mastery)
+            .map(c => ({ title: c.title, score_percent: Math.round((c.correct / c.total) * 100) }))
+            .sort((a, b) => a.score_percent - b.score_percent);
 
         return res.status(200).json({
             exam_code: examCode,
             summary: {
-                average_score: Math.round((total_c / total_q) * 100) || 0,
+                average_score: Math.round((total_c / (total_q || 1)) * 100),
                 total_questions: total_q,
                 correct_answers: total_c
             },
             subjects: subject_stats,
             time_analytics: {
                 total_seconds: total_sec,
-                daily_seconds: Math.round(total_sec / 30),
-                weekly_seconds: Math.round(total_sec / 4)
+                daily_seconds: daily_sec,
+                weekly_seconds: weekly_sec
             },
             error_analysis: { error_types },
-            chapter_mastery: Object.values(chapter_mastery).map(c => ({
-                title: c.title,
-                score_percent: Math.round((c.correct / c.total) * 100)
-            })).sort((a, b) => a.score_percent - b.score_percent)
+            chapter_mastery: sortedChapters
         });
     } catch (error) {
         console.error('[PracticeAnalytics] Exam deep-dive error:', error);
