@@ -132,11 +132,28 @@ router.post('/message', authenticateToken, async (req, res) => {
 			data: { updated_at: new Date() }
 		})
 
-		// Generate AI response
+		// Generate AI response with history
 		let aiResponseText = "I'm here to help!"
 		try {
-			const systemPrompt = `You are Cloop AI, a helpful educational assistant. Be concise and supportive.`
-			aiResponseText = await invokeModel(systemPrompt, [{ role: 'user', content: message }], {
+			// Fetch last 10 messages for context
+			const history = await prisma.normal_user_chat.findMany({
+				where: { session_id: current_session_id },
+				orderBy: { created_at: 'asc' },
+				take: 11 // Current message is already saved, so take 10 previous + 1 current
+			})
+
+			const messages = history.map(msg => ({
+				role: msg.sender === 'ai' ? 'assistant' : 'user',
+				content: msg.message
+			}))
+
+			const systemPrompt = `You are Cloop AI, a helpful educational assistant for competitive exams like NEET, JEE, and KCET. 
+			Be supportive, clear, and concise. 
+			When explaining technical concepts, use simple analogies.
+			ALWAYS format math formulas using LaTeX notation like $[ formula ]$ or $$ formula $$ for better rendering.
+			Example: $[ \text{Strain} = \frac{\Delta L}{L} ]$`
+
+			aiResponseText = await invokeModel(systemPrompt, messages, {
 				maxTokens: 2048,
 				temperature: 0.7
 			})
