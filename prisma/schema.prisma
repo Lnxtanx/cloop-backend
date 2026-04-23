@@ -110,20 +110,26 @@ model standard_chapters {
   order       Int?
   subject     standard_subjects @relation(fields: [subject_id], references: [id], onDelete: Cascade)
   practice_tests practice_test_chapters[]
+  questions      practice_questions[]
 }
 
 model practice_questions {
   id               Int       @id @default(autoincrement())
   test_id          Int
+  chapter_id       Int?      // Link to the specific standard chapter
   question_text    String    @db.Text
-  options          Json
+  options          Json      // Array of strings
   correct_answer   String
   explanation      String?   @db.Text
   user_answer      String?
   is_correct       Boolean?
+  time_spent_sec   Int?      @default(0) // How long user took
+  ideal_time_sec   Int?      @default(60) // AI suggested time
+  difficulty       String?   @db.VarChar(20) // 'Easy', 'Medium', 'Hard'
   created_at       DateTime? @default(now()) @db.Timestamp(6)
   
   practice_tests   practice_tests @relation(fields: [test_id], references: [id], onDelete: Cascade)
+  chapter          standard_chapters? @relation(fields: [chapter_id], references: [id])
 }
 
 model subjects {

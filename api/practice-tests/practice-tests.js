@@ -54,12 +54,17 @@ router.post('/generate', authenticateToken, async (req, res) => {
 
         // Bulk insert questions linked to this test
         const savedQuestions = await prisma.practice_questions.createMany({
-            data: questions.map(q => ({
+            data: questions.map((q, idx) => ({
                 test_id: practiceTest.id,
                 question_text: q.question_text,
                 options: q.options,
                 correct_answer: q.correct_answer,
-                explanation: q.explanation
+                explanation: q.explanation,
+                difficulty: q.difficulty || 'Medium',
+                ideal_time_sec: q.ideal_time_sec || 60,
+                // If chapter_ids are provided, we can link the first one or try to match titles
+                // For now, let's keep it simple or expand if needed
+                chapter_id: chapter_ids && chapter_ids.length > 0 ? parseInt(chapter_ids[0]) : null
             }))
         });
 
@@ -92,7 +97,8 @@ router.post('/generate', authenticateToken, async (req, res) => {
  */
 router.post('/:id/submit', authenticateToken, async (req, res) => {
     const { id } = req.params;
-    const { answers, time_taken_sec } = req.body; // answers: [{ question_id: number, user_answer: string }]
+    const { answers, time_taken_sec } = req.body; 
+    // answers: [{ question_id: number, user_answer: string, time_spent_sec: number }]
     const user_id = req.user.user_id;
 
     try {
@@ -117,7 +123,10 @@ router.post('/:id/submit', authenticateToken, async (req, res) => {
 
         // Evaluate each question
         for (const q of dbQuestions) {
-            const userAnswer = answers.find(a => a.question_id === q.id)?.user_answer || null;
+            const answerObj = answers.find(a => a.question_id === q.id);
+            const userAnswer = answerObj?.user_answer || null;
+            const timeSpent = answerObj?.time_spent_sec || 0;
+            
             const isCorrect = userAnswer === q.correct_answer;
             if (isCorrect) totalCorrect++;
 
@@ -128,15 +137,17 @@ router.post('/:id/submit', authenticateToken, async (req, res) => {
                 correct_answer: q.correct_answer,
                 user_answer: userAnswer,
                 is_correct: isCorrect,
-                explanation: q.explanation
+                explanation: q.explanation,
+                time_spent_sec: timeSpent
             });
 
-            // Update user answer in database
+            // Update user answer and time spent in database
             await prisma.practice_questions.update({
                 where: { id: q.id },
                 data: {
                     user_answer: userAnswer,
-                    is_correct: isCorrect
+                    is_correct: isCorrect,
+                    time_spent_sec: timeSpent
                 }
             });
         }

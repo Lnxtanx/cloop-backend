@@ -31,13 +31,15 @@ async function generatePracticeQuestions(examType, subject, chapters = []) {
                 "question_text": "...",
                 "options": ["...", "...", "...", "..."],
                 "correct_answer": "...",
-                "explanation": "..."
+                "explanation": "...",
+                "difficulty": "Easy|Medium|Hard",
+                "ideal_time_sec": 45
             }
         ]
     }`;
 
     const userPrompt = `Generate 15 ${examType} MCQs for ${subject}. ${chapters && chapters.length > 0 ? 'Focus on: ' + chapters.join(', ') : ''} 
-    Keep explanations extremely short. Return ONLY valid JSON.`;
+    Assign appropriate difficulty and ideal_time_sec (30-60s for Bio, 60-120s for Phys/Chem/Math). Keep explanations extremely short. Return ONLY valid JSON.`;
 
     try {
         console.log(`[PracticeTest] 🚀 Generating 15 questions for ${examType} - ${subject}`);
