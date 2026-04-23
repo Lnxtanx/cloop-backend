@@ -218,7 +218,7 @@ router.get('/:id', authenticateToken, async (req, res) => {
             time_taken_sec: practiceTest.time_taken_sec,
             status: practiceTest.status,
             completed_at: practiceTest.completed_at,
-            questions: practiceTest.questions.map(q => ({
+            questions: (practiceTest.questions || []).map(q => ({
                 id: q.id,
                 question_text: q.question_text,
                 options: q.options,
@@ -229,8 +229,11 @@ router.get('/:id', authenticateToken, async (req, res) => {
             }))
         });
     } catch (error) {
-        console.error('Error fetching test details:', error);
-        return res.status(500).json({ error: 'Failed to fetch test details' });
+        console.error(`[PracticeTest] ❌ Error fetching test details for ID ${id}:`, error);
+        return res.status(500).json({ 
+            error: 'Failed to fetch test details',
+            details: error.message 
+        });
     }
 });
 
