@@ -62,12 +62,12 @@ model users {
 model practice_tests {
   id               Int       @id @default(autoincrement())
   user_id          Int
-  exam_type        String    @db.VarChar(50) // 'NEET', 'JEE_MAIN', 'JEE_ADVANCED', etc.
+  exam_type        String    @db.VarChar(50)
   subject          String?   @db.VarChar(100)
   total_questions  Int       @default(15)
   score            Int?      @default(0)
   time_taken_sec   Int?      @default(0)
-  status           String    @default("in_progress") @db.VarChar(20) // 'in_progress', 'completed'
+  status           String    @default("in_progress") @db.VarChar(20)
   created_at       DateTime? @default(now()) @db.Timestamp(6)
   completed_at     DateTime? @db.Timestamp(6)
   
@@ -88,7 +88,7 @@ model practice_test_chapters {
 
 model standard_exams {
   id          Int      @id @default(autoincrement())
-  code        String   @unique @db.VarChar(50) // 'NEET', 'JEE_MAIN', 'KCET'
+  code        String   @unique @db.VarChar(50)
   name        String   @db.VarChar(100)
   description String?  @db.Text
   created_at  DateTime? @default(now()) @db.Timestamp(6)
@@ -98,7 +98,7 @@ model standard_exams {
 model standard_subjects {
   id          Int      @id @default(autoincrement())
   exam_id     Int
-  name        String   @db.VarChar(100) // 'Physics', 'Biology'
+  name        String   @db.VarChar(100)
   exam        standard_exams @relation(fields: [exam_id], references: [id], onDelete: Cascade)
   chapters    standard_chapters[]
 }
@@ -106,7 +106,7 @@ model standard_subjects {
 model standard_chapters {
   id          Int      @id @default(autoincrement())
   subject_id  Int
-  title       String   @db.VarChar(200) // 'Human Reproduction', 'Thermodynamics'
+  title       String   @db.VarChar(200)
   order       Int?
   subject     standard_subjects @relation(fields: [subject_id], references: [id], onDelete: Cascade)
   practice_tests practice_test_chapters[]
@@ -116,10 +116,10 @@ model practice_questions {
   id               Int       @id @default(autoincrement())
   test_id          Int
   question_text    String    @db.Text
-  options          Json      // Array of strings: ["A", "B", "C", "D"]
-  correct_answer   String    // The correct option string
+  options          Json
+  correct_answer   String
   explanation      String?   @db.Text
-  user_answer      String?   // The option chosen by user
+  user_answer      String?
   is_correct       Boolean?
   created_at       DateTime? @default(now()) @db.Timestamp(6)
   
