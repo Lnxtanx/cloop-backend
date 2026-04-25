@@ -15,6 +15,39 @@ function normalizeText(s) {
 	return s.replace(/\s+/g, ' ').trim().toLowerCase()
 }
 
+/**
+ * Helper: Find the appropriate goal for linking a message
+ * When currentGoal exists, use it. Otherwise, find the last/active goal
+ * This prevents orphaned messages when all goals are completed
+ */
+async function findGoalForLinking(currentGoal, topicGoals, user_id, prisma) {
+	// If we have an active goal, use it
+	if (currentGoal) {
+		return currentGoal
+	}
+
+	// If no active goal, find the most recently progressed goal
+	// This handles the case when all goals are completed
+	if (topicGoals && topicGoals.length > 0) {
+		// Find the goal with the most recent chat_goal_progress update
+		const goalWithMostProgress = topicGoals.reduce((prev, curr) => {
+			const prevTime = prev.chat_goal_progress?.[0]?.updated_at ? new Date(prev.chat_goal_progress[0].updated_at).getTime() : 0
+			const currTime = curr.chat_goal_progress?.[0]?.updated_at ? new Date(curr.chat_goal_progress[0].updated_at).getTime() : 0
+			return currTime > prevTime ? curr : prev
+		})
+
+		if (goalWithMostProgress) {
+			return goalWithMostProgress
+		}
+
+		// Fallback: use the first goal if no progress info
+		return topicGoals[0]
+	}
+
+	// If no goals at all (shouldn't happen), return null
+	return null
+}
+
 // GET /api/topic-chats/reports/recent
 // Fetch the 3 most recent detailed topic reports for the user
 router.get('/reports/recent', authenticateToken, async (req, res) => {
@@ -674,41 +707,52 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 		});
 		console.log('\n🤖 Calling AI to generate response...');
 
-		// Create chat_goal_progress link if currentGoal exists (so this chat is associated with goal tracking)
-		if (currentGoal) {
-			const existingLink = await prisma.chat_goal_progress.findFirst({
-				where: {
-					chat_id: userMessage.id,
-					goal_id: currentGoal.id,
-					user_id: user_id
-				}
-			})
-
-			if (!existingLink) {
-				// Check if progress already exists for this goal
-				const existingProgress = await prisma.chat_goal_progress.findFirst({
+		// 🔧 FIX: ALWAYS link user message to a goal (prevents orphaned messages)
+		// Use current goal if available, otherwise find the most active goal
+		const linkGoal = await findGoalForLinking(currentGoal, topicGoals, user_id, prisma)
+		if (linkGoal) {
+			try {
+				const existingLink = await prisma.chat_goal_progress.findFirst({
 					where: {
-						user_id: user_id,
-						goal_id: currentGoal.id
+						chat_id: userMessage.id,
+						goal_id: linkGoal.id,
+						user_id: user_id
 					}
 				})
 
-				if (!existingProgress) {
-					// Create initial progress entry
-					await prisma.chat_goal_progress.create({
-						data: {
-							chat_id: userMessage.id,
-							goal_id: currentGoal.id,
+				if (!existingLink) {
+					// Check if progress already exists for this goal
+					const existingProgress = await prisma.chat_goal_progress.findFirst({
+						where: {
 							user_id: user_id,
-							is_completed: false,
-							num_questions: 0,
-							num_correct: 0,
-							num_incorrect: 0
+							goal_id: linkGoal.id
 						}
 					})
-					console.log(`✅ Created chat_goal_progress link for goal: ${currentGoal.title}`)
+
+					if (!existingProgress) {
+						// Create initial progress entry
+						await prisma.chat_goal_progress.create({
+							data: {
+								chat_id: userMessage.id,
+								goal_id: linkGoal.id,
+								user_id: user_id,
+								is_completed: false,
+								num_questions: 0,
+								num_correct: 0,
+								num_incorrect: 0
+							}
+						})
+						const reason = currentGoal ? '' : ' (fallback: all goals complete)'
+						console.log(`✅ Created chat_goal_progress link for user message to goal: ${linkGoal.title}${reason}`) 
+					}
+				} else {
+					console.log(`✅ User message already linked to goal: ${linkGoal.title}`)  
 				}
+			} catch (linkErr) {
+				console.error('❌ Error linking user message to goal:', linkErr.message)
 			}
+		} else {
+			console.warn('⚠️ No goal found for linking user message - this is unusual')
 		}
 
 		// Store the raw user answer in chat_process linked to the placeholder admin_chat
@@ -948,24 +992,25 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 			})
 			aiMessages.push(savedAiMessage)
 
-			// Link AI message to current goal if it exists
-			if (currentGoal) {
+			// 🔧 FIX: ALWAYS link AI message to a goal (prevents orphaned messages)
+			const linkGoalAI = await findGoalForLinking(currentGoal, topicGoals, user_id, prisma)
+			if (linkGoalAI) {
 				try {
 					const existingLink = await prisma.chat_goal_progress.findFirst({
 						where: {
 							chat_id: savedAiMessage.id,
-							goal_id: currentGoal.id,
+							goal_id: linkGoalAI.id,
 							user_id: user_id
 						}
 					})
 
 					if (!existingLink) {
-						// ALWAYS create a link for this specific AI message to the current goal
-						// This ensures the message appears when fetching history for this goal
+						// ALWAYS create a link for this specific AI message to the appropriate goal
+						// This ensures the message appears when fetching history even if all goals complete
 						const currentStats = await prisma.chat_goal_progress.findFirst({
 							where: {
 								user_id: user_id,
-								goal_id: currentGoal.id
+								goal_id: linkGoalAI.id
 							},
 							orderBy: {
 								updated_at: 'desc'
@@ -975,7 +1020,7 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 						await prisma.chat_goal_progress.create({
 							data: {
 								chat_id: savedAiMessage.id,
-								goal_id: currentGoal.id,
+								goal_id: linkGoalAI.id,
 								user_id: user_id,
 								is_completed: currentStats ? currentStats.is_completed : false,
 								num_questions: currentStats ? currentStats.num_questions : 0,
@@ -983,10 +1028,14 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 								num_incorrect: currentStats ? currentStats.num_incorrect : 0
 							}
 						})
+						const reason = currentGoal ? '' : ' (fallback: all goals complete)'
+						console.log(`✅ AI message linked to goal: ${linkGoalAI.title}${reason}`)
 					}
 				} catch (linkErr) {
 					console.error('Error linking AI message to goal:', linkErr.message)
 				}
+			} else {
+				console.warn('⚠️ No goal found for linking AI message - this is unusual')
 			}
 		}
 
