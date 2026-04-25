@@ -306,6 +306,7 @@ model normal_user_chat {
   id           Int                  @id @default(autoincrement())
   user_id      Int
   session_id   Int?
+  from_report_id Int?               // Link back to practice test
   sender       String               @db.VarChar(50)
   message      String?
   message_type String?              @default("text") @db.VarChar(50)

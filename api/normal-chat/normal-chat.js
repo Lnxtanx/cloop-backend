@@ -79,7 +79,15 @@ router.get('/', authenticateToken, async (req, res) => {
 
 		const chatMessages = await prisma.normal_user_chat.findMany({
 			where: { session_id: target_session_id },
-			orderBy: { created_at: 'asc' }
+			orderBy: { created_at: 'asc' },
+			select: {
+				id: true,
+				sender: true,
+				message: true,
+				message_type: true,
+				from_report_id: true, // Persist the origin link
+				created_at: true
+			}
 		})
 
 		return res.status(200).json({
@@ -96,7 +104,7 @@ router.get('/', authenticateToken, async (req, res) => {
 // Send a new message in normal chat
 router.post('/message', authenticateToken, async (req, res) => {
 	let user_id = req.user?.user_id
-	const { message, session_id } = req.body
+	const { message, session_id, from_report_id } = req.body
 
 	if (!user_id) return res.status(401).json({ error: 'Authentication required' })
 	if (!message) return res.status(400).json({ error: 'Message is required' })
@@ -115,11 +123,12 @@ router.post('/message', authenticateToken, async (req, res) => {
 			current_session_id = newSession.id
 		}
 
-		// Create user message
+		// Create user message with optional origin report ID
 		const userMessage = await prisma.normal_user_chat.create({
 			data: {
 				user_id,
 				session_id: current_session_id,
+				from_report_id: from_report_id ? parseInt(from_report_id) : null,
 				sender: 'user',
 				message,
 				message_type: 'text'
