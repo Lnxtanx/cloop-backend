@@ -247,16 +247,18 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 			if (seenIds.has(msg.id)) continue
 			seenIds.add(msg.id)
 
+			// Check if this is a user message that has correction data
+			const turn = turnByMessageId.get(msg.id)
+			
 			if (msg.sender === 'user') {
-				// Look up correction data for this user message
-				const turn = turnByMessageId.get(msg.id)
 				if (turn && (turn.diff_html || turn.is_correct !== undefined)) {
-					const emoji = turn.is_correct ? '😊' :
-						(turn.score_percent === 0 ? '😓' : turn.score_percent < 50 ? '😢' : '😅')
+					const emoji = msg.emoji || turn.emoji || (turn.is_correct ? '😊' :
+						(turn.score_percent === 0 ? '😓' : turn.score_percent < 50 ? '😢' : '😅'))
+					
 					chatMessages.push({
 						...msg,
-						message_type: 'user_correction',
-						diff_html: turn.diff_html || null,
+						message_type: 'user_correction', // Force this type for corrected bubbles
+						diff_html: turn.diff_html || msg.diff_html || null,
 						emoji: emoji,
 						feedback: {
 							is_correct: turn.is_correct,
@@ -265,17 +267,21 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 						}
 					})
 				} else {
-					chatMessages.push(msg)
+					// Plain user message
+					chatMessages.push({
+						...msg,
+						message_type: msg.message_type || 'text'
+					})
 				}
 			} else {
-				// AI message — unpack session_metrics from diff_html for session_summary type
+				// AI message — unpack session_metrics if it's a summary
 				if (msg.message_type === 'session_summary' && msg.diff_html) {
 					try {
-						if (msg.diff_html.trim().startsWith('{')) {
-							msg.session_metrics = JSON.parse(msg.diff_html)
+						if (typeof msg.diff_html === 'string' && msg.diff_html.trim().startsWith('{')) {
+							msg.session_summary = JSON.parse(msg.diff_html)
 						}
 					} catch (e) {
-						// leave as-is
+						console.error('Failed to parse session summary JSON:', e.message)
 					}
 				}
 				chatMessages.push(msg)
@@ -507,7 +513,8 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 				chapter: topic.chapters,
 				subject: topic.subjects
 			},
-			messages: chatMessages,
+			messages: chatMessages.filter(m => m.sender === 'user'),
+			aiMessages: chatMessages.filter(m => m.sender === 'ai'),
 			rawProcesses: rawProcesses,
 			goals: updatedGoals
 		})
