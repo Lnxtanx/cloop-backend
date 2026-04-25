@@ -307,6 +307,7 @@ model normal_user_chat {
   user_id      Int
   session_id   Int?
   from_report_id Int?               // Link back to practice test
+  from_q_index String?              // Link back to specific question index
   sender       String               @db.VarChar(50)
   message      String?
   message_type String?              @default("text") @db.VarChar(50)

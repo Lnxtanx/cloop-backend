@@ -85,7 +85,8 @@ router.get('/', authenticateToken, async (req, res) => {
 				sender: true,
 				message: true,
 				message_type: true,
-				from_report_id: true, // Persist the origin link
+				from_report_id: true, 
+				from_q_index: true, // Persist the origin link
 				created_at: true
 			}
 		})
@@ -104,7 +105,7 @@ router.get('/', authenticateToken, async (req, res) => {
 // Send a new message in normal chat
 router.post('/message', authenticateToken, async (req, res) => {
 	let user_id = req.user?.user_id
-	const { message, session_id, from_report_id } = req.body
+	const { message, session_id, from_report_id, from_q_index } = req.body
 
 	if (!user_id) return res.status(401).json({ error: 'Authentication required' })
 	if (!message) return res.status(400).json({ error: 'Message is required' })
@@ -129,6 +130,7 @@ router.post('/message', authenticateToken, async (req, res) => {
 				user_id,
 				session_id: current_session_id,
 				from_report_id: from_report_id ? parseInt(from_report_id) : null,
+				from_q_index: from_q_index || null,
 				sender: 'user',
 				message,
 				message_type: 'text'

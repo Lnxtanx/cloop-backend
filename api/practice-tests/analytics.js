@@ -4,19 +4,22 @@ const { authenticateToken } = require('../../middleware/auth');
 const prisma = require('../../lib/prisma');
 
 /**
- * GET /api/practice-tests/analytics/overview
+ * GET /api/practice-analytics/overview
  */
 router.get('/overview', authenticateToken, async (req, res) => {
     const user_id = req.user.user_id;
 
     try {
-        const allExams = await prisma.standard_exams.findMany();
         const tests = await prisma.practice_tests.findMany({
-            where: { user_id, status: 'completed' },
+            where: { user_id: user_id, status: 'completed' },
             orderBy: { created_at: 'desc' }
         });
 
-        // 1. Format Recent Tests
+        const allExams = await prisma.standard_exams.findMany({
+            include: { subjects: true }
+        });
+
+        // 1. Format Recent Tests (Top 5)
         const recent_tests = tests.slice(0, 5).map(t => ({
             id: t.id,
             title: `${t.exam_type}: ${t.subject}`,
@@ -27,17 +30,26 @@ router.get('/overview', authenticateToken, async (req, res) => {
             created_at: t.created_at
         }));
 
-        // 2. Calculate Predicted Score for ALL exams
-        const exams_data = allExams.map(exam => {
+        // 2. Calculate Predicted Score and Coverage for ALL exams
+        const exams_data = await Promise.all(allExams.map(async (exam) => {
             const examTests = tests.filter(t => t.exam_type === exam.code);
+            
+            // Calculate real coverage (unique chapters tested vs total available)
+            const totalChapters = await prisma.standard_chapters.count({
+                where: { subject: { exam_id: exam.id } }
+            });
+
+            const testIds = examTests.map(t => t.id);
+            const chaptersTestedCount = await prisma.practice_test_chapters.findMany({
+                where: { test_id: { in: testIds } },
+                distinct: ['chapter_id']
+            });
             
             let predicted_score = 0;
             if (examTests.length > 0) {
-                // Weighted Logic: Recent tests carry more weight (60% weight for last 3 tests)
                 const recentTests = examTests.slice(0, 3);
                 const recentAvg = (recentTests.reduce((s, t) => s + (t.score / t.total_questions), 0) / recentTests.length) * 100;
                 const overallAvg = (examTests.reduce((s, t) => s + (t.score / t.total_questions), 0) / examTests.length) * 100;
-                
                 predicted_score = Math.round((recentAvg * 0.6) + (overallAvg * 0.4));
             }
 
@@ -45,14 +57,29 @@ router.get('/overview', authenticateToken, async (req, res) => {
                 exam_type: exam.code,
                 name: exam.name,
                 predicted_score: predicted_score || 0,
-                total_tests: examTests.length
+                total_tests: examTests.length,
+                chapters_covered: chaptersTestedCount.length,
+                total_chapters: totalChapters || 1
             };
-        });
+        }));
+
+        const overall_covered = exams_data.reduce((acc, e) => acc + e.chapters_covered, 0);
+        const overall_total = exams_data.reduce((acc, e) => acc + e.total_chapters, 0);
 
         return res.status(200).json({
             has_data: tests.length > 0,
             recent_tests,
-            exams: exams_data
+            subjects: exams_data.map(e => ({
+                id: e.exam_type,
+                name: e.name,
+                predicted_score: e.predicted_score
+            })),
+            exams: exams_data,
+            coverage: {
+                percentage: Math.round((overall_covered / (overall_total || 1)) * 100),
+                covered: overall_covered,
+                total: overall_total
+            }
         });
     } catch (error) {
         console.error('[PracticeAnalytics] Overview error:', error);
@@ -61,7 +88,7 @@ router.get('/overview', authenticateToken, async (req, res) => {
 });
 
 /**
- * GET /api/practice-tests/analytics/exam/:examCode
+ * GET /api/practice-analytics/exam/:examCode
  */
 router.get('/exam/:examCode', authenticateToken, async (req, res) => {
     const user_id = req.user.user_id;
@@ -80,7 +107,6 @@ router.get('/exam/:examCode', authenticateToken, async (req, res) => {
 
         if (!examMeta) return res.status(404).json({ error: 'Exam not found' });
 
-        // 1. REAL Time Analytics (Actual calculations)
         const now = new Date();
         const oneDayAgo = new Date(now.getTime() - (24 * 60 * 60 * 1000));
         const oneWeekAgo = new Date(now.getTime() - (7 * 24 * 60 * 60 * 1000));
@@ -98,7 +124,6 @@ router.get('/exam/:examCode', authenticateToken, async (req, res) => {
             if (testDate > oneWeekAgo) weekly_sec += (t.time_taken_sec || 0);
         });
 
-        // 2. Subject Breakdown
         const uniqueSubjects = new Set(examMeta.subjects.map(s => s.name));
         tests.forEach(t => { if(t.subject) uniqueSubjects.add(t.subject); });
 
@@ -111,7 +136,6 @@ router.get('/exam/:examCode', authenticateToken, async (req, res) => {
             return { name: subName, score_percent: sub_score || 0 };
         });
 
-        // 3. Error Analysis
         const error_types = { Conceptual: 0, Application: 0, Calculation: 0 };
         tests.forEach(t => {
             t.questions.forEach(q => {
@@ -124,7 +148,6 @@ router.get('/exam/:examCode', authenticateToken, async (req, res) => {
             });
         });
 
-        // 4. Chapter Mastery
         const chapter_mastery = {};
         tests.forEach(t => {
             t.selected_chapters.forEach(sc => {
