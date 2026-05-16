@@ -223,15 +223,32 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 
 		const topicGoalIds = topicGoalsForIds.map(g => g.id)
 
+		// Get all chat_ids from learning_turns for this topic (fallback lookup)
+		const learningTurnsChatIds = await prisma.learning_turns.findMany({
+			where: { topic_id: parseInt(topicId), user_id: user_id },
+			select: { chat_id: true }
+		})
+		const chatIdsFromLearningTurns = learningTurnsChatIds.map(t => t.chat_id).filter(Boolean)
+
 		// PRIMARY source: admin_chat — has real timestamps and real IDs for every message
-		// This includes user messages (sender='user') and all AI messages
-		// Session summary + performance text are linked to the last goal at save time, so they appear here too
+		// We fetch messages in MULTIPLE ways to ensure no messages are missed on refresh:
+		// 1. Via chat_goal_progress (linked to goals) — main path
+		// 2. Via learning_turns chat_ids (linked directly to topic) — fallback for user messages
 		const adminChatMessages = await prisma.admin_chat.findMany({
 			where: {
 				user_id: user_id,
-				chat_goal_progress: {
-					some: { goal_id: { in: topicGoalIds } }
-				}
+				OR: [
+					// Messages linked via chat_goal_progress to goals (main path)
+					{
+						chat_goal_progress: {
+							some: { goal_id: { in: topicGoalIds } }
+						}
+					},
+					// Messages that have an ID in learning_turns for this topic
+					...(chatIdsFromLearningTurns.length > 0 ? [{
+						id: { in: chatIdsFromLearningTurns }
+					}] : [])
+				]
 			},
 			orderBy: { created_at: 'asc' },
 			select: {
@@ -708,46 +725,34 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 		console.log('\n🤖 Calling AI to generate response...');
 
 		// 🔧 FIX: ALWAYS link user message to a goal (prevents orphaned messages)
-		// Use current goal if available, otherwise find the most active goal
 		const linkGoal = await findGoalForLinking(currentGoal, topicGoals, user_id, prisma)
 		if (linkGoal) {
 			try {
-				const existingLink = await prisma.chat_goal_progress.findFirst({
+				// Fetch the most recent stats for this goal to carry them forward
+				const lastProgress = await prisma.chat_goal_progress.findFirst({
 					where: {
-						chat_id: userMessage.id,
-						goal_id: linkGoal.id,
-						user_id: user_id
-					}
+						user_id: user_id,
+						goal_id: linkGoal.id
+					},
+					orderBy: { updated_at: 'desc' }
 				})
 
-				if (!existingLink) {
-					// Check if progress already exists for this goal
-					const existingProgress = await prisma.chat_goal_progress.findFirst({
-						where: {
-							user_id: user_id,
-							goal_id: linkGoal.id
-						}
-					})
-
-					if (!existingProgress) {
-						// Create initial progress entry
-						await prisma.chat_goal_progress.create({
-							data: {
-								chat_id: userMessage.id,
-								goal_id: linkGoal.id,
-								user_id: user_id,
-								is_completed: false,
-								num_questions: 0,
-								num_correct: 0,
-								num_incorrect: 0
-							}
-						})
-						const reason = currentGoal ? '' : ' (fallback: all goals complete)'
-						console.log(`✅ Created chat_goal_progress link for user message to goal: ${linkGoal.title}${reason}`) 
+				// Create a NEW link record for this specific user message
+				// This ensures the message is visible in GET /api/topic-chats/:topicId
+				await prisma.chat_goal_progress.create({
+					data: {
+						chat_id: userMessage.id,
+						goal_id: linkGoal.id,
+						user_id: user_id,
+						is_completed: lastProgress ? lastProgress.is_completed : false,
+						num_questions: lastProgress ? lastProgress.num_questions : 0,
+						num_correct: lastProgress ? lastProgress.num_correct : 0,
+						num_incorrect: lastProgress ? lastProgress.num_incorrect : 0,
+						last_question_id: lastProgress ? lastProgress.last_question_id : null
 					}
-				} else {
-					console.log(`✅ User message already linked to goal: ${linkGoal.title}`)  
-				}
+				})
+				const reason = currentGoal ? '' : ' (fallback: all goals complete)'
+				console.log(`✅ Created chat_goal_progress link for user message to goal: ${linkGoal.title}${reason}`) 
 			} catch (linkErr) {
 				console.error('❌ Error linking user message to goal:', linkErr.message)
 			}
@@ -1154,68 +1159,33 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 			aiSignalsGoalComplete = aiResponse.evaluation?.next_step_type === 'predict_score'
 			if (aiSignalsGoalComplete) justCompletedGoal = currentGoal
 
-			if (existingProgress) {
-				// Update existing progress
-				const newNumQuestions = existingProgress.num_questions + (isActualAnswer ? 1 : 0)
-				const newNumCorrect = existingProgress.num_correct + (isCorrectAnswer ? 1 : 0)
-				const newNumIncorrect = existingProgress.num_incorrect + (isActualAnswer && !isCorrectAnswer ? 1 : 0)
+			// 🔧 FIX: Update the progress record specifically for THIS user message
+			// We already created it above in the message receiving block, now we update it with the feedback results
+			const newNumQuestions = (existingProgress?.num_questions || 0) + (isActualAnswer ? 1 : 0)
+			const newNumCorrect = (existingProgress?.num_correct || 0) + (isCorrectAnswer ? 1 : 0)
+			const newNumIncorrect = (existingProgress?.num_incorrect || 0) + (isActualAnswer && !isCorrectAnswer ? 1 : 0)
+			const shouldComplete = aiSignalsGoalComplete || (existingProgress?.is_completed || false)
 
-				// Calculate accuracy
-				const accuracyPercent = newNumQuestions > 0 ? Math.round((newNumCorrect / newNumQuestions) * 100) : 0
-
-				// Goal is complete when AI signals both concept + exam phases are done
-				const shouldComplete = aiSignalsGoalComplete || existingProgress.is_completed
-
-				await prisma.chat_goal_progress.update({
-					where: { id: existingProgress.id },
-					data: {
-						num_questions: newNumQuestions,
-						num_correct: newNumCorrect,
-						num_incorrect: newNumIncorrect,
-						is_completed: shouldComplete,
-						last_question_id: newChatProcess.id,
-						updated_at: new Date()
-					}
-				})
-
-				console.log(`📊 Goal Progress Updated | Goal: ${currentGoal.title} | Questions: ${newNumQuestions} | Correct: ${newNumCorrect} | Accuracy: ${accuracyPercent}% | Completed: ${shouldComplete} | AI Signal: ${aiSignalsGoalComplete}`)
-			} else {
-				// This shouldn't happen if we created the link earlier, but handle it
-				const numQuestions = isActualAnswer ? 1 : 0
-				const numCorrect = isCorrectAnswer ? 1 : 0
-				const numIncorrect = (isActualAnswer && !isCorrectAnswer) ? 1 : 0
-				const shouldComplete = aiSignalsGoalComplete
-
-				await prisma.chat_goal_progress.upsert({
-					where: {
-						chat_id_goal_id_user_id: {
-							chat_id: userMessage.id,
-							goal_id: currentGoal.id,
-							user_id: user_id
-						}
-					},
-					update: {
-						num_questions: { increment: numQuestions },
-						num_correct: { increment: numCorrect },
-						num_incorrect: { increment: numIncorrect },
-						is_completed: shouldComplete,
-						last_question_id: newChatProcess.id
-					},
-					create: {
+			await prisma.chat_goal_progress.update({
+				where: {
+					chat_id_goal_id_user_id: {
 						chat_id: userMessage.id,
 						goal_id: currentGoal.id,
-						user_id: user_id,
-						is_completed: shouldComplete,
-						num_questions: numQuestions,
-						num_correct: numCorrect,
-						num_incorrect: numIncorrect,
-						last_question_id: newChatProcess.id
+						user_id: user_id
 					}
-				})
+				},
+				data: {
+					num_questions: newNumQuestions,
+					num_correct: newNumCorrect,
+					num_incorrect: newNumIncorrect,
+					is_completed: shouldComplete,
+					last_question_id: newChatProcess.id,
+					updated_at: new Date()
+				}
+			})
 
-				const accuracyPercent = numQuestions > 0 ? (isCorrectAnswer ? 100 : 0) : 0
-				console.log(`📊 Goal Progress Created | Goal: ${currentGoal.title} | Questions: ${numQuestions} | Correct: ${numCorrect} | Accuracy: ${accuracyPercent}% | Completed: ${shouldComplete} | AI Signal: ${aiSignalsGoalComplete}`)
-			}
+			const accuracyPercent = newNumQuestions > 0 ? Math.round((newNumCorrect / newNumQuestions) * 100) : 0
+			console.log(`📊 Goal Progress Updated for Message ${userMessage.id} | Goal: ${currentGoal.title} | Questions: ${newNumQuestions} | Correct: ${newNumCorrect} | Accuracy: ${accuracyPercent}% | Completed: ${shouldComplete} | AI Signal: ${aiSignalsGoalComplete}`)
 
 			// Update topic completion based on completed goals
 			const completedGoals = await prisma.chat_goal_progress.findMany({
