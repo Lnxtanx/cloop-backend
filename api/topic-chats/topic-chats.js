@@ -1044,6 +1044,64 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 			}
 		}
 
+		// 📊 Save mermaid diagram as a separate AI message if present
+		if (aiResponse.mermaid_diagram && aiResponse.mermaid_diagram.code) {
+			try {
+				const diagram = aiResponse.mermaid_diagram
+				const savedDiagramMessage = await prisma.admin_chat.create({
+					data: {
+						user_id: user_id,
+						sender: 'ai',
+						message: diagram.title || 'Diagram',
+						message_type: 'mermaid_diagram',
+						options: [],
+						diff_html: JSON.stringify({ code: diagram.code, trigger: diagram.trigger || 'teaching' }),
+						emoji: null,
+						images: [],
+						videos: [],
+						links: []
+					},
+					select: {
+						id: true,
+						sender: true,
+						message: true,
+						message_type: true,
+						options: true,
+						diff_html: true,
+						emoji: true,
+						images: true,
+						videos: true,
+						links: true,
+						created_at: true
+					}
+				})
+				aiMessages.push(savedDiagramMessage)
+				console.log(`📊 Mermaid diagram saved | Title: ${diagram.title} | Trigger: ${diagram.trigger}`)
+
+				// Link diagram message to goal
+				const linkGoalDiagram = await findGoalForLinking(currentGoal, topicGoals, user_id, prisma)
+				if (linkGoalDiagram) {
+					const currentStats = await prisma.chat_goal_progress.findFirst({
+						where: { user_id: user_id, goal_id: linkGoalDiagram.id },
+						orderBy: { updated_at: 'desc' }
+					})
+					await prisma.chat_goal_progress.create({
+						data: {
+							chat_id: savedDiagramMessage.id,
+							goal_id: linkGoalDiagram.id,
+							user_id: user_id,
+							is_completed: currentStats ? currentStats.is_completed : false,
+							num_questions: currentStats ? currentStats.num_questions : 0,
+							num_correct: currentStats ? currentStats.num_correct : 0,
+							num_incorrect: currentStats ? currentStats.num_incorrect : 0
+						}
+					})
+				}
+			} catch (diagramErr) {
+				console.error('❌ Error saving mermaid diagram:', diagramErr.message)
+			}
+		}
+
 		// Update goal progress if user_correction feedback is provided
 		let completedGoalsCount = 0 // Track for session end detection
 		let totalGoalsCount = topicGoals.length // Track total goals

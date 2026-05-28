@@ -170,7 +170,23 @@ router.post('/message', authenticateToken, async (req, res) => {
 			- Use single dollar signs $...$ for inline math (e.g. $E=mc^2$).
 			- Use double dollar signs $$...$$ for block math on a new line.
 			- NEVER use ( ) or [ ] for math formulas.
-			- Example: The formula for strain is $$\text{Strain} = \frac{\Delta L}{L}$$`
+			- Example: The formula for strain is $$\text{Strain} = \frac{\Delta L}{L}$$
+			
+			MERMAID DIAGRAM RULES:
+			- When explaining concepts that involve classifications, processes, hierarchies, comparisons, cause-effect chains, or cycles, include a Mermaid diagram using a fenced code block with language "mermaid".
+			- Only include diagrams when they genuinely help — not for simple factual answers.
+			- If the user asks you to "explain", "show me", "visualize", or "draw a diagram", always include one.
+			- Keep diagrams simple: max 8-10 nodes with clear labels.
+			- Use graph TD (top-down) or graph LR (left-right) syntax.
+			- Labels must NOT contain unquoted special characters like parentheses — use quotes: A["Label (info)"]
+			- Example:
+			\`\`\`mermaid
+			graph TD
+			  A[Energy] --> B[Kinetic]
+			  A --> C[Potential]
+			  B --> D[Motion]
+			  C --> E[Height]
+			\`\`\``
 
 			aiResponseText = await invokeModel(systemPrompt, messages, {
 				maxTokens: 2048,
