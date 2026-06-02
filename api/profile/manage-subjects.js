@@ -3,6 +3,7 @@ const router = express.Router();
 const { authenticateToken } = require('../../middleware/auth');
 
 const prisma = require('../../lib/prisma');
+const CurriculumAutoTrigger = require('../../services/curriculum-auto-trigger');
 
 // POST /api/profile/add-subject
 router.post('/add-subject', authenticateToken, async (req, res) => {
@@ -68,6 +69,11 @@ router.post('/add-subject', authenticateToken, async (req, res) => {
           }
         }
       }
+    });
+
+    // Trigger background curriculum generation setup for the newly added subject
+    CurriculumAutoTrigger.handleProfileUpdate(user_id, {}).catch(err => {
+      console.error('Error triggering curriculum generation for added subject:', err);
     });
 
     return res.json({

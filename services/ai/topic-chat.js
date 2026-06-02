@@ -51,7 +51,7 @@ async function generateTopicChatResponse(userMessage, topicTitle, topicContent, 
     }
 
     if (shouldEndSession) {
-      console.log('🔔 SESSION END DETECTED');
+      console.log('NOT FOUND');
     }
 
     // Build comprehensive system prompt

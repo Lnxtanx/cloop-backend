@@ -100,18 +100,33 @@ router.get('/', authenticateToken, async (req, res) => {
       }
     }
 
+    // Fetch curriculum generation statuses for the user
+    const generationStatuses = await prisma.content_generation_status.findMany({
+      where: { user_id: user_id }
+    });
+
     // Add the subjects data to the user object
     const userWithSubjects = {
       ...user,
-      user_subjects: userSubjects.map(us => ({
-        id: us.id,
-        subject_id: us.subject_id,
-        total_chapters: us.total_chapters,
-        completed_chapters: us.completed_chapters,
-        completion_percent: us.completion_percent,
-        created_at: us.created_at,
-        subject: us.subjects
-      }))
+      user_subjects: userSubjects.map(us => {
+        const statusRecord = generationStatuses.find(gs => gs.subject_id === us.subject_id);
+        return {
+          id: us.id,
+          subject_id: us.subject_id,
+          total_chapters: us.total_chapters,
+          completed_chapters: us.completed_chapters,
+          completion_percent: us.completion_percent,
+          created_at: us.created_at,
+          subject: us.subjects,
+          generation_status: statusRecord ? {
+            status: statusRecord.status,
+            chapters_generated: statusRecord.chapters_generated,
+            topics_generated: statusRecord.topics_generated,
+            goals_generated: statusRecord.goals_generated,
+            error_message: statusRecord.error_message
+          } : null
+        };
+      })
     };
 
     return res.json(userWithSubjects);
