@@ -127,5 +127,57 @@ router.get('/status', authenticateToken, async (req, res) => {
   }
 });
 
+/**
+ * POST /api/content-generation/retry/:subjectId
+ * Reset failed status to pending and manually trigger background processor
+ */
+router.post('/retry/:subjectId', authenticateToken, async (req, res) => {
+  const { subjectId } = req.params;
+  const userId = req.user?.user_id;
+
+  if (!subjectId || isNaN(parseInt(subjectId))) {
+    return res.status(400).json({ error: 'Valid subject ID is required' });
+  }
+
+  try {
+    // Find the current status record for this user and subject
+    const statusRecord = await prisma.content_generation_status.findFirst({
+      where: {
+        user_id: userId,
+        subject_id: parseInt(subjectId)
+      }
+    });
+
+    if (!statusRecord) {
+      return res.status(404).json({ error: 'No generation status found for this subject' });
+    }
+
+    // Reset the status to pending
+    await prisma.content_generation_status.update({
+      where: { id: statusRecord.id },
+      data: {
+        status: 'pending',
+        error_message: null,
+        updated_at: new Date()
+      }
+    });
+
+    // Manually trigger the background processor
+    const { triggerManualProcessing } = require('../../services/background-processor');
+    triggerManualProcessing().catch(err => console.error('Error in manual processing trigger:', err));
+
+    return res.status(200).json({
+      success: true,
+      message: 'Curriculum generation retried successfully'
+    });
+  } catch (error) {
+    console.error('Error retrying generation:', error);
+    return res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
 module.exports = router;
 

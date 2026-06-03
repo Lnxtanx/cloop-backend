@@ -2,6 +2,16 @@ const prisma = require('../lib/prisma');
 const { generateChapters, generateTopics, generateTopicGoals } = require('./ai/curriculum');
 const { notifyContentGenerationStatus } = require('./notifications');
 
+// Helper to create prefix logger for clean concurrent debugging/logging
+function createLogger(userId, subjectName) {
+	const prefix = `[User ${userId} | ${subjectName}]`;
+	return {
+		log: (...args) => console.log(prefix, ...args),
+		error: (...args) => console.error(prefix, ...args),
+		warn: (...args) => console.warn(prefix, ...args)
+	};
+}
+
 /**
  * Check if content generation is needed for a user-subject combination
  */
@@ -50,8 +60,8 @@ async function updateGenerationStatus(userId, subjectId, gradeLevel, board, upda
 /**
  * Generate chapters for a subject
  */
-async function generateChaptersForSubject(userId, subjectId, gradeLevel, board, subjectName) {
-	console.log(`Generating chapters for User ${userId}, Subject: ${subjectName}`);
+async function generateChaptersForSubject(userId, subjectId, gradeLevel, board, subjectName, logger = console) {
+	logger.log(`Generating chapters for User ${userId}, Subject: ${subjectName}`);
 
 	try {
 		// Call AI to generate chapters in proper order
@@ -81,10 +91,10 @@ async function generateChaptersForSubject(userId, subjectId, gradeLevel, board, 
 			createdChapters.push(chapter);
 		}
 
-		console.log(`Created ${createdChapters.length} chapters for ${subjectName}`);
+		logger.log(`Created ${createdChapters.length} chapters for ${subjectName}`);
 		return createdChapters;
 	} catch (error) {
-		console.error('Error generating chapters:', error);
+		logger.error('Error generating chapters:', error);
 		throw error;
 	}
 }
@@ -92,8 +102,8 @@ async function generateChaptersForSubject(userId, subjectId, gradeLevel, board, 
 /**
  * Generate topics for a specific chapter
  */
-async function generateTopicsForChapter(userId, subjectId, chapter, gradeLevel, board, subjectName) {
-	console.log(`Generating topics for Chapter: ${chapter.title}`);
+async function generateTopicsForChapter(userId, subjectId, chapter, gradeLevel, board, subjectName, logger = console) {
+	logger.log(`Generating topics for Chapter: ${chapter.title}`);
 
 	try {
 		// Call AI to generate topics
@@ -137,10 +147,10 @@ async function generateTopicsForChapter(userId, subjectId, chapter, gradeLevel, 
 			},
 		});
 
-		console.log(`✓ Created ${createdTopics.length} topics for chapter: ${chapter.title}`);
+		logger.log(`✓ Created ${createdTopics.length} topics for chapter: ${chapter.title}`);
 		return createdTopics;
 	} catch (error) {
-		console.error('✗ Error generating topics:', error);
+		logger.error('✗ Error generating topics:', error);
 		throw error;
 	}
 }
@@ -148,8 +158,8 @@ async function generateTopicsForChapter(userId, subjectId, chapter, gradeLevel, 
 /**
  * Generate learning goals for a specific topic
  */
-async function generateGoalsForTopic(topic) {
-	console.log(`  Generating goals for Topic: ${topic.title}`);
+async function generateGoalsForTopic(topic, logger = console) {
+	logger.log(`  Generating goals for Topic: ${topic.title}`);
 
 	try {
 		// Generate initial goals
@@ -158,7 +168,7 @@ async function generateGoalsForTopic(topic) {
 		// Ensure we have at least 4 goals
 		let goals = goalsData.goals || [];
 		if (goals.length < 4) {
-			console.log(`  ⚠️ Insufficient goals (${goals.length}) for ${topic.title}, generating more...`);
+			logger.log(`  ⚠️ Insufficient goals (${goals.length}) for ${topic.title}, generating more...`);
 			goals = await regenerateGoalsUntilMinimum(topic);
 		}
 
@@ -177,10 +187,10 @@ async function generateGoalsForTopic(topic) {
 			createdGoals.push(goal);
 		}
 
-		console.log(`  ✓ Created ${createdGoals.length} goals for topic: ${topic.title}`);
+		logger.log(`  ✓ Created ${createdGoals.length} goals for topic: ${topic.title}`);
 		return createdGoals;
 	} catch (error) {
-		console.error(`  ✗ Error generating goals for topic ${topic.title}:`, error.message);
+		logger.error(`  ✗ Error generating goals for topic ${topic.title}:`, error.message);
 		// Don't throw - allow pipeline to continue even if goal generation fails
 		return [];
 	}
@@ -241,45 +251,89 @@ async function runContentGenerationPipeline(userId, subjectId) {
 			generation_started_at: new Date(),
 		});
 
-		console.log(`Starting content generation pipeline for User: ${userId}, Subject: ${subject.name}`);
+		// Create prefix logger for cleanly tracing logs during concurrent runs
+		const logger = createLogger(userId, subject.name);
 
-		// Step 1: Generate chapters
-		const chapters = await generateChaptersForSubject(
-			userId,
-			subjectId,
-			grade_level,
-			board,
-			subject.name
-		);
+		logger.log(`Starting content generation pipeline for User: ${userId}, Subject: ${subject.name}`);
 
-		// Update status: chapters generated
-		await updateGenerationStatus(userId, subjectId, grade_level, board, {
-			chapters_generated: true,
-		});
+		// Step 1: Generate or retrieve chapters
+		let chapters;
+		if (status && status.chapters_generated) {
+			logger.log('Chapters already generated, retrieving from database...');
+			chapters = await prisma.chapters.findMany({
+				where: {
+					subject_id: subjectId,
+					user_id: userId
+				},
+				orderBy: {
+					id: 'asc'
+				}
+			});
+		} else {
+			chapters = await generateChaptersForSubject(
+				userId,
+				subjectId,
+				grade_level,
+				board,
+				subject.name,
+				logger
+			);
+
+			// Update status: chapters generated
+			await updateGenerationStatus(userId, subjectId, grade_level, board, {
+				chapters_generated: true,
+			});
+		}
 
 		// Send notification: chapters complete
 		await notifyContentGenerationStatus(userId, 'chapters_complete', subject.name, {
 			count: chapters.length
 		});
 
-		// Step 2: Generate topics for each chapter
+		// Step 2: Generate or retrieve topics for each chapter
 		let totalTopicsCount = 0;
-		for (const chapter of chapters) {
-			const topics = await generateTopicsForChapter(
-				userId,
-				subjectId,
-				chapter,
-				grade_level,
-				board,
-				subject.name
-			);
-			totalTopicsCount += topics.length;
-		}
+		if (status && status.topics_generated) {
+			logger.log('Topics already generated, retrieving count from database...');
+			const topicsCount = await prisma.topics.count({
+				where: {
+					subject_id: subjectId,
+					user_id: userId
+				}
+			});
+			totalTopicsCount = topicsCount;
+		} else {
+			for (const chapter of chapters) {
+				// Check if topics already exist for this chapter
+				const existingTopics = await prisma.topics.findMany({
+					where: {
+						chapter_id: chapter.id,
+						user_id: userId
+					}
+				});
 
-		// Update status: all topics generated
-		await updateGenerationStatus(userId, subjectId, grade_level, board, {
-			topics_generated: true,
-		});
+				if (existingTopics.length > 0) {
+					logger.log(`Topics already exist for chapter: ${chapter.title}, skipping topic generation for this chapter.`);
+					totalTopicsCount += existingTopics.length;
+					continue;
+				}
+
+				const topics = await generateTopicsForChapter(
+					userId,
+					subjectId,
+					chapter,
+					grade_level,
+					board,
+					subject.name,
+					logger
+				);
+				totalTopicsCount += topics.length;
+			}
+
+			// Update status: all topics generated
+			await updateGenerationStatus(userId, subjectId, grade_level, board, {
+				topics_generated: true,
+			});
+		}
 
 		// Send notification: topics complete
 		await notifyContentGenerationStatus(userId, 'topics_complete', subject.name, {
@@ -287,7 +341,7 @@ async function runContentGenerationPipeline(userId, subjectId) {
 		});
 
 		// Step 3: Generate goals for all topics
-		console.log(`\nGenerating goals for all ${totalTopicsCount} topics...`);
+		logger.log(`Generating goals for all ${totalTopicsCount} topics...`);
 		let totalGoalsCount = 0;
 
 		for (const chapter of chapters) {
@@ -298,17 +352,28 @@ async function runContentGenerationPipeline(userId, subjectId) {
 				}
 			});
 
-			console.log(`Generating goals for ${chapterTopics.length} topics in chapter: ${chapter.title}`);
+			logger.log(`Generating goals for ${chapterTopics.length} topics in chapter: ${chapter.title}`);
 
 			for (const topic of chapterTopics) {
-				const goals = await generateGoalsForTopic(topic);
+				// Check if goals already exist for this topic
+				const existingGoalsCount = await prisma.topic_goals.count({
+					where: { topic_id: topic.id }
+				});
+
+				if (existingGoalsCount >= 4) {
+					logger.log(`Goals already exist for topic: ${topic.title}, skipping goal generation.`);
+					totalGoalsCount += existingGoalsCount;
+					continue;
+				}
+
+				const goals = await generateGoalsForTopic(topic, logger);
 				totalGoalsCount += goals.length;
 
 				// Small delay to avoid rate limiting
 				await new Promise(resolve => setTimeout(resolve, 500));
 			}
 
-			console.log(`✓ Generated goals for chapter: ${chapter.title}\n`);
+			logger.log(`✓ Generated goals for chapter: ${chapter.title}`);
 		}
 
 		// Update status: all goals generated
@@ -347,17 +412,15 @@ async function runContentGenerationPipeline(userId, subjectId) {
 
 		// Mark as completed
 		await updateGenerationStatus(userId, subjectId, grade_level, board, {
-			topics_generated: true,
 			status: 'completed',
 			generation_completed_at: new Date(),
 		});
 
-		console.log(`\n✓✓✓ Pipeline completed successfully ✓✓✓`);
-		console.log(`User: ${userId}, Subject: ${subject.name}`);
-		console.log(`Chapters: ${chapters.length}, Topics: ${totalTopicsCount}, Goals: ${totalGoalsCount}`);
-		console.log(`📊 Total API Calls: ${1 + chapters.length + totalTopicsCount} (1 chapters + ${chapters.length} topics + ${totalTopicsCount} goals)`);
-		console.log(`💡 Optimized with GPT-5 & content truncation`);
-		console.log(`=====================================\n`);
+		logger.log(`✓✓✓ Pipeline completed successfully ✓✓✓`);
+		logger.log(`User: ${userId}, Subject: ${subject.name}`);
+		logger.log(`Chapters: ${chapters.length}, Topics: ${totalTopicsCount}, Goals: ${totalGoalsCount}`);
+		logger.log(`📊 Total API Calls: ${1 + chapters.length + totalTopicsCount} (1 chapters + ${chapters.length} topics + ${totalTopicsCount} goals)`);
+		logger.log(`=====================================\n`);
 
 		return {
 			success: true,

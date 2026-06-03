@@ -2,6 +2,7 @@ const prisma = require('../lib/prisma');
 const { runContentGenerationPipeline, generateMissingGoals } = require('./content-pipeline');
 const { notifyContentGenerationStatus } = require('./notifications');
 const { processEngagementNotifications } = require('./engagement-notifications');
+const pLimit = require('p-limit');
 
 console.log('[background-processor] Prisma loaded:', typeof prisma, 'has content_generation_status:', typeof prisma?.content_generation_status);
 
@@ -73,10 +74,10 @@ async function stopContinuousProcessing() {
 }
 
 /**
- * Process all pending content generation tasks
+ * Process all pending content generation tasks concurrently
  */
 async function processPendingTasks() {
-  // Prevent concurrent processing
+  // Prevent concurrent processing cycles from overlapping
   if (isProcessing) {
     console.log('⏳ Processing already in progress, skipping this cycle...');
     return;
@@ -127,89 +128,96 @@ async function processPendingTasks() {
     console.log(`\n📚 Found ${pendingTasks.length} pending task(s) to process`);
     console.log('═'.repeat(60));
 
-    for (const task of pendingTasks) {
-      try {
-        // Check if user still exists and has complete profile
-        const user = await prisma.users.findUnique({
-          where: { user_id: task.user_id }
-        });
+    // Limit concurrency to 4 parallel workers to avoid hitting Bedrock rate limits
+    const limit = pLimit(4);
 
-        if (!user) {
-          console.log(`❌ User ${task.user_id} not found, skipping...`);
+    const taskPromises = pendingTasks.map((task) => {
+      return limit(async () => {
+        try {
+          // Check if user still exists and has complete profile
+          const user = await prisma.users.findUnique({
+            where: { user_id: task.user_id }
+          });
 
-          // Mark as failed
+          if (!user) {
+            console.log(`❌ User ${task.user_id} not found, skipping...`);
+
+            // Mark as failed
+            await prisma.content_generation_status.update({
+              where: { id: task.id },
+              data: {
+                status: 'failed',
+                error_message: 'User not found',
+                updated_at: new Date()
+              }
+            });
+            return;
+          }
+
+          if (!user.grade_level || !user.board) {
+            console.log(`⚠️  User ${task.user_id} profile incomplete, skipping...`);
+            return;
+          }
+
+          console.log(`\n🚀 [Worker] Processing: ${user.name} - ${task.subjects.name}`);
+          console.log(`   Grade: ${user.grade_level}, Board: ${user.board}`);
+
+          // Send start notification
+          await notifyContentGenerationStatus(
+            task.user_id,
+            'started',
+            task.subjects.name
+          );
+
+          // Run the content generation pipeline
+          const result = await runContentGenerationPipeline(task.user_id, task.subject_id);
+
+          if (result.success) {
+            console.log(`✅ [Worker] Successfully completed: ${task.subjects.name}`);
+            console.log(`   Chapters: ${result.chaptersCount}, Topics: ${result.topicsCount || 0}`);
+
+            // Send completion notification
+            await notifyContentGenerationStatus(
+              task.user_id,
+              'completed',
+              task.subjects.name,
+              {
+                chaptersCount: result.chaptersCount,
+                topicsCount: result.topicsCount
+              }
+            );
+          }
+
+          // Add a brief delay between concurrently triggered workers to space out LLM burst requests
+          await new Promise(resolve => setTimeout(resolve, 2000));
+
+        } catch (error) {
+          console.error(`\n❌ [Worker] Failed: User ${task.user_id}, Subject ${task.subjects.name}`);
+          console.error(`   Error: ${error.message}`);
+
+          // Send failure notification
+          await notifyContentGenerationStatus(
+            task.user_id,
+            'failed',
+            task.subjects.name,
+            { error: error.message }
+          );
+
+          // Mark as failed in database
           await prisma.content_generation_status.update({
             where: { id: task.id },
             data: {
               status: 'failed',
-              error_message: 'User not found',
+              error_message: error.message,
               updated_at: new Date()
             }
           });
-          continue;
         }
+      });
+    });
 
-        if (!user.grade_level || !user.board) {
-          console.log(`⚠️  User ${task.user_id} profile incomplete, skipping...`);
-          continue;
-        }
-
-        console.log(`\n🚀 Processing: ${user.name} - ${task.subjects.name}`);
-        console.log(`   Grade: ${user.grade_level}, Board: ${user.board}`);
-
-        // Send start notification
-        await notifyContentGenerationStatus(
-          task.user_id,
-          'started',
-          task.subjects.name
-        );
-
-        // Run the content generation pipeline
-        const result = await runContentGenerationPipeline(task.user_id, task.subject_id);
-
-        if (result.success) {
-          console.log(`✅ Successfully completed: ${task.subjects.name}`);
-          console.log(`   Chapters: ${result.chaptersCount}, Topics: ${result.topicsCount || 0}`);
-
-          // Send completion notification
-          await notifyContentGenerationStatus(
-            task.user_id,
-            'completed',
-            task.subjects.name,
-            {
-              chaptersCount: result.chaptersCount,
-              topicsCount: result.topicsCount
-            }
-          );
-        }
-
-        // Add delay between tasks to avoid rate limiting
-        console.log('⏸️  Waiting 3 seconds before next task...');
-        await new Promise(resolve => setTimeout(resolve, 3000));
-
-      } catch (error) {
-        console.error(`\n❌ Failed: User ${task.user_id}, Subject ${task.subjects.name}`);
-        console.error(`   Error: ${error.message}`);
-
-        // Send failure notification
-        await notifyContentGenerationStatus(
-          task.user_id,
-          'failed',
-          task.subjects.name,
-          { error: error.message }
-        );
-
-        // Mark as failed in database
-        await prisma.content_generation_status.update({
-          where: { id: task.id },
-          data: {
-            status: 'failed',
-            error_message: error.message,
-            updated_at: new Date()
-          }
-        });
-      }
-    }
+    // Process all pending tasks in parallel concurrently (up to limit of 4)
+    await Promise.all(taskPromises);
 
     console.log('\n' + '═'.repeat(60));
     console.log('✅ Processing cycle completed');

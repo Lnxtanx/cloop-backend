@@ -18,6 +18,25 @@ const client = new BedrockRuntimeClient({
 });
 
 /**
+ * Helper to wrap a promise with a timeout
+ */
+function withTimeout(promise, ms, errorMessage) {
+    let timeoutId;
+    const timeoutPromise = new Promise((_, reject) => {
+        timeoutId = setTimeout(() => {
+            reject(new Error(errorMessage));
+        }, ms);
+    });
+    return Promise.race([
+        promise.then((res) => {
+            clearTimeout(timeoutId);
+            return res;
+        }),
+        timeoutPromise
+    ]);
+}
+
+/**
  * Invoke a Bedrock model using the Converse API (Unified for most models)
  * @param {string} systemPrompt - System instruction
  * @param {Array} messages - Array of { role: 'user'|'assistant', content: [{ text: string }] }
@@ -51,7 +70,13 @@ async function invokeModel(systemPrompt, messages, options = {}) {
 
     try {
         console.log(`[Bedrock] 🚀 Invoking model: ${modelId}`);
-        const response = await client.send(command);
+        
+        // Wrap Bedrock Converse command send with a 60-second timeout to prevent indefinite hangs
+        const response = await withTimeout(
+            client.send(command),
+            60000,
+            `AWS Bedrock call to ${modelId} timed out after 60 seconds`
+        );
         
         if (response.output && response.output.message) {
             const text = response.output.message.content[0].text;
@@ -66,25 +91,35 @@ async function invokeModel(systemPrompt, messages, options = {}) {
 }
 
 /**
- * Helper to extract JSON from model response
+ * Helper to extract JSON from model response, robust against thinking blocks and trailing commas
  */
 function extractJson(text) {
     if (!text) return null;
+    
+    // 1. Strip reasoning/thinking blocks (common in DeepSeek R1 models)
+    let cleanedText = text.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+    
     try {
-        // Find the first { or [ and last } or ]
-        const start = text.search(/\{|\[/);
-        const end = text.lastIndexOf('}') > text.lastIndexOf(']') ? text.lastIndexOf('}') : text.lastIndexOf(']');
+        // 2. Find the first { or [ and last } or ]
+        const start = cleanedText.search(/\{|\[/);
+        const end = cleanedText.lastIndexOf('}') > cleanedText.lastIndexOf(']') ? cleanedText.lastIndexOf('}') : cleanedText.lastIndexOf(']');
         
         if (start === -1 || end === -1) {
             // Fallback: try parsing directly
-            return JSON.parse(text);
+            return JSON.parse(cleanedText);
         }
         
-        const jsonStr = text.substring(start, end + 1);
-        return JSON.parse(jsonStr);
+        const jsonStr = cleanedText.substring(start, end + 1);
+        
+        // 3. Sanitize common JSON errors like trailing commas or invalid control characters
+        const sanitizedJsonStr = jsonStr
+            .replace(/,\s*([\]}])/g, '$1') // Remove trailing commas
+            .replace(/[\u0000-\u001F\u007F-\u009F]/g, ""); // Remove invalid control characters
+            
+        return JSON.parse(sanitizedJsonStr);
     } catch (e) {
         console.error('[Bedrock] Failed to parse JSON from response:', e.message);
-        console.debug('Raw text:', text);
+        console.debug('Raw text was:', text);
         return null;
     }
 }
