@@ -2,7 +2,8 @@ const prisma = require('../lib/prisma');
 const { runContentGenerationPipeline, generateMissingGoals } = require('./content-pipeline');
 const { notifyContentGenerationStatus } = require('./notifications');
 const { processEngagementNotifications } = require('./engagement-notifications');
-const pLimit = require('p-limit');
+const pLimitModule = require('p-limit');
+const pLimit = pLimitModule.default || pLimitModule;
 
 console.log('[background-processor] Prisma loaded:', typeof prisma, 'has content_generation_status:', typeof prisma?.content_generation_status);
 
