@@ -45,9 +45,10 @@ router.get('/', authenticateToken, async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    // Fetch user's subjects from user_subjects table
+    // Fetch user's subjects from user_subjects table in stable order
     const userSubjects = await prisma.user_subjects.findMany({
       where: { user_id: user_id },
+      orderBy: { id: 'asc' },
       include: {
         subjects: {
           select: {
