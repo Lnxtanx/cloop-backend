@@ -1102,6 +1102,68 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 			}
 		}
 
+		// 📝 Save text diagram as a separate AI message if present
+		if (aiResponse.text_diagram && aiResponse.text_diagram.code) {
+			try {
+				const textDiagram = aiResponse.text_diagram
+				const savedTextDiagramMessage = await prisma.admin_chat.create({
+					data: {
+						user_id: user_id,
+						sender: 'ai',
+						message: textDiagram.title || 'Quick Reference',
+						message_type: 'text_diagram',
+						options: [],
+						diff_html: JSON.stringify({ 
+							code: textDiagram.code, 
+							diagram_type: textDiagram.diagram_type || 'ascii',
+							trigger: textDiagram.trigger || 'teaching' 
+						}),
+						emoji: null,
+						images: [],
+						videos: [],
+						links: []
+					},
+					select: {
+						id: true,
+						sender: true,
+						message: true,
+						message_type: true,
+						options: true,
+						diff_html: true,
+						emoji: true,
+						images: true,
+						videos: true,
+						links: true,
+						created_at: true
+					}
+				})
+				aiMessages.push(savedTextDiagramMessage)
+				console.log(`📝 Text diagram saved | Title: ${textDiagram.title} | Type: ${textDiagram.diagram_type}`)
+
+				// Link diagram message to goal
+				const linkGoalTextDiagram = await findGoalForLinking(currentGoal, topicGoals, user_id, prisma)
+				if (linkGoalTextDiagram) {
+					const currentStats = await prisma.chat_goal_progress.findFirst({
+						where: { user_id: user_id, goal_id: linkGoalTextDiagram.id },
+						orderBy: { updated_at: 'desc' }
+					})
+					await prisma.chat_goal_progress.create({
+						data: {
+							chat_id: savedTextDiagramMessage.id,
+							goal_id: linkGoalTextDiagram.id,
+							user_id: user_id,
+							is_completed: currentStats ? currentStats.is_completed : false,
+							num_questions: currentStats ? currentStats.num_questions : 0,
+							num_correct: currentStats ? currentStats.num_correct : 0,
+							num_incorrect: currentStats ? currentStats.num_incorrect : 0
+						}
+					})
+				}
+			} catch (textDiagramErr) {
+				console.error('❌ Error saving text diagram:', textDiagramErr.message)
+			}
+		}
+
 		// Update goal progress if user_correction feedback is provided
 		let completedGoalsCount = 0 // Track for session end detection
 		let totalGoalsCount = topicGoals.length // Track total goals
@@ -1585,7 +1647,12 @@ Write a SHORT 2-3 sentence performance summary for the student.
 			session_summary: aiResponse.session_summary || null,
 			score_prediction: scorePrediction || null,
 			all_goals_completed: completedGoalsCount >= totalGoalsCount, // Add flag for frontend
-			goals: topicGoals // Include updated goals for frontend UI
+			goals: topicGoals, // Include updated goals for frontend UI
+			// Pass through diagram and media suggestions from AI response
+			mermaid_diagram: aiResponse.mermaid_diagram || null,
+			text_diagram: aiResponse.text_diagram || null,
+			youtube_video: aiResponse.youtube_video || null,
+			google_image: aiResponse.google_image || null
 		})
 	} catch (err) {
 		console.error('Error sending topic chat message:', err)

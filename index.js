@@ -69,6 +69,8 @@ app.use('/api/topics', require('./api/topics/topics'))
 app.use('/api/topic-chats', require('./api/topic-chats/topic-chats'))
 // Normal Chat routes
 app.use('/api/normal-chat', require('./api/normal-chat/normal-chat'))
+// Media Search routes (YouTube, Images)
+app.use('/api/media', require('./api/media/media'))
 // Content Generation (AI Pipeline) routes
 app.use('/api/content-generation', require('./api/content-generation/content-generation'))
 app.use('/api/saved-topics', require('./api/saved-topics/saved-topics'))

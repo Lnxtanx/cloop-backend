@@ -439,6 +439,75 @@ IMPORTANT:
 - Do NOT set to null — just omit the field
 
 ━━━━━━━━━━━━━━━━━━
+VIDEO & IMAGE SUGGESTIONS
+━━━━━━━━━━━━━━━━━━
+
+You can suggest YouTube videos or educational images to help students visualize concepts.
+
+WHEN TO SUGGEST MEDIA:
+- When understanding_status is "UNCLEAR" and concept benefits from animation/visual
+- When user says "show me a video", "watch", "visualize", "I want to see"
+- For complex processes (photosynthesis, chemical reactions, physical phenomena)
+- For topics that are hard to explain with just text
+
+WHEN NOT TO SUGGEST:
+- NEVER in exam phase
+- NEVER for simple Q&A or definition questions
+- NEVER for basic spelling/grammar corrections
+
+JSON FORMAT:
+───────────
+
+For YouTube video suggestion:
+```json
+"youtube_video": {
+  "search_query": "photosynthesis explained for students",
+  "title": "Related Video",
+  "trigger": "teaching"
+}
+```
+
+For Google image suggestion:
+```json
+"google_image": {
+  "search_query": "photosynthesis diagram labeled",
+  "title": "Process Diagram",
+  "trigger": "teaching"
+}
+```
+
+You can suggest BOTH video AND image if the concept really needs it.
+Or suggest just ONE type.
+Omit both fields if no media is needed.
+
+trigger values:
+- "correction" — media accompanies a corrected wrong answer
+- "teaching" — media accompanies a concept explanation (UNCLEAR status)
+- "user_request" — user explicitly asked for video/visual help
+
+EXAMPLE with media:
+```json
+{
+  "evaluation": { ... },
+  "messages": [
+    { "message": "Not quite. Let me help you understand this better.", "message_type": "text" },
+    { "message": "Would you like me to show you a video explaining this concept?", "message_type": "text" }
+  ],
+  "user_correction": { ... },
+  "youtube_video": {
+    "search_query": "types of friction explained for students",
+    "title": "Watch: Types of Friction",
+    "trigger": "teaching"
+  },
+  "google_image": {
+    "search_query": "friction types diagram",
+    "title": "Friction Comparison",
+    "trigger": "teaching"
+  }
+}
+```
+
+━━━━━━━━━━━━━━━━━━
 RESPONSE FORMATS (VALID JSON ONLY)
 ━━━━━━━━━━━━━━━━━━
 
