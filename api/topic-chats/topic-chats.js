@@ -4,6 +4,7 @@ const { authenticateToken } = require('../../middleware/auth')
 const { generateTopicChatResponse, generateTopicGreeting, generateTopicGoals } = require('../../services/ai/topic-chat')
 const { invokeModel } = require('../../services/ai/bedrock-client')
 const { createLearningTurn, incrementExplainCount, calculateMasteryScore } = require('../../services/learning_turns_tracker')
+const { searchYouTube, searchImages } = require('../../services/media-search')
 
 const prisma = require('../../lib/prisma')
 // Note: Total of 10 questions will be asked across ALL goals (not per goal)
@@ -815,6 +816,41 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 				retryable: true,
 				message: 'The AI service encountered an issue. Please try your message again.'
 			})
+		}
+
+		// ========== LOG AI RESPONSE FOR DEBUGGING ==========
+		console.log('\n========== AI RESPONSE DEBUG ==========')
+		console.log('📊 aiResponse keys:', Object.keys(aiResponse || {}))
+		console.log('📝 mermaid_diagram:', aiResponse?.mermaid_diagram ? 'PRESENT' : 'null/undefined')
+		console.log('📝 text_diagram:', aiResponse?.text_diagram ? JSON.stringify(aiResponse.text_diagram) : 'null/undefined')
+		console.log('🎬 youtube_video:', aiResponse?.youtube_video ? JSON.stringify(aiResponse.youtube_video) : 'null/undefined')
+		console.log('🖼️ google_image:', aiResponse?.google_image ? JSON.stringify(aiResponse.google_image) : 'null/undefined')
+		console.log('========================================\n')
+
+		// ========== FETCH ACTUAL MEDIA IF AI SUGGESTS IT ==========
+		let fetchedVideos = null
+		let fetchedImages = null
+
+		// Fetch YouTube videos if AI suggests it
+		if (aiResponse?.youtube_video?.search_query) {
+			try {
+				console.log(`🎬 Fetching YouTube videos for: "${aiResponse.youtube_video.search_query}"`)
+				fetchedVideos = await searchYouTube(aiResponse.youtube_video.search_query, 2)
+				console.log(`✅ YouTube fetch complete: ${fetchedVideos?.length || 0} videos`)
+			} catch (mediaErr) {
+				console.error('❌ YouTube search failed:', mediaErr.message)
+			}
+		}
+
+		// Fetch Google images if AI suggests it
+		if (aiResponse?.google_image?.search_query) {
+			try {
+				console.log(`🖼️ Fetching images for: "${aiResponse.google_image.search_query}"`)
+				fetchedImages = await searchImages(aiResponse.google_image.search_query, 2)
+				console.log(`✅ Image fetch complete: ${fetchedImages?.length || 0} images`)
+			} catch (mediaErr) {
+				console.error('❌ Image search failed:', mediaErr.message)
+			}
 		}
 
 		// Duplicate-question fallback (retry once) — if the model returns a question identical
@@ -1648,11 +1684,14 @@ Write a SHORT 2-3 sentence performance summary for the student.
 			score_prediction: scorePrediction || null,
 			all_goals_completed: completedGoalsCount >= totalGoalsCount, // Add flag for frontend
 			goals: topicGoals, // Include updated goals for frontend UI
-			// Pass through diagram and media suggestions from AI response
+			// Pass through diagram and media from AI response + fetched results
 			mermaid_diagram: aiResponse.mermaid_diagram || null,
 			text_diagram: aiResponse.text_diagram || null,
+			// Include both the AI suggestion AND the fetched results
 			youtube_video: aiResponse.youtube_video || null,
-			google_image: aiResponse.google_image || null
+			youtube_results: fetchedVideos || [],
+			google_image: aiResponse.google_image || null,
+			image_results: fetchedImages || []
 		})
 	} catch (err) {
 		console.error('Error sending topic chat message:', err)
