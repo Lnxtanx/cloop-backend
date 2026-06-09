@@ -129,8 +129,7 @@ process.on('SIGINT', async () => {
 	const { stopContinuousProcessing } = require('./services/background-processor')
 	await stopContinuousProcessing()
 
-	// Close WebSocket server
-	wss.close()
+	// Close HTTP server
 	server.close()
 
 	process.exit(0)
@@ -141,8 +140,7 @@ process.on('SIGTERM', async () => {
 	const { stopContinuousProcessing } = require('./services/background-processor')
 	await stopContinuousProcessing()
 
-	// Close WebSocket server
-	wss.close()
+	// Close HTTP server
 	server.close()
 
 	process.exit(0)

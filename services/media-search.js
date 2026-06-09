@@ -154,6 +154,7 @@ async function searchWikimediaImages(query, maxResults = 3) {
         gsrnamespace: 6, // File/media namespace
         prop: 'imageinfo',
         iiprop: 'url|size',
+        iiurlwidth: 400, // Request generated thumbnail URL with 400px width
         format: 'json',
         origin: '*',
         gsrlimit: maxResults * 2, // Fetch extra results to allow filtering
@@ -183,7 +184,7 @@ async function searchWikimediaImages(query, maxResults = 3) {
         id: `wiki-${pageId}`,
         title: page.title ? page.title.replace(/^File:/i, '') : 'Untitled',
         url: url,
-        thumbnail: imageinfo.descriptionurl || url,
+        thumbnail: imageinfo.thumburl || url, // Use actual thumbnail URL or fall back to full image URL
         width: imageinfo.width,
         height: imageinfo.height,
         sourceUrl: imageinfo.descriptionurl || 'https://commons.wikimedia.org',

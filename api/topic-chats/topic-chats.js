@@ -1200,6 +1200,146 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 			}
 		}
 
+		// 🎬 Save YouTube video results as separate AI messages if present
+		if (fetchedVideos && fetchedVideos.length > 0) {
+			try {
+				for (const video of fetchedVideos) {
+					const savedVideoMessage = await prisma.admin_chat.create({
+						data: {
+							user_id: user_id,
+							sender: 'ai',
+							message: video.title || 'YouTube Video',
+							message_type: 'youtube_video',
+							options: [],
+							diff_html: JSON.stringify({
+								video_id: video.id,
+								thumbnail: video.thumbnail,
+								url: video.url,
+								embedUrl: video.embedUrl,
+								channel: video.channel,
+								duration: video.duration,
+								viewCount: video.viewCount,
+								trigger: aiResponse?.youtube_video?.trigger || 'user_request',
+								search_query: aiResponse?.youtube_video?.search_query || ''
+							}),
+							emoji: '🎬',
+							images: [],
+							videos: [video],
+							links: [{ url: video.url, title: video.title }]
+						},
+						select: {
+							id: true,
+							sender: true,
+							message: true,
+							message_type: true,
+							options: true,
+							diff_html: true,
+							emoji: true,
+							images: true,
+							videos: true,
+							links: true,
+							created_at: true
+						}
+					})
+					aiMessages.push(savedVideoMessage)
+				}
+				console.log(`🎬 ${fetchedVideos.length} YouTube videos saved to database`)
+
+				// Link video messages to goal
+				const linkGoalVideo = await findGoalForLinking(currentGoal, topicGoals, user_id, prisma)
+				if (linkGoalVideo) {
+					const currentStats = await prisma.chat_goal_progress.findFirst({
+						where: { user_id: user_id, goal_id: linkGoalVideo.id },
+						orderBy: { updated_at: 'desc' }
+					})
+					for (const videoMsg of aiMessages.filter(m => m.message_type === 'youtube_video')) {
+						await prisma.chat_goal_progress.create({
+							data: {
+								chat_id: videoMsg.id,
+								goal_id: linkGoalVideo.id,
+								user_id: user_id,
+								is_completed: currentStats ? currentStats.is_completed : false,
+								num_questions: currentStats ? currentStats.num_questions : 0,
+								num_correct: currentStats ? currentStats.num_correct : 0,
+								num_incorrect: currentStats ? currentStats.num_incorrect : 0
+							}
+						})
+					}
+				}
+			} catch (videoErr) {
+				console.error('❌ Error saving YouTube videos:', videoErr.message)
+			}
+		}
+
+		// 🖼️ Save image results as separate AI messages if present
+		if (fetchedImages && fetchedImages.length > 0) {
+			try {
+				for (const image of fetchedImages) {
+					const savedImageMessage = await prisma.admin_chat.create({
+						data: {
+							user_id: user_id,
+							sender: 'ai',
+							message: image.title || 'Educational Image',
+							message_type: 'google_image',
+							options: [],
+							diff_html: JSON.stringify({
+								image_id: image.id,
+								thumbnail: image.thumbnail,
+								url: image.url,
+								source: image.source,
+								sourceUrl: image.sourceUrl,
+								trigger: aiResponse?.google_image?.trigger || 'user_request',
+								search_query: aiResponse?.google_image?.search_query || ''
+							}),
+							emoji: '🖼️',
+							images: [{ url: image.url, thumbnail: image.thumbnail, title: image.title }],
+							videos: [],
+							links: [{ url: image.url, title: image.title }]
+						},
+						select: {
+							id: true,
+							sender: true,
+							message: true,
+							message_type: true,
+							options: true,
+							diff_html: true,
+							emoji: true,
+							images: true,
+							videos: true,
+							links: true,
+							created_at: true
+						}
+					})
+					aiMessages.push(savedImageMessage)
+				}
+				console.log(`🖼️ ${fetchedImages.length} images saved to database`)
+
+				// Link image messages to goal
+				const linkGoalImage = await findGoalForLinking(currentGoal, topicGoals, user_id, prisma)
+				if (linkGoalImage) {
+					const currentStats = await prisma.chat_goal_progress.findFirst({
+						where: { user_id: user_id, goal_id: linkGoalImage.id },
+						orderBy: { updated_at: 'desc' }
+					})
+					for (const imgMsg of aiMessages.filter(m => m.message_type === 'google_image')) {
+						await prisma.chat_goal_progress.create({
+							data: {
+								chat_id: imgMsg.id,
+								goal_id: linkGoalImage.id,
+								user_id: user_id,
+								is_completed: currentStats ? currentStats.is_completed : false,
+								num_questions: currentStats ? currentStats.num_questions : 0,
+								num_correct: currentStats ? currentStats.num_correct : 0,
+								num_incorrect: currentStats ? currentStats.num_incorrect : 0
+							}
+						})
+					}
+				}
+			} catch (imageErr) {
+				console.error('❌ Error saving images:', imageErr.message)
+			}
+		}
+
 		// Update goal progress if user_correction feedback is provided
 		let completedGoalsCount = 0 // Track for session end detection
 		let totalGoalsCount = topicGoals.length // Track total goals
