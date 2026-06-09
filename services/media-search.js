@@ -136,23 +136,92 @@ async function searchYouTube(query, maxResults = 3) {
  * @param {number} maxResults - Maximum results to return (default 3)
  * @returns {Array} Array of image objects
  */
-async function searchImages(query, maxResults = 3) {
-  // Read keys at runtime from process.env
-  const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
-  const GOOGLE_CX_ID = process.env.GOOGLE_CX_ID;
+/**
+ * Search Wikimedia Commons for educational images (no API key required fallback)
+ * @param {string} query - Search query
+ * @param {number} maxResults - Maximum results to return
+ * @returns {Array} Array of image objects
+ */
+async function searchWikimediaImages(query, maxResults = 3) {
+  try {
+    console.log(`[media-search] 🌐 Querying Wikimedia Commons search for: "${query}"`);
+    
+    const response = await axios.get('https://commons.wikimedia.org/w/api.php', {
+      params: {
+        action: 'query',
+        generator: 'search',
+        gsrsearch: query,
+        gsrnamespace: 6, // File/media namespace
+        prop: 'imageinfo',
+        iiprop: 'url|size',
+        format: 'json',
+        origin: '*',
+        gsrlimit: maxResults * 2, // Fetch extra results to allow filtering
+      },
+      timeout: 10000,
+      headers: {
+        'User-Agent': 'CloopEducationalApp/1.0 (contact@cloop.edu; contact via app)'
+      }
+    });
 
-  if (!GOOGLE_API_KEY || !GOOGLE_CX_ID) {
-    console.warn('[media-search] Google Custom Search API not configured');
-    console.warn('[media-search] GOOGLE_API_KEY:', GOOGLE_API_KEY ? 'SET' : 'NOT SET');
-    console.warn('[media-search] GOOGLE_CX_ID:', GOOGLE_CX_ID ? 'SET' : 'NOT SET');
+    const pages = response.data?.query?.pages || {};
+    const results = [];
+    
+    for (const pageId in pages) {
+      const page = pages[pageId];
+      const imageinfo = page.imageinfo?.[0];
+      if (!imageinfo || !imageinfo.url) continue;
+
+      const url = imageinfo.url;
+      const lowerUrl = url.toLowerCase();
+      // Only include common static image formats (exclude audio, video, pdf)
+      if (!lowerUrl.endsWith('.jpg') && !lowerUrl.endsWith('.jpeg') && !lowerUrl.endsWith('.png') && !lowerUrl.endsWith('.gif') && !lowerUrl.endsWith('.svg')) {
+        continue;
+      }
+
+      results.push({
+        id: `wiki-${pageId}`,
+        title: page.title ? page.title.replace(/^File:/i, '') : 'Untitled',
+        url: url,
+        thumbnail: imageinfo.descriptionurl || url,
+        width: imageinfo.width,
+        height: imageinfo.height,
+        sourceUrl: imageinfo.descriptionurl || 'https://commons.wikimedia.org',
+        source: 'Wikimedia Commons',
+      });
+
+      if (results.length >= maxResults) break;
+    }
+
+    console.log(`[media-search] ✅ Wikimedia search returned ${results.length} images`);
+    return results;
+  } catch (error) {
+    console.error('[media-search] ❌ Wikimedia search error:', error.message);
     return [];
   }
+}
 
+/**
+ * Search Google Custom Search for educational images
+ * @param {string} query - Search query
+ * @param {number} maxResults - Maximum results to return (default 3)
+ * @returns {Array} Array of image objects
+ */
+async function searchImages(query, maxResults = 3) {
   const cacheKey = `images:${query}:${maxResults}`;
 
   return getCached(cacheKey, async () => {
+    // Read keys at runtime from process.env
+    const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
+    const GOOGLE_CX_ID = process.env.GOOGLE_CX_ID;
+
+    if (!GOOGLE_API_KEY || !GOOGLE_CX_ID) {
+      console.warn('[media-search] Google Custom Search API not configured. Falling back to Wikimedia Commons.');
+      return searchWikimediaImages(query, maxResults);
+    }
+
     try {
-      console.log(`[media-search] 🖼️ Searching images for: "${query}"`);
+      console.log(`[media-search] 🖼️ Searching Google Custom Search for: "${query}"`);
 
       const params = {
         q: `${query} diagram illustration`,
@@ -191,7 +260,9 @@ async function searchImages(query, maxResults = 3) {
         console.error('[media-search] Response status:', error.response.status);
         console.error('[media-search] Response data:', JSON.stringify(error.response.data).substring(0, 500));
       }
-      return [];
+      
+      console.log('[media-search] ⚠️ Falling back to Wikimedia Commons image search due to Google Custom Search error');
+      return searchWikimediaImages(query, maxResults);
     }
   });
 }
