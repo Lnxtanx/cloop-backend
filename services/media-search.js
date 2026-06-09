@@ -6,11 +6,6 @@
 
 const axios = require('axios');
 
-// API Keys from environment
-const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
-const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
-const GOOGLE_CX_ID = process.env.GOOGLE_CX_ID;
-
 // Base URLs
 const YOUTUBE_SEARCH_URL = 'https://www.googleapis.com/youtube/v3/search';
 const YOUTUBE_VIDEOS_URL = 'https://www.googleapis.com/youtube/v3/videos';
@@ -20,6 +15,12 @@ const GOOGLE_CUSTOM_SEARCH_URL = 'https://www.googleapis.com/customsearch/v1';
 const cache = new Map();
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
+// Log API key status on load
+console.log('[media-search] Service loaded');
+console.log('[media-search] YOUTUBE_API_KEY:', process.env.YOUTUBE_API_KEY ? 'SET (' + process.env.YOUTUBE_API_KEY.substring(0, 10) + '...)' : 'NOT SET');
+console.log('[media-search] GOOGLE_API_KEY:', process.env.GOOGLE_API_KEY ? 'SET (' + process.env.GOOGLE_API_KEY.substring(0, 10) + '...)' : 'NOT SET');
+console.log('[media-search] GOOGLE_CX_ID:', process.env.GOOGLE_CX_ID ? 'SET (' + process.env.GOOGLE_CX_ID + ')' : 'NOT SET');
+
 /**
  * Get from cache or fetch fresh
  */
@@ -28,7 +29,7 @@ async function getCached(key, fetchFn) {
   if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
     return cached.data;
   }
-  
+
   const data = await fetchFn();
   cache.set(key, { data, timestamp: Date.now() });
   return data;
@@ -41,49 +42,54 @@ async function getCached(key, fetchFn) {
  * @returns {Array} Array of video objects
  */
 async function searchYouTube(query, maxResults = 3) {
+  // Read key at runtime from process.env
+  const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
+
   if (!YOUTUBE_API_KEY) {
     console.warn('[media-search] YouTube API key not configured');
     return [];
   }
 
   const cacheKey = `youtube:${query}:${maxResults}`;
-  
+
   return getCached(cacheKey, async () => {
     try {
+      console.log(`[media-search] 📺 Searching YouTube for: "${query}"`);
+
       // Educational-friendly search parameters
       const params = {
         part: 'snippet',
         q: `${query} explained for students educational`,
         type: 'video',
-        maxResults: maxResults * 2, // Fetch extra to filter
+        maxResults: Math.min(maxResults * 2, 10), // Fetch extra to filter, max 10
         key: YOUTUBE_API_KEY,
         videoEmbeddable: 'true',
-        videoDuration: 'medium', // 4-20 minutes
         safeSearch: 'strict',
         relevanceLanguage: 'en',
       };
 
       const response = await axios.get(YOUTUBE_SEARCH_URL, {
         params,
-        timeout: 5000,
+        timeout: 10000,
       });
 
       const videos = response.data.items || [];
-      
+
       if (videos.length === 0) {
+        console.log('[media-search] No YouTube videos found');
         return [];
       }
 
       // Get video IDs to fetch additional details (duration, view count)
       const videoIds = videos.map(v => v.id.videoId).join(',');
-      
+
       const detailsResponse = await axios.get(YOUTUBE_VIDEOS_URL, {
         params: {
           part: 'contentDetails,statistics',
           id: videoIds,
           key: YOUTUBE_API_KEY,
         },
-        timeout: 5000,
+        timeout: 10000,
       });
 
       const detailsMap = {};
@@ -92,7 +98,7 @@ async function searchYouTube(query, maxResults = 3) {
       });
 
       // Format results
-      return videos.slice(0, maxResults).map(video => {
+      const results = videos.slice(0, maxResults).map(video => {
         const videoId = video.id.videoId;
         const details = detailsMap[videoId] || {};
         const snippet = video.snippet || {};
@@ -110,8 +116,15 @@ async function searchYouTube(query, maxResults = 3) {
           embedUrl: `https://www.youtube.com/embed/${videoId}`,
         };
       });
+
+      console.log(`[media-search] ✅ YouTube search returned ${results.length} videos`);
+      return results;
     } catch (error) {
-      console.error('[media-search] YouTube search error:', error.message);
+      console.error('[media-search] ❌ YouTube search error:', error.message);
+      if (error.response) {
+        console.error('[media-search] Response status:', error.response.status);
+        console.error('[media-search] Response data:', JSON.stringify(error.response.data).substring(0, 300));
+      }
       return [];
     }
   });
@@ -124,34 +137,42 @@ async function searchYouTube(query, maxResults = 3) {
  * @returns {Array} Array of image objects
  */
 async function searchImages(query, maxResults = 3) {
+  // Read keys at runtime from process.env
+  const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
+  const GOOGLE_CX_ID = process.env.GOOGLE_CX_ID;
+
   if (!GOOGLE_API_KEY || !GOOGLE_CX_ID) {
     console.warn('[media-search] Google Custom Search API not configured');
+    console.warn('[media-search] GOOGLE_API_KEY:', GOOGLE_API_KEY ? 'SET' : 'NOT SET');
+    console.warn('[media-search] GOOGLE_CX_ID:', GOOGLE_CX_ID ? 'SET' : 'NOT SET');
     return [];
   }
 
   const cacheKey = `images:${query}:${maxResults}`;
-  
+
   return getCached(cacheKey, async () => {
     try {
+      console.log(`[media-search] 🖼️ Searching images for: "${query}"`);
+
       const params = {
-        q: `${query} diagram illustration educational`,
+        q: `${query} diagram illustration`,
         cx: GOOGLE_CX_ID,
         key: GOOGLE_API_KEY,
         searchType: 'image',
         num: maxResults,
         safe: 'active',
-        imgSize: 'large',
-        imgType: 'clipart|photo|illustration',
       };
+
+      console.log('[media-search] Request params:', JSON.stringify({ q: params.q, cx: params.cx?.substring(0, 10) + '...', num: params.num }));
 
       const response = await axios.get(GOOGLE_CUSTOM_SEARCH_URL, {
         params,
-        timeout: 5000,
+        timeout: 10000,
       });
 
       const items = response.data.items || [];
 
-      return items.map((item, index) => ({
+      const results = items.map((item, index) => ({
         id: `img-${Date.now()}-${index}`,
         title: item.title || 'Untitled',
         url: item.link || '',
@@ -161,8 +182,15 @@ async function searchImages(query, maxResults = 3) {
         sourceUrl: item.image?.contextLink || item.displayLink || '',
         source: item.displayLink || 'Unknown',
       }));
+
+      console.log(`[media-search] ✅ Image search returned ${results.length} images`);
+      return results;
     } catch (error) {
-      console.error('[media-search] Google Custom Search error:', error.message);
+      console.error('[media-search] ❌ Google Custom Search error:', error.message);
+      if (error.response) {
+        console.error('[media-search] Response status:', error.response.status);
+        console.error('[media-search] Response data:', JSON.stringify(error.response.data).substring(0, 500));
+      }
       return [];
     }
   });
