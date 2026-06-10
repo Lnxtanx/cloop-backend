@@ -999,23 +999,31 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 			}
 		}
 
-		// Save AI messages (multiple bubbles) with message_type and options
-		const aiMessages = []
-		for (let i = 0; i < (aiResponse.messages || []).length; i++) {
-			const aiMsg = aiResponse.messages[i];
+		// Save AI messages, diagrams, videos, and images in proper order:
+		// 1. Feedback/explanation messages (all bubbles except the last one, if multiple)
+		// 2. Diagrams/Media (mermaid, text, videos, images)
+		// 3. Next question message (the last bubble)
+		const aiMessages = [];
+		const baseTime = Date.now();
+		let timeOffset = 0;
 
-			const savedAiMessage = await prisma.admin_chat.create({
+		async function saveAndLinkAiMessage(data) {
+			const createdAt = new Date(baseTime + timeOffset);
+			timeOffset += 10; // Increment time offset by 10ms to ensure strict ordering
+
+			const savedMessage = await prisma.admin_chat.create({
 				data: {
 					user_id: user_id,
 					sender: 'ai',
-					message: aiMsg.message,
-					message_type: aiMsg.message_type || 'text',
-					options: aiMsg.options || [],
-					diff_html: null,
-					emoji: aiMsg.emoji || null,
-					images: aiMsg.images || [],
-					videos: aiMsg.videos || [],
-					links: aiMsg.links || []
+					message: data.message,
+					message_type: data.message_type || 'text',
+					options: data.options || [],
+					diff_html: data.diff_html || null,
+					emoji: data.emoji || null,
+					images: data.images || [],
+					videos: data.videos || [],
+					links: data.links || [],
+					created_at: createdAt
 				},
 				select: {
 					id: true,
@@ -1028,30 +1036,27 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 					images: true,
 					videos: true,
 					links: true,
-					created_at: true
+					created_at: createdAt
 				}
-			})
-			aiMessages.push(savedAiMessage)
+			});
 
-			// 🔧 FIX: ALWAYS link AI message to a goal (prevents orphaned messages)
-			const linkGoalAI = await findGoalForLinking(currentGoal, topicGoals, user_id, prisma)
-			if (linkGoalAI) {
+			// Link message to goal
+			const linkGoal = await findGoalForLinking(currentGoal, topicGoals, user_id, prisma);
+			if (linkGoal) {
 				try {
 					const existingLink = await prisma.chat_goal_progress.findFirst({
 						where: {
-							chat_id: savedAiMessage.id,
-							goal_id: linkGoalAI.id,
+							chat_id: savedMessage.id,
+							goal_id: linkGoal.id,
 							user_id: user_id
 						}
-					})
+					});
 
 					if (!existingLink) {
-						// ALWAYS create a link for this specific AI message to the appropriate goal
-						// This ensures the message appears when fetching history even if all goals complete
 						const currentStats = await prisma.chat_goal_progress.findFirst({
 							where: {
 								user_id: user_id,
-								goal_id: linkGoalAI.id
+								goal_id: linkGoal.id
 							},
 							orderBy: {
 								updated_at: 'desc'
@@ -1060,284 +1065,160 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 
 						await prisma.chat_goal_progress.create({
 							data: {
-								chat_id: savedAiMessage.id,
-								goal_id: linkGoalAI.id,
+								chat_id: savedMessage.id,
+								goal_id: linkGoal.id,
 								user_id: user_id,
 								is_completed: currentStats ? currentStats.is_completed : false,
 								num_questions: currentStats ? currentStats.num_questions : 0,
 								num_correct: currentStats ? currentStats.num_correct : 0,
 								num_incorrect: currentStats ? currentStats.num_incorrect : 0
 							}
-						})
-						const reason = currentGoal ? '' : ' (fallback: all goals complete)'
-						console.log(`✅ AI message linked to goal: ${linkGoalAI.title}${reason}`)
+						});
+						const reason = currentGoal ? '' : ' (fallback: all goals complete)';
+						console.log(`✅ AI message (${data.message_type || 'text'}) linked to goal: ${linkGoal.title}${reason}`);
 					}
 				} catch (linkErr) {
-					console.error('Error linking AI message to goal:', linkErr.message)
+					console.error(`Error linking AI message (${data.message_type || 'text'}) to goal:`, linkErr.message);
 				}
-			} else {
-				console.warn('⚠️ No goal found for linking AI message - this is unusual')
 			}
+
+			return savedMessage;
 		}
 
-		// 📊 Save mermaid diagram as a separate AI message if present
+		// Split AI messages into feedback/explanations and next question
+		const rawMessages = aiResponse.messages || [];
+		const totalMsgs = rawMessages.length;
+		let feedbackMsgs = [];
+		let questionMsg = null;
+
+		if (totalMsgs > 1) {
+			feedbackMsgs = rawMessages.slice(0, totalMsgs - 1);
+			questionMsg = rawMessages[totalMsgs - 1];
+		} else if (totalMsgs === 1) {
+			questionMsg = rawMessages[0];
+		}
+
+		// 1. Save feedback messages first
+		for (const msg of feedbackMsgs) {
+			const saved = await saveAndLinkAiMessage({
+				message: msg.message,
+				message_type: msg.message_type,
+				options: msg.options,
+				emoji: msg.emoji,
+				images: msg.images,
+				videos: msg.videos,
+				links: msg.links
+			});
+			aiMessages.push(saved);
+		}
+
+		// 2. Save diagrams and media
+		// 📊 Save mermaid diagram if present
 		if (aiResponse.mermaid_diagram && aiResponse.mermaid_diagram.code) {
 			try {
-				const diagram = aiResponse.mermaid_diagram
-				const savedDiagramMessage = await prisma.admin_chat.create({
-					data: {
-						user_id: user_id,
-						sender: 'ai',
-						message: diagram.title || 'Diagram',
-						message_type: 'mermaid_diagram',
-						options: [],
-						diff_html: JSON.stringify({ code: diagram.code, trigger: diagram.trigger || 'teaching' }),
-						emoji: null,
-						images: [],
-						videos: [],
-						links: []
-					},
-					select: {
-						id: true,
-						sender: true,
-						message: true,
-						message_type: true,
-						options: true,
-						diff_html: true,
-						emoji: true,
-						images: true,
-						videos: true,
-						links: true,
-						created_at: true
-					}
-				})
-				aiMessages.push(savedDiagramMessage)
-				console.log(`📊 Mermaid diagram saved | Title: ${diagram.title} | Trigger: ${diagram.trigger}`)
-
-				// Link diagram message to goal
-				const linkGoalDiagram = await findGoalForLinking(currentGoal, topicGoals, user_id, prisma)
-				if (linkGoalDiagram) {
-					const currentStats = await prisma.chat_goal_progress.findFirst({
-						where: { user_id: user_id, goal_id: linkGoalDiagram.id },
-						orderBy: { updated_at: 'desc' }
-					})
-					await prisma.chat_goal_progress.create({
-						data: {
-							chat_id: savedDiagramMessage.id,
-							goal_id: linkGoalDiagram.id,
-							user_id: user_id,
-							is_completed: currentStats ? currentStats.is_completed : false,
-							num_questions: currentStats ? currentStats.num_questions : 0,
-							num_correct: currentStats ? currentStats.num_correct : 0,
-							num_incorrect: currentStats ? currentStats.num_incorrect : 0
-						}
-					})
-				}
+				const diagram = aiResponse.mermaid_diagram;
+				const saved = await saveAndLinkAiMessage({
+					message: diagram.title || 'Diagram',
+					message_type: 'mermaid_diagram',
+					diff_html: JSON.stringify({ code: diagram.code, trigger: diagram.trigger || 'teaching' })
+				});
+				aiMessages.push(saved);
+				console.log(`📊 Mermaid diagram saved | Title: ${diagram.title} | Trigger: ${diagram.trigger}`);
 			} catch (diagramErr) {
-				console.error('❌ Error saving mermaid diagram:', diagramErr.message)
+				console.error('❌ Error saving mermaid diagram:', diagramErr.message);
 			}
 		}
 
-		// 📝 Save text diagram as a separate AI message if present
+		// 📝 Save text diagram if present
 		if (aiResponse.text_diagram && aiResponse.text_diagram.code) {
 			try {
-				const textDiagram = aiResponse.text_diagram
-				const savedTextDiagramMessage = await prisma.admin_chat.create({
-					data: {
-						user_id: user_id,
-						sender: 'ai',
-						message: textDiagram.title || 'Quick Reference',
-						message_type: 'text_diagram',
-						options: [],
-						diff_html: JSON.stringify({ 
-							code: textDiagram.code, 
-							diagram_type: textDiagram.diagram_type || 'ascii',
-							trigger: textDiagram.trigger || 'teaching' 
-						}),
-						emoji: null,
-						images: [],
-						videos: [],
-						links: []
-					},
-					select: {
-						id: true,
-						sender: true,
-						message: true,
-						message_type: true,
-						options: true,
-						diff_html: true,
-						emoji: true,
-						images: true,
-						videos: true,
-						links: true,
-						created_at: true
-					}
-				})
-				aiMessages.push(savedTextDiagramMessage)
-				console.log(`📝 Text diagram saved | Title: ${textDiagram.title} | Type: ${textDiagram.diagram_type}`)
-
-				// Link diagram message to goal
-				const linkGoalTextDiagram = await findGoalForLinking(currentGoal, topicGoals, user_id, prisma)
-				if (linkGoalTextDiagram) {
-					const currentStats = await prisma.chat_goal_progress.findFirst({
-						where: { user_id: user_id, goal_id: linkGoalTextDiagram.id },
-						orderBy: { updated_at: 'desc' }
+				const textDiagram = aiResponse.text_diagram;
+				const saved = await saveAndLinkAiMessage({
+					message: textDiagram.title || 'Quick Reference',
+					message_type: 'text_diagram',
+					diff_html: JSON.stringify({ 
+						code: textDiagram.code, 
+						diagram_type: textDiagram.diagram_type || 'ascii',
+						trigger: textDiagram.trigger || 'teaching' 
 					})
-					await prisma.chat_goal_progress.create({
-						data: {
-							chat_id: savedTextDiagramMessage.id,
-							goal_id: linkGoalTextDiagram.id,
-							user_id: user_id,
-							is_completed: currentStats ? currentStats.is_completed : false,
-							num_questions: currentStats ? currentStats.num_questions : 0,
-							num_correct: currentStats ? currentStats.num_correct : 0,
-							num_incorrect: currentStats ? currentStats.num_incorrect : 0
-						}
-					})
-				}
+				});
+				aiMessages.push(saved);
+				console.log(`📝 Text diagram saved | Title: ${textDiagram.title} | Type: ${textDiagram.diagram_type}`);
 			} catch (textDiagramErr) {
-				console.error('❌ Error saving text diagram:', textDiagramErr.message)
+				console.error('❌ Error saving text diagram:', textDiagramErr.message);
 			}
 		}
 
-		// 🎬 Save YouTube video results as separate AI messages if present
+		// 🎬 Save YouTube videos if present
 		if (fetchedVideos && fetchedVideos.length > 0) {
 			try {
 				for (const video of fetchedVideos) {
-					const savedVideoMessage = await prisma.admin_chat.create({
-						data: {
-							user_id: user_id,
-							sender: 'ai',
-							message: video.title || 'YouTube Video',
-							message_type: 'youtube_video',
-							options: [],
-							diff_html: JSON.stringify({
-								video_id: video.id,
-								thumbnail: video.thumbnail,
-								url: video.url,
-								embedUrl: video.embedUrl,
-								channel: video.channel,
-								duration: video.duration,
-								viewCount: video.viewCount,
-								trigger: aiResponse?.youtube_video?.trigger || 'user_request',
-								search_query: aiResponse?.youtube_video?.search_query || ''
-							}),
-							emoji: '🎬',
-							images: [],
-							videos: [video],
-							links: [{ url: video.url, title: video.title }]
-						},
-						select: {
-							id: true,
-							sender: true,
-							message: true,
-							message_type: true,
-							options: true,
-							diff_html: true,
-							emoji: true,
-							images: true,
-							videos: true,
-							links: true,
-							created_at: true
-						}
-					})
-					aiMessages.push(savedVideoMessage)
+					const saved = await saveAndLinkAiMessage({
+						message: video.title || 'YouTube Video',
+						message_type: 'youtube_video',
+						diff_html: JSON.stringify({
+							video_id: video.id,
+							thumbnail: video.thumbnail,
+							url: video.url,
+							embedUrl: video.embedUrl,
+							channel: video.channel,
+							duration: video.duration,
+							viewCount: video.viewCount,
+							trigger: aiResponse?.youtube_video?.trigger || 'user_request',
+							search_query: aiResponse?.youtube_video?.search_query || ''
+						}),
+						emoji: '🎬',
+						videos: [video],
+						links: [{ url: video.url, title: video.title }]
+					});
+					aiMessages.push(saved);
 				}
-				console.log(`🎬 ${fetchedVideos.length} YouTube videos saved to database`)
-
-				// Link video messages to goal
-				const linkGoalVideo = await findGoalForLinking(currentGoal, topicGoals, user_id, prisma)
-				if (linkGoalVideo) {
-					const currentStats = await prisma.chat_goal_progress.findFirst({
-						where: { user_id: user_id, goal_id: linkGoalVideo.id },
-						orderBy: { updated_at: 'desc' }
-					})
-					for (const videoMsg of aiMessages.filter(m => m.message_type === 'youtube_video')) {
-						await prisma.chat_goal_progress.create({
-							data: {
-								chat_id: videoMsg.id,
-								goal_id: linkGoalVideo.id,
-								user_id: user_id,
-								is_completed: currentStats ? currentStats.is_completed : false,
-								num_questions: currentStats ? currentStats.num_questions : 0,
-								num_correct: currentStats ? currentStats.num_correct : 0,
-								num_incorrect: currentStats ? currentStats.num_incorrect : 0
-							}
-						})
-					}
-				}
+				console.log(`🎬 ${fetchedVideos.length} YouTube videos saved to database`);
 			} catch (videoErr) {
-				console.error('❌ Error saving YouTube videos:', videoErr.message)
+				console.error('❌ Error saving YouTube videos:', videoErr.message);
 			}
 		}
 
-		// 🖼️ Save image results as separate AI messages if present
+		// 🖼️ Save images if present
 		if (fetchedImages && fetchedImages.length > 0) {
 			try {
 				for (const image of fetchedImages) {
-					const savedImageMessage = await prisma.admin_chat.create({
-						data: {
-							user_id: user_id,
-							sender: 'ai',
-							message: image.title || 'Educational Image',
-							message_type: 'google_image',
-							options: [],
-							diff_html: JSON.stringify({
-								image_id: image.id,
-								thumbnail: image.thumbnail,
-								url: image.url,
-								source: image.source,
-								sourceUrl: image.sourceUrl,
-								trigger: aiResponse?.google_image?.trigger || 'user_request',
-								search_query: aiResponse?.google_image?.search_query || ''
-							}),
-							emoji: '🖼️',
-							images: [{ url: image.url, thumbnail: image.thumbnail, title: image.title }],
-							videos: [],
-							links: [{ url: image.url, title: image.title }]
-						},
-						select: {
-							id: true,
-							sender: true,
-							message: true,
-							message_type: true,
-							options: true,
-							diff_html: true,
-							emoji: true,
-							images: true,
-							videos: true,
-							links: true,
-							created_at: true
-						}
-					})
-					aiMessages.push(savedImageMessage)
+					const saved = await saveAndLinkAiMessage({
+						message: image.title || 'Educational Image',
+						message_type: 'google_image',
+						diff_html: JSON.stringify({
+							image_id: image.id,
+							thumbnail: image.thumbnail,
+							url: image.url,
+							source: image.source,
+							sourceUrl: image.sourceUrl,
+							trigger: aiResponse?.google_image?.trigger || 'user_request',
+							search_query: aiResponse?.google_image?.search_query || ''
+						}),
+						emoji: '🖼️',
+						images: [{ url: image.url, thumbnail: image.thumbnail, title: image.title }],
+						links: [{ url: image.url, title: image.title }]
+					});
+					aiMessages.push(saved);
 				}
-				console.log(`🖼️ ${fetchedImages.length} images saved to database`)
-
-				// Link image messages to goal
-				const linkGoalImage = await findGoalForLinking(currentGoal, topicGoals, user_id, prisma)
-				if (linkGoalImage) {
-					const currentStats = await prisma.chat_goal_progress.findFirst({
-						where: { user_id: user_id, goal_id: linkGoalImage.id },
-						orderBy: { updated_at: 'desc' }
-					})
-					for (const imgMsg of aiMessages.filter(m => m.message_type === 'google_image')) {
-						await prisma.chat_goal_progress.create({
-							data: {
-								chat_id: imgMsg.id,
-								goal_id: linkGoalImage.id,
-								user_id: user_id,
-								is_completed: currentStats ? currentStats.is_completed : false,
-								num_questions: currentStats ? currentStats.num_questions : 0,
-								num_correct: currentStats ? currentStats.num_correct : 0,
-								num_incorrect: currentStats ? currentStats.num_incorrect : 0
-							}
-						})
-					}
-				}
+				console.log(`🖼️ ${fetchedImages.length} images saved to database`);
 			} catch (imageErr) {
-				console.error('❌ Error saving images:', imageErr.message)
+				console.error('❌ Error saving images:', imageErr.message);
 			}
+		}
+
+		// 3. Save the next question message last
+		if (questionMsg) {
+			const saved = await saveAndLinkAiMessage({
+				message: questionMsg.message,
+				message_type: questionMsg.message_type,
+				options: questionMsg.options,
+				emoji: questionMsg.emoji,
+				images: questionMsg.images,
+				videos: questionMsg.videos,
+				links: questionMsg.links
+			});
+			aiMessages.push(saved);
 		}
 
 		// Update goal progress if user_correction feedback is provided

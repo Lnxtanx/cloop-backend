@@ -154,7 +154,7 @@ async function searchWikimediaImages(query, maxResults = 3) {
         gsrnamespace: 6, // File/media namespace
         prop: 'imageinfo',
         iiprop: 'url|size',
-        iiurlwidth: 400, // Request generated thumbnail URL with 400px width
+        iiurlwidth: 600, // Request generated thumbnail URL with 600px width
         format: 'json',
         origin: '*',
         gsrlimit: maxResults * 2, // Fetch extra results to allow filtering
@@ -175,8 +175,8 @@ async function searchWikimediaImages(query, maxResults = 3) {
 
       const url = imageinfo.url;
       const lowerUrl = url.toLowerCase();
-      // Only include common static image formats (exclude audio, video, pdf)
-      if (!lowerUrl.endsWith('.jpg') && !lowerUrl.endsWith('.jpeg') && !lowerUrl.endsWith('.png') && !lowerUrl.endsWith('.gif') && !lowerUrl.endsWith('.svg')) {
+      // Only include common raster image formats (exclude SVG — causes CORS/rendering issues, and audio/video/pdf)
+      if (!lowerUrl.endsWith('.jpg') && !lowerUrl.endsWith('.jpeg') && !lowerUrl.endsWith('.png') && !lowerUrl.endsWith('.gif')) {
         continue;
       }
 

@@ -102,7 +102,7 @@ async function generateTopicChatResponse(userMessage, topicTitle, topicContent, 
 
     let parsed = {};
     let attempts = 0;
-    const maxAttempts = 3;
+    const maxAttempts = 2;
     let lastError = null;
 
     while (attempts < maxAttempts) {
@@ -112,7 +112,7 @@ async function generateTopicChatResponse(userMessage, topicTitle, topicContent, 
         
         const responseText = await invokeModel(systemPrompt, messages, {
             temperature: 0.7,
-            maxTokens: 4096
+            maxTokens: 2048
         });
 
         if (!responseText) {
@@ -137,7 +137,7 @@ async function generateTopicChatResponse(userMessage, topicTitle, topicContent, 
         
         if (attempts < maxAttempts) {
           console.log(`[topic_chat] 🔄 Retrying...`);
-          await new Promise(resolve => setTimeout(resolve, 1000));
+          await new Promise(resolve => setTimeout(resolve, 500));
         } else {
           console.error(`[topic_chat] 💥 All ${maxAttempts} attempts failed.`);
           throw lastError;
