@@ -298,6 +298,38 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 			if (seenIds.has(msg.id)) continue
 			seenIds.add(msg.id)
 
+			// Unpack serialized media arrays
+			const videos = (msg.videos || []).map(item => {
+				if (typeof item === 'string' && item.trim().startsWith('{')) {
+					try {
+						return JSON.parse(item)
+					} catch (e) {
+						return item
+					}
+				}
+				return item
+			})
+			const images = (msg.images || []).map(item => {
+				if (typeof item === 'string' && item.trim().startsWith('{')) {
+					try {
+						return JSON.parse(item)
+					} catch (e) {
+						return item
+					}
+				}
+				return item
+			})
+			const links = (msg.links || []).map(item => {
+				if (typeof item === 'string' && item.trim().startsWith('{')) {
+					try {
+						return JSON.parse(item)
+					} catch (e) {
+						return item
+					}
+				}
+				return item
+			})
+
 			// Check if this is a user message that has correction data
 			const turn = turnByMessageId.get(msg.id)
 			
@@ -308,6 +340,9 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 					
 					chatMessages.push({
 						...msg,
+						videos,
+						images,
+						links,
 						message_type: 'user_correction', // Force this type for corrected bubbles
 						diff_html: turn.diff_html || msg.diff_html || null,
 						emoji: emoji,
@@ -321,21 +356,30 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 					// Plain user message
 					chatMessages.push({
 						...msg,
+						videos,
+						images,
+						links,
 						message_type: msg.message_type || 'text'
 					})
 				}
 			} else {
 				// AI message — unpack session_metrics if it's a summary
+				const enrichedMsg = {
+					...msg,
+					videos,
+					images,
+					links
+				}
 				if (msg.message_type === 'session_summary' && msg.diff_html) {
 					try {
 						if (typeof msg.diff_html === 'string' && msg.diff_html.trim().startsWith('{')) {
-							msg.session_summary = JSON.parse(msg.diff_html)
+							enrichedMsg.session_summary = JSON.parse(msg.diff_html)
 						}
 					} catch (e) {
 						console.error('Failed to parse session summary JSON:', e.message)
 					}
 				}
-				chatMessages.push(msg)
+				chatMessages.push(enrichedMsg)
 			}
 		}
 
@@ -1020,9 +1064,9 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 					options: data.options || [],
 					diff_html: data.diff_html || null,
 					emoji: data.emoji || null,
-					images: data.images || [],
-					videos: data.videos || [],
-					links: data.links || [],
+					images: (data.images || []).map(x => typeof x === 'string' ? x : (x.url || JSON.stringify(x))),
+					videos: (data.videos || []).map(x => typeof x === 'string' ? x : (x.url || JSON.stringify(x))),
+					links: (data.links || []).map(x => typeof x === 'string' ? x : (x.url || JSON.stringify(x))),
 					created_at: createdAt
 				},
 				select: {
@@ -1036,9 +1080,41 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 					images: true,
 					videos: true,
 					links: true,
-					created_at: createdAt
+					created_at: true
 				}
 			});
+
+			// Unpack serialized media arrays for returned object
+			savedMessage.videos = (savedMessage.videos || []).map(item => {
+				if (typeof item === 'string' && item.trim().startsWith('{')) {
+					try {
+						return JSON.parse(item)
+					} catch (e) {
+						return item
+					}
+				}
+				return item
+			})
+			savedMessage.images = (savedMessage.images || []).map(item => {
+				if (typeof item === 'string' && item.trim().startsWith('{')) {
+					try {
+						return JSON.parse(item)
+					} catch (e) {
+						return item
+					}
+				}
+				return item
+			})
+			savedMessage.links = (savedMessage.links || []).map(item => {
+				if (typeof item === 'string' && item.trim().startsWith('{')) {
+					try {
+						return JSON.parse(item)
+					} catch (e) {
+						return item
+					}
+				}
+				return item
+			})
 
 			// Link message to goal
 			const linkGoal = await findGoalForLinking(currentGoal, topicGoals, user_id, prisma);
@@ -1940,10 +2016,10 @@ router.post('/:topicId/option', authenticateToken, async (req, res) => {
 		try {
 			if (option === 'Got it') {
 				const modifiedHistory = [...chatHistory, { sender: 'system', message: 'IMPORTANT: The user has acknowledged the previous correction. Do NOT repeat the previous question or treat this as an answer. Ask a NEW question about the current goal to continue the lesson. Generate a "messages" array with the next question - do NOT use user_correction format.' }];
-				aiResponse = await generateTopicChatResponse('', topic.title, topic.content || 'No additional content provided', modifiedHistory, finalCurrentGoal, finalTopicGoals);
+				aiResponse = await generateTopicChatResponse(option, topic.title, topic.content || 'No additional content provided', modifiedHistory, finalCurrentGoal, finalTopicGoals);
 			} else if (option === 'Explain' || option === 'Explain more') {
 				const modifiedHistory = [...chatHistory, { sender: 'system', message: `IMPORTANT: The user clicked "${option}". Provide a clear, detailed explanation of the concept with examples. Use 2-3 short messages. The LAST message should include options: ["Got it", "Explain more"]. Do NOT ask a new question yet - focus on explaining the previous correction thoroughly.` }];
-				aiResponse = await generateTopicChatResponse('', topic.title, topic.content || 'No additional content provided', modifiedHistory, finalCurrentGoal, finalTopicGoals);
+				aiResponse = await generateTopicChatResponse(option, topic.title, topic.content || 'No additional content provided', modifiedHistory, finalCurrentGoal, finalTopicGoals);
 			} else {
 				aiResponse = await generateTopicChatResponse(option, topic.title, topic.content || 'No additional content provided', chatHistory, finalCurrentGoal, finalTopicGoals);
 			}
@@ -1963,11 +2039,44 @@ router.post('/:topicId/option', authenticateToken, async (req, res) => {
 					message: aiMsg.message,
 					message_type: aiMsg.message_type || 'text',
 					options: aiMsg.options || [],
-					images: aiMsg.images || [],
-					videos: aiMsg.videos || [],
-					links: aiMsg.links || []
+					images: (aiMsg.images || []).map(x => typeof x === 'string' ? x : (x.url || JSON.stringify(x))),
+					videos: (aiMsg.videos || []).map(x => typeof x === 'string' ? x : (x.url || JSON.stringify(x))),
+					links: (aiMsg.links || []).map(x => typeof x === 'string' ? x : (x.url || JSON.stringify(x)))
 				}
 			});
+
+			// Unpack serialized media arrays for returned object
+			savedAiMessage.videos = (savedAiMessage.videos || []).map(item => {
+				if (typeof item === 'string' && item.trim().startsWith('{')) {
+					try {
+						return JSON.parse(item)
+					} catch (e) {
+						return item
+					}
+				}
+				return item
+			})
+			savedAiMessage.images = (savedAiMessage.images || []).map(item => {
+				if (typeof item === 'string' && item.trim().startsWith('{')) {
+					try {
+						return JSON.parse(item)
+					} catch (e) {
+						return item
+					}
+				}
+				return item
+			})
+			savedAiMessage.links = (savedAiMessage.links || []).map(item => {
+				if (typeof item === 'string' && item.trim().startsWith('{')) {
+					try {
+						return JSON.parse(item)
+					} catch (e) {
+						return item
+					}
+				}
+				return item
+			})
+
 			aiMessages.push(savedAiMessage);
 
 			if (finalCurrentGoal) {

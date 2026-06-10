@@ -46,15 +46,26 @@ function withTimeout(promise, ms, errorMessage) {
 async function invokeModel(systemPrompt, messages, options = {}) {
     const modelId = options.modelId || process.env.BEDROCK_MODEL_ID || 'deepseek.v3.2';
     
-    // Format messages for Bedrock Converse API if they are just strings
+    // Format messages for Bedrock Converse API and safeguard against empty/blank content
     const formattedMessages = messages.map(msg => {
+        let textContent = '';
         if (typeof msg.content === 'string') {
-            return {
-                role: msg.role,
-                content: [{ text: msg.content }]
-            };
+            textContent = msg.content.trim();
+        } else if (Array.isArray(msg.content) && msg.content[0] && typeof msg.content[0].text === 'string') {
+            textContent = msg.content[0].text.trim();
+        } else if (msg.content && typeof msg.content === 'object' && typeof msg.content.text === 'string') {
+            textContent = msg.content.text.trim();
         }
-        return msg;
+
+        // Bedrock Converse API throws an error if any message has empty/blank text content
+        if (!textContent) {
+            textContent = '...';
+        }
+
+        return {
+            role: msg.role,
+            content: [{ text: textContent }]
+        };
     });
 
     const command = new ConverseCommand({
