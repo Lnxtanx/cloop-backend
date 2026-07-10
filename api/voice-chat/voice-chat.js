@@ -46,9 +46,9 @@ router.post('/sarvam-tts', authenticateToken, async (req, res) => {
             }
         )
 
-        // The Sarvam AI REST API returns an object containing an array of audios: { audios: [ { audio: "base64String..." } ] }
+        // The Sarvam AI REST API returns an object containing an array of audios: { audios: [ "base64String..." ] }
         if (response.data && response.data.audios && response.data.audios.length > 0) {
-            const audioBase64 = response.data.audios[0].audio
+            const audioBase64 = response.data.audios[0]
             return res.status(200).json({ audio: audioBase64 })
         } else {
             console.error('[Voice API] Sarvam TTS response did not return audio', response.data)
