@@ -5,37 +5,61 @@
 
 const express = require('express')
 const router = express.Router()
+const axios = require('axios')
 const { authenticateToken } = require('../../middleware/auth')
 const prisma = require('../../lib/prisma')
 const { buildMinimalContext } = require('../../services/user-context-builder')
 
-// GET /api/voice-chat/session
-// Create a new voice chat session and return session info
-router.get('/session', authenticateToken, async (req, res) => {
-    const userId = req.user?.user_id
+// POST /api/voice-chat/sarvam-tts
+// Convert text to speech using Sarvam AI
+router.post('/sarvam-tts', authenticateToken, async (req, res) => {
+    const { text, speaker = 'priya', language = 'en-IN' } = req.body
 
-    if (!userId) {
-        return res.status(401).json({ error: 'Authentication required' })
+    if (!text) {
+        return res.status(400).json({ error: 'Text content is required' })
     }
 
     try {
-        // Build user context for the session
-        const context = await buildMinimalContext(userId)
-
-        if (!context) {
-            return res.status(404).json({ error: 'User not found' })
+        const apiKey = process.env.SARVAM_API_KEY
+        if (!apiKey) {
+            console.error('[Voice API] SARVAM_API_KEY not configured')
+            return res.status(500).json({ error: 'Sarvam AI service configuration missing' })
         }
 
-        // Return session info (WebSocket URL is relative)
-        return res.status(200).json({
-            sessionId: `voice_${userId}_${Date.now()}`,
-            wsPath: '/api/voice-chat/stream',
-            userContext: context,
-            message: 'Ready to connect via WebSocket'
-        })
+        console.log(`[Voice API] Synthesizing text with speaker ${speaker} and language ${language}`)
+
+        const response = await axios.post(
+            'https://api.sarvam.ai/text-to-speech',
+            {
+                text: text,
+                speaker: speaker,
+                target_language_code: language,
+                model: 'bulbul:v3',
+                pace: 1.0,
+                sample_rate: 24000
+            },
+            {
+                headers: {
+                    'api-subscription-key': apiKey,
+                    'Content-Type': 'application/json'
+                }
+            }
+        )
+
+        // The Sarvam AI REST API returns an object containing an array of audios: { audios: [ { audio: "base64String..." } ] }
+        if (response.data && response.data.audios && response.data.audios.length > 0) {
+            const audioBase64 = response.data.audios[0].audio
+            return res.status(200).json({ audio: audioBase64 })
+        } else {
+            console.error('[Voice API] Sarvam TTS response did not return audio', response.data)
+            return res.status(500).json({ error: 'Failed to synthesize speech' })
+        }
     } catch (error) {
-        console.error('[Voice API] Session creation error:', error)
-        return res.status(500).json({ error: 'Failed to create voice session' })
+        console.error('[Voice API] Sarvam TTS error:', error.response?.data || error.message)
+        return res.status(error.response?.status || 500).json({
+            error: 'Sarvam AI synthesis request failed',
+            details: error.response?.data || error.message
+        })
     }
 })
 

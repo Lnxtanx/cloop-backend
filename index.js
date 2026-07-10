@@ -79,8 +79,8 @@ app.use('/api/notifications', require('./api/notifications/notifications'))
 app.use('/api/practice-tests', require('./api/practice-tests/practice-tests'))
 app.use('/api/practice-analytics', require('./api/practice-tests/analytics'))
 app.use('/api/standard-exams', require('./api/practice-tests/standard-exams'))
-// Voice Chat REST routes (Legacy - Moved to Python Service)
-// app.use('/api/voice-chat', require('./api/voice-chat/voice-chat'))
+// Voice Chat REST routes
+app.use('/api/voice-chat', require('./api/voice-chat/voice-chat'))
 app.use('/api/internal/tools', require('./api/internal/tools'))
 
 const PORT = process.env.PORT || 4000
