@@ -1776,11 +1776,15 @@ Write a SHORT 2-3 sentence performance summary for the student.
 								return;
 							}
 
-							const cleanText = msg.message
+							let cleanText = msg.message
 								.replace(/<[^>]+>/g, "") // strip HTML tags
 								.replace(/\*\*([^*]+)\*\*/g, "$1") // strip markdown bold
 								.replace(/_([^_]+)_/g, "$1") // strip markdown italic
 								.trim();
+
+							if (cleanText.length > 500) {
+								cleanText = cleanText.substring(0, 500) + "...";
+							}
 
 							if (!cleanText) return;
 
@@ -1800,7 +1804,7 @@ Write a SHORT 2-3 sentence performance summary for the student.
 											'api-subscription-key': apiKey,
 											'Content-Type': 'application/json'
 										},
-										timeout: 5000 // 5 seconds timeout so TTS failure doesn't hang the chat response
+										timeout: 8000 // 8 seconds timeout
 									}
 								);
 

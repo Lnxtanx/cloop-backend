@@ -29,10 +29,15 @@ router.post('/sarvam-tts', authenticateToken, async (req, res) => {
 
         console.log(`[Voice API] Synthesizing text with speaker ${speaker} and language ${language}`)
 
+        let cleanText = text.trim()
+        if (cleanText.length > 500) {
+            cleanText = cleanText.substring(0, 500) + '...'
+        }
+
         const response = await axios.post(
             'https://api.sarvam.ai/text-to-speech',
             {
-                text: text,
+                text: cleanText,
                 speaker: speaker,
                 target_language_code: language,
                 model: 'bulbul:v3',
@@ -43,7 +48,8 @@ router.post('/sarvam-tts', authenticateToken, async (req, res) => {
                 headers: {
                     'api-subscription-key': apiKey,
                     'Content-Type': 'application/json'
-                }
+                },
+                timeout: 8000
             }
         )
 
@@ -273,11 +279,15 @@ router.post('/message', authenticateToken, async (req, res) => {
 		try {
 			const apiKey = process.env.SARVAM_API_KEY
 			if (apiKey && aiResponseText) {
-				const cleanText = aiResponseText
+				let cleanText = aiResponseText
 					.replace(/<[^>]+>/g, "") // strip HTML tags
 					.replace(/\*\*([^*]+)\*\*/g, "$1") // strip markdown bold
 					.replace(/_([^_]+)_/g, "$1") // strip markdown italic
 					.trim();
+
+				if (cleanText.length > 500) {
+					cleanText = cleanText.substring(0, 500) + "...";
+				}
 
 				if (cleanText) {
 					const ttsResponse = await axios.post(
@@ -295,7 +305,7 @@ router.post('/message', authenticateToken, async (req, res) => {
 								'api-subscription-key': apiKey,
 								'Content-Type': 'application/json'
 							},
-							timeout: 5000
+							timeout: 8000
 						}
 					);
 
