@@ -106,7 +106,7 @@ router.get('/', authenticateToken, async (req, res) => {
 // Send a new message in normal chat
 router.post('/message', authenticateToken, async (req, res) => {
 	let user_id = req.user?.user_id
-	const { message, session_id, from_report_id, from_q_index, voice_enabled } = req.body
+	const { message, session_id, from_report_id, from_q_index } = req.body
 
 	if (!user_id) return res.status(401).json({ error: 'Authentication required' })
 	if (!message) return res.status(400).json({ error: 'Message is required' })
@@ -207,54 +207,9 @@ router.post('/message', authenticateToken, async (req, res) => {
 			}
 		})
 
-		let audioBase64 = null
-		if (voice_enabled) {
-			try {
-				const apiKey = process.env.SARVAM_API_KEY
-				if (apiKey) {
-					const cleanText = aiResponseText
-						.replace(/<[^>]+>/g, "") // strip HTML tags
-						.replace(/\*\*([^*]+)\*\*/g, "$1") // strip markdown bold
-						.replace(/_([^_]+)_/g, "$1") // strip markdown italic
-						.trim();
-
-					if (cleanText) {
-						console.log(`[Voice API] Synthesizing normal chat text with speaker priya and language en-IN`)
-						const ttsResponse = await axios.post(
-							'https://api.sarvam.ai/text-to-speech',
-							{
-								text: cleanText,
-								speaker: 'priya',
-								target_language_code: 'en-IN',
-								model: 'bulbul:v3',
-								pace: 1.0,
-								sample_rate: 24000
-							},
-							{
-								headers: {
-									'api-subscription-key': apiKey,
-									'Content-Type': 'application/json'
-								},
-								timeout: 5000
-							}
-						);
-
-						if (ttsResponse.data && ttsResponse.data.audios && ttsResponse.data.audios.length > 0) {
-							audioBase64 = ttsResponse.data.audios[0]
-						}
-					}
-				}
-			} catch (ttsErr) {
-				console.error('[Voice API] Parallel TTS failed in normal chat:', ttsErr.message)
-			}
-		}
-
 		return res.status(201).json({
 			userMessage,
-			aiMessage: {
-				...aiMessage,
-				audio: audioBase64
-			},
+			aiMessage,
 			session_id: current_session_id
 		})
 	} catch (err) {
