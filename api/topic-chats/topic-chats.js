@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const axios = require('axios')
 const { authenticateToken } = require('../../middleware/auth')
 const { generateTopicChatResponse, generateTopicGreeting, generateTopicGoals } = require('../../services/ai/topic-chat')
 const { invokeModel } = require('../../services/ai/bedrock-client')
@@ -624,7 +625,7 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 router.post('/:topicId/message', authenticateToken, async (req, res) => {
 	let user_id = req.user?.user_id
 	const { topicId } = req.params
-	const { message, file_url, file_type, session_time_seconds } = req.body
+	const { message, file_url, file_type, session_time_seconds, voice_enabled } = req.body
 
 	// For production, always require authenticated user
 	if (!user_id) {
@@ -1751,6 +1752,70 @@ Write a SHORT 2-3 sentence performance summary for the student.
 				} catch (fuErr) {
 					console.error('❌ Auto-continue follow-up failed:', fuErr.message)
 				}
+			}
+		}
+
+		// If voice is enabled, pre-fetch/synthesize TTS for all new text messages in parallel
+		if (voice_enabled) {
+			try {
+				console.log(`[Voice API] Parallel TTS synthesis started for ${aiMessages.length} messages`);
+				const apiKey = process.env.SARVAM_API_KEY;
+				if (apiKey) {
+					await Promise.all(
+						aiMessages.map(async (msg) => {
+							if (
+								msg.message_type === 'mermaid_diagram' ||
+								msg.message_type === 'text_diagram' ||
+								msg.message_type === 'youtube_video' ||
+								msg.message_type === 'google_image' ||
+								msg.message_type === 'session_summary' ||
+								msg.message_type === 'score_prediction' ||
+								!msg.message ||
+								!msg.message.trim()
+							) {
+								return;
+							}
+
+							const cleanText = msg.message
+								.replace(/<[^>]+>/g, "") // strip HTML tags
+								.replace(/\*\*([^*]+)\*\*/g, "$1") // strip markdown bold
+								.replace(/_([^_]+)_/g, "$1") // strip markdown italic
+								.trim();
+
+							if (!cleanText) return;
+
+							try {
+								const ttsResponse = await axios.post(
+									'https://api.sarvam.ai/text-to-speech',
+									{
+										text: cleanText,
+										speaker: 'priya',
+										target_language_code: 'en-IN',
+										model: 'bulbul:v3',
+										pace: 1.0,
+										sample_rate: 24000
+									},
+									{
+										headers: {
+											'api-subscription-key': apiKey,
+											'Content-Type': 'application/json'
+										},
+										timeout: 5000 // 5 seconds timeout so TTS failure doesn't hang the chat response
+									}
+								);
+
+								if (ttsResponse.data && ttsResponse.data.audios && ttsResponse.data.audios.length > 0) {
+									msg.audio = ttsResponse.data.audios[0];
+								}
+							} catch (ttsErr) {
+								console.error(`[Voice API] Parallel TTS failed for message "${msg.id}":`, ttsErr.message);
+							}
+						})
+					);
+					console.log('[Voice API] Parallel TTS synthesis complete');
+				}
+			} catch (err) {
+				console.error('[Voice API] Error in parallel TTS processing:', err.message);
 			}
 		}
 
