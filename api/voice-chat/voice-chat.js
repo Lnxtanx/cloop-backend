@@ -229,7 +229,7 @@ router.post('/message', authenticateToken, async (req, res) => {
 				const chatResponse = await axios.post(
 					'https://api.sarvam.ai/v1/chat/completions',
 					{
-						model: 'sarvam-2b-v0.5',
+						model: 'sarvam-30b',
 						messages: [
 							{ role: 'system', content: systemPrompt },
 							...messages
