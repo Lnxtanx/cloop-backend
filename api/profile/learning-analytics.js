@@ -361,6 +361,50 @@ router.get('/subject/:subjectId', authenticateToken, async (req, res) => {
     // Sort recommended focus by potential gain (desc)
     recommendedFocus.sort((a, b) => b.potential_gain - a.potential_gain);
 
+    // Calculate mastery level status
+    let masteryLevel = 'Needs Attention';
+    if (averageScore >= 80) masteryLevel = 'Mastered';
+    else if (averageScore >= 60) masteryLevel = 'Proficient';
+    else if (averageScore > 0) masteryLevel = 'Developing';
+
+    // Calculate per-topic weak points (score < 60)
+    const weakTopicsList = Object.values(byTopic)
+      .filter(t => t.average_score < 60)
+      .map(t => {
+        const topicTurns = turns.filter(turn => turn.topic_id === t.topic_id && !turn.is_correct);
+        const topicErrors = {};
+        topicTurns.forEach(turn => {
+          if (turn.error_type) {
+            topicErrors[turn.error_type] = (topicErrors[turn.error_type] || 0) + 1;
+          }
+        });
+        return {
+          topic_id: t.topic_id,
+          topic_title: t.topic_title,
+          average_score: t.average_score,
+          total_questions: t.total,
+          error_distribution: topicErrors
+        };
+      });
+
+    // Detailed error cards for this subject (limit to last 50, latest first)
+    const errorTurns = turns
+      .filter(t => !t.is_correct)
+      .slice(-50)
+      .reverse()
+      .map(t => ({
+        id: t.id,
+        question_text: t.question_text,
+        user_answer_raw: t.user_answer_raw,
+        corrected_answer: t.corrected_answer,
+        diff_html: t.diff_html,
+        error_type: t.error_type,
+        feedback_json: t.feedback_json,
+        score_percent: t.score_percent,
+        topic_title: t.topic_title,
+        created_at: t.created_at
+      }));
+
     return res.status(200).json({
       subject: subject,
       summary: {
@@ -388,7 +432,10 @@ router.get('/subject/:subjectId', authenticateToken, async (req, res) => {
         error_subtypes: errorSubtypes
       },
       by_topic: Object.values(byTopic),
-      performance_trend: recentTurns
+      performance_trend: recentTurns,
+      mastery_level: masteryLevel,
+      weak_topics: weakTopicsList,
+      error_cards: errorTurns
     });
   } catch (err) {
     console.error('Error fetching subject analytics:', err);

@@ -62,6 +62,7 @@ app.use('/api/profile', require('./api/profile/manage-subjects'))
 app.use('/api/profile/chat-history', require('./api/profile/chat-history'))
 app.use('/api/profile/metrics', require('./api/profile/metrics'))
 app.use('/api/profile/learning-analytics', require('./api/profile/learning-analytics'))
+app.use('/api/profile/teacher-analytics', require('./api/profile/teacher-analytics'))
 // Chapters and Topics routes
 app.use('/api/chapters', require('./api/chapters/chapters'))
 app.use('/api/topics', require('./api/topics/topics'))
