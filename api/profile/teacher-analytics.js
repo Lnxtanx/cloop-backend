@@ -124,20 +124,47 @@ router.get('/student-overview', authenticateToken, async (req, res) => {
       recommendations.push(`Keep practicing! Regular quiz sessions will help build robust mastery scores.`);
     }
 
+    // Performance trend (weekly averages for last 8 weeks)
+    const weeklyScores = {};
+    turns.forEach(turn => {
+      const date = new Date(turn.created_at);
+      const weekStart = new Date(date);
+      weekStart.setDate(date.getDate() - date.getDay());
+      const weekKey = weekStart.toISOString().split('T')[0];
+
+      if (!weeklyScores[weekKey]) {
+        weeklyScores[weekKey] = { scores: [], count: 0 };
+      }
+      weeklyScores[weekKey].scores.push(turn.score_percent || 0);
+      weeklyScores[weekKey].count++;
+    });
+
+    const weeklyTrend = Object.keys(weeklyScores)
+      .sort()
+      .slice(-8)
+      .map(week => ({
+        week: week,
+        average_score: weeklyScores[week].scores.length > 0
+          ? Math.round(weeklyScores[week].scores.reduce((a, b) => a + b, 0) / weeklyScores[week].scores.length)
+          : 0,
+        question_count: weeklyScores[week].count
+      }));
+
     return res.status(200).json({
       overview: {
         total_questions: totalQuestions,
         correct_answers: correctAnswers,
         incorrect_answers: incorrectAnswers,
         accuracy,
-        explain_count,
-        retry_count,
+        explain_count: explainCount,
+        retry_count: retryCount,
         help_requests: helpRequests
       },
       error_distribution: errorCounts,
       subjects: subjectsList,
       weak_topics: weakTopics,
-      recommendations
+      recommendations,
+      weekly_trend: weeklyTrend
     });
 
   } catch (error) {
