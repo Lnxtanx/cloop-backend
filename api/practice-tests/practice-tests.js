@@ -29,7 +29,7 @@ router.post('/generate', authenticateToken, async (req, res) => {
             chapterTitles = chapters.map(c => c.title);
         }
 
-        const questions = await generatePracticeQuestions(exam_type, subject, chapterTitles);
+        const questions = await generatePracticeQuestions(exam_type, subject, chapterTitles, user_id);
 
         // Save the test session and questions to the database
         const practiceTest = await prisma.practice_tests.create({

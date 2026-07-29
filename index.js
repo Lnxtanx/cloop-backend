@@ -83,6 +83,9 @@ app.use('/api/standard-exams', require('./api/practice-tests/standard-exams'))
 // Voice Chat REST routes
 app.use('/api/voice-chat', require('./api/voice-chat/voice-chat'))
 app.use('/api/internal/tools', require('./api/internal/tools'))
+// AI Token Analytics routes
+app.use('/api/analytics/tokens', require('./api/analytics/tokens'))
+
 
 const PORT = process.env.PORT || 4000
 const HOST = process.env.HOST || '0.0.0.0' // Listen on all network interfaces

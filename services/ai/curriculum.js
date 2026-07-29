@@ -15,7 +15,7 @@ function truncateContent(content, maxLength = 200) {
 /**
  * Generate chapters for a specific subject, grade, and board
  */
-async function generateChapters(gradeLevel, board, subject) {
+async function generateChapters(gradeLevel, board, subject, userId = null) {
     const systemPrompt = 'You are an expert educational content generator that creates structured curriculum content. Always respond with valid JSON only. Output a JSON object with a "chapters" array.';
     
     const userPrompt = `You are an educational content expert. Generate a comprehensive list of chapters for the following:
@@ -32,7 +32,11 @@ Return ONLY valid JSON.`;
 
     try {
         const responseText = await invokeModel(systemPrompt, [{ role: 'user', content: userPrompt }], {
-            temperature: 0.3 // Lower temperature for more deterministic JSON
+            temperature: 0.3,
+            userId,
+            featureArea: 'curriculum_generation',
+            subFeature: 'chapter_gen',
+            metadata: { gradeLevel, board, subject }
         });
 
         const parsed = extractJson(responseText);
@@ -58,7 +62,7 @@ Return ONLY valid JSON.`;
 /**
  * Generate topics/exercises for a specific chapter
  */
-async function generateTopics(gradeLevel, board, subject, chapterTitle, chapterContent) {
+async function generateTopics(gradeLevel, board, subject, chapterTitle, chapterContent, userId = null) {
     const chapterSummary = truncateContent(chapterContent, 150);
     const systemPrompt = 'You are an expert educational content generator that creates structured curriculum content. Always respond with valid JSON only. Output a JSON object with a "topics" array.';
 
@@ -78,7 +82,11 @@ Return ONLY valid JSON.`;
 
     try {
         const responseText = await invokeModel(systemPrompt, [{ role: 'user', content: userPrompt }], {
-            temperature: 0.3
+            temperature: 0.3,
+            userId,
+            featureArea: 'curriculum_generation',
+            subFeature: 'topic_gen',
+            metadata: { gradeLevel, board, subject, chapterTitle }
         });
 
         const parsed = extractJson(responseText);
@@ -104,7 +112,7 @@ Return ONLY valid JSON.`;
 /**
  * Generate clear, measurable learning goals for a topic
  */
-async function generateTopicGoals(topicTitle, topicContent) {
+async function generateTopicGoals(topicTitle, topicContent, userId = null) {
     const topicSummary = truncateContent(topicContent, 250);
     const systemPrompt = 'You are an expert educational content generator that creates clear, measurable learning objectives. Always respond with valid JSON only.';
 
@@ -118,7 +126,11 @@ Return ONLY valid JSON.`;
 
     try {
         const responseText = await invokeModel(systemPrompt, [{ role: 'user', content: userPrompt }], {
-            temperature: 0.3
+            temperature: 0.3,
+            userId,
+            featureArea: 'curriculum_generation',
+            subFeature: 'goal_gen',
+            metadata: { topicTitle }
         });
 
         const parsed = extractJson(responseText);

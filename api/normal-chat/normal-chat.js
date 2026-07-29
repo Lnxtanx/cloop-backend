@@ -191,8 +191,13 @@ router.post('/message', authenticateToken, async (req, res) => {
 
 			aiResponseText = await invokeModel(systemPrompt, messages, {
 				maxTokens: 2048,
-				temperature: 0.7
+				temperature: 0.7,
+				userId: user_id,
+				featureArea: 'normal_chat',
+				subFeature: 'user_query',
+				metadata: { session_id: current_session_id }
 			})
+
 		} catch (e) {
 			console.error('AI Error:', e)
 		}

@@ -1,5 +1,6 @@
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '../../.env'), override: true });
+const { logTokenUsage } = require('../token-tracker');
 
 const DEEPSEEK_BASE_URL = process.env.DEEPSEEK_BASE_URL || 'https://api.deepseek.com';
 
@@ -7,8 +8,8 @@ const DEEPSEEK_BASE_URL = process.env.DEEPSEEK_BASE_URL || 'https://api.deepseek
  * Invoke DeepSeek API (OpenAI-compatible)
  * @param {string} systemPrompt - System instruction
  * @param {Array} messages - Array of { role: 'user'|'assistant', content: string|Array|Object }
- * @param {Object} options - Options (modelId, temperature, maxTokens, topP)
- * @returns {Promise<string>} - Generated text response
+ * @param {Object} options - Options (modelId, temperature, maxTokens, topP, userId, featureArea, subFeature, returnUsage, metadata)
+ * @returns {Promise<string|Object>} - Generated text response (or { text, usage, durationMs } if options.returnUsage)
  */
 async function invokeModel(systemPrompt, messages, options = {}) {
     const apiKey = (process.env.DEEPSEEK_API_KEY || process.env.DEEPSEEK_KEY || '').trim();
@@ -59,6 +60,7 @@ async function invokeModel(systemPrompt, messages, options = {}) {
 
     console.log(`[DeepSeek] 🚀 Invoking model: ${model} (${formattedMessages.length} messages)`);
 
+    const startTime = Date.now();
     const maxAttempts = 2;
     let lastError = null;
 
@@ -79,15 +81,61 @@ async function invokeModel(systemPrompt, messages, options = {}) {
             }
 
             const data = await response.json();
+            const durationMs = Date.now() - startTime;
 
             if (data.choices && data.choices[0] && data.choices[0].message) {
                 const messageObj = data.choices[0].message;
-                // If deepseek-reasoner returned reasoning_content, log it for context
                 if (messageObj.reasoning_content) {
                     console.log(`[DeepSeek] 🧠 Reasoning length: ${messageObj.reasoning_content.length} chars`);
                 }
                 const text = messageObj.content || '';
-                console.log(`[DeepSeek] ✅ Response received (${text.length} chars)`);
+                
+                // Extract usage statistics
+                const rawUsage = data.usage || {};
+                const promptTokens = rawUsage.prompt_tokens || 0;
+                const completionTokens = rawUsage.completion_tokens || 0;
+                const totalTokens = rawUsage.total_tokens || (promptTokens + completionTokens);
+                const cachedPromptTokens = rawUsage.prompt_tokens_details?.cached_tokens || 0;
+                const reasoningTokens = rawUsage.completion_tokens_details?.reasoning_tokens || 0;
+
+                const usageDetails = {
+                    promptTokens,
+                    completionTokens,
+                    totalTokens,
+                    cachedPromptTokens,
+                    reasoningTokens,
+                    durationMs
+                };
+
+                // Automatically log token usage if featureArea was specified in call options
+                if (options.featureArea) {
+                    logTokenUsage({
+                        userId: options.userId,
+                        featureArea: options.featureArea,
+                        subFeature: options.subFeature,
+                        provider: 'deepseek',
+                        modelName: model,
+                        promptTokens,
+                        completionTokens,
+                        totalTokens,
+                        cachedPromptTokens,
+                        reasoningTokens,
+                        requestDurationMs: durationMs,
+                        status: 'success',
+                        metadata: options.metadata || null
+                    });
+                }
+
+                console.log(`[DeepSeek] ✅ Response received (${text.length} chars | ${totalTokens} tokens: ${promptTokens} in, ${completionTokens} out)`);
+
+                if (options.returnUsage) {
+                    return {
+                        text,
+                        usage: usageDetails,
+                        durationMs
+                    };
+                }
+
                 return text;
             }
 
@@ -95,6 +143,20 @@ async function invokeModel(systemPrompt, messages, options = {}) {
         } catch (error) {
             lastError = error;
             console.error(`[DeepSeek] ❌ Attempt ${attempt}/${maxAttempts} failed:`, error.message);
+
+            if (options.featureArea && attempt === maxAttempts) {
+                logTokenUsage({
+                    userId: options.userId,
+                    featureArea: options.featureArea,
+                    subFeature: options.subFeature,
+                    provider: 'deepseek',
+                    modelName: model,
+                    status: 'failed',
+                    requestDurationMs: Date.now() - startTime,
+                    metadata: { error: error.message, ...(options.metadata || {}) }
+                });
+            }
+
             if (attempt < maxAttempts) {
                 console.log(`[DeepSeek] 🔄 Retrying in 1 second...`);
                 await new Promise(r => setTimeout(r, 1000));

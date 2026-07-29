@@ -112,8 +112,13 @@ async function generateTopicChatResponse(userMessage, topicTitle, topicContent, 
         
         const responseText = await invokeModel(systemPrompt, messages, {
             temperature: 0.7,
-            maxTokens: 2048
+            maxTokens: 2048,
+            userId,
+            featureArea: 'topic_chat',
+            subFeature: 'tutor_turn',
+            metadata: { topicId, topicTitle }
         });
+
 
         if (!responseText) {
           throw new Error('Empty response from Bedrock API');

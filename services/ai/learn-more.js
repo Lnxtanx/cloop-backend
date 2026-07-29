@@ -144,7 +144,7 @@ ALWAYS respond with valid JSON only. Do NOT include markdown or any commentary o
 /**
  * Generate initial greeting for Learn More mode
  */
-async function generateLearnMoreGreeting(topicTitle, learningPlan) {
+async function generateLearnMoreGreeting(topicTitle, learningPlan, userId = null) {
   try {
     const { focus_areas, focus_reason } = learningPlan;
     const weakestGoal = focus_areas[0];
@@ -159,7 +159,12 @@ Return VALID JSON ONLY.`;
 
     const userPrompt = 'Generate Learn More greeting and first question.';
 
-    const responseText = await invokeModel(systemPrompt, [{ role: 'user', content: userPrompt }]);
+    const responseText = await invokeModel(systemPrompt, [{ role: 'user', content: userPrompt }], {
+      userId,
+      featureArea: 'memory_context',
+      subFeature: 'learn_more_greeting',
+      metadata: { topicTitle }
+    });
     const parsed = extractJson(responseText);
 
     if (!parsed) throw new Error('Failed to parse greeting JSON');
@@ -178,7 +183,7 @@ Return VALID JSON ONLY.`;
 /**
  * Generate Learn More chat response
  */
-async function generateLearnMoreResponse(userMessage, topicTitle, topicContent, learningPlan, currentFocusArea, chatHistory = [], questionsAskedInLearnMore = []) {
+async function generateLearnMoreResponse(userMessage, topicTitle, topicContent, learningPlan, currentFocusArea, chatHistory = [], questionsAskedInLearnMore = [], userId = null) {
   try {
     const aiMessages = chatHistory.filter(m => m.sender === 'ai' && m.message_type === 'text');
     const allQuestions = aiMessages
@@ -211,7 +216,13 @@ async function generateLearnMoreResponse(userMessage, topicTitle, topicContent, 
 
     messages.push({ role: 'user', content: userMessage });
 
-    const responseText = await invokeModel(systemPrompt, messages);
+    const responseText = await invokeModel(systemPrompt, messages, {
+      userId,
+      featureArea: 'memory_context',
+      subFeature: 'learn_more_turn',
+      metadata: { topicTitle }
+    });
+
     let parsed = extractJson(responseText);
 
     if (!parsed) throw new Error('Failed to parse response JSON');

@@ -65,7 +65,7 @@ async function generateChaptersForSubject(userId, subjectId, gradeLevel, board, 
 
 	try {
 		// Call AI to generate chapters in proper order
-		const chaptersData = await generateChapters(gradeLevel, board, subjectName);
+		const chaptersData = await generateChapters(gradeLevel, board, subjectName, userId);
 
 		// Ensure chapters are numbered correctly
 		chaptersData.forEach((chapter, index) => {
@@ -112,8 +112,10 @@ async function generateTopicsForChapter(userId, subjectId, chapter, gradeLevel, 
 			board,
 			subjectName,
 			chapter.title,
-			chapter.content
+			chapter.content,
+			userId
 		);
+
 
 		// Format topic titles with proper numbering
 		topicsData.forEach((topic, index) => {
@@ -163,7 +165,7 @@ async function generateGoalsForTopic(topic, logger = console) {
 
 	try {
 		// Generate initial goals
-		const goalsData = await generateTopicGoals(topic.title, topic.content);
+		const goalsData = await generateTopicGoals(topic.title, topic.content, topic.user_id);
 
 		// Ensure we have at least 4 goals
 		let goals = goalsData.goals || [];

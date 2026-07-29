@@ -7,11 +7,12 @@ const { invokeModel, extractJson } = require('./bedrock-client');
  * @param {Array<string>} chapters - Optional list of chapter titles to focus on
  * @returns {Promise<Array>} - Array of 15 question objects
  */
-async function generatePracticeQuestions(examType, subject, chapters = []) {
+async function generatePracticeQuestions(examType, subject, chapters = [], userId = null) {
     const chapterContext = chapters && chapters.length > 0 
         ? `Focus strictly on the following chapters: ${chapters.join(', ')}.`
         : `Cover the entire syllabus for ${subject}.`;
-
+    
+    // ...
     const systemPrompt = `You are an expert exam paper setter for ${examType}. 
     Your task is to generate exactly 15 high-quality Multiple Choice Questions (MCQs) for the subject: ${subject}.
     
@@ -45,8 +46,13 @@ async function generatePracticeQuestions(examType, subject, chapters = []) {
         console.log(`[PracticeTest] 🚀 Generating 15 questions for ${examType} - ${subject}`);
         const responseText = await invokeModel(systemPrompt, [{ role: 'user', content: userPrompt }], {
             temperature: 0.7,
-            maxTokens: 4096
+            maxTokens: 4096,
+            userId,
+            featureArea: 'practice_test',
+            subFeature: 'question_gen',
+            metadata: { examType, subject }
         });
+
 
         const parsed = extractJson(responseText);
         if (!parsed || !Array.isArray(parsed.questions)) {
