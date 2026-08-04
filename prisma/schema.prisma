@@ -59,6 +59,7 @@ model users {
   practice_tests            practice_tests[]
   ai_token_logs             ai_token_logs[]
   ai_user_daily_token_usage ai_user_daily_token_usage[]
+  user_english_progress     user_english_progress[]
 }
 
 model practice_tests {
@@ -477,3 +478,69 @@ model ai_user_daily_token_usage {
   @@index([date, feature_area])
 }
 
+// Global English Learning Models
+
+model english_subjects {
+  id          Int                @id @default(autoincrement())
+  code        String             @unique @db.VarChar(50)
+  title       String             @db.VarChar(150)
+  description String?            @db.Text
+  category    String?            @default("ACADEMIC") @db.VarChar(50)
+  icon        String?            @db.VarChar(50)
+  order       Int                @default(1)
+  created_at  DateTime?          @default(now()) @db.Timestamp(6)
+  chapters    english_chapters[]
+}
+
+model english_chapters {
+  id                 Int              @id @default(autoincrement())
+  subject_id         Int
+  title              String           @db.VarChar(200)
+  description        String?          @db.Text
+  badge_level        String?          @default("Intermediate") @db.VarChar(50)
+  order              Int              @default(1)
+  created_at         DateTime?        @default(now()) @db.Timestamp(6)
+  subject            english_subjects @relation(fields: [subject_id], references: [id], onDelete: Cascade)
+  topics             english_topics[]
+}
+
+model english_topics {
+  id                 Int                  @id @default(autoincrement())
+  chapter_id         Int
+  title              String               @db.VarChar(200)
+  description        String?              @db.Text
+  category           String?              @db.VarChar(50)
+  difficulty         String?              @default("Intermediate") @db.VarChar(30)
+  estimated_minutes  Int?                 @default(10)
+  key_vocabulary     String[]             @default([])
+  system_prompt_goal String?              @db.Text
+  order              Int                  @default(1)
+  created_at         DateTime?            @default(now()) @db.Timestamp(6)
+  chapter            english_chapters     @relation(fields: [chapter_id], references: [id], onDelete: Cascade)
+  goals              english_topic_goals[]
+  user_progress      user_english_progress[]
+}
+
+model english_topic_goals {
+  id          Int            @id @default(autoincrement())
+  topic_id    Int
+  title       String         @db.VarChar(200)
+  description String?        @db.Text
+  order       Int            @default(1)
+  created_at  DateTime?      @default(now()) @db.Timestamp(6)
+  topic       english_topics @relation(fields: [topic_id], references: [id], onDelete: Cascade)
+}
+
+model user_english_progress {
+  id                 Int            @id @default(autoincrement())
+  user_id            Int
+  topic_id           Int
+  is_completed       Boolean        @default(false)
+  completion_percent Decimal        @default(0.00) @db.Decimal(5, 2)
+  time_spent_seconds Int            @default(0)
+  last_practiced_at  DateTime?      @default(now()) @db.Timestamp(6)
+  users              users          @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  topic              english_topics @relation(fields: [topic_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, topic_id])
+}

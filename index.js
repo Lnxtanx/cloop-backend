@@ -86,6 +86,9 @@ app.use('/api/internal/tools', require('./api/internal/tools'))
 // AI Token Analytics routes
 app.use('/api/analytics/tokens', require('./api/analytics/tokens'))
 
+// Global English Learning routes
+app.use('/api/english', require('./api/english/english-routes'))
+
 
 const PORT = process.env.PORT || 4000
 const HOST = process.env.HOST || '0.0.0.0' // Listen on all network interfaces
