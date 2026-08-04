@@ -112,16 +112,17 @@ router.post('/', async (req, res) => {
 
 		// End subjects block
 
-		// Auto-trigger curriculum generation setup for new user
-		// Call this regardless of whether subjects were provided in the request.
-		// The trigger function itself will validate the user's profile and
-		// skip creating statuses if grade/board/subjects are missing.
-		try {
-			await CurriculumAutoTrigger.handleUserSignup(user.user_id);
-			console.log(`✓ Content generation setup completed for user ${user.user_id}`);
-		} catch (error) {
-			console.error('Auto-trigger curriculum generation setup after signup failed:', error);
-			// Don't fail signup if content generation setup fails
+		// Auto-trigger curriculum generation setup for new user unless skipped (e.g. for English app)
+		if (!req.body.skipCurriculumGeneration && !req.body.isEnglishApp) {
+			try {
+				await CurriculumAutoTrigger.handleUserSignup(user.user_id);
+				console.log(`✓ Content generation setup completed for user ${user.user_id}`);
+			} catch (error) {
+				console.error('Auto-trigger curriculum generation setup after signup failed:', error);
+				// Don't fail signup if content generation setup fails
+			}
+		} else {
+			console.log(`ℹ Curriculum generation skipped for user ${user.user_id} (English App/Custom focus)`);
 		}
 
 		return res.status(201).json({ 
