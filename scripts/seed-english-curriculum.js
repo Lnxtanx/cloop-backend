@@ -12,27 +12,29 @@ const prisma = require('../lib/prisma');
 const { invokeModel, extractJson } = require('../services/ai/deepseek-client');
 
 // ============================================================================
-// AI PROMPT TEMPLATES (Customize prompts here as needed)
+// AI PROMPT TEMPLATES (Editable content generation prompts)
 // ============================================================================
 
 const PROMPTS = {
   // System instruction for curriculum generation
   systemPrompt: `You are a world-class English Fluency Curriculum Specialist and AI Content Architect. 
-Always respond with valid JSON only.`,
+Your task is to design high-quality, practical, real-world English learning content for non-native speakers.
+Always respond with strictly valid JSON only. Do not include markdown code blocks or surrounding commentary outside JSON.`,
 
   // Chapter generation prompt per subject
   chapterPrompt: (subjectTitle, subjectDesc) => `
-You are designing a structured English learning course for: "${subjectTitle}".
-Description: "${subjectDesc}"
+You are designing a comprehensive English learning curriculum for the subject: "${subjectTitle}".
+Subject Context: "${subjectDesc}"
 
-Generate 4 comprehensive chapters for this subject.
-Return ONLY a valid JSON object with the key "chapters", containing an array of objects:
+Generate 4 distinct, progressive chapters for this subject ranging from foundational to advanced fluency.
+
+Return ONLY a valid JSON object with shape:
 {
   "chapters": [
     {
-      "title": "Chapter Title",
-      "description": "2-sentence overview of what learners will master in this chapter.",
-      "badge_level": "Intermediate" // Beginner, Intermediate, or Advanced
+      "title": "Clear, professional chapter title",
+      "description": "2-sentence summary detailing what practical conversational skills learners will master.",
+      "badge_level": "Intermediate" // Must be one of: "Beginner", "Intermediate", or "Advanced"
     }
   ]
 }
@@ -44,21 +46,29 @@ Subject: "${subjectTitle}"
 Chapter: "${chapterTitle}"
 Chapter Summary: "${chapterDesc}"
 
-Generate 4 realistic conversation scenarios / practice topics for this chapter.
-Return ONLY a valid JSON object with the key "topics", containing an array of objects:
+Generate 4 immersive, interactive conversation scenarios / practice topics for this chapter.
+Each topic must provide real-world dialogue situations, high-yield vocabulary (4-5 terms), an AI tutor roleplay system prompt, and 2-3 measurable learning goals.
+
+Return ONLY a valid JSON object with shape:
 {
   "topics": [
     {
-      "title": "Scenario / Topic Title",
-      "description": "Detailed description of the interactive roleplay scenario.",
+      "title": "Specific, engaging scenario title (e.g., 'Answering Behavioral Questions with STAR Method')",
+      "description": "Comprehensive 2-3 sentence overview of the roleplay setting, objective, and conversation context.",
       "category": "Practical Speaking",
-      "difficulty": "Intermediate", // Beginner, Intermediate, or Advanced
-      "estimated_minutes": 10,
-      "key_vocabulary": ["Word1", "Word2", "Word3", "Word4"],
-      "system_prompt_goal": "Act as [Persona] guiding the user through [Scenario Goal]. Provide live feedback on grammar, tone, and vocabulary.",
+      "difficulty": "Intermediate", // Must be: "Beginner", "Intermediate", or "Advanced"
+      "estimated_minutes": 12,
+      "key_vocabulary": ["Term 1", "Term 2", "Term 3", "Term 4"],
+      "system_prompt_goal": "Act as an expert English fluency coach playing the role of [Specific Persona]. Your goal is to guide the user through [Scenario Goal]. Ask relevant follow-up questions, evaluate user responses, and provide supportive corrections for grammar, sentence structure, and vocabulary choice.",
       "goals": [
-        { "title": "Goal 1", "description": "Specific measurable objective 1" },
-        { "title": "Goal 2", "description": "Specific measurable objective 2" }
+        { 
+          "title": "Goal 1 Title", 
+          "description": "Clear action-oriented goal description (e.g., 'Structure a response using the Situation-Task-Action-Result format.')" 
+        },
+        { 
+          "title": "Goal 2 Title", 
+          "description": "Clear action-oriented goal description (e.g., 'Use strong professional action verbs to describe past accomplishments.')" 
+        }
       ]
     }
   ]
