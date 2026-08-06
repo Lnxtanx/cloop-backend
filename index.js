@@ -88,6 +88,7 @@ app.use('/api/analytics/tokens', require('./api/analytics/tokens'))
 
 // Global English Learning routes
 app.use('/api/english', require('./api/english/english-routes'))
+app.use('/api/english/chat', require('./api/english/english-chat-routes'))
 
 
 const PORT = process.env.PORT || 4000
