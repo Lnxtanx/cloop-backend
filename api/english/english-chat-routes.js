@@ -163,22 +163,39 @@ router.get('/messages', async (req, res) => {
       ];
 
       for (const aiMsg of initMsgs) {
-        const turnId = Date.now() + Math.random();
+        // Step 1: Create admin_chat record to get valid chat_id
+        const adminChat = await prisma.admin_chat.create({
+          data: {
+            user_id: userId,
+            sender: 'ai',
+            message: aiMsg.message,
+            message_type: aiMsg.message_type || 'text',
+            options: (aiMsg.options || []).map(o => o.text || o.value || String(o))
+          }
+        }).catch((err) => {
+          console.error("Error creating admin_chat for greeting:", err.message);
+          return null;
+        });
 
-        // Save initial AI prompt to learning_turns table so it persists for this English topic
+        const chatIdToUse = adminChat?.id || Date.now();
+
+        // Step 2: Save initial AI prompt to learning_turns table with chat_id
         await prisma.learning_turns.create({
           data: {
             user_id: userId,
+            chat_id: chatIdToUse, // REQUIRED BY PRISMA SCHEMA
             topic_id: topic.id,
             topic_title: topic.title,
             subject_name: 'English',
             question_text: aiMsg.message,
             user_name: userProfile?.name || 'Learner'
           }
-        }).catch(() => null);
+        }).catch((err) => {
+          console.error("Error creating learning_turns for greeting:", err.message);
+        });
 
         messages.push({
-          id: turnId,
+          id: adminChat?.id || Date.now() + Math.random(),
           sender: 'ai',
           message: aiMsg.message,
           message_type: aiMsg.message_type || 'text',
@@ -294,10 +311,27 @@ router.post('/message', async (req, res) => {
     const feedback = corr.feedback || { is_correct: true, score_percent: 100 };
     const firstAiMsg = aiResponse.messages?.[0]?.message || "";
 
-    // Save turn into existing learning_turns table (strictly scoped with subject_name: 'English' and topic_title)
+    // Step 1: Create user message in admin_chat to get valid chat_id
+    const userAdminChat = await prisma.admin_chat.create({
+      data: {
+        user_id: userId,
+        sender: 'user',
+        message: userMessage,
+        message_type: 'text',
+        emoji: corr.emoji || undefined
+      }
+    }).catch((err) => {
+      console.error("Error creating user admin_chat:", err.message);
+      return null;
+    });
+
+    const chatIdToUse = userAdminChat?.id || Date.now();
+
+    // Step 2: Save turn into learning_turns table with chat_id
     await prisma.learning_turns.create({
       data: {
         user_id: userId,
+        chat_id: chatIdToUse, // REQUIRED BY PRISMA SCHEMA
         topic_id: topic.id,
         topic_title: topic.title,
         subject_name: 'English',
@@ -313,13 +347,26 @@ router.post('/message', async (req, res) => {
         mastery_score: Number(feedback.score_percent) || 0,
         user_name: userProfile?.name || 'Learner'
       }
-    }).catch(() => null);
+    }).catch((err) => {
+      console.error("Error creating learning_turns turn:", err.message);
+    });
 
     const aiMessagesToReturn = [];
     if (aiResponse.messages && Array.isArray(aiResponse.messages)) {
       for (const aiMsg of aiResponse.messages) {
+        // Save AI response to admin_chat as well
+        const createdAiChat = await prisma.admin_chat.create({
+          data: {
+            user_id: userId,
+            sender: 'ai',
+            message: aiMsg.message,
+            message_type: aiMsg.message_type || 'text',
+            options: (aiMsg.options || []).map(o => o.text || o.value || String(o))
+          }
+        }).catch(() => null);
+
         aiMessagesToReturn.push({
-          id: Date.now() + Math.random(),
+          id: createdAiChat?.id || Date.now() + Math.random(),
           sender: 'ai',
           message: aiMsg.message,
           message_type: aiMsg.message_type || 'text',
@@ -331,7 +378,7 @@ router.post('/message', async (req, res) => {
 
     return res.json({
       userMessage: {
-        id: Date.now(),
+        id: userAdminChat?.id || Date.now(),
         sender: 'user',
         message: userMessage
       },
