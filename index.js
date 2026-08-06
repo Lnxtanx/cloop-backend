@@ -24,15 +24,19 @@ const corsOptions = {
 			'http://localhost:19000',
 			'http://localhost:19002',
 			'http://localhost:3000',
+			'http://localhost:3005',
 			// Production - Add your frontend URLs here
 			process.env.FRONTEND_URL,
 			'https://learn.cloopapp.com',
+			'https://english.cloopapp.com',
+			'https://cloopapp.com',
 		].filter(Boolean)
 
 		// Allow all local network IPs for development
 		const isLocalNetwork = /^http:\/\/(192\.168|10\.|172\.(1[6-9]|2[0-9]|3[01]))/.test(origin)
+		const isCloopDomain = origin ? /\.cloopapp\.com$/.test(new URL(origin).hostname) : false
 
-		if (allowedOrigins.indexOf(origin) !== -1 || isLocalNetwork || process.env.NODE_ENV === 'development') {
+		if (allowedOrigins.indexOf(origin) !== -1 || isLocalNetwork || isCloopDomain || process.env.NODE_ENV === 'development') {
 			callback(null, true)
 		} else {
 			callback(new Error('Not allowed by CORS'))
