@@ -64,7 +64,7 @@ router.get('/messages', async (req, res) => {
     const numericTopicId = Number(topicId);
     let topic = null;
 
-    // Fetch from english_topics safely (without requesting non-existent goals table)
+    // Fetch from english_topics safely
     if (!isNaN(numericTopicId)) {
       topic = await prisma.english_topics.findUnique({
         where: { id: numericTopicId },
@@ -95,7 +95,6 @@ router.get('/messages', async (req, res) => {
     }
 
     if (!topic) {
-      // Create lightweight fallback topic object
       topic = {
         id: numericTopicId || 1,
         title: `Topic ${topicId}`,
@@ -111,44 +110,41 @@ router.get('/messages', async (req, res) => {
     // Generate dynamic scenario goals
     const goalsWithProgress = getDynamicTopicGoals(topic.title);
 
-    // Fetch existing chat history for this user from admin_chat
-    const rawChats = await prisma.admin_chat.findMany({
-      where: { user_id: userId },
+    // Fetch existing chat history STRICTLY FOR THIS SPECIFIC TOPIC ONLY
+    const learningTurns = await prisma.learning_turns.findMany({
+      where: { user_id: userId, topic_id: topic.id },
       orderBy: { created_at: 'asc' },
-      take: 50,
-      include: {
-        chat_process: true
-      }
+      take: 50
     }).catch(() => []);
 
     let messages = [];
 
-    for (const chat of rawChats) {
-      if (chat.sender === 'user') {
-        const proc = chat.chat_process?.[0];
-        messages.push({
-          id: chat.id,
-          sender: 'user',
-          message: chat.message,
-          message_type: proc?.corrected_message ? 'user_correction' : 'text',
-          diff_html: proc?.diff_html || null,
-          emoji: chat.emoji || null,
-          feedback: proc?.feedback || null,
-          created_at: chat.created_at
-        });
-      } else {
-        messages.push({
-          id: chat.id,
-          sender: 'ai',
-          message: chat.message,
-          message_type: chat.message_type || 'text',
-          options: (chat.options || []).map(opt => ({ text: opt, value: opt })),
-          created_at: chat.created_at
-        });
+    if (learningTurns.length > 0) {
+      for (const turn of learningTurns) {
+        if (turn.question_text) {
+          messages.push({
+            id: `ai_${turn.id}`,
+            sender: 'ai',
+            message: turn.question_text,
+            message_type: 'text',
+            created_at: turn.created_at
+          });
+        }
+        if (turn.user_answer_raw) {
+          messages.push({
+            id: `user_${turn.id}`,
+            sender: 'user',
+            message: turn.user_answer_raw,
+            message_type: turn.diff_html ? 'user_correction' : 'text',
+            diff_html: turn.diff_html || null,
+            feedback: turn.feedback_json || null,
+            created_at: turn.created_at
+          });
+        }
       }
     }
 
-    // If no messages exist yet, generate initial scenario greeting & opening question!
+    // If no messages exist for this topic yet, generate initial scenario greeting & opening question!
     if (messages.length === 0) {
       const greeting = await generateEnglishTopicGreeting(
         topic.title,
@@ -163,28 +159,13 @@ router.get('/messages', async (req, res) => {
       ];
 
       for (const aiMsg of initMsgs) {
-        const createdChat = await prisma.admin_chat.create({
-          data: {
-            user_id: userId,
-            sender: 'ai',
-            message: aiMsg.message,
-            message_type: aiMsg.message_type || 'text',
-            options: (aiMsg.options || []).map(o => o.text || o.value || String(o))
-          }
-        }).catch(() => ({
-          id: Date.now() + Math.random(),
-          message: aiMsg.message,
-          message_type: aiMsg.message_type,
-          created_at: new Date()
-        }));
-
         messages.push({
-          id: createdChat.id,
+          id: Date.now() + Math.random(),
           sender: 'ai',
-          message: createdChat.message,
-          message_type: createdChat.message_type,
+          message: aiMsg.message,
+          message_type: aiMsg.message_type || 'text',
           options: (aiMsg.options || []).map(o => ({ text: o.text || o.value || String(o), value: o.value || o.text || String(o) })),
-          created_at: createdChat.created_at
+          created_at: new Date()
         });
       }
     }
@@ -261,28 +242,18 @@ router.post('/message', async (req, res) => {
     const goalsWithProgress = getDynamicTopicGoals(topic.title);
     const currentGoal = goalsWithProgress[0];
 
-    // Save User Message in admin_chat safely
-    const userChatRecord = await prisma.admin_chat.create({
-      data: {
-        user_id: userId,
-        sender: 'user',
-        message: userMessage,
-        message_type: 'text'
-      }
-    }).catch(() => ({ id: Date.now() }));
-
-    // Fetch recent chat history
-    const rawChats = await prisma.admin_chat.findMany({
-      where: { user_id: userId },
+    // Fetch recent chat history STRICTLY FOR THIS TOPIC ONLY
+    const recentTurns = await prisma.learning_turns.findMany({
+      where: { user_id: userId, topic_id: topic.id },
       orderBy: { created_at: 'asc' },
       take: 20
     }).catch(() => []);
 
-    const chatHistory = rawChats.map(c => ({
-      sender: c.sender,
-      message: c.message,
-      message_type: c.message_type
-    }));
+    const chatHistory = [];
+    for (const turn of recentTurns) {
+      if (turn.question_text) chatHistory.push({ sender: 'ai', message: turn.question_text, message_type: 'text' });
+      if (turn.user_answer_raw) chatHistory.push({ sender: 'user', message: turn.user_answer_raw, message_type: 'text' });
+    }
 
     // Call AI Tutor Engine for Evaluation & Roleplay Response
     const aiResponse = await generateEnglishTopicChatResponse({
@@ -300,58 +271,47 @@ router.post('/message', async (req, res) => {
     const corr = aiResponse.user_correction || {};
     const feedback = corr.feedback || { is_correct: true, score_percent: 100 };
 
-    // Save in chat_process table safely
-    if (userChatRecord.id && typeof userChatRecord.id === 'number') {
-      await prisma.chat_process.create({
-        data: {
-          chat_id: userChatRecord.id,
-          user_message: userMessage,
-          corrected_message: corr.complete_answer || userMessage,
-          ai_response: aiResponse.messages?.[0]?.message || "",
-          wrong_message: userMessage,
-          feedback: {
-            is_correct: feedback.is_correct,
-            score_percent: feedback.score_percent,
-            error_type: feedback.error_type || 'Grammar',
-            explanation: feedback.explanation || ''
-          }
-        }
-      }).catch(() => null);
-    }
+    const firstAiMsg = aiResponse.messages?.[0]?.message || "";
 
-    // Save AI Messages to admin_chat
+    // Save in learning_turns table for analytics engine (scoped by topic_id!)
+    await prisma.learning_turns.create({
+      data: {
+        user_id: userId,
+        topic_id: topic.id,
+        user_name: userProfile?.name || 'Learner',
+        sender: 'user',
+        question_text: firstAiMsg,
+        user_answer_raw: userMessage,
+        corrected_answer: corr.complete_answer || userMessage,
+        diff_html: corr.diff_html || userMessage,
+        feedback_text: feedback.explanation || '',
+        feedback_json: feedback,
+        error_type: feedback.error_type || 'Grammar',
+        is_correct: feedback.is_correct,
+        score_percent: Number(feedback.score_percent) || 0,
+        mastery_score: Number(feedback.score_percent) || 0,
+        topic_title: topic.title,
+        subject_name: 'English'
+      }
+    }).catch(() => null);
+
     const aiMessagesToReturn = [];
     if (aiResponse.messages && Array.isArray(aiResponse.messages)) {
       for (const aiMsg of aiResponse.messages) {
-        const createdAiChat = await prisma.admin_chat.create({
-          data: {
-            user_id: userId,
-            sender: 'ai',
-            message: aiMsg.message,
-            message_type: aiMsg.message_type || 'text',
-            options: (aiMsg.options || []).map(o => o.text || o.value || String(o))
-          }
-        }).catch(() => ({
-          id: Date.now() + Math.random(),
-          message: aiMsg.message,
-          message_type: aiMsg.message_type,
-          created_at: new Date()
-        }));
-
         aiMessagesToReturn.push({
-          id: createdAiChat.id,
+          id: Date.now() + Math.random(),
           sender: 'ai',
-          message: createdAiChat.message,
-          message_type: createdAiChat.message_type,
+          message: aiMsg.message,
+          message_type: aiMsg.message_type || 'text',
           options: aiMsg.options || [],
-          created_at: createdAiChat.created_at
+          created_at: new Date()
         });
       }
     }
 
     return res.json({
       userMessage: {
-        id: userChatRecord.id,
+        id: Date.now(),
         sender: 'user',
         message: userMessage
       },
@@ -421,4 +381,3 @@ Your goal is to help ${userProfile?.name || 'the user'} improve English speaking
 });
 
 module.exports = router;
-
