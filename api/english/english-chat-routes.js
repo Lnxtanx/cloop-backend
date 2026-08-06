@@ -97,7 +97,7 @@ router.get('/messages', async (req, res) => {
     if (!topic) {
       topic = {
         id: numericTopicId || 1,
-        title: `Topic ${topicId}`,
+        title: `Scenario ${topicId}`,
         description: "English conversational roleplay"
       };
     }
@@ -110,9 +110,13 @@ router.get('/messages', async (req, res) => {
     // Generate dynamic scenario goals
     const goalsWithProgress = getDynamicTopicGoals(topic.title);
 
-    // Fetch existing chat history STRICTLY FOR THIS SPECIFIC TOPIC ONLY
+    // Fetch existing chat history STRICTLY FOR THIS SPECIFIC ENGLISH TOPIC TITLE ONLY
     const learningTurns = await prisma.learning_turns.findMany({
-      where: { user_id: userId, topic_id: topic.id },
+      where: {
+        user_id: userId,
+        subject_name: 'English',
+        topic_title: topic.title
+      },
       orderBy: { created_at: 'asc' },
       take: 50
     }).catch(() => []);
@@ -144,7 +148,7 @@ router.get('/messages', async (req, res) => {
       }
     }
 
-    // If no messages exist for this topic yet, generate initial scenario greeting & opening question!
+    // If no messages exist for this exact English topic title, generate initial scenario greeting & opening question!
     if (messages.length === 0) {
       const greeting = await generateEnglishTopicGreeting(
         topic.title,
@@ -159,8 +163,22 @@ router.get('/messages', async (req, res) => {
       ];
 
       for (const aiMsg of initMsgs) {
+        const turnId = Date.now() + Math.random();
+
+        // Save initial AI prompt to learning_turns table so it persists for this English topic
+        await prisma.learning_turns.create({
+          data: {
+            user_id: userId,
+            topic_id: topic.id,
+            topic_title: topic.title,
+            subject_name: 'English',
+            question_text: aiMsg.message,
+            user_name: userProfile?.name || 'Learner'
+          }
+        }).catch(() => null);
+
         messages.push({
-          id: Date.now() + Math.random(),
+          id: turnId,
           sender: 'ai',
           message: aiMsg.message,
           message_type: aiMsg.message_type || 'text',
@@ -230,7 +248,7 @@ router.post('/message', async (req, res) => {
     if (!topic) {
       topic = {
         id: numericTopicId || 1,
-        title: `Topic ${topicId}`,
+        title: `Scenario ${topicId}`,
         description: "English conversational roleplay"
       };
     }
@@ -242,9 +260,13 @@ router.post('/message', async (req, res) => {
     const goalsWithProgress = getDynamicTopicGoals(topic.title);
     const currentGoal = goalsWithProgress[0];
 
-    // Fetch recent chat history STRICTLY FOR THIS TOPIC ONLY
+    // Fetch recent chat history STRICTLY FOR THIS EXACT ENGLISH TOPIC TITLE
     const recentTurns = await prisma.learning_turns.findMany({
-      where: { user_id: userId, topic_id: topic.id },
+      where: {
+        user_id: userId,
+        subject_name: 'English',
+        topic_title: topic.title
+      },
       orderBy: { created_at: 'asc' },
       take: 20
     }).catch(() => []);
@@ -270,16 +292,15 @@ router.post('/message', async (req, res) => {
 
     const corr = aiResponse.user_correction || {};
     const feedback = corr.feedback || { is_correct: true, score_percent: 100 };
-
     const firstAiMsg = aiResponse.messages?.[0]?.message || "";
 
-    // Save in learning_turns table for analytics engine (scoped by topic_id!)
+    // Save turn into existing learning_turns table (strictly scoped with subject_name: 'English' and topic_title)
     await prisma.learning_turns.create({
       data: {
         user_id: userId,
         topic_id: topic.id,
-        user_name: userProfile?.name || 'Learner',
-        sender: 'user',
+        topic_title: topic.title,
+        subject_name: 'English',
         question_text: firstAiMsg,
         user_answer_raw: userMessage,
         corrected_answer: corr.complete_answer || userMessage,
@@ -290,8 +311,7 @@ router.post('/message', async (req, res) => {
         is_correct: feedback.is_correct,
         score_percent: Number(feedback.score_percent) || 0,
         mastery_score: Number(feedback.score_percent) || 0,
-        topic_title: topic.title,
-        subject_name: 'English'
+        user_name: userProfile?.name || 'Learner'
       }
     }).catch(() => null);
 
