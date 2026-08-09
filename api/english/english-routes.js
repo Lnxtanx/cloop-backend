@@ -47,19 +47,36 @@ router.get('/subjects', async (req, res) => {
       }
     });
 
-    // Fetch user completed topics
+    // Fetch all user scenario progress records
     const userProgress = await prisma.user_english_progress.findMany({
-      where: { user_id: userId, is_completed: true },
-      select: { topic_id: true }
+      where: { user_id: userId },
+      select: { topic_id: true, is_completed: true, completion_percent: true }
     }).catch(() => []);
 
-    const completedTopicIds = new Set(userProgress.map(p => p.topic_id));
+    const progressMap = new Map();
+    userProgress.forEach(p => {
+      progressMap.set(p.topic_id, {
+        is_completed: p.is_completed || false,
+        percent: Number(p.completion_percent) || (p.is_completed ? 100 : 0)
+      });
+    });
 
     const formatted = subjects.map(s => {
       const allScenarios = s.chapters.flatMap(c => c.topics);
-      const completedCount = allScenarios.filter(sc => completedTopicIds.has(sc.id)).length;
       const totalCount = allScenarios.length;
-      const progressPercent = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+      
+      let completedCount = 0;
+      let totalPercentSum = 0;
+
+      allScenarios.forEach(sc => {
+        const prog = progressMap.get(sc.id);
+        if (prog) {
+          if (prog.is_completed) completedCount++;
+          totalPercentSum += Math.min(100, Math.max(0, prog.percent));
+        }
+      });
+
+      const progressPercent = totalCount > 0 ? Math.round(totalPercentSum / totalCount) : 0;
 
       return {
         id: s.id,
@@ -77,7 +94,7 @@ router.get('/subjects', async (req, res) => {
           title: sc.title,
           difficulty: sc.difficulty,
           estimatedMinutes: sc.estimated_minutes,
-          is_completed: completedTopicIds.has(sc.id)
+          is_completed: progressMap.get(sc.id)?.is_completed || false
         }))
       };
     });
