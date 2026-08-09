@@ -1,12 +1,31 @@
 const express = require('express');
 const router = express.Router();
 const prisma = require('../../lib/prisma');
+const jwt = require('jsonwebtoken');
+
+// Middleware to extract user from JWT token (optional fallback)
+function authMiddleware(req, res, next) {
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    const token = authHeader.split(' ')[1];
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret');
+      req.userId = decoded.userId || decoded.id || decoded.user_id;
+    } catch {
+      req.userId = null;
+    }
+  }
+  next();
+}
+
+router.use(authMiddleware);
 
 /**
  * GET /api/english/subjects
  * Returns all global English subjects with chapter & topic counts
  */
 router.get('/subjects', async (req, res) => {
+  const userId = req.userId || 1;
   try {
     const subjects = await prisma.english_subjects.findMany({
       orderBy: { order: 'asc' },
@@ -28,9 +47,20 @@ router.get('/subjects', async (req, res) => {
       }
     });
 
-    // Format response for frontend
+    // Fetch user completed topics
+    const userProgress = await prisma.user_english_progress.findMany({
+      where: { user_id: userId, is_completed: true },
+      select: { topic_id: true }
+    }).catch(() => []);
+
+    const completedTopicIds = new Set(userProgress.map(p => p.topic_id));
+
     const formatted = subjects.map(s => {
       const allScenarios = s.chapters.flatMap(c => c.topics);
+      const completedCount = allScenarios.filter(sc => completedTopicIds.has(sc.id)).length;
+      const totalCount = allScenarios.length;
+      const progressPercent = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+
       return {
         id: s.id,
         code: s.code,
@@ -39,12 +69,15 @@ router.get('/subjects', async (req, res) => {
         category: s.category || "ACADEMIC",
         icon: s.icon,
         totalChapters: s.chapters.length,
-        totalScenarios: allScenarios.length,
+        totalScenarios: totalCount,
+        completedScenarios: completedCount,
+        progressPercent: progressPercent,
         scenarios: allScenarios.map(sc => ({
           id: String(sc.id),
           title: sc.title,
           difficulty: sc.difficulty,
-          estimatedMinutes: sc.estimated_minutes
+          estimatedMinutes: sc.estimated_minutes,
+          is_completed: completedTopicIds.has(sc.id)
         }))
       };
     });
@@ -58,10 +91,12 @@ router.get('/subjects', async (req, res) => {
 
 /**
  * GET /api/english/subjects/:subjectId/chapters
- * Returns all chapters and topics under a specific English subject
+ * Returns all chapters and topics under a specific English subject with completion status
  */
 router.get('/subjects/:subjectId/chapters', async (req, res) => {
   const { subjectId } = req.params;
+  const userId = req.userId || 1;
+
   try {
     const isCode = isNaN(Number(subjectId));
     const subject = await prisma.english_subjects.findFirst({
@@ -87,26 +122,39 @@ router.get('/subjects/:subjectId/chapters', async (req, res) => {
       return res.status(404).json({ error: 'English Subject not found' });
     }
 
+    // Fetch user progress for all topics under this subject
+    const userProgress = await prisma.user_english_progress.findMany({
+      where: { user_id: userId }
+    }).catch(() => []);
+
+    const progressMap = new Map();
+    userProgress.forEach(p => progressMap.set(p.topic_id, p));
+
     const formattedChapters = subject.chapters.map(ch => ({
       id: ch.id,
       title: ch.title,
       description: ch.description,
       badgeLevel: ch.badge_level,
-      scenarios: ch.topics.map(tp => ({
-        id: String(tp.id),
-        title: tp.title,
-        description: tp.description,
-        category: tp.category,
-        difficulty: tp.difficulty,
-        estimatedMinutes: tp.estimated_minutes,
-        keyVocabulary: tp.key_vocabulary || [],
-        systemPromptGoal: tp.system_prompt_goal,
-        goals: tp.goals.map(g => ({
-          id: g.id,
-          title: g.title,
-          description: g.description
-        }))
-      }))
+      scenarios: ch.topics.map(tp => {
+        const prog = progressMap.get(tp.id);
+        return {
+          id: String(tp.id),
+          title: tp.title,
+          description: tp.description,
+          category: tp.category,
+          difficulty: tp.difficulty,
+          estimatedMinutes: tp.estimated_minutes,
+          keyVocabulary: tp.key_vocabulary || [],
+          systemPromptGoal: tp.system_prompt_goal,
+          is_completed: prog?.is_completed || false,
+          completion_percent: prog ? Number(prog.completion_percent) : 0,
+          goals: tp.goals.map(g => ({
+            id: g.id,
+            title: g.title,
+            description: g.description
+          }))
+        };
+      })
     }));
 
     return res.json({
@@ -131,6 +179,8 @@ router.get('/subjects/:subjectId/chapters', async (req, res) => {
  */
 router.get('/topics/:topicId', async (req, res) => {
   const { topicId } = req.params;
+  const userId = req.userId || 1;
+
   try {
     const topic = await prisma.english_topics.findUnique({
       where: { id: Number(topicId) },
@@ -150,6 +200,10 @@ router.get('/topics/:topicId', async (req, res) => {
       return res.status(404).json({ error: 'Topic scenario not found' });
     }
 
+    const prog = await prisma.user_english_progress.findUnique({
+      where: { user_id_topic_id: { user_id: userId, topic_id: Number(topicId) } }
+    }).catch(() => null);
+
     return res.json({
       scenario: {
         id: String(topic.id),
@@ -162,6 +216,7 @@ router.get('/topics/:topicId', async (req, res) => {
         systemPromptGoal: topic.system_prompt_goal,
         subjectTitle: topic.chapter?.subject?.title,
         chapterTitle: topic.chapter?.title,
+        is_completed: prog?.is_completed || false,
         goals: topic.goals.map(g => ({
           id: g.id,
           title: g.title,

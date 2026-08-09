@@ -3,7 +3,8 @@ const prisma = require('../../lib/prisma');
 
 /**
  * English AI Topic Tutor Service
- * Interactive conversational roleplay, real-time grammar & vocabulary error correction, and goal tracking.
+ * Agentic conversational roleplay with real-time grammar correction.
+ * AI sets its own teaching goals, tracks progress, and decides when to end.
  */
 
 /**
@@ -13,96 +14,78 @@ function buildEnglishTutorSystemPrompt({
   topicTitle,
   topicDescription,
   topicGoals,
-  currentGoal,
-  completedGoalsCount,
-  questionsAsked,
-  userResponses,
-  lastQuestion,
-  shouldEndSession,
-  isFirstMessage,
+  turnNumber,
+  totalTurns,
+  chatHistory,
   userMessage,
   userProfile
 }) {
-  if (shouldEndSession) {
-    return `🎉 ALL SCENARIO GOALS COMPLETED FOR "${topicTitle}"!
-
-Return ONLY a valid JSON object with key "message_type": "session_summary".
-JSON format:
-{
-  "messages": [
-    {
-      "message": "Congratulations! You have completed all fluency goals for this scenario.",
-      "message_type": "session_summary"
-    }
-  ]
-}`;
-  }
-
-  const learnerName = userProfile?.name || "Learner";
-  const targetGoal = userProfile?.study_goal || "English Fluency";
+  const learnerName = userProfile?.name ? userProfile.name.split(" ")[0] : "Learner";
   const fluencyLevel = userProfile?.fluencyLevel || "Intermediate";
-  const nativeLang = userProfile?.preferred_language || "English";
 
   const goalsListStr = topicGoals.map((g, i) => {
-    const isCompleted = g.chat_goal_progress?.[0]?.is_completed || false;
-    return `${i + 1}. "${g.title}" - ${isCompleted ? '✅ COMPLETED' : '⭕ IN PROGRESS'}`;
+    const done = g.is_completed ? '✅' : '⭕';
+    return `${done} ${i + 1}. "${g.title}"`;
   }).join('\n');
 
-  return `You are an expert English Fluency Coach and Roleplay Partner.
-Learner Context:
-- Name: ${learnerName}
-- Target Goal: ${targetGoal}
-- Current Fluency Level: ${fluencyLevel}
-- Native Explanation Language: ${nativeLang}
+  const turnInfo = `Turn ${turnNumber} of approximately ${totalTurns}.`;
+  const isNearEnd = turnNumber >= totalTurns - 2;
+  const shouldEnd = turnNumber >= totalTurns;
 
-Current Scenario / Topic: "${topicTitle}"
-Scenario Overview: "${topicDescription}"
+  let endingInstruction = '';
+  if (shouldEnd) {
+    endingInstruction = `
+⚠️ THIS IS THE FINAL TURN. You MUST end the scenario now.
+Set "session_ended": true and provide a brief session summary in your message.
+Mention what ${learnerName} did well and one area to improve.`;
+  } else if (isNearEnd) {
+    endingInstruction = `
+⚠️ The session is ending soon (${totalTurns - turnNumber} turns left).
+Start wrapping up the conversation naturally. Begin steering toward a closing.`;
+  }
 
-Learning Objectives:
+  return `You are an expert English Fluency Coach and Roleplay Partner for "${topicTitle}".
+
+LEARNER: ${learnerName} (Level: ${fluencyLevel})
+SCENARIO: "${topicTitle}" — ${topicDescription || 'English conversational practice'}
+${turnInfo}
+${endingInstruction}
+
+LEARNING GOALS FOR THIS SCENARIO:
 ${goalsListStr}
 
-Active Goal: "${currentGoal ? currentGoal.title : 'General Fluency Practice'}"
-
 YOUR DUAL ROLE:
-1. ROLEPLAY PARTNER: Respond naturally in character for the scenario "${topicTitle}" (e.g. interviewer, executive, barista, colleague). Ask engaging follow-up questions to keep the conversation flowing.
-2. LIVE GRAMMAR & FLUENCY TUTOR: Evaluate the user's latest response "${userMessage}" for grammar, vocabulary choice, sentence structure, tone, and spelling.
+1. ROLEPLAY PARTNER: Stay in character for "${topicTitle}". Respond naturally as the scenario character (interviewer, colleague, barista, etc). Ask ONE clear follow-up question to continue the conversation.
+2. GRAMMAR TUTOR: Evaluate the user's message for grammar, vocabulary, spelling, and sentence structure errors.
 
-RULES FOR EVALUATION & RESPONSE:
-- Always output strictly valid JSON only. Do not include markdown code blocks (\`\`\`json).
-- Include a "user_correction" object evaluating the user's response:
-  - "diff_html": Generate HTML string showing exact edits. Use <del>red strikethrough</del> for errors or unnatural phrasing, and <ins>green underline</ins> for correct/natural phrasing. (e.g. "I <del>goes</del> <ins>went</ins> to <ins>the</ins> office yesterday.")
-  - "feedback": { "is_correct": boolean, "score_percent": number (0-100), "error_type": "Grammar" | "Vocabulary" | "Structure" | "Tone" | "Spelling" | "None", "explanation": "Short 1-sentence tip explaining the fix" }
-  - "complete_answer": "Complete, natural native-speaker version of what the user tried to say."
-  - "emoji": "😊" if score >= 80, "😅" if 50-79, "😓" if < 50.
-- Include a "messages" array containing the AI roleplay response to continue the conversation naturally:
-  - "message": "In-character AI response continuing the conversation and asking the next question."
-  - "message_type": "text"
-  - "options": Optional array of 2-3 suggested quick response options [{ "text": "...", "value": "..." }]
+CRITICAL RULES:
+- Keep your roleplay response SHORT (2-3 sentences max + 1 question). Do NOT write paragraphs.
+- Do NOT provide multiple-choice options. The user must type their own answer.
+- Always output ONLY valid JSON. No markdown code fences.
+- Evaluate EVERY user message for errors, even small ones.
 
-JSON OUTPUT SCHEMA:
+JSON OUTPUT FORMAT:
 {
   "user_correction": {
-    "diff_html": "I <del>goes</del> <ins>went</ins> to <ins>the</ins> office.",
-    "complete_answer": "I went to the office yesterday.",
-    "emoji": "😅",
+    "diff_html": "HTML with <del>errors</del> and <ins>corrections</ins>",
+    "complete_answer": "The fully corrected natural sentence",
+    "emoji": "😊 if score>=80, 😅 if 50-79, 😓 if <50",
     "feedback": {
-      "is_correct": false,
-      "score_percent": 75,
-      "error_type": "Grammar",
-      "explanation": "Use past tense 'went' instead of 'goes' when talking about yesterday."
+      "is_correct": true/false,
+      "score_percent": 0-100,
+      "error_type": "Grammar|Vocabulary|Spelling|Structure|Tone|None",
+      "explanation": "One short sentence explaining the fix"
     }
   },
   "goal_status": {
-    "current_goal_satisfied": boolean,
-    "reason": "Brief reason"
+    "goals_completed": ["Goal title 1", "Goal title 2"],
+    "all_goals_done": false
   },
+  "session_ended": false,
   "messages": [
     {
-      "message": "AI Roleplay tutor response continuing the scenario...",
-      "message_type": "text",
-      "options": [
-        { "text": "Option 1", "value": "Option 1" }
-      ]
+      "message": "Short in-character response (2-3 sentences) + one follow-up question",
+      "message_type": "text"
     }
   ]
 }`;
@@ -116,33 +99,28 @@ async function generateEnglishTopicChatResponse({
   topicTitle,
   topicDescription,
   chatHistory = [],
-  currentGoal = null,
   topicGoals = [],
+  turnNumber = 1,
+  totalTurns = 10,
   userId = null,
   topicId = null,
   userProfile = {}
 }) {
   try {
-    const completedGoalsCount = topicGoals.filter(g => g.chat_goal_progress?.[0]?.is_completed).length;
-    const shouldEndSession = topicGoals.length > 0 && completedGoalsCount === topicGoals.length;
-
     const systemPrompt = buildEnglishTutorSystemPrompt({
       topicTitle,
       topicDescription,
       topicGoals,
-      currentGoal,
-      completedGoalsCount,
-      questionsAsked: chatHistory.length,
-      userResponses: chatHistory.filter(m => m.sender === 'user'),
-      lastQuestion: chatHistory.filter(m => m.sender === 'ai').pop()?.message || '',
-      shouldEndSession,
-      isFirstMessage: chatHistory.length === 0,
+      turnNumber,
+      totalTurns,
+      chatHistory,
       userMessage,
       userProfile
     });
 
     const messages = [];
-    const recentHistory = chatHistory.slice(-6);
+    // Include recent chat history for context (last 8 messages)
+    const recentHistory = chatHistory.slice(-8);
     for (const msg of recentHistory) {
       messages.push({
         role: msg.sender === 'user' ? 'user' : 'assistant',
@@ -172,22 +150,38 @@ async function generateEnglishTopicChatResponse({
       throw new Error('Failed to parse JSON response from AI model');
     }
 
+    // Ensure messages array exists
     if (!parsed.messages || !Array.isArray(parsed.messages)) {
       parsed.messages = [
         {
-          message: parsed.message || "That's interesting! Tell me more about that.",
+          message: parsed.message || "That's interesting! Tell me more.",
           message_type: "text"
         }
       ];
     }
 
-    if (parsed.user_correction) {
-      if (!parsed.user_correction.message_type) {
-        parsed.user_correction.message_type = 'user_correction';
-      }
-      if (!parsed.user_correction.diff_html) {
-        parsed.user_correction.diff_html = userMessage;
-      }
+    // Strip any options the AI may have included
+    for (const msg of parsed.messages) {
+      delete msg.options;
+    }
+
+    // Ensure user_correction exists
+    if (!parsed.user_correction) {
+      parsed.user_correction = {
+        diff_html: userMessage,
+        complete_answer: userMessage,
+        emoji: '😊',
+        feedback: { is_correct: true, score_percent: 100, error_type: 'None', explanation: 'Good job!' }
+      };
+    }
+
+    if (!parsed.user_correction.diff_html) {
+      parsed.user_correction.diff_html = userMessage;
+    }
+
+    // Ensure session_ended flag
+    if (typeof parsed.session_ended !== 'boolean') {
+      parsed.session_ended = turnNumber >= totalTurns;
     }
 
     return parsed;
@@ -200,42 +194,39 @@ async function generateEnglishTopicChatResponse({
         emoji: '😊',
         feedback: { is_correct: true, score_percent: 100, error_type: 'None', explanation: 'Good effort!' }
       },
+      session_ended: false,
       messages: [
-        { message: "Great job! Let's keep practicing.", message_type: "text" }
+        { message: "Great! Let's keep practicing. Tell me more about that.", message_type: "text" }
       ]
     };
   }
 }
 
 /**
- * Generate initial scenario greeting (Agentic AI Tutor starts with 2 messages)
+ * Generate initial scenario greeting (AI starts the conversation)
  */
 async function generateEnglishTopicGreeting(topicTitle, topicDescription, topicGoals = [], userProfile = {}) {
   const learnerName = userProfile?.name ? userProfile.name.split(" ")[0] : "there";
   
-  const systemPrompt = `You are an AI English Tutor initiating an interactive scenario roleplay.
-Scenario Title: "${topicTitle}"
+  const systemPrompt = `You are an AI English Tutor starting an interactive scenario roleplay.
+Scenario: "${topicTitle}"
 Description: "${topicDescription}"
-Learner Name: ${learnerName}
+Learner: ${learnerName}
 
-Return ONLY a valid JSON object with a "messages" array containing 2 messages:
-1. Message 1: Topic greeting: "Let's start ${topicTitle}! 📚"
-2. Message 2: An in-character opening scenario question asking ${learnerName} the first question to start the conversation.
+Return ONLY valid JSON with a "messages" array containing exactly 2 messages:
+1. A brief topic greeting (one line, include 📚 emoji)
+2. An in-character opening that sets the scene in 2-3 sentences and asks ${learnerName} one opening question.
 
-JSON Output Format:
+RULES:
+- Do NOT include "options" or multiple-choice. The user types their own answer.
+- Keep messages short and natural.
+- No markdown code fences.
+
+JSON format:
 {
   "messages": [
-    {
-      "message": "Let's start ${topicTitle}! 📚",
-      "message_type": "text"
-    },
-    {
-      "message": "In-character opening scenario question for ${learnerName}...",
-      "message_type": "text",
-      "options": [
-        { "text": "Suggested response 1", "value": "Suggested response 1" }
-      ]
-    }
+    { "message": "Let's start ${topicTitle}! 📚", "message_type": "text" },
+    { "message": "Short scene-setting + question for ${learnerName}...", "message_type": "text" }
   ]
 }`;
 
@@ -244,6 +235,10 @@ JSON Output Format:
     const parsed = extractJson(responseText);
 
     if (parsed && parsed.messages && Array.isArray(parsed.messages) && parsed.messages.length > 0) {
+      // Strip any options the AI may have included
+      for (const msg of parsed.messages) {
+        delete msg.options;
+      }
       return parsed;
     }
   } catch (err) {
@@ -257,12 +252,8 @@ JSON Output Format:
         message_type: "text"
       },
       {
-        message: `Welcome to "${topicTitle}"! I'm your AI roleplay partner. Could you introduce yourself and tell me what brings you here today?`,
-        message_type: "text",
-        options: [
-          { text: "Hi! I'm excited to practice my English.", value: "Hi! I'm excited to practice my English." },
-          { text: "Hello, let me introduce myself.", value: "Hello, let me introduce myself." }
-        ]
+        message: `Welcome, ${learnerName}! I'm your conversation partner for "${topicTitle}". How would you like to begin?`,
+        message_type: "text"
       }
     ]
   };
