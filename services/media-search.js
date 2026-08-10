@@ -222,10 +222,9 @@ async function searchImages(query, maxResults = 3) {
     }
 
     try {
-      console.log(`[media-search] 🖼️ Searching Google Custom Search for: "${query}"`);
-
+      const baseQuery = /diagram|illustration|labeled|labelled/i.test(query) ? query : `${query} diagram`;
       const params = {
-        q: `${query} diagram illustration`,
+        q: baseQuery,
         cx: GOOGLE_CX_ID,
         key: GOOGLE_API_KEY,
         searchType: 'image',

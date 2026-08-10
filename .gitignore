@@ -3,3 +3,7 @@ node_modules
 .env
 
 /generated/prisma
+
+# Service Account Keys
+premium-aloe-*.json
+*.json.key

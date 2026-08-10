@@ -1,4 +1,5 @@
 const { invokeModel, extractJson } = require('./bedrock-client');
+const { gradeAnswer } = require('./answer-grader');
 const {
   buildSystemPrompt,
   analyzeChatHistory,
@@ -20,6 +21,7 @@ const {
  * Session-based: 2 questions per goal with performance tracking
  */
 async function generateTopicChatResponse(userMessage, topicTitle, topicContent, chatHistory = [], currentGoal = null, topicGoals = [], userId = null, topicId = null) {
+  let lastQuestion = "";
   try {
     const {
       aiMessages,
@@ -27,10 +29,11 @@ async function generateTopicChatResponse(userMessage, topicTitle, topicContent, 
       allQuestions,
       questionsAsked,
       lastAIMessage,
-      lastQuestion,
+      lastQuestion: extractedLastQuestion,
       hasAskedQuestion
     } = analyzeChatHistory(chatHistory);
 
+    lastQuestion = extractedLastQuestion;
     const isFirstMessage = chatHistory.length === 0;
 
     // Count completed goals
@@ -102,7 +105,7 @@ async function generateTopicChatResponse(userMessage, topicTitle, topicContent, 
 
     let parsed = {};
     let attempts = 0;
-    const maxAttempts = 2;
+    const maxAttempts = 3; // Increased to 3 for higher reliability
     let lastError = null;
 
     while (attempts < maxAttempts) {
@@ -111,14 +114,13 @@ async function generateTopicChatResponse(userMessage, topicTitle, topicContent, 
         console.log(`[topic_chat] 🚀 Attempt ${attempts}/${maxAttempts} - Calling Bedrock API...`);
         
         const responseText = await invokeModel(systemPrompt, messages, {
-            temperature: 0.7,
-            maxTokens: 2048,
-            userId,
-            featureArea: 'topic_chat',
-            subFeature: 'tutor_turn',
-            metadata: { topicId, topicTitle }
+          temperature: 0.7,
+          maxTokens: 2048,
+          userId,
+          featureArea: 'topic_chat',
+          subFeature: 'tutor_turn',
+          metadata: { topicId, topicTitle }
         });
-
 
         if (!responseText) {
           throw new Error('Empty response from Bedrock API');
@@ -130,7 +132,7 @@ async function generateTopicChatResponse(userMessage, topicTitle, topicContent, 
         parsed = extractJson(responseText);
         
         if (!parsed) {
-            throw new Error('Failed to extract valid JSON from Bedrock response');
+          throw new Error('Failed to extract valid JSON from Bedrock response');
         }
 
         console.log(`[topic_chat] ✅ Successfully parsed JSON on attempt ${attempts}`);
@@ -165,22 +167,35 @@ async function generateTopicChatResponse(userMessage, topicTitle, topicContent, 
     // Normalize user_correction options
     parsed = normalizeUserCorrectionOptions(parsed);
 
-    // Evaluate "I don't know" or retry user_correction if missing
+    // Grounded evaluation: If a question was asked and user_correction is missing, call gradeAnswer at temp 0
     if (hasAskedQuestion && !parsed.user_correction && userMessage && userMessage.trim() !== '' && !shouldEndSession) {
       try {
-        console.log('[topic_chat] ⚠️ No user_correction found but question was asked — retrying evaluation');
-        const retryPrompt = `User answer: "${userMessage}"\nLast question asked: "${lastQuestion}"\n\nTask: Evaluate this answer and return a "user_correction" object only.\n\nRules:\n1. If correct: set feedback.is_correct=true, score_percent=100.\n2. If incorrect: set feedback.is_correct=false, score_percent=based on accuracy, provide diff_html and complete_answer.\n3. If "I don't know": set feedback.is_correct=false, feedback.score_percent=10, feedback.error_type="Knowledge Gap", and provide complete_answer for "${lastQuestion}".`;
-        
-        const retryText = await invokeModel('You are a JSON-only assistant. Respond with a single JSON object. Do NOT include any extra text.', [{ role: 'user', content: retryPrompt }], { temperature: 0.3 });
-        const retryParsed = extractJson(retryText);
-        
-        if (retryParsed && retryParsed.user_correction) {
-          parsed.user_correction = retryParsed.user_correction;
+        console.log('[topic_chat] ⚠️ No user_correction found — using grounded answer grader (temp 0)');
+        const graded = await gradeAnswer({
+          answer: userMessage,
+          question: lastQuestion,
+          topicTitle,
+          topicContent
+        });
+
+        if (graded) {
+          parsed.user_correction = {
+            message_type: 'user_correction',
+            diff_html: graded.diff_html,
+            complete_answer: graded.complete_answer,
+            emoji: graded.is_correct ? '😊' : (graded.score_percent >= 50 ? '😅' : '😓'),
+            feedback: {
+              is_correct: graded.is_correct,
+              bubble_color: graded.is_correct ? 'green' : 'red',
+              error_type: graded.error_type,
+              score_percent: graded.score_percent
+            }
+          };
           parsed = normalizeUserCorrectionOptions(parsed);
-          console.log('[topic_chat] ✅ Obtained user_correction from retry');
+          console.log('[topic_chat] ✅ Obtained grounded user_correction');
         }
       } catch (retryErr) {
-        console.error('[topic_chat] Retry for user_correction failed:', retryErr.message);
+        console.error('[topic_chat] Grounded grader fallback failed:', retryErr.message);
       }
     }
 
@@ -189,10 +204,12 @@ async function generateTopicChatResponse(userMessage, topicTitle, topicContent, 
     return parsed;
   } catch (error) {
     console.error('Error generating topic chat response:', error);
+    // Do NOT blame the student. Re-ask the SAME question so the turn continues naturally
+    const q = lastQuestion || "Let's keep going — here's the question again.";
     return {
       messages: [
-        { message: "I'm here to help you learn!", message_type: "text" },
-        { message: "Could you rephrase that?", message_type: "text" }
+        { message: "I encountered an issue processing that. Could you resend your message as text?", message_type: "text" },
+        { message: q, message_type: "text" }
       ]
     };
   }
