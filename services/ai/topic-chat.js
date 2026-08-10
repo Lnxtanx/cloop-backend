@@ -208,7 +208,7 @@ async function generateTopicChatResponse(userMessage, topicTitle, topicContent, 
     const q = lastQuestion || "Let's keep going — here's the question again.";
     return {
       messages: [
-        { message: "I encountered an issue processing that. Could you resend your message as text?", message_type: "text" },
+        { message: "I faced an issue processing your message. Could you resend it?", message_type: "text" },
         { message: q, message_type: "text" }
       ]
     };
