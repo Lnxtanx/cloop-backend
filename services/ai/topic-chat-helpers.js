@@ -1,4 +1,4 @@
-const { invokeModel, extractJson } = require('./bedrock-client');
+const { invokeModel, extractJson } = require('./deepseek-client');
 const fs = require('fs');
 const path = require('path');
 
@@ -220,7 +220,7 @@ async function generateTopicGreeting(topicTitle, topicContent, topicGoals = []) 
     const parsed = extractJson(responseText);
 
     if (!parsed) {
-      throw new Error('Failed to extract valid JSON greeting from Bedrock');
+      throw new Error('Failed to extract valid JSON greeting from DeepSeek');
     }
 
     return parsed;

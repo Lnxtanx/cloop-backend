@@ -5,8 +5,8 @@ const axios = require('axios')
 
 const prisma = require('../../lib/prisma')
 
-// Bedrock integration
-const { invokeModel } = require('../../services/ai/bedrock-client')
+// DeepSeek AI integration
+const { invokeModel } = require('../../services/ai/deepseek-client')
 
 // GET /api/normal-chat/sessions
 // Fetch all chat sessions for a user

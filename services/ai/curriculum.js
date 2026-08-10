@@ -1,4 +1,4 @@
-const { invokeModel, extractJson } = require('./bedrock-client');
+const { invokeModel, extractJson } = require('./deepseek-client');
 
 /**
  * Truncate content to save tokens while keeping essential info
@@ -41,7 +41,7 @@ Return ONLY valid JSON.`;
 
         const parsed = extractJson(responseText);
         if (!parsed) {
-            throw new Error('Failed to extract valid JSON from Bedrock response');
+            throw new Error('Failed to extract valid JSON from DeepSeek response');
         }
 
         // Handle both array and { chapters: [...] } formats
@@ -91,7 +91,7 @@ Return ONLY valid JSON.`;
 
         const parsed = extractJson(responseText);
         if (!parsed) {
-            throw new Error('Failed to extract valid JSON from Bedrock response');
+            throw new Error('Failed to extract valid JSON from DeepSeek response');
         }
 
         // Handle both array and { topics: [...] } formats
@@ -135,7 +135,7 @@ Return ONLY valid JSON.`;
 
         const parsed = extractJson(responseText);
         if (!parsed) {
-            throw new Error('Failed to extract valid JSON from Bedrock response');
+            throw new Error('Failed to extract valid JSON from DeepSeek response');
         }
 
         // Normalise to { goals: [...] }

@@ -1,4 +1,4 @@
-const { invokeModel, extractJson } = require('./bedrock-client');
+const { invokeModel, extractJson } = require('./deepseek-client');
 
 /**
  * Topic Chat Learn More Service

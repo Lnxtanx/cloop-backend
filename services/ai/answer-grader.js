@@ -1,4 +1,4 @@
-const { invokeModel, extractJson } = require('./bedrock-client');
+const { invokeModel, extractJson } = require('./deepseek-client');
 
 /**
  * Snap correctness/completeness score to 0, 0.5, or 1.0

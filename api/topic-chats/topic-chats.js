@@ -3,7 +3,7 @@ const router = express.Router()
 const axios = require('axios')
 const { authenticateToken } = require('../../middleware/auth')
 const { generateTopicChatResponse, generateTopicGreeting, generateTopicGoals } = require('../../services/ai/topic-chat')
-const { invokeModel } = require('../../services/ai/bedrock-client')
+const { invokeModel } = require('../../services/ai/deepseek-client')
 const { createLearningTurn, incrementExplainCount, calculateMasteryScore } = require('../../services/learning_turns_tracker')
 const { searchYouTube, searchImages } = require('../../services/media-search')
 

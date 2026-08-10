@@ -9,7 +9,7 @@ const axios = require('axios')
 const { authenticateToken } = require('../../middleware/auth')
 const prisma = require('../../lib/prisma')
 const { buildMinimalContext } = require('../../services/user-context-builder')
-const { invokeModel } = require('../../services/ai/bedrock-client')
+const { invokeModel } = require('../../services/ai/deepseek-client')
 
 // POST /api/voice-chat/sarvam-tts
 // Convert text to speech using Sarvam AI

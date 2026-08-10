@@ -1,4 +1,4 @@
-const { invokeModel, extractJson } = require('./bedrock-client');
+const { invokeModel, extractJson } = require('./deepseek-client');
 const { gradeAnswer } = require('./answer-grader');
 const {
   buildSystemPrompt,
@@ -12,7 +12,7 @@ const {
 
 /**
  * Enhanced Topic Chat Service with Micro-Assessment and Real-Time Error Correction
- * Uses AWS Bedrock for interactive questioning with immediate feedback
+ * Uses DeepSeek Direct API for interactive questioning with immediate feedback
  */
 
 /**
@@ -95,7 +95,7 @@ async function generateTopicChatResponse(userMessage, topicTitle, topicContent, 
     });
 
     // ===== LOG COMPLETE AI INPUT =====
-    console.log('\n========== AI INPUT DETAILS (BEDROCK) ==========');
+    console.log('\n========== AI INPUT DETAILS (DEEPSEEK DIRECT API) ==========');
     console.log('📊 Session State:');
     console.log('  - Questions Asked:', questionsAsked, '/', totalQuestionsTarget);
     console.log('  - Completed Goals:', completedGoalsCount, '/', topicGoals.length);
@@ -111,7 +111,7 @@ async function generateTopicChatResponse(userMessage, topicTitle, topicContent, 
     while (attempts < maxAttempts) {
       attempts++;
       try {
-        console.log(`[topic_chat] 🚀 Attempt ${attempts}/${maxAttempts} - Calling Bedrock API...`);
+        console.log(`[topic_chat] 🚀 Attempt ${attempts}/${maxAttempts} - Calling DeepSeek API...`);
         
         const responseText = await invokeModel(systemPrompt, messages, {
           temperature: 0.7,
@@ -123,7 +123,7 @@ async function generateTopicChatResponse(userMessage, topicTitle, topicContent, 
         });
 
         if (!responseText) {
-          throw new Error('Empty response from Bedrock API');
+          throw new Error('Empty response from DeepSeek API');
         }
 
         console.log(`[topic_chat] 📤 Raw Output (first 500 chars): ${responseText.substring(0, 500)}`);
@@ -132,7 +132,7 @@ async function generateTopicChatResponse(userMessage, topicTitle, topicContent, 
         parsed = extractJson(responseText);
         
         if (!parsed) {
-          throw new Error('Failed to extract valid JSON from Bedrock response');
+          throw new Error('Failed to extract valid JSON from DeepSeek response');
         }
 
         console.log(`[topic_chat] ✅ Successfully parsed JSON on attempt ${attempts}`);

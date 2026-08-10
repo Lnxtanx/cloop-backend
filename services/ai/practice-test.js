@@ -1,4 +1,4 @@
-const { invokeModel, extractJson } = require('./bedrock-client');
+const { invokeModel, extractJson } = require('./deepseek-client');
 
 /**
  * Generate a practice test with 15 MCQs for a specific exam type and subject

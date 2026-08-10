@@ -1,5 +1,5 @@
 const prisma = require('../lib/prisma');
-const { invokeModel, extractJson } = require('../services/ai/bedrock-client');
+const { invokeModel, extractJson } = require('../services/ai/deepseek-client');
 
 const EXAMS = [
   {

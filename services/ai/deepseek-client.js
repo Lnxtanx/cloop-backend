@@ -58,6 +58,12 @@ async function invokeModel(systemPrompt, messages, options = {}) {
         top_p: options.topP || 0.9
     };
 
+    if (options.responseFormat) {
+        payload.response_format = options.responseFormat;
+    } else if (options.jsonFormat !== false && !model.includes('reasoner')) {
+        payload.response_format = { type: 'json_object' };
+    }
+
     console.log(`[DeepSeek] 🚀 Invoking model: ${model} (${formattedMessages.length} messages)`);
 
     const startTime = Date.now();
@@ -182,7 +188,19 @@ function extractJson(text) {
         const end = cleanedText.lastIndexOf('}') > cleanedText.lastIndexOf(']') ? cleanedText.lastIndexOf('}') : cleanedText.lastIndexOf(']');
 
         if (start === -1 || end === -1) {
-            return JSON.parse(cleanedText);
+            try {
+                return JSON.parse(cleanedText);
+            } catch (e) {
+                if (cleanedText && cleanedText.length > 0) {
+                    console.log('[DeepSeek] 💡 Raw text response received without JSON braces, wrapping as message object');
+                    return {
+                        messages: [
+                            { message: cleanedText, message_type: "text" }
+                        ]
+                    };
+                }
+                return null;
+            }
         }
 
         const jsonCandidate = cleanedText.substring(start, end + 1);
@@ -192,8 +210,15 @@ function extractJson(text) {
 
         return JSON.parse(sanitized);
     } catch (err) {
-        console.error('[DeepSeek] ❌ JSON Parse Error:', err.message);
-        console.error('[DeepSeek] Raw text:', text.substring(0, 300));
+        console.error('[DeepSeek] ⚠️ JSON Parse Error:', err.message);
+        if (cleanedText && cleanedText.length > 0) {
+            console.log('[DeepSeek] 💡 Using raw text fallback wrapper for invalid JSON output');
+            return {
+                messages: [
+                    { message: cleanedText, message_type: "text" }
+                ]
+            };
+        }
         return null;
     }
 }

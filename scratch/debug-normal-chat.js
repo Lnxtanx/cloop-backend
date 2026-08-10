@@ -1,4 +1,4 @@
-const { invokeModel } = require('../services/ai/bedrock-client');
+const { invokeModel } = require('../services/ai/deepseek-client');
 
 async function debugChat() {
     const message = "Hello, how are you?";
