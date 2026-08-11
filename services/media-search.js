@@ -69,10 +69,11 @@ async function searchYouTube(query, maxResults = 3) {
     try {
       console.log(`[media-search] 📺 Searching YouTube for: "${query}"`);
 
-      // Educational-friendly search parameters
+      // Educational-friendly search parameters. Keep the appended words minimal so
+      // the caller's topic terms dominate ranking (avoids generic "education" videos).
       const params = {
         part: 'snippet',
-        q: `${query} explained for students educational`,
+        q: `${query} explained`,
         type: 'video',
         maxResults: Math.min(maxResults * 2, 10), // Fetch extra to filter, max 10
         key: YOUTUBE_API_KEY,

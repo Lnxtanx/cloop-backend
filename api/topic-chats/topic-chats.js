@@ -919,22 +919,43 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 		let fetchedVideos = null
 		let fetchedImages = null
 
-		// Fetch YouTube videos if AI suggests it
+		// Ground EVERY media query in the actual lesson so results are on-topic and
+		// curriculum-relevant — never a generic "education/teaching" video. We do NOT
+		// trust the model's free-form search_query alone (it can drift off-topic).
+		const _cleanTopic = String(topic.title || '').replace(/^\s*(topic|chapter)\s*\d+\s*[:\-.]*/i, '').trim()
+		const _goalTitle = (currentGoal && currentGoal.title)
+			? String(currentGoal.title).replace(/^\s*goal\s*\d+\s*[:\-.]*/i, '').trim() : ''
+		// Key term from the correct answer (often the answer word, e.g. "mutation").
+		const _lastWord = String(aiResponse?.user_correction?.complete_answer || '')
+			.replace(/["'.?!]+\s*$/, '').split(/\s+/).filter(Boolean).pop() || ''
+		const _keyTerm = _lastWord.length >= 4 ? _lastWord : ''
+		// The most specific on-topic anchor available for this turn.
+		const _anchor = [_keyTerm, _goalTitle || _cleanTopic].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim() || _cleanTopic
+		// Constrain a (possibly noisy) model query to the lesson; keep it short.
+		const _ground = (q) => {
+			q = String(q || '').trim()
+			const out = q ? `${q} ${_cleanTopic}` : _anchor
+			return out.replace(/\s+/g, ' ').trim().slice(0, 90)
+		}
+
+		// Fetch YouTube videos if AI suggests one (query grounded in the topic)
 		if (aiResponse?.youtube_video?.search_query) {
 			try {
-				console.log(`🎬 Fetching YouTube videos for: "${aiResponse.youtube_video.search_query}"`)
-				fetchedVideos = await searchYouTube(aiResponse.youtube_video.search_query, 2)
+				const q = _ground(aiResponse.youtube_video.search_query)
+				console.log(`🎬 Fetching YouTube videos for: "${q}"`)
+				fetchedVideos = await searchYouTube(q, 2)
 				console.log(`✅ YouTube fetch complete: ${fetchedVideos?.length || 0} videos`)
 			} catch (mediaErr) {
 				console.error('❌ YouTube search failed:', mediaErr.message)
 			}
 		}
 
-		// Fetch Google images if AI suggests it
+		// Fetch Google images if AI suggests one (query grounded in the topic)
 		if (aiResponse?.google_image?.search_query) {
 			try {
-				console.log(`🖼️ Fetching images for: "${aiResponse.google_image.search_query}"`)
-				fetchedImages = await searchImages(aiResponse.google_image.search_query, 2)
+				const q = _ground(aiResponse.google_image.search_query)
+				console.log(`🖼️ Fetching images for: "${q}"`)
+				fetchedImages = await searchImages(q, 2)
 				console.log(`✅ Image fetch complete: ${fetchedImages?.length || 0} images`)
 			} catch (mediaErr) {
 				console.error('❌ Image search failed:', mediaErr.message)
@@ -942,31 +963,25 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 		}
 
 		// ========== SHARE MEDIA WHEN THE STUDENT IS FAILING ==========
-		// If the student got it wrong (a genuine failure: wrong + score < 60, not a
-		// minor spelling/grammar slip) and the model didn't already supply media,
-		// automatically fetch a fact-relevant image/diagram + a short explainer
-		// video for the CORRECT concept so a struggling student always gets a visual
-		// aid. The query is grounded in the correct answer / current goal / topic so
-		// results are on-topic (not the student's mistake).
+		// On a genuine failure (wrong + score < 60), if the model didn't already
+		// supply media, fetch a topic-grounded image/diagram + short explainer video
+		// so a struggling student always gets an ON-TOPIC visual aid. The query is
+		// the clean topic/goal anchor (searchImages/searchYouTube add their own
+		// "diagram"/"explained" suffixes — we keep the anchor tight so the specific
+		// concept dominates the result).
 		const _fb = aiResponse?.user_correction?.feedback
 		const _isFailing = _fb && _fb.is_correct === false && (typeof _fb.score_percent !== 'number' || _fb.score_percent < 60)
-		if (_isFailing) {
-			const _correct = aiResponse?.user_correction?.complete_answer
-			const _concept = (_correct ? String(_correct).replace(/[.?!].*$/, '').slice(0, 60).trim() : '')
-				|| (currentGoal && currentGoal.title)
-				|| topic.title
-			const _imgQuery = `${_concept} ${topic.title || ''}`.trim()
-			const _vidQuery = `${_concept} explained for students`.trim()
+		if (_isFailing && _anchor) {
 			try {
 				if (!fetchedImages || fetchedImages.length === 0) {
-					console.log(`🖼️ [remedial] Fetching image/diagram for a struggling student: "${_imgQuery}"`)
-					fetchedImages = await searchImages(_imgQuery, 1)
+					console.log(`🖼️ [remedial] Fetching image/diagram for a struggling student: "${_anchor}"`)
+					fetchedImages = await searchImages(_anchor, 1)
 				}
 			} catch (e) { console.error('❌ [remedial] image fetch failed:', e.message) }
 			try {
 				if (!fetchedVideos || fetchedVideos.length === 0) {
-					console.log(`🎬 [remedial] Fetching video for a struggling student: "${_vidQuery}"`)
-					fetchedVideos = await searchYouTube(_vidQuery, 1)
+					console.log(`🎬 [remedial] Fetching video for a struggling student: "${_anchor}"`)
+					fetchedVideos = await searchYouTube(_anchor, 1)
 				}
 			} catch (e) { console.error('❌ [remedial] video fetch failed:', e.message) }
 		}
