@@ -870,7 +870,50 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 		console.log('📝 text_diagram:', aiResponse?.text_diagram ? JSON.stringify(aiResponse.text_diagram) : 'null/undefined')
 		console.log('🎬 youtube_video:', aiResponse?.youtube_video ? JSON.stringify(aiResponse.youtube_video) : 'null/undefined')
 		console.log('🖼️ google_image:', aiResponse?.google_image ? JSON.stringify(aiResponse.google_image) : 'null/undefined')
-		console.log('========================================\n')
+		// ========== SMART INTENT & KEYWORD AUTO-DETECTOR ==========
+		// If user requested a video/image/diagram or said "I don't understand", and AI forgot to include media block, auto-populate it!
+		const userMsgLower = (message || '').toLowerCase();
+
+		// Clean up AI text if it falsely claimed "I can't share links"
+		if (aiResponse && Array.isArray(aiResponse.messages)) {
+			aiResponse.messages = aiResponse.messages.map(m => {
+				if (m.message && /can'?t share (links|videos|youtube)|cannot (share|provide|show) (links|videos)/i.test(m.message)) {
+					return {
+						...m,
+						message: `Here's a helpful visual explanation for ${topic.title}:`
+					};
+				}
+				return m;
+			});
+		}
+
+		// 1. Video intent auto-fallback
+		if (
+			!aiResponse?.youtube_video &&
+			(userMsgLower.includes('video') || userMsgLower.includes('youtube') || userMsgLower.includes('watch') || userMsgLower.includes('clip'))
+		) {
+			console.log('💡 User requested video — auto-generating youtube_video query');
+			const query = `${topic.title} ${currentGoal?.title || ''} explanation`.trim();
+			aiResponse.youtube_video = {
+				search_query: query,
+				title: `${topic.title} Explanation`,
+				trigger: 'user_request'
+			};
+		}
+
+		// 2. Image intent auto-fallback
+		if (
+			!aiResponse?.google_image &&
+			(userMsgLower.includes('image') || userMsgLower.includes('picture') || userMsgLower.includes('photo') || userMsgLower.includes('diagram') || userMsgLower.includes('illustration'))
+		) {
+			console.log('💡 User requested image — auto-generating google_image query');
+			const query = `${topic.title} ${currentGoal?.title || ''} diagram`.trim();
+			aiResponse.google_image = {
+				search_query: query,
+				title: `${topic.title} Diagram`,
+				trigger: 'user_request'
+			};
+		}
 
 		// ========== FETCH ACTUAL MEDIA IF AI SUGGESTS IT ==========
 		let fetchedVideos = null
