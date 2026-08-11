@@ -5,6 +5,7 @@
  */
 
 const axios = require('axios');
+const { isTrustedChannel, isTrustedImageItem, ytStrict, imageStrict } = require('./media-whitelist');
 
 // Base URLs
 const YOUTUBE_SEARCH_URL = 'https://www.googleapis.com/youtube/v3/search';
@@ -75,7 +76,7 @@ async function searchYouTube(query, maxResults = 3) {
         part: 'snippet',
         q: `${query} explained`,
         type: 'video',
-        maxResults: Math.min(maxResults * 2, 10), // Fetch extra to filter, max 10
+        maxResults: 10, // Fetch a pool so the trusted-channel filter has candidates
         key: YOUTUBE_API_KEY,
         videoEmbeddable: 'true',
         safeSearch: 'strict',
@@ -87,25 +88,24 @@ async function searchYouTube(query, maxResults = 3) {
         timeout: 10000,
       });
 
-      const videos = response.data.items || [];
+      const allVideos = response.data.items || [];
 
-      if (videos.length === 0) {
+      if (allVideos.length === 0) {
         console.log('[media-search] No YouTube videos found');
-        return [
-          {
-            id: `yt-fallback-${Date.now()}`,
-            title: `${query} — Video Explanation`,
-            description: `Educational search results for ${query}`,
-            thumbnail: `https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=500&auto=format&fit=crop&q=60`,
-            channel: 'Educational Channel',
-            publishedAt: new Date().toISOString(),
-            duration: '5:00',
-            viewCount: 25000,
-            url: `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`,
-            embedUrl: `https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(query)}`,
-          }
-        ];
+        return [];
       }
+
+      // ── Trusted-channel whitelist: only reputable education channels appear ──
+      let trusted = allVideos.filter(v => isTrustedChannel(v.snippet?.channelTitle));
+      if (trusted.length === 0) {
+        if (ytStrict()) {
+          console.log('[media-search] ⚠️ No video from a trusted channel — showing none (whitelist strict).');
+          return [];
+        }
+        console.log('[media-search] No trusted-channel match — relaxed fallback to general results.');
+        trusted = allVideos;
+      }
+      const videos = trusted.slice(0, maxResults);
 
       // Get video IDs to fetch additional details (duration, view count)
       const videoIds = videos.map(v => v.id.videoId).join(',');
@@ -264,7 +264,7 @@ async function searchImages(query, maxResults = 3) {
         cx: GOOGLE_CX_ID,
         key: GOOGLE_API_KEY,
         searchType: 'image',
-        num: maxResults,
+        num: 10, // fetch a pool so the trusted-domain filter has candidates
         safe: 'active',
       };
 
@@ -275,7 +275,22 @@ async function searchImages(query, maxResults = 3) {
         timeout: 10000,
       });
 
-      const items = response.data.items || [];
+      const allItems = response.data.items || [];
+
+      // ── Trusted-domain whitelist (see services/media-whitelist.js) ──
+      // PREFER trusted sources; if none match, still show the best on-topic result
+      // (the query is already grounded in the topic). Set IMAGE_WHITELIST_STRICT=true
+      // to instead show only trusted domains (Wikimedia fallback when none match).
+      let items = allItems.filter(isTrustedImageItem);
+      if (items.length === 0) {
+        if (imageStrict()) {
+          console.log('[media-search] ⚠️ No image from a trusted domain — falling back to Wikimedia (strict).');
+          return searchWikimediaImages(query, maxResults);
+        }
+        console.log('[media-search] No trusted-domain match — using the best on-topic result.');
+        items = allItems;
+      }
+      items = items.slice(0, maxResults);
 
       const results = items.map((item, index) => ({
         id: `img-${Date.now()}-${index}`,
