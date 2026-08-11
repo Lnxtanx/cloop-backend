@@ -941,6 +941,36 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 			}
 		}
 
+		// ========== SHARE MEDIA WHEN THE STUDENT IS FAILING ==========
+		// If the student got it wrong (a genuine failure: wrong + score < 60, not a
+		// minor spelling/grammar slip) and the model didn't already supply media,
+		// automatically fetch a fact-relevant image/diagram + a short explainer
+		// video for the CORRECT concept so a struggling student always gets a visual
+		// aid. The query is grounded in the correct answer / current goal / topic so
+		// results are on-topic (not the student's mistake).
+		const _fb = aiResponse?.user_correction?.feedback
+		const _isFailing = _fb && _fb.is_correct === false && (typeof _fb.score_percent !== 'number' || _fb.score_percent < 60)
+		if (_isFailing) {
+			const _correct = aiResponse?.user_correction?.complete_answer
+			const _concept = (_correct ? String(_correct).replace(/[.?!].*$/, '').slice(0, 60).trim() : '')
+				|| (currentGoal && currentGoal.title)
+				|| topic.title
+			const _imgQuery = `${_concept} ${topic.title || ''}`.trim()
+			const _vidQuery = `${_concept} explained for students`.trim()
+			try {
+				if (!fetchedImages || fetchedImages.length === 0) {
+					console.log(`🖼️ [remedial] Fetching image/diagram for a struggling student: "${_imgQuery}"`)
+					fetchedImages = await searchImages(_imgQuery, 1)
+				}
+			} catch (e) { console.error('❌ [remedial] image fetch failed:', e.message) }
+			try {
+				if (!fetchedVideos || fetchedVideos.length === 0) {
+					console.log(`🎬 [remedial] Fetching video for a struggling student: "${_vidQuery}"`)
+					fetchedVideos = await searchYouTube(_vidQuery, 1)
+				}
+			} catch (e) { console.error('❌ [remedial] video fetch failed:', e.message) }
+		}
+
 		// Duplicate-question fallback (retry once) — if the model returns a question identical
 		// to the last AI question in chatHistory, ask it again with an explicit instruction
 		try {
