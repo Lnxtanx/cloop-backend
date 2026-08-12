@@ -922,21 +922,49 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 		// Ground EVERY media query in the actual lesson so results are on-topic and
 		// curriculum-relevant — never a generic "education/teaching" video. We do NOT
 		// trust the model's free-form search_query alone (it can drift off-topic).
+
+		// ── Stop words that should NEVER appear in search queries ──
+		const _STOP_WORDS = new Set([
+			'know', 'dont', "don't", 'idk', 'skip', 'sure', 'think', 'sorry',
+			'answer', 'question', 'what', 'that', 'this', 'with', 'from', 'about',
+			'have', 'will', 'would', 'could', 'should', 'does', 'like', 'just',
+			'also', 'very', 'really', 'maybe', 'guess', 'help', 'tell', 'explain',
+			'yeah', 'yes', 'no', 'not', 'okay', 'right', 'well', 'hmm', 'umm',
+			'the', 'and', 'for', 'are', 'but', 'or', 'an', 'can', 'had', 'has',
+			'was', 'were', 'been', 'being', 'do', 'did', 'doing', 'it', 'its',
+		])
+		// ── Bloom's taxonomy action verbs to strip from goal titles ──
+		const _ACTION_VERBS = new Set([
+			'identify', 'describe', 'analyze', 'demonstrate', 'compare', 'explain',
+			'state', 'calculate', 'evaluate', 'apply', 'define', 'list', 'discuss',
+			'classify', 'distinguish', 'illustrate', 'outline', 'summarize', 'write',
+			'examine', 'interpret', 'justify', 'predict', 'solve', 'construct',
+		])
+
 		const _cleanTopic = String(topic.title || '').replace(/^\s*(topic|chapter)\s*\d+\s*[:\-.]*/i, '').trim()
-		const _goalTitle = (currentGoal && currentGoal.title)
+
+		// Strip "Goal N:" prefix AND leading action verb from goal title
+		const _rawGoal = (currentGoal && currentGoal.title)
 			? String(currentGoal.title).replace(/^\s*goal\s*\d+\s*[:\-.]*/i, '').trim() : ''
-		// Key term from the correct answer (often the answer word, e.g. "mutation").
-		const _lastWord = String(aiResponse?.user_correction?.complete_answer || '')
-			.replace(/["'.?!]+\s*$/, '').split(/\s+/).filter(Boolean).pop() || ''
-		const _keyTerm = _lastWord.length >= 4 ? _lastWord : ''
+		const _cleanGoal = _rawGoal.replace(/^\w+\s+/, (match) => {
+			return _ACTION_VERBS.has(match.trim().toLowerCase()) ? '' : match
+		}).trim()
+
+		// Key term from the correct answer — filter out stop words before picking
+		const _answerWords = String(aiResponse?.user_correction?.complete_answer || '')
+			.replace(/[\"'.?!,;:]+/g, '').split(/\s+/).filter(Boolean)
+			.filter(w => !_STOP_WORDS.has(w.toLowerCase()) && w.length >= 3)
+		const _keyTerm = _answerWords.length > 0 ? _answerWords.slice(-2).join(' ') : ''
+
 		// The most specific on-topic anchor available for this turn.
-		const _anchor = [_keyTerm, _goalTitle || _cleanTopic].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim() || _cleanTopic
+		const _anchor = [_keyTerm, _cleanGoal || _cleanTopic].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim() || _cleanTopic
 		// Constrain a (possibly noisy) model query to the lesson; keep it short.
 		const _ground = (q) => {
 			q = String(q || '').trim()
 			const out = q ? `${q} ${_cleanTopic}` : _anchor
 			return out.replace(/\s+/g, ' ').trim().slice(0, 90)
 		}
+		console.log(`🔍 [query-builder] _cleanTopic="${_cleanTopic}" _cleanGoal="${_cleanGoal}" _keyTerm="${_keyTerm}" _anchor="${_anchor}"`)
 
 		// Fetch YouTube videos if AI suggests one (query grounded in the topic)
 		if (aiResponse?.youtube_video?.search_query) {
