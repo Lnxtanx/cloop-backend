@@ -13,28 +13,59 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key'
 router.post('/', async (req, res) => {
 	console.log('Login request received:', req.body);
 
-	const { emailOrPhone } = req.body
-	if (!emailOrPhone) {
+	const rawInput = String(emailOrPhone || '');
+	// Remove outer whitespace, non-breaking spaces, zero-width spaces, and extra tabs/newlines
+	const cleanInput = rawInput
+		.trim()
+		.replace(/[\u200B-\u200D\uFEFF\u00A0]/g, '')
+		.replace(/\s+/g, ' ');
+
+	if (!cleanInput) {
 		console.log('Login error: emailOrPhone required');
-		return res.status(400).json({ error: 'emailOrPhone required' });
+		return res.status(400).json({ error: 'Please enter your Guest ID, email, or phone number' });
 	}
 
 	try {
-		console.log('Searching for user with:', emailOrPhone);
+		console.log(`Searching for user with cleanInput="${cleanInput}" (raw="${rawInput}")`);
 
-		// Try to find by email first, then by phone
-		const user = await prisma.users.findFirst({
-			where: {
-				OR: [
-					{ email: emailOrPhone },
-					{ phone: emailOrPhone },
-				],
-			},
-		})
+		// Extract potential numeric user_id if input is formatted like "GUEST-1234" or "1234"
+		const numericIdMatch = cleanInput.match(/\d+/);
+		const parsedUserId = numericIdMatch ? parseInt(numericIdMatch[0], 10) : null;
+		const digitsOnlyPhone = cleanInput.replace(/\D/g, '');
+
+		// Build flexible lookup criteria
+		const orConditions = [
+			{ email: { equals: cleanInput, mode: 'insensitive' } },
+			{ phone: { equals: cleanInput, mode: 'insensitive' } },
+			{ name: { equals: cleanInput, mode: 'insensitive' } },
+		];
+
+		if (parsedUserId && !isNaN(parsedUserId)) {
+			orConditions.push({ user_id: parsedUserId });
+		}
+		if (digitsOnlyPhone && digitsOnlyPhone.length >= 4) {
+			orConditions.push({ phone: { contains: digitsOnlyPhone } });
+		}
+
+		let user = await prisma.users.findFirst({
+			where: { OR: orConditions },
+		});
+
+		// Fallback: if not found, try matching substring of email or name
+		if (!user) {
+			user = await prisma.users.findFirst({
+				where: {
+					OR: [
+						{ email: { contains: cleanInput, mode: 'insensitive' } },
+						{ name: { contains: cleanInput, mode: 'insensitive' } },
+					],
+				},
+			});
+		}
 
 		if (!user) {
-			console.log('User not found for:', emailOrPhone);
-			return res.status(401).json({ error: 'User not found' });
+			console.log('User not found for:', cleanInput);
+			return res.status(401).json({ error: 'User not found. Please check for typos or click Sign Up.' });
 		}
 
 		console.log('User found:', { user_id: user.user_id, email: user.email, name: user.name });
