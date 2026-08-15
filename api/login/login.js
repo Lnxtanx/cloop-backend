@@ -13,6 +13,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key'
 router.post('/', async (req, res) => {
 	console.log('Login request received:', req.body);
 
+	const { emailOrPhone } = req.body || {};
 	const rawInput = String(emailOrPhone || '');
 	// Remove outer whitespace, non-breaking spaces, zero-width spaces, and extra tabs/newlines
 	const cleanInput = rawInput
