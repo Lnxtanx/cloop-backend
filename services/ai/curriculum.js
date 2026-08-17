@@ -65,12 +65,16 @@ async function generateChapters(gradeLevel, board, subject, userId = null) {
     console.log(`🔍 [curriculum-gen] Fetching live 2026-27 rationalized curriculum web search for ${board} Class ${gradeLevel} ${subject}...`);
     
     // 1. Fetch live web search results from Tavily Search API (Domain-Restricted)
-    let webSearchContext = null;
+    let searchResult = null;
     try {
-        webSearchContext = await searchCurriculumSyllabus({ gradeLevel, board, subject });
+        searchResult = await searchCurriculumSyllabus({ gradeLevel, board, subject, userId });
     } catch (searchErr) {
         console.warn('⚠️ Web search fallback triggered for chapter generation:', searchErr.message);
     }
+
+    const webSearchContext = searchResult ? searchResult.formattedText : null;
+    const searchUrls = searchResult ? searchResult.searchUrls : [];
+    const searchQuery = searchResult ? searchResult.query : null;
 
     const systemPrompt = `You are an expert NCERT, CBSE, ICSE, and Indian State Board curriculum authority. 
 STRICT RULE: Output ONLY the official 2026-27 RATIONALIZED NCERT syllabus chapters. 
@@ -115,7 +119,14 @@ Return ONLY valid JSON.`;
             userId,
             featureArea: 'curriculum_generation',
             subFeature: 'chapter_gen',
-            metadata: { gradeLevel, board, subject, hasWebSearch: !!webSearchContext }
+            metadata: {
+                gradeLevel,
+                board,
+                subject,
+                hasWebSearch: !!webSearchContext,
+                searchQuery,
+                searchUrls,
+            }
         });
 
         const parsed = extractJson(responseText);
@@ -123,7 +134,6 @@ Return ONLY valid JSON.`;
             throw new Error('Failed to extract valid JSON from DeepSeek response');
         }
 
-        // Handle both array and { chapters: [...] } formats
         let chapters = Array.isArray(parsed) ? parsed : (parsed.chapters || parsed.data || []);
 
         if (!Array.isArray(chapters) || chapters.length === 0) {
@@ -148,12 +158,16 @@ async function generateTopics(gradeLevel, board, subject, chapterTitle, chapterC
     const chapterSummary = truncateContent(chapterContent, 150);
     
     // 1. Fetch live web search results for chapter topics from Tavily Search API
-    let webSearchContext = null;
+    let searchResult = null;
     try {
-        webSearchContext = await searchChapterTopics({ gradeLevel, board, subject, chapterTitle });
+        searchResult = await searchChapterTopics({ gradeLevel, board, subject, chapterTitle, userId });
     } catch (searchErr) {
         console.warn('⚠️ Web search fallback triggered for topic generation:', searchErr.message);
     }
+
+    const webSearchContext = searchResult ? searchResult.formattedText : null;
+    const searchUrls = searchResult ? searchResult.searchUrls : [];
+    const searchQuery = searchResult ? searchResult.query : null;
 
     const systemPrompt = 'You are an expert educational content generator that creates structured curriculum content according to the 2026-27 NCERT/Board rationalized syllabus. Always respond with valid JSON only. Output a JSON object with a "topics" array.';
 
@@ -192,7 +206,15 @@ Return ONLY valid JSON.`;
             userId,
             featureArea: 'curriculum_generation',
             subFeature: 'topic_gen',
-            metadata: { gradeLevel, board, subject, chapterTitle, hasWebSearch: !!webSearchContext }
+            metadata: {
+                gradeLevel,
+                board,
+                subject,
+                chapterTitle,
+                hasWebSearch: !!webSearchContext,
+                searchQuery,
+                searchUrls,
+            }
         });
 
         const parsed = extractJson(responseText);

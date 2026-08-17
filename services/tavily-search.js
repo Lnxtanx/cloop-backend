@@ -8,6 +8,8 @@ const axios = require('axios');
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '../.env'), override: true });
 
+const { logWebSearch } = require('./tavily-logger');
+
 const TAVILY_API_URL = 'https://api.tavily.com/search';
 const DEFAULT_API_KEY = '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';
 
@@ -29,9 +31,6 @@ function getApiKey() {
 
 /**
  * Execute a Tavily web search query with optional domain filtering
- * @param {string} query - Search query
- * @param {Object} options - Search options (maxResults, searchDepth, includeDomains)
- * @returns {Promise<Object|null>} - Tavily API response
  */
 async function executeTavilySearch(query, options = {}) {
   const apiKey = getApiKey();
@@ -64,11 +63,26 @@ async function executeTavilySearch(query, options = {}) {
       timeout: 12000,
     });
 
-    const duration = Date.now() - startTime;
+    const durationMs = Date.now() - startTime;
     const data = response.data;
     const resultCount = data.results?.length || 0;
 
-    console.log(`[tavily-search] ✅ Tavily search complete (${duration}ms) | Results: ${resultCount}`);
+    console.log(`[tavily-search] ✅ Tavily search complete (${durationMs}ms) | Results: ${resultCount}`);
+
+    // Audit Log Search Event
+    logWebSearch({
+      query: query.trim(),
+      featureArea: options.featureArea || 'curriculum_generation',
+      gradeLevel: options.gradeLevel,
+      board: options.board,
+      subject: options.subject,
+      chapterTitle: options.chapterTitle,
+      userId: options.userId,
+      durationMs,
+      answerSummary: data.answer,
+      results: data.results || [],
+    });
+
     return data;
   } catch (error) {
     console.error('[tavily-search] ❌ Tavily API search failed:', error.message);
@@ -79,7 +93,7 @@ async function executeTavilySearch(query, options = {}) {
 /**
  * Search live 2026-27 official rationalized curriculum table of contents for a Grade, Board, and Subject
  */
-async function searchCurriculumSyllabus({ gradeLevel, board, subject }) {
+async function searchCurriculumSyllabus({ gradeLevel, board, subject, userId = null }) {
   const query = `NCERT Class ${gradeLevel} ${subject} rationalized syllabus 2026 2027 official list of chapters ${board || 'CBSE'}`;
   
   // Try domain-filtered search first
@@ -87,37 +101,59 @@ async function searchCurriculumSyllabus({ gradeLevel, board, subject }) {
     maxResults: 6,
     searchDepth: 'advanced',
     includeDomains: TRUSTED_CURRICULUM_DOMAINS,
+    featureArea: 'curriculum_syllabus_gen',
+    gradeLevel,
+    board,
+    subject,
+    userId,
   });
 
   // Fallback to open search if domain-restricted search returns empty
   if (!data || (!data.answer && (!data.results || data.results.length === 0))) {
     console.log('[tavily-search] 🔄 Domain filter returned 0 results, attempting broader search...');
-    data = await executeTavilySearch(query, { maxResults: 5, searchDepth: 'advanced' });
+    data = await executeTavilySearch(query, {
+      maxResults: 5,
+      searchDepth: 'advanced',
+      featureArea: 'curriculum_syllabus_gen_fallback',
+      gradeLevel,
+      board,
+      subject,
+      userId,
+    });
   }
 
   if (!data || (!data.answer && (!data.results || data.results.length === 0))) {
     return null;
   }
 
+  const results = data.results || [];
+  const searchUrls = results.map(r => r.url).filter(Boolean);
+
   let formattedText = '';
   if (data.answer) {
     formattedText += `OFFICIAL 2026-27 RATIONALIZED CURRICULUM SUMMARY:\n${data.answer.trim()}\n\n`;
   }
 
-  if (data.results && data.results.length > 0) {
+  if (results.length > 0) {
     formattedText += `TRUSTED OFFICIAL WEB SEARCH SNIPPETS (2026-27 CURRICULUM):\n`;
-    data.results.forEach((res, idx) => {
+    results.forEach((res, idx) => {
       formattedText += `${idx + 1}. [${res.title}] (${res.url})\n   ${res.content}\n`;
     });
   }
 
-  return formattedText.trim();
+  return {
+    formattedText: formattedText.trim(),
+    searchUrls,
+    sources: results,
+    query,
+    answerSummary: data.answer || null,
+  };
 }
 
 /**
  * Search live 2026-27 official topic list for a specific Chapter
  */
-async function searchChapterTopics({ gradeLevel, board, subject, chapterTitle }) {
+async function searchChapterTopics({ gradeLevel, board, subject, chapterTitle, userId = null }) {
   const cleanChap = String(chapterTitle || '').replace(/^Chapter\s*\d+\s*[:\-.]*/i, '').trim();
   const query = `NCERT Class ${gradeLevel} ${subject} Chapter ${cleanChap} official rationalized topics subtopics list 2026 ${board || 'CBSE'}`;
 
@@ -125,29 +161,53 @@ async function searchChapterTopics({ gradeLevel, board, subject, chapterTitle })
     maxResults: 5,
     searchDepth: 'basic',
     includeDomains: TRUSTED_CURRICULUM_DOMAINS,
+    featureArea: 'chapter_topics_gen',
+    gradeLevel,
+    board,
+    subject,
+    chapterTitle: cleanChap,
+    userId,
   });
 
   if (!data || (!data.answer && (!data.results || data.results.length === 0))) {
-    data = await executeTavilySearch(query, { maxResults: 4, searchDepth: 'basic' });
+    data = await executeTavilySearch(query, {
+      maxResults: 4,
+      searchDepth: 'basic',
+      featureArea: 'chapter_topics_gen_fallback',
+      gradeLevel,
+      board,
+      subject,
+      chapterTitle: cleanChap,
+      userId,
+    });
   }
 
   if (!data || (!data.answer && (!data.results || data.results.length === 0))) {
     return null;
   }
 
+  const results = data.results || [];
+  const searchUrls = results.map(r => r.url).filter(Boolean);
+
   let formattedText = '';
   if (data.answer) {
     formattedText += `CHAPTER RATIONALIZED TOPICS SUMMARY:\n${data.answer.trim()}\n\n`;
   }
 
-  if (data.results && data.results.length > 0) {
+  if (results.length > 0) {
     formattedText += `CHAPTER TRUSTED WEB SEARCH SNIPPETS:\n`;
-    data.results.forEach((res, idx) => {
-      formattedText += `${idx + 1}. [${res.title}]\n   ${res.content}\n`;
+    results.forEach((res, idx) => {
+      formattedText += `${idx + 1}. [${res.title}] (${res.url})\n   ${res.content}\n`;
     });
   }
 
-  return formattedText.trim();
+  return {
+    formattedText: formattedText.trim(),
+    searchUrls,
+    sources: results,
+    query,
+    answerSummary: data.answer || null,
+  };
 }
 
 module.exports = {
