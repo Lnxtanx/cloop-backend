@@ -1,4 +1,5 @@
 const { invokeModel, extractJson } = require('./deepseek-client');
+const { searchCurriculumSyllabus, searchChapterTopics } = require('../tavily-search');
 
 /**
  * Truncate content to save tokens while keeping essential info
@@ -13,30 +14,55 @@ function truncateContent(content, maxLength = 200) {
 }
 
 /**
- * Generate chapters for a specific subject, grade, and board
+ * Generate chapters for a specific subject, grade, and board using live 2026 web search
  */
 async function generateChapters(gradeLevel, board, subject, userId = null) {
-    const systemPrompt = 'You are an expert educational content generator that creates structured curriculum content. Always respond with valid JSON only. Output a JSON object with a "chapters" array.';
+    console.log(`🔍 [curriculum-gen] Fetching live 2026 curriculum web search for ${board} Class ${gradeLevel} ${subject}...`);
     
-    const userPrompt = `You are an educational content expert. Generate a comprehensive list of chapters for the following:
+    // 1. Fetch live web search results from Tavily Search API
+    let webSearchContext = null;
+    try {
+        webSearchContext = await searchCurriculumSyllabus({ gradeLevel, board, subject });
+    } catch (searchErr) {
+        console.warn('⚠️ Web search fallback triggered for chapter generation:', searchErr.message);
+    }
+
+    const systemPrompt = 'You are an expert educational curriculum designer specializing in NCERT, CBSE, ICSE, and Indian State Board updated curricula. Always respond with valid JSON only. Output a JSON object with a "chapters" array.';
+
+    let userPrompt = `You are an educational content expert. Generate a comprehensive and 100% accurate list of chapters for the following:
 - Grade/Class: ${gradeLevel}
 - Board: ${board}
 - Subject: ${subject}
+`;
 
+    if (webSearchContext) {
+        userPrompt += `
+====================================================
+LATEST OFFICIAL 2026 CURRICULUM WEB SEARCH DATA:
+====================================================
+${webSearchContext}
+====================================================
+
+STRICT INSTRUCTION: Use the live 2026 official web search data above to ensure the chapter titles, order, and sequence strictly reflect the latest updated NCERT / ${board} textbook for Grade ${gradeLevel} ${subject}.
+`;
+    } else {
+        userPrompt += `\nMake sure the chapters follow the official ${board} curriculum for ${gradeLevel} ${subject}.\n`;
+    }
+
+    userPrompt += `
 Please provide a JSON object with a "chapters" array, where each chapter has:
 - "title": "Chapter title"
-- "content": "Brief description of what this chapter covers"
+- "content": "Brief description of what this chapter covers according to the latest 2026 syllabus"
 
-Make sure the chapters follow the official ${board} curriculum for ${gradeLevel} ${subject}.
 Return ONLY valid JSON.`;
 
     try {
         const responseText = await invokeModel(systemPrompt, [{ role: 'user', content: userPrompt }], {
-            temperature: 0.3,
+            temperature: 0.2,
             userId,
             featureArea: 'curriculum_generation',
             subFeature: 'chapter_gen',
-            metadata: { gradeLevel, board, subject }
+            metadata: { gradeLevel, board, subject, hasWebSearch: !!webSearchContext }
         });
 
         const parsed = extractJson(responseText);
@@ -51,7 +77,7 @@ Return ONLY valid JSON.`;
             throw new Error('Generated chapters is not a valid array or empty');
         }
 
-        console.log(`✓ Chapters generated | Count: ${chapters.length}`);
+        console.log(`✓ Chapters generated (Web Search: ${webSearchContext ? 'LIVE 2026' : 'LLM Fallback'}) | Count: ${chapters.length}`);
         return chapters;
     } catch (error) {
         console.error('❌ Error generating chapters:', error.message);
@@ -60,33 +86,57 @@ Return ONLY valid JSON.`;
 }
 
 /**
- * Generate topics/exercises for a specific chapter
+ * Generate topics/exercises for a specific chapter using live web search
  */
 async function generateTopics(gradeLevel, board, subject, chapterTitle, chapterContent, userId = null) {
     const chapterSummary = truncateContent(chapterContent, 150);
+    
+    // 1. Fetch live web search results for chapter topics from Tavily Search API
+    let webSearchContext = null;
+    try {
+        webSearchContext = await searchChapterTopics({ gradeLevel, board, subject, chapterTitle });
+    } catch (searchErr) {
+        console.warn('⚠️ Web search fallback triggered for topic generation:', searchErr.message);
+    }
+
     const systemPrompt = 'You are an expert educational content generator that creates structured curriculum content. Always respond with valid JSON only. Output a JSON object with a "topics" array.';
 
-    const userPrompt = `You are an educational content expert. Generate a comprehensive list of topics and exercises for the following chapter:
+    let userPrompt = `You are an educational content expert. Generate a comprehensive list of topics and exercises for the following chapter:
 - Grade/Class: ${gradeLevel}
 - Board: ${board}
 - Subject: ${subject}
 - Chapter: ${chapterTitle}
 - Chapter Summary: ${chapterSummary}
+`;
 
+    if (webSearchContext) {
+        userPrompt += `
+====================================================
+LATEST OFFICIAL CHAPTER TOPICS WEB SEARCH DATA (2026):
+====================================================
+${webSearchContext}
+====================================================
+
+STRICT INSTRUCTION: Ensure all topics and subtopics reflect the live 2026 NCERT / ${board} curriculum web search data above.
+`;
+    } else {
+        userPrompt += `\nMake sure the topics follow the official ${board} curriculum and cover all important aspects of this chapter.\n`;
+    }
+
+    userPrompt += `
 Please provide a JSON object with a "topics" array, where each topic has:
 - "title": "Topic/Exercise title"
 - "content": "Brief description of the topic (2-3 sentences)"
 
-Make sure the topics follow the official ${board} curriculum and cover all important aspects of this chapter.
 Return ONLY valid JSON.`;
 
     try {
         const responseText = await invokeModel(systemPrompt, [{ role: 'user', content: userPrompt }], {
-            temperature: 0.3,
+            temperature: 0.2,
             userId,
             featureArea: 'curriculum_generation',
             subFeature: 'topic_gen',
-            metadata: { gradeLevel, board, subject, chapterTitle }
+            metadata: { gradeLevel, board, subject, chapterTitle, hasWebSearch: !!webSearchContext }
         });
 
         const parsed = extractJson(responseText);
@@ -101,7 +151,7 @@ Return ONLY valid JSON.`;
             throw new Error('Generated topics is not a valid array or empty');
         }
 
-        console.log(`✓ Topics generated | Count: ${topics.length}`);
+        console.log(`✓ Topics generated (Web Search: ${webSearchContext ? 'LIVE 2026' : 'LLM Fallback'}) | Count: ${topics.length}`);
         return topics;
     } catch (error) {
         console.error('❌ Error generating topics:', error.message);
