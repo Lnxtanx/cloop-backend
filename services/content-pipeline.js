@@ -64,8 +64,23 @@ async function generateChaptersForSubject(userId, subjectId, gradeLevel, board, 
 	logger.log(`Generating chapters for User ${userId}, Subject: ${subjectName}`);
 
 	try {
-		// Call AI to generate chapters in proper order
+		// Call AI to generate chapters strictly matching 2026-27 rationalized syllabus
 		const chaptersData = await generateChapters(gradeLevel, board, subjectName, userId);
+
+		// Reconcile database: Delete any old/stale chapters & topics for this user & subject
+		logger.log(`🧹 Reconciling database: Cleaning up old stale chapters for User ${userId}, Subject ID ${subjectId}...`);
+		await prisma.topics.deleteMany({
+			where: {
+				subject_id: subjectId,
+				user_id: userId,
+			},
+		});
+		await prisma.chapters.deleteMany({
+			where: {
+				subject_id: subjectId,
+				user_id: userId,
+			},
+		});
 
 		// Ensure chapters are numbered correctly
 		chaptersData.forEach((chapter, index) => {
@@ -74,7 +89,7 @@ async function generateChaptersForSubject(userId, subjectId, gradeLevel, board, 
 			}
 		});
 
-		// Store chapters in database
+		// Store fresh 2026-27 chapters in database
 		const createdChapters = [];
 		for (const chapterData of chaptersData) {
 			const chapter = await prisma.chapters.create({
@@ -91,7 +106,7 @@ async function generateChaptersForSubject(userId, subjectId, gradeLevel, board, 
 			createdChapters.push(chapter);
 		}
 
-		logger.log(`Created ${createdChapters.length} chapters for ${subjectName}`);
+		logger.log(`Created ${createdChapters.length} fresh 2026-27 rationalized chapters for ${subjectName}`);
 		return createdChapters;
 	} catch (error) {
 		logger.error('Error generating chapters:', error);
