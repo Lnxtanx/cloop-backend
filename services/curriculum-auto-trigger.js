@@ -70,7 +70,7 @@ async function handleUserSignup(userId) {
 
     for (const sub of subjectNames) {
       try {
-        // 1. Find global_subject in DB
+        // 1. Find or create global_subject in DB
         let globalSubject = await prisma.global_subjects.findUnique({
           where: {
             board_grade_name: {
@@ -82,27 +82,39 @@ async function handleUserSignup(userId) {
         });
 
         if (!globalSubject) {
-          // Try flexible matching on name
+          // Try flexible matching on board/grade variants
           globalSubject = await prisma.global_subjects.findFirst({
             where: {
-              name: { equals: sub.name, mode: 'insensitive' }
+              name: { equals: sub.name, mode: 'insensitive' },
+              board: { in: [board, board.includes('CBSE') ? 'CBSE' : board] },
+              grade: { in: [gradeLevel, gradeLevel.replace('Class', 'Grade').trim(), gradeLevel.replace('Grade', 'Class').trim()] }
             }
           });
         }
 
-        if (globalSubject) {
-          // 2. Enroll user in global subject
-          await enrollUserInSubject(userId, globalSubject.id);
-
-          enrolledStatuses.push({
-            subject: sub.name,
-            globalSubjectId: globalSubject.id
+        // If globalSubject does not exist, create the subject shell in database so it's in the catalog
+        if (!globalSubject) {
+          globalSubject = await prisma.global_subjects.create({
+            data: {
+              board: board,
+              grade: gradeLevel,
+              name: sub.name,
+              code: sub.code || sub.name.toLowerCase().replace(/\s+/g, '_'),
+              category: sub.category || 'Academics'
+            }
           });
-
-          console.log(`✓ Enrolled user ${userId} in global subject: ${sub.name}`);
-        } else {
-          console.log(`ℹ Global subject ${sub.name} not found in database for ${board} ${gradeLevel}, skipping.`);
+          console.log(`✓ Created global subject shell for: ${board} | ${gradeLevel} | ${sub.name} (ID: ${globalSubject.id})`);
         }
+
+        // 2. Enroll user in global subject
+        await enrollUserInSubject(userId, globalSubject.id);
+
+        enrolledStatuses.push({
+          subject: sub.name,
+          globalSubjectId: globalSubject.id
+        });
+
+        console.log(`✓ Enrolled user ${userId} in global subject: ${sub.name}`);
       } catch (subErr) {
         console.error(`Error enrolling user ${userId} in ${sub.name}:`, subErr.message);
       }
