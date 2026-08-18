@@ -8,6 +8,55 @@ let isProcessing = false;
 let processingInterval = null;
 const POLLING_INTERVAL = 30000; // Check every 30 seconds
 
+const DEFAULT_MATRIX = [
+	{ board: 'Central Board of Secondary Education', grade: 'Class 5', subjects: ['Mathematics', 'Science', 'Social Studies', 'English', 'Hindi', 'Environmental Studies', 'Computer Science', 'Art & Craft'] },
+	{ board: 'Central Board of Secondary Education', grade: 'Class 6', subjects: ['Mathematics', 'Science', 'Social Studies', 'English', 'Hindi', 'Environmental Studies', 'Computer Science'] },
+	{ board: 'Central Board of Secondary Education', grade: 'Class 7', subjects: ['Mathematics', 'Science', 'Social Studies', 'English', 'Hindi', 'Environmental Studies', 'Computer Science'] },
+	{ board: 'Central Board of Secondary Education', grade: 'Class 8', subjects: ['Mathematics', 'Science', 'Social Studies', 'English', 'Hindi', 'Environmental Studies', 'Computer Science'] },
+	{ board: 'Central Board of Secondary Education', grade: 'Class 9', subjects: ['Mathematics', 'Science', 'Social Studies', 'English', 'Hindi', 'Computer Science'] },
+	{ board: 'Central Board of Secondary Education', grade: 'Class 10', subjects: ['Mathematics', 'Science', 'Social Studies', 'English', 'Hindi', 'Computer Science'] }
+];
+
+async function enqueueStandardCurriculumTasks() {
+	try {
+		for (const item of DEFAULT_MATRIX) {
+			for (const subjectName of item.subjects) {
+				const existing = await prisma.global_curriculum_status.findUnique({
+					where: {
+						board_grade_subject_name: {
+							board: item.board,
+							grade: item.grade,
+							subject_name: subjectName
+						}
+					}
+				});
+
+				if (!existing) {
+					await prisma.global_curriculum_status.create({
+						data: {
+							board: item.board,
+							grade: item.grade,
+							subject_name: subjectName,
+							status: 'pending'
+						}
+					});
+				} else if (existing.status === 'in_progress') {
+					// Check if stale (older than 5 minutes)
+					const fiveMinAgo = new Date(Date.now() - 5 * 60 * 1000);
+					if (existing.updated_at && new Date(existing.updated_at) < fiveMinAgo) {
+						await prisma.global_curriculum_status.update({
+							where: { id: existing.id },
+							data: { status: 'pending' }
+						});
+					}
+				}
+			}
+		}
+	} catch (err) {
+		console.error('Error enqueuing standard curriculum tasks:', err.message);
+	}
+}
+
 /**
  * Continuously check and process pending global curriculum generation
  */
@@ -23,6 +72,9 @@ async function startContinuousProcessing() {
     console.error('❌ Failed to connect to database:', error);
     throw error;
   }
+
+  // Ensure all standard curriculum tasks are enqueued
+  await enqueueStandardCurriculumTasks();
 
   // Run immediately on start
   await processPendingTasks();
