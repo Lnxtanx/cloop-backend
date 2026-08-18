@@ -163,9 +163,9 @@ async function processPendingTasks() {
           { status: 'failed', updated_at: { lt: fiveMinutesAgo } }
         ]
       },
-      orderBy: {
-        created_at: 'asc'
-      }
+      orderBy: [
+        { id: 'asc' }
+      ]
     });
 
     if (pendingTasks.length === 0) {
