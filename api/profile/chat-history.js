@@ -14,16 +14,26 @@ router.get('/', authenticateToken, async (req, res) => {
   }
 
   try {
-    // Get distinct topics that user has chatted about via chat_goal_progress -> topic_goals -> topics
+    // Get distinct topics that user has chatted about via chat_goal_progress -> global_topic_goals -> topic
     const progressEntries = await prisma.chat_goal_progress.findMany({
       where: { user_id: user_id },
       include: {
-        topic_goals: {
+        global_topic_goals: {
           include: {
-            topics: {
+            topic: {
               include: {
-                subjects: { select: { name: true } },
-                chapters: { select: { title: true } }
+                chapter: {
+                  include: {
+                    subject: { select: { name: true } }
+                  }
+                },
+                user_progress: {
+                  where: { user_id: user_id },
+                  select: {
+                    is_completed: true,
+                    completion_percent: true
+                  }
+                }
               }
             }
           }
@@ -36,18 +46,20 @@ router.get('/', authenticateToken, async (req, res) => {
     const seen = new Set();
     const formattedHistory = [];
     for (const entry of progressEntries) {
-      const topic = entry.topic_goals?.topics;
+      const topic = entry.global_topic_goals?.topic;
       if (!topic) continue;
       if (seen.has(topic.id)) continue;
       seen.add(topic.id);
+
+      const prog = topic.user_progress?.[0] || {};
       formattedHistory.push({
         topic_id: topic.id,
         title: topic.title,
-        subject: topic.subjects?.name || null,
-        chapter: topic.chapters?.title || null,
+        subject: topic.chapter?.subject?.name || null,
+        chapter: topic.chapter?.title || null,
         last_activity: entry.created_at,
-        is_completed: topic.is_completed || false,
-        completion_percent: topic.completion_percent || 0,
+        is_completed: prog.is_completed || false,
+        completion_percent: Number(prog.completion_percent || 0),
         chat_count: 0 // Placeholder, or calculate if feasible
       });
     }

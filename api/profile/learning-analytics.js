@@ -23,41 +23,49 @@ router.get('/topic/:topicId', authenticateToken, async (req, res) => {
   }
 
   try {
-    // Verify user has access to this topic
-    const topic = await prisma.topics.findFirst({
+    // Verify topic exists
+    const topic = await prisma.global_topics.findUnique({
       where: {
-        id: parseInt(topicId),
-        user_id: user_id
+        id: parseInt(topicId)
       },
       include: {
-        subjects: {
+        chapter: {
           select: {
-            name: true
+            title: true,
+            subject: {
+              select: {
+                name: true
+              }
+            }
           }
         },
-        chapters: {
+        user_progress: {
+          where: { user_id: user_id },
           select: {
-            title: true
+            is_completed: true,
+            completion_percent: true
           }
         }
       }
     });
 
     if (!topic) {
-      return res.status(403).json({ error: 'Topic not found or access denied' });
+      return res.status(404).json({ error: 'Topic not found' });
     }
 
     // Get comprehensive analytics from learning_turns
     const analytics = await getTopicAnalytics(user_id, parseInt(topicId));
 
+    const prog = topic.user_progress?.[0] || {};
+
     return res.status(200).json({
       topic: {
         id: topic.id,
         title: topic.title,
-        subject: topic.subjects?.name,
-        chapter: topic.chapters?.title,
-        is_completed: topic.is_completed,
-        completion_percent: parseFloat(topic.completion_percent?.toString() || '0')
+        subject: topic.chapter?.subject?.name || null,
+        chapter: topic.chapter?.title || null,
+        is_completed: prog.is_completed || false,
+        completion_percent: parseFloat(prog.completion_percent?.toString() || '0')
       },
       analytics: analytics
     });
@@ -88,10 +96,10 @@ router.get('/goal/:goalId', authenticateToken, async (req, res) => {
     const turns = await getLearningTurnsByGoal(user_id, parseInt(goalId));
 
     // Get goal details
-    const goal = await prisma.topic_goals.findUnique({
+    const goal = await prisma.global_topic_goals.findUnique({
       where: { id: parseInt(goalId) },
       include: {
-        topics: {
+        topic: {
           select: {
             title: true,
             subject_id: true
@@ -146,7 +154,7 @@ router.get('/goal/:goalId', authenticateToken, async (req, res) => {
         id: goal.id,
         title: goal.title,
         description: goal.description,
-        topic_title: goal.topics?.title
+        topic_title: goal.topic?.title
       },
       metrics: {
         total_questions: totalQuestions,
@@ -192,7 +200,7 @@ router.get('/subject/:subjectId', authenticateToken, async (req, res) => {
         created_at: 'asc'
       },
       include: {
-        topic_goals: {
+        global_topic_goals: {
           select: {
             title: true,
             topic_id: true
@@ -202,7 +210,7 @@ router.get('/subject/:subjectId', authenticateToken, async (req, res) => {
     });
 
     // Get subject details
-    const subject = await prisma.subjects.findUnique({
+    let subject = await prisma.global_subjects.findUnique({
       where: { id: parseInt(subjectId) },
       select: {
         id: true,
@@ -210,6 +218,17 @@ router.get('/subject/:subjectId', authenticateToken, async (req, res) => {
         code: true
       }
     });
+
+    if (!subject) {
+      subject = await prisma.subjects.findUnique({
+        where: { id: parseInt(subjectId) },
+        select: {
+          id: true,
+          name: true,
+          code: true
+        }
+      });
+    }
 
     if (!subject) {
       return res.status(404).json({ error: 'Subject not found' });

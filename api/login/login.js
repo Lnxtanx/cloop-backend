@@ -115,6 +115,16 @@ router.post('/', async (req, res) => {
 			// Don't block login if notification fails
 		}
 
+		// Ensure user subject enrollments are synchronized in the background
+		try {
+			const CurriculumAutoTrigger = require('../../services/curriculum-auto-trigger');
+			CurriculumAutoTrigger.handleUserSignup(user.user_id).catch(err => {
+				console.error('Background curriculum sync on login error:', err.message);
+			});
+		} catch (e) {
+			console.error('Failed to trigger curriculum sync on login:', e.message);
+		}
+
 		return res.json({ token, user: payload })
 	} catch (err) {
 		console.error('Login server error:', err)

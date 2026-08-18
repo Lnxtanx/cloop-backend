@@ -203,7 +203,7 @@ async function getLearningTurnsByTopic(userId, topicId) {
         created_at: 'asc'
       },
       include: {
-        topic_goals: {
+        global_topic_goals: {
           select: {
             title: true,
             description: true
@@ -349,7 +349,7 @@ async function getTopicAnalytics(userId, topicId) {
       if (turn.goal_id) {
         if (!analytics.by_goal[turn.goal_id]) {
           analytics.by_goal[turn.goal_id] = {
-            goal_title: turn.topic_goals?.title || 'Unknown',
+            goal_title: turn.global_topic_goals?.title || 'Unknown',
             total: 0,
             correct: 0,
             incorrect: 0,

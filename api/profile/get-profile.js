@@ -42,7 +42,7 @@ router.get('/', authenticateToken, async (req, res) => {
     }
 
     // Fetch user's enrolled global subjects
-    const enrollments = await prisma.user_subject_enrollment.findMany({
+    let enrollments = await prisma.user_subject_enrollment.findMany({
       where: { user_id: user_id },
       orderBy: { id: 'asc' },
       include: {
@@ -75,6 +75,51 @@ router.get('/', authenticateToken, async (req, res) => {
         }
       }
     });
+
+    // Auto-sync fallback: if user has no enrollments yet but has board/grade/subjects on profile, auto-enroll them now
+    if (enrollments.length === 0 && user.board && user.grade_level) {
+      try {
+        const CurriculumAutoTrigger = require('../../services/curriculum-auto-trigger');
+        await CurriculumAutoTrigger.handleUserSignup(user_id);
+
+        // Re-fetch enrollments after auto-sync
+        enrollments = await prisma.user_subject_enrollment.findMany({
+          where: { user_id: user_id },
+          orderBy: { id: 'asc' },
+          include: {
+            subject: {
+              select: {
+                id: true,
+                name: true,
+                code: true,
+                category: true,
+                board: true,
+                grade: true,
+                chapters: {
+                  select: {
+                    id: true,
+                    topics: {
+                      select: {
+                        id: true,
+                        user_progress: {
+                          where: { user_id: user_id },
+                          select: {
+                            is_completed: true,
+                            completion_percent: true
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        });
+      } catch (autoErr) {
+        console.error('Auto-enrollment fallback on get-profile error:', autoErr.message);
+      }
+    }
 
     // Also fetch global curriculum status records
     const globalStatuses = await prisma.global_curriculum_status.findMany({

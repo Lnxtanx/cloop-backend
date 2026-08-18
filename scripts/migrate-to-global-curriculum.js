@@ -254,7 +254,21 @@ async function migrate() {
 				}
 			});
 
-			for (const gs of matchingGlobalSubjects) {
+			// Filter matching global subjects against user's selected subjects if present
+			const selectedSubjectCodes = (user.subjects || []).map(s => s.toLowerCase().trim());
+			const filteredSubjects = matchingGlobalSubjects.filter(gs => {
+				if (selectedSubjectCodes.length === 0) return true;
+				return selectedSubjectCodes.some(code => 
+					code === gs.name.toLowerCase() || 
+					(gs.code && code === gs.code.toLowerCase()) ||
+					gs.name.toLowerCase().includes(code) ||
+					code.includes(gs.name.toLowerCase())
+				);
+			});
+
+			const targetSubjects = filteredSubjects.length > 0 ? filteredSubjects : matchingGlobalSubjects;
+
+			for (const gs of targetSubjects) {
 				if (!isDryRun) {
 					// Enroll user
 					await prisma.user_subject_enrollment.upsert({
