@@ -45,7 +45,9 @@ const DEFAULT_SUBJECTS_BY_GRADE = {
 
 const DEFAULT_BOARDS = [
 	{ code: 'CBSE', name: 'Central Board of Secondary Education' },
-	{ code: 'ICSE', name: 'Indian Certificate of Secondary Education' }
+	{ code: 'ICSE', name: 'Indian Certificate of Secondary Education' },
+	{ code: 'IB', name: 'International Baccalaureate' },
+	{ code: 'IGCSE', name: 'International General Certificate of Secondary Education' }
 ];
 
 function parseArgs() {

@@ -9,12 +9,37 @@ let processingInterval = null;
 const POLLING_INTERVAL = 30000; // Check every 30 seconds
 
 const DEFAULT_MATRIX = [
+	// 1. CBSE
 	{ board: 'Central Board of Secondary Education', grade: 'Class 5', subjects: ['Mathematics', 'Science', 'Social Studies', 'English', 'Hindi', 'Environmental Studies', 'Computer Science', 'Art & Craft'] },
 	{ board: 'Central Board of Secondary Education', grade: 'Class 6', subjects: ['Mathematics', 'Science', 'Social Studies', 'English', 'Hindi', 'Environmental Studies', 'Computer Science'] },
 	{ board: 'Central Board of Secondary Education', grade: 'Class 7', subjects: ['Mathematics', 'Science', 'Social Studies', 'English', 'Hindi', 'Environmental Studies', 'Computer Science'] },
 	{ board: 'Central Board of Secondary Education', grade: 'Class 8', subjects: ['Mathematics', 'Science', 'Social Studies', 'English', 'Hindi', 'Environmental Studies', 'Computer Science'] },
 	{ board: 'Central Board of Secondary Education', grade: 'Class 9', subjects: ['Mathematics', 'Science', 'Social Studies', 'English', 'Hindi', 'Computer Science'] },
-	{ board: 'Central Board of Secondary Education', grade: 'Class 10', subjects: ['Mathematics', 'Science', 'Social Studies', 'English', 'Hindi', 'Computer Science'] }
+	{ board: 'Central Board of Secondary Education', grade: 'Class 10', subjects: ['Mathematics', 'Science', 'Social Studies', 'English', 'Hindi', 'Computer Science'] },
+
+	// 2. ICSE
+	{ board: 'Indian Certificate of Secondary Education', grade: 'Class 5', subjects: ['Mathematics', 'Science', 'Social Studies', 'English', 'Hindi', 'Computer Science', 'Environmental Studies'] },
+	{ board: 'Indian Certificate of Secondary Education', grade: 'Class 6', subjects: ['Mathematics', 'Science', 'Social Studies', 'English', 'Hindi', 'Computer Science', 'Environmental Studies'] },
+	{ board: 'Indian Certificate of Secondary Education', grade: 'Class 7', subjects: ['Mathematics', 'Science', 'Social Studies', 'English', 'Hindi', 'Computer Science', 'Environmental Studies'] },
+	{ board: 'Indian Certificate of Secondary Education', grade: 'Class 8', subjects: ['Mathematics', 'Science', 'Social Studies', 'English', 'Hindi', 'Computer Science', 'Environmental Studies'] },
+	{ board: 'Indian Certificate of Secondary Education', grade: 'Class 9', subjects: ['Mathematics', 'Science', 'Social Studies', 'English', 'Hindi', 'Computer Science'] },
+	{ board: 'Indian Certificate of Secondary Education', grade: 'Class 10', subjects: ['Mathematics', 'Science', 'Social Studies', 'English', 'Hindi', 'Computer Science'] },
+
+	// 3. IB (International Baccalaureate)
+	{ board: 'International Baccalaureate', grade: 'Class 5', subjects: ['Mathematics', 'Science', 'Social Studies', 'English', 'Hindi', 'Computer Science', 'Art & Craft'] },
+	{ board: 'International Baccalaureate', grade: 'Class 6', subjects: ['Mathematics', 'Science', 'Social Studies', 'English', 'Hindi', 'Computer Science', 'Environmental Studies'] },
+	{ board: 'International Baccalaureate', grade: 'Class 7', subjects: ['Mathematics', 'Science', 'Social Studies', 'English', 'Hindi', 'Computer Science', 'Environmental Studies'] },
+	{ board: 'International Baccalaureate', grade: 'Class 8', subjects: ['Mathematics', 'Science', 'Social Studies', 'English', 'Hindi', 'Computer Science', 'Environmental Studies'] },
+	{ board: 'International Baccalaureate', grade: 'Class 9', subjects: ['Mathematics', 'Science', 'Social Studies', 'English', 'Hindi', 'Computer Science'] },
+	{ board: 'International Baccalaureate', grade: 'Class 10', subjects: ['Mathematics', 'Science', 'Social Studies', 'English', 'Hindi', 'Computer Science'] },
+
+	// 4. IGCSE (Cambridge Assessment)
+	{ board: 'International General Certificate of Secondary Education', grade: 'Class 5', subjects: ['Mathematics', 'Science', 'Social Studies', 'English', 'Hindi', 'Computer Science', 'Environmental Studies'] },
+	{ board: 'International General Certificate of Secondary Education', grade: 'Class 6', subjects: ['Mathematics', 'Science', 'Social Studies', 'English', 'Hindi', 'Computer Science', 'Environmental Studies'] },
+	{ board: 'International General Certificate of Secondary Education', grade: 'Class 7', subjects: ['Mathematics', 'Science', 'Social Studies', 'English', 'Hindi', 'Computer Science', 'Environmental Studies'] },
+	{ board: 'International General Certificate of Secondary Education', grade: 'Class 8', subjects: ['Mathematics', 'Science', 'Social Studies', 'English', 'Hindi', 'Computer Science', 'Environmental Studies'] },
+	{ board: 'International General Certificate of Secondary Education', grade: 'Class 9', subjects: ['Mathematics', 'Science', 'Social Studies', 'English', 'Hindi', 'Computer Science'] },
+	{ board: 'International General Certificate of Secondary Education', grade: 'Class 10', subjects: ['Mathematics', 'Science', 'Social Studies', 'English', 'Hindi', 'Computer Science'] }
 ];
 
 async function enqueueStandardCurriculumTasks() {
