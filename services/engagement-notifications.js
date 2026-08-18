@@ -101,19 +101,23 @@ async function processEngagementNotifications() {
                 // Strategy A: Incomplete Topics (High)
                 // Find a topic that is started (completion > 0) but not completed
                 if (!matchedStrategy) {
-                    const incompleteTopic = await prisma.topics.findFirst({
+                    const incompleteProgress = await prisma.user_topic_progress.findFirst({
                         where: {
                             user_id: user.user_id,
                             is_completed: false,
                             completion_percent: { gt: 0 }
                         },
-                        // topics table has title directly
-                        orderBy: { id: 'desc' }
+                        include: {
+                            topic: {
+                                select: { title: true }
+                            }
+                        },
+                        orderBy: { last_accessed_at: 'desc' }
                     });
 
-                    if (incompleteTopic) {
+                    if (incompleteProgress && incompleteProgress.topic) {
                         title = "Complete Your Session ⏳";
-                        message = getRandomMessage(INCOMPLETE_MESSAGES).replace('{{topic}}', incompleteTopic.title);
+                        message = getRandomMessage(INCOMPLETE_MESSAGES).replace('{{topic}}', incompleteProgress.topic.title);
                         type = 'study_reminder';
                         matchedStrategy = true;
                     }
@@ -125,12 +129,12 @@ async function processEngagementNotifications() {
                         where: {
                             user_id: user.user_id,
                         },
-                        include: { topics: true },
+                        include: { topic: true },
                         orderBy: { updated_at: 'desc' }
                     });
 
                     // If report is recent (last 24h) and low score, OR just random chance to remind
-                    if (recentReport) {
+                    if (recentReport && recentReport.topic) {
                         const isLowScore = recentReport.score_percent < 60;
                         // 50% chance to trigger this if low score, 20% otherwise
                         const shouldNotify = isLowScore ? Math.random() > 0.5 : Math.random() > 0.8;
@@ -138,7 +142,7 @@ async function processEngagementNotifications() {
                         if (shouldNotify) {
                             title = isLowScore ? "Boost Your Score! 📈" : "Metrics Update 📊";
                             message = getRandomMessage(SCORE_MESSAGES)
-                                .replace('{{topic}}', recentReport.topics.title)
+                                .replace('{{topic}}', recentReport.topic.title)
                                 .replace('{{score}}', recentReport.score_percent);
                             type = 'metrics_alert';
                             matchedStrategy = true;
@@ -150,12 +154,12 @@ async function processEngagementNotifications() {
                 if (!matchedStrategy) {
                     const savedTopic = await prisma.saved_topics.findFirst({
                         where: { user_id: user.user_id },
-                        include: { topics: true }
+                        include: { topic: true }
                     });
 
-                    if (savedTopic && Math.random() > 0.5) {
+                    if (savedTopic && savedTopic.topic && Math.random() > 0.5) {
                         title = "Review Saved Topic 🔖";
-                        message = getRandomMessage(SAVED_TOPIC_MESSAGES).replace('{{topic}}', savedTopic.topics.title);
+                        message = getRandomMessage(SAVED_TOPIC_MESSAGES).replace('{{topic}}', savedTopic.topic.title);
                         type = 'study_reminder';
                         matchedStrategy = true;
                     }

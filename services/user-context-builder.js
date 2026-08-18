@@ -165,40 +165,63 @@ async function getTopicDetails(userId, topicIdOrTitle) {
     let topic
 
     if (typeof topicIdOrTitle === 'number') {
-        topic = await prisma.topics.findFirst({
-            where: { id: topicIdOrTitle, user_id: userId },
+        topic = await prisma.global_topics.findUnique({
+            where: { id: topicIdOrTitle },
             include: {
-                chapters: { select: { title: true } },
-                subjects: { select: { name: true } },
-                topic_goals: { select: { title: true, description: true } }
+                chapter: {
+                    select: {
+                        title: true,
+                        subject: { select: { name: true } }
+                    }
+                },
+                goals: { select: { title: true, description: true } },
+                user_progress: {
+                    where: { user_id: userId },
+                    select: {
+                        is_completed: true,
+                        completion_percent: true
+                    }
+                }
             }
         })
     } else {
         // Search by title (partial match)
-        topic = await prisma.topics.findFirst({
+        topic = await prisma.global_topics.findFirst({
             where: {
-                user_id: userId,
                 title: { contains: topicIdOrTitle, mode: 'insensitive' }
             },
             include: {
-                chapters: { select: { title: true } },
-                subjects: { select: { name: true } },
-                topic_goals: { select: { title: true, description: true } }
+                chapter: {
+                    select: {
+                        title: true,
+                        subject: { select: { name: true } }
+                    }
+                },
+                goals: { select: { title: true, description: true } },
+                user_progress: {
+                    where: { user_id: userId },
+                    select: {
+                        is_completed: true,
+                        completion_percent: true
+                    }
+                }
             }
         })
     }
 
     if (!topic) return null
 
+    const progress = topic.user_progress?.[0] || {}
+
     return {
         id: topic.id,
         title: topic.title,
         content: topic.content,
-        chapterName: topic.chapters?.title,
-        subjectName: topic.subjects?.name,
-        isCompleted: topic.is_completed,
-        completionPercent: topic.completion_percent,
-        goals: topic.topic_goals?.map(g => g.title) || []
+        chapterName: topic.chapter?.title,
+        subjectName: topic.chapter?.subject?.name,
+        isCompleted: progress.is_completed || false,
+        completionPercent: progress.completion_percent ? Number(progress.completion_percent) : 0,
+        goals: topic.goals?.map(g => g.title) || []
     }
 }
 

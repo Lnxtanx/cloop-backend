@@ -1,30 +1,24 @@
 const prisma = require('../lib/prisma');
-const { runContentGenerationPipeline, generateMissingGoals } = require('./content-pipeline');
-const { notifyContentGenerationStatus } = require('./notifications');
+const { ensureGlobalCurriculum, generateMissingGlobalGoals } = require('./global-curriculum-pipeline');
 const { processEngagementNotifications } = require('./engagement-notifications');
 const pLimitModule = require('p-limit');
 const pLimit = pLimitModule.default || pLimitModule;
-
-console.log('[background-processor] Prisma loaded:', typeof prisma, 'has content_generation_status:', typeof prisma?.content_generation_status);
 
 let isProcessing = false;
 let processingInterval = null;
 const POLLING_INTERVAL = 30000; // Check every 30 seconds
 
 /**
- * Continuously check and process pending content generation
+ * Continuously check and process pending global curriculum generation
  */
 async function startContinuousProcessing() {
-  console.log('\n🔄 Starting continuous content generation processor...');
+  console.log('\n🔄 Starting continuous global curriculum processor...');
   console.log(`⏰ Polling interval: ${POLLING_INTERVAL / 1000} seconds\n`);
-
-  console.log('[startContinuousProcessing] Prisma before connect:', typeof prisma, 'has content_generation_status:', typeof prisma?.content_generation_status);
 
   // Initialize and connect Prisma
   try {
     await prisma.$connect();
     console.log('✓ Database connection established');
-    console.log('[startContinuousProcessing] Prisma after connect:', typeof prisma, 'has content_generation_status:', typeof prisma?.content_generation_status);
   } catch (error) {
     console.error('❌ Failed to connect to database:', error);
     throw error;
@@ -39,13 +33,12 @@ async function startContinuousProcessing() {
   }, POLLING_INTERVAL);
 
   // Engagement Notification Loop (Check every 1 hour)
-  // We check frequently, but the internal logic handles the 2-hour cooldown per user
   const ENGAGEMENT_INTERVAL = 60 * 60 * 1000; // 1 hour
   setInterval(() => {
     processEngagementNotifications();
   }, ENGAGEMENT_INTERVAL);
 
-  // Run on start for demo purposes (optional)
+  // Run on start for demo purposes
   setTimeout(() => {
     processEngagementNotifications();
   }, 10000); // Wait 10s after startup
@@ -63,7 +56,6 @@ async function stopContinuousProcessing() {
     console.log('\n⏹️  Continuous processor stopped');
   }
 
-  // Disconnect Prisma client
   if (prisma) {
     try {
       await prisma.$disconnect();
@@ -75,10 +67,9 @@ async function stopContinuousProcessing() {
 }
 
 /**
- * Process all pending content generation tasks concurrently
+ * Process all pending global curriculum generation tasks
  */
 async function processPendingTasks() {
-  // Prevent concurrent processing cycles from overlapping
   if (isProcessing) {
     console.log('⏳ Processing already in progress, skipping this cycle...');
     return;
@@ -87,141 +78,66 @@ async function processPendingTasks() {
   try {
     isProcessing = true;
 
-    // Find all pending or failed tasks (only retry failed tasks that were last updated >5 min ago to avoid rapid retry loops)
     const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
-    const pendingTasks = await prisma.content_generation_status.findMany({
+    const pendingTasks = await prisma.global_curriculum_status.findMany({
       where: {
         OR: [
           { status: 'pending' },
           { status: 'failed', updated_at: { lt: fiveMinutesAgo } }
         ]
       },
-      include: {
-        subjects: {
-          select: {
-            id: true,
-            name: true,
-            code: true
-          }
-        }
-      },
       orderBy: {
-        created_at: 'asc' // Process oldest first
+        created_at: 'asc'
       }
     });
 
     if (pendingTasks.length === 0) {
-      // No pending tasks, check for missing goals
-      console.log('📋 No pending content generation tasks');
-      console.log('🔍 [background-processor] Checking for topics without goals...');
+      console.log('📋 No pending global curriculum tasks');
+      console.log('🔍 [background-processor] Checking for global topics without goals...');
 
-      const missingGoalsResult = await generateMissingGoals();
+      const missingGoalsResult = await generateMissingGlobalGoals();
 
-      if (missingGoalsResult.generated > 0) {
-        console.log(`✅ Generated goals for ${missingGoalsResult.generated} topics\n`);
+      if (missingGoalsResult && missingGoalsResult.generated > 0) {
+        console.log(`✅ Generated goals for ${missingGoalsResult.generated} global topics\n`);
       } else {
-        console.log('✅ All topics have goals\n');
+        console.log('✅ All global topics have goals\n');
       }
 
       return;
     }
 
-    console.log(`\n📚 Found ${pendingTasks.length} pending task(s) to process`);
+    console.log(`\n📚 Found ${pendingTasks.length} pending global curriculum task(s) to process`);
     console.log('═'.repeat(60));
 
-    // Limit concurrency to 4 parallel workers to avoid hitting Bedrock rate limits
-    const limit = pLimit(4);
+    const limit = pLimit(3);
 
     const taskPromises = pendingTasks.map((task) => {
       return limit(async () => {
         try {
-          // Check if user still exists and has complete profile
-          const user = await prisma.users.findUnique({
-            where: { user_id: task.user_id }
-          });
+          console.log(`\n🚀 [Worker] Processing Global Curriculum: ${task.board} | ${task.grade} | ${task.subject_name}`);
 
-          if (!user) {
-            console.log(`❌ User ${task.user_id} not found, skipping...`);
-
-            // Mark as failed
-            await prisma.content_generation_status.update({
-              where: { id: task.id },
-              data: {
-                status: 'failed',
-                error_message: 'User not found',
-                updated_at: new Date()
-              }
-            });
-            return;
-          }
-
-          if (!user.grade_level || !user.board) {
-            console.log(`⚠️  User ${task.user_id} profile incomplete, skipping...`);
-            return;
-          }
-
-          console.log(`\n🚀 [Worker] Processing: ${user.name} - ${task.subjects.name}`);
-          console.log(`   Grade: ${user.grade_level}, Board: ${user.board}`);
-
-          // Send start notification
-          await notifyContentGenerationStatus(
-            task.user_id,
-            'started',
-            task.subjects.name
+          const result = await ensureGlobalCurriculum(
+            task.board,
+            task.grade,
+            task.subject_name
           );
 
-          // Run the content generation pipeline
-          const result = await runContentGenerationPipeline(task.user_id, task.subject_id);
-
-          if (result.success) {
-            console.log(`✅ [Worker] Successfully completed: ${task.subjects.name}`);
-            console.log(`   Chapters: ${result.chaptersCount}, Topics: ${result.topicsCount || 0}`);
-
-            // Send completion notification
-            await notifyContentGenerationStatus(
-              task.user_id,
-              'completed',
-              task.subjects.name,
-              {
-                chaptersCount: result.chaptersCount,
-                topicsCount: result.topicsCount
-              }
-            );
+          if (result && result.globalSubject) {
+            console.log(`✅ [Worker] Successfully completed global curriculum: ${task.board} ${task.grade} ${task.subject_name} (ID: ${result.globalSubject.id})`);
           }
 
-          // Add a brief delay between concurrently triggered workers to space out LLM burst requests
           await new Promise(resolve => setTimeout(resolve, 2000));
-
         } catch (error) {
-          console.error(`\n❌ [Worker] Failed: User ${task.user_id}, Subject ${task.subjects.name}`);
+          console.error(`\n❌ [Worker] Failed Global Curriculum: ${task.board} ${task.grade} ${task.subject_name}`);
           console.error(`   Error: ${error.message}`);
-
-          // Send failure notification
-          await notifyContentGenerationStatus(
-            task.user_id,
-            'failed',
-            task.subjects.name,
-            { error: error.message }
-          );
-
-          // Mark as failed in database
-          await prisma.content_generation_status.update({
-            where: { id: task.id },
-            data: {
-              status: 'failed',
-              error_message: error.message,
-              updated_at: new Date()
-            }
-          });
         }
       });
     });
 
-    // Process all pending tasks in parallel concurrently (up to limit of 4)
     await Promise.all(taskPromises);
 
     console.log('\n' + '═'.repeat(60));
-    console.log('✅ Processing cycle completed');
+    console.log('✅ Global processing cycle completed');
     console.log(`⏰ Next check in ${POLLING_INTERVAL / 1000} seconds\n`);
 
   } catch (error) {
@@ -257,4 +173,5 @@ module.exports = {
   getProcessorStatus,
   triggerManualProcessing,
 };
+
 

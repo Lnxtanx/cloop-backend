@@ -17,10 +17,13 @@ router.get('/', async (req, res) => {
                 user_id: userId,
             },
             include: {
-                topics: {
+                topic: {
                     include: {
-                        subjects: true,
-                        chapters: true,
+                        chapter: {
+                            include: {
+                                subject: true
+                            }
+                        }
                     }
                 },
             },
@@ -29,7 +32,30 @@ router.get('/', async (req, res) => {
             },
         });
 
-        res.json(savedTopics);
+        // Format to preserve compatibility with existing frontend expectations
+        const formatted = savedTopics.map(st => ({
+            id: st.id,
+            user_id: st.user_id,
+            topic_id: st.topic_id,
+            created_at: st.created_at,
+            topics: {
+                id: st.topic?.id,
+                title: st.topic?.title,
+                content: st.topic?.content,
+                chapter_id: st.topic?.chapter_id,
+                subject_id: st.topic?.subject_id,
+                chapters: st.topic?.chapter ? {
+                    id: st.topic.chapter.id,
+                    title: st.topic.chapter.title
+                } : null,
+                subjects: st.topic?.chapter?.subject ? {
+                    id: st.topic.chapter.subject.id,
+                    name: st.topic.chapter.subject.name
+                } : null
+            }
+        }));
+
+        res.json(formatted);
     } catch (error) {
         console.error('Error fetching saved topics:', error);
         res.status(500).json({ error: 'Failed to fetch saved topics' });

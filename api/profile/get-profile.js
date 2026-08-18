@@ -6,17 +6,13 @@ const prisma = require('../../lib/prisma');
 
 // GET /api/profile
 router.get('/', authenticateToken, async (req, res) => {
-  // Get user_id from authenticated token
   let user_id = req.user?.user_id;
 
-  // Allow a query fallback for development/testing: /api/profile?user_id=1
   if (!user_id && req.query && req.query.user_id) {
-    // coerce to number when possible
     const parsed = Number(req.query.user_id);
     if (!Number.isNaN(parsed)) user_id = parsed;
   }
 
-  // If still no user_id, return error
   if (!user_id) {
     return res.status(400).json({ error: 'User ID not found in token' });
   }
@@ -30,7 +26,7 @@ router.get('/', authenticateToken, async (req, res) => {
         email: true,
         grade_level: true,
         board: true,
-        subjects: true, // Keep for backward compatibility
+        subjects: true,
         preferred_language: true,
         study_goal: true,
         avatar_choice: true,
@@ -45,92 +41,115 @@ router.get('/', authenticateToken, async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    // Fetch user's subjects from user_subjects table in stable order
-    const userSubjects = await prisma.user_subjects.findMany({
+    // Fetch user's enrolled global subjects
+    const enrollments = await prisma.user_subject_enrollment.findMany({
       where: { user_id: user_id },
       orderBy: { id: 'asc' },
       include: {
-        subjects: {
+        subject: {
           select: {
             id: true,
             name: true,
             code: true,
             category: true,
+            board: true,
+            grade: true,
+            chapters: {
+              select: {
+                id: true,
+                topics: {
+                  select: {
+                    id: true,
+                    user_progress: {
+                      where: { user_id: user_id },
+                      select: {
+                        is_completed: true,
+                        completion_percent: true
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
     });
 
-    // Update chapter counts from actual chapters table
-    for (const userSubject of userSubjects) {
-      const actualChapterCount = await prisma.chapters.count({
-        where: {
-          subject_id: userSubject.subject_id,
-          user_id: user_id
-        }
-      });
-
-      const completedChapterCount = await prisma.chapters.count({
-        where: {
-          subject_id: userSubject.subject_id,
-          user_id: user_id,
-          completion_percent: { gte: 100 }
-        }
-      });
-
-      // Update the user_subjects record if counts differ
-      if (actualChapterCount !== userSubject.total_chapters || 
-          completedChapterCount !== userSubject.completed_chapters) {
-        await prisma.user_subjects.update({
-          where: {
-            id: userSubject.id
-          },
-          data: {
-            total_chapters: actualChapterCount,
-            completed_chapters: completedChapterCount,
-            completion_percent: actualChapterCount > 0 ? 
-              Math.round((completedChapterCount / actualChapterCount) * 100) : 0
-          }
-        });
-
-        // Update the local object
-        userSubject.total_chapters = actualChapterCount;
-        userSubject.completed_chapters = completedChapterCount;
-        userSubject.completion_percent = actualChapterCount > 0 ? 
-          Math.round((completedChapterCount / actualChapterCount) * 100) : 0;
+    // Also fetch global curriculum status records
+    const globalStatuses = await prisma.global_curriculum_status.findMany({
+      where: {
+        board: user.board || undefined,
+        grade: user.grade_level || undefined
       }
-    }
-
-    // Fetch curriculum generation statuses for the user
-    const generationStatuses = await prisma.content_generation_status.findMany({
-      where: { user_id: user_id }
     });
 
-    // Add the subjects data to the user object
-    const userWithSubjects = {
+    const user_subjects = enrollments.map(enr => {
+      const sub = enr.subject;
+      const chapters = sub.chapters || [];
+      const total_chapters = chapters.length;
+
+      let completed_chapters = 0;
+      let totalTopicPercentSum = 0;
+      let totalTopicCount = 0;
+
+      for (const ch of chapters) {
+        const topics = ch.topics || [];
+        const chTopicCount = topics.length;
+        let chCompletedTopics = 0;
+
+        for (const top of topics) {
+          totalTopicCount++;
+          const prog = top.user_progress?.[0];
+          if (prog?.is_completed) {
+            chCompletedTopics++;
+          }
+          totalTopicPercentSum += Number(prog?.completion_percent || 0);
+        }
+
+        if (chTopicCount > 0 && chCompletedTopics >= chTopicCount) {
+          completed_chapters++;
+        }
+      }
+
+      const completion_percent = totalTopicCount > 0
+        ? Math.round(totalTopicPercentSum / totalTopicCount)
+        : 0;
+
+      const statusRecord = globalStatuses.find(gs => gs.subject_name.toLowerCase() === sub.name.toLowerCase());
+
+      return {
+        id: enr.id,
+        subject_id: sub.id,
+        total_chapters,
+        completed_chapters,
+        completion_percent,
+        created_at: enr.enrolled_at,
+        subject: {
+          id: sub.id,
+          name: sub.name,
+          code: sub.code,
+          category: sub.category
+        },
+        generation_status: statusRecord ? {
+          status: statusRecord.status,
+          chapters_generated: statusRecord.chapters_generated,
+          topics_generated: statusRecord.topics_generated,
+          goals_generated: statusRecord.goals_generated,
+          error_message: statusRecord.error_message
+        } : {
+          status: 'completed',
+          chapters_generated: true,
+          topics_generated: true,
+          goals_generated: true
+        }
+      };
+    });
+
+    return res.json({
       ...user,
-      user_subjects: userSubjects.map(us => {
-        const statusRecord = generationStatuses.find(gs => gs.subject_id === us.subject_id);
-        return {
-          id: us.id,
-          subject_id: us.subject_id,
-          total_chapters: us.total_chapters,
-          completed_chapters: us.completed_chapters,
-          completion_percent: us.completion_percent,
-          created_at: us.created_at,
-          subject: us.subjects,
-          generation_status: statusRecord ? {
-            status: statusRecord.status,
-            chapters_generated: statusRecord.chapters_generated,
-            topics_generated: statusRecord.topics_generated,
-            goals_generated: statusRecord.goals_generated,
-            error_message: statusRecord.error_message
-          } : null
-        };
-      })
-    };
-
-    return res.json(userWithSubjects);
+      user_subjects
+    });
   } catch (err) {
     console.error('Error fetching user profile:', err);
     return res.status(500).json({ error: 'Server error' });
@@ -138,4 +157,5 @@ router.get('/', authenticateToken, async (req, res) => {
 });
 
 module.exports = router;
+
 

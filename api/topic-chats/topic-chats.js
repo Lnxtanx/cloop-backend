@@ -69,18 +69,12 @@ router.get('/reports/recent', authenticateToken, async (req, res) => {
 			},
 			take: 3,
 			include: {
-				topics: {
+				topic: {
 					select: {
 						title: true,
-						chapters: {
+						chapter: {
 							select: {
 								title: true
-							}
-						},
-						subjects: {
-							select: {
-								id: true,
-								name: true
 							}
 						}
 					}
@@ -108,20 +102,18 @@ router.get('/reports/subject/:subjectId', authenticateToken, async (req, res) =>
 		const reports = await prisma.user_topic_reports.findMany({
 			where: {
 				user_id: user_id,
-				topics: {
-					subjects: {
-						id: parseInt(subjectId)
-					}
+				topic: {
+					subject_id: parseInt(subjectId)
 				}
 			},
 			orderBy: {
 				updated_at: 'desc'
 			},
 			include: {
-				topics: {
+				topic: {
 					select: {
 						title: true,
-						chapters: {
+						chapter: {
 							select: {
 								title: true
 							}
@@ -189,36 +181,43 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 	}
 
 	try {
-		// First verify that the user has access to this topic
-		const topic = await prisma.topics.findFirst({
+		// First verify that the topic exists
+		const topic = await prisma.global_topics.findUnique({
 			where: {
-				id: parseInt(topicId),
-				user_id: user_id
+				id: parseInt(topicId)
 			},
 			include: {
-				chapters: {
+				chapter: {
 					select: {
 						id: true,
 						title: true,
-						subject_id: true
+						subject_id: true,
+						subject: {
+							select: {
+								id: true,
+								name: true,
+								code: true
+							}
+						}
 					}
 				},
-				subjects: {
+				user_progress: {
+					where: { user_id: user_id },
 					select: {
-						id: true,
-						name: true,
-						code: true
+						is_completed: true,
+						completion_percent: true,
+						time_spent_seconds: true
 					}
 				}
 			}
 		})
 
 		if (!topic) {
-			return res.status(403).json({ error: 'Topic not found or user does not have access' })
+			return res.status(404).json({ error: 'Topic not found' })
 		}
 
 		// Fetch topic goals (we need their ids to find related admin_chat messages)
-		const topicGoalsForIds = await prisma.topic_goals.findMany({
+		const topicGoalsForIds = await prisma.global_topic_goals.findMany({
 			where: { topic_id: parseInt(topicId) },
 			select: { id: true },
 		})
@@ -417,7 +416,7 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 		})
 
 		// Fetch topic goals with progress info
-		const topicGoals = await prisma.topic_goals.findMany({
+		const topicGoals = await prisma.global_topic_goals.findMany({
 			where: {
 				topic_id: parseInt(topicId)
 			},
@@ -517,7 +516,7 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 
 			// Save generated goals
 			for (const goal of goalsData.goals) {
-				await prisma.topic_goals.create({
+				await prisma.global_topic_goals.create({
 					data: {
 						topic_id: parseInt(topicId),
 						title: goal.title,
@@ -529,7 +528,7 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 		}
 
 		// Refetch goals after potential creation
-		const updatedGoals = await prisma.topic_goals.findMany({
+		const updatedGoals = await prisma.global_topic_goals.findMany({
 			where: {
 				topic_id: parseInt(topicId)
 			},
@@ -598,16 +597,17 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 		});
 		console.log('==========================================\n');
 
+		const topicProgress = topic.user_progress?.[0] || {}
 		return res.status(200).json({
 			topic: {
 				id: topic.id,
 				title: topic.title,
 				content: topic.content,
-				is_completed: topic.is_completed,
-				completion_percent: topic.completion_percent,
-				time_spent_seconds: topic.time_spent_seconds || 0,
-				chapter: topic.chapters,
-				subject: topic.subjects
+				is_completed: topicProgress.is_completed || false,
+				completion_percent: topicProgress.completion_percent || 0,
+				time_spent_seconds: topicProgress.time_spent_seconds || 0,
+				chapter: topic.chapter,
+				subject: topic.chapter?.subject
 			},
 			messages: chatMessages.filter(m => m.sender === 'user'),
 			aiMessages: chatMessages.filter(m => m.sender === 'ai'),
@@ -647,33 +647,32 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 		console.log('💬 User Message:', message ? message.substring(0, 100) : 'None');
 		console.log('📎 File:', file_url || 'None');
 
-		// Verify user has access to this topic
-		const topic = await prisma.topics.findFirst({
+		// Verify topic exists
+		const topic = await prisma.global_topics.findUnique({
 			where: {
-				id: parseInt(topicId),
-				user_id: user_id
+				id: parseInt(topicId)
 			},
 			include: {
-				chapters: {
+				chapter: {
 					select: {
-						title: true
-					}
-				},
-				subjects: {
-					select: {
-						name: true
+						title: true,
+						subject: {
+							select: {
+								name: true
+							}
+						}
 					}
 				}
 			}
 		})
 
 		if (!topic) {
-			return res.status(403).json({ error: 'Topic not found or user does not have access' })
+			return res.status(404).json({ error: 'Topic not found' })
 		}
 
 		// Get recent chat history for context (from admin_chat linked via chat_goal_progress)
 		// First get goal ids for this topic
-		const topicGoalsForHistory = await prisma.topic_goals.findMany({
+		const topicGoalsForHistory = await prisma.global_topic_goals.findMany({
 			where: { topic_id: parseInt(topicId) },
 			select: { id: true }
 		})
@@ -732,7 +731,7 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 		})
 
 		// Fetch topic goals with progress data for context
-		const topicGoals = await prisma.topic_goals.findMany({
+		const topicGoals = await prisma.global_topic_goals.findMany({
 			where: {
 				topic_id: parseInt(topicId)
 			},
@@ -1514,7 +1513,7 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 					mastery_score: masteryScore,
 					difficulty_level: 'medium',
 					topic_title: topic.title,
-					subject_name: topic.subjects?.name || null,
+					subject_name: topic.chapter?.subject?.name || null,
 					question_type: questionMode // 'concept' or 'exam'
 				});
 
@@ -1574,18 +1573,31 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 				? Math.round((completedGoalsCount / totalGoalsCount) * 100)
 				: 0
 
-			await prisma.topics.update({
-				where: { id: parseInt(topicId) },
-				data: {
+			await prisma.user_topic_progress.upsert({
+				where: {
+					user_id_topic_id: {
+						user_id: user_id,
+						topic_id: parseInt(topicId)
+					}
+				},
+				update: {
 					completion_percent: completionPercent,
-					is_completed: completionPercent >= 100
+					is_completed: completionPercent >= 100,
+					last_accessed_at: new Date()
+				},
+				create: {
+					user_id: user_id,
+					topic_id: parseInt(topicId),
+					completion_percent: completionPercent,
+					is_completed: completionPercent >= 100,
+					last_accessed_at: new Date()
 				}
 			})
 
 			console.log(`🎯 Topic Progress | Completed Goals: ${completedGoalsCount}/${totalGoalsCount} | Completion: ${completionPercent}%`)
 
 			// 🔧 FIX: Re-fetch goals with UPDATED progress so subsequent AI calls see correct completion status
-			const updatedGoalsAfterProgress = await prisma.topic_goals.findMany({
+			const updatedGoalsAfterProgress = await prisma.global_topic_goals.findMany({
 				where: {
 					topic_id: parseInt(topicId)
 				},
@@ -2034,16 +2046,15 @@ router.post('/:topicId/option', authenticateToken, async (req, res) => {
 	}
 
 	try {
-		// Verify user has access to this topic
-		const topic = await prisma.topics.findFirst({
+		// Verify topic exists
+		const topic = await prisma.global_topics.findUnique({
 			where: {
-				id: parseInt(topicId),
-				user_id: user_id
+				id: parseInt(topicId)
 			}
 		});
 
 		if (!topic) {
-			return res.status(403).json({ error: 'Topic not found or user does not have access' });
+			return res.status(404).json({ error: 'Topic not found' });
 		}
 
 		// Update the related chat_process feedback to record the selected option (if exists)
@@ -2068,7 +2079,7 @@ router.post('/:topicId/option', authenticateToken, async (req, res) => {
 		}
 
 		// Build recent chat history for context
-		const topicGoalsForHistory = await prisma.topic_goals.findMany({ where: { topic_id: parseInt(topicId) }, select: { id: true } });
+		const topicGoalsForHistory = await prisma.global_topic_goals.findMany({ where: { topic_id: parseInt(topicId) }, select: { id: true } });
 		const goalIdsForHistory = topicGoalsForHistory.map(g => g.id);
 
 		const recentMessages = await prisma.admin_chat.findMany({
@@ -2088,7 +2099,7 @@ router.post('/:topicId/option', authenticateToken, async (req, res) => {
 		const chatHistory = recentMessages.reverse();
 
 		// Fetch topic goals and current goal WITH progress data
-		const topicGoals = await prisma.topic_goals.findMany({
+		const topicGoals = await prisma.global_topic_goals.findMany({
 			where: { topic_id: parseInt(topicId) },
 			orderBy: { order: 'asc' },
 			include: {
@@ -2111,14 +2122,6 @@ router.post('/:topicId/option', authenticateToken, async (req, res) => {
 		// --- Check and update goal completion status ---
 		if (currentGoal) {
 			try {
-				// Check current progress for this goal
-				let prog = await prisma.chat_goal_progress.findFirst({ where: { user_id: user_id, goal_id: currentGoal.id } });
-
-				if (prog) {
-					// Goal completion is now driven by AI phase signals (predict_score),
-					// not by a fixed question count. No auto-mark here.
-					// is_completed is set directly in the message handler above.
-				}
 				// Recompute topic completion percent
 				const allGoalsProgress = await prisma.chat_goal_progress.groupBy({
 					by: ['goal_id'],
@@ -2127,10 +2130,29 @@ router.post('/:topicId/option', authenticateToken, async (req, res) => {
 				const completedGoalsCount = allGoalsProgress.length;
 				const totalGoalsCount = topicGoals.length;
 				const completionPercent = totalGoalsCount > 0 ? Math.round((completedGoalsCount / totalGoalsCount) * 100) : 0;
-				await prisma.topics.update({ where: { id: parseInt(topicId) }, data: { completion_percent: completionPercent, is_completed: completionPercent >= 100 } });
+				await prisma.user_topic_progress.upsert({
+					where: {
+						user_id_topic_id: {
+							user_id: user_id,
+							topic_id: parseInt(topicId)
+						}
+					},
+					update: {
+						completion_percent: completionPercent,
+						is_completed: completionPercent >= 100,
+						last_accessed_at: new Date()
+					},
+					create: {
+						user_id: user_id,
+						topic_id: parseInt(topicId),
+						completion_percent: completionPercent,
+						is_completed: completionPercent >= 100,
+						last_accessed_at: new Date()
+					}
+				});
 
 				// Re-fetch goals with updated progress
-				const updatedTopicGoals = await prisma.topic_goals.findMany({
+				const updatedTopicGoals = await prisma.global_topic_goals.findMany({
 					where: { topic_id: parseInt(topicId) },
 					orderBy: { order: 'asc' },
 					include: {
@@ -2306,7 +2328,7 @@ router.post('/:topicId/option', authenticateToken, async (req, res) => {
 		}
 
 		// Return updated goals
-		const updatedGoalsForClient = await prisma.topic_goals.findMany({
+		const updatedGoalsForClient = await prisma.global_topic_goals.findMany({
 			where: { topic_id: parseInt(topicId) },
 			orderBy: { order: 'asc' },
 			include: {
@@ -2345,11 +2367,10 @@ router.post('/:topicId/update-time', authenticateToken, async (req, res) => {
 	}
 
 	try {
-		// Verify user has access to this topic
-		const topic = await prisma.topics.findFirst({
+		// Verify topic exists
+		const topic = await prisma.global_topics.findUnique({
 			where: {
-				id: parseInt(topicId),
-				user_id: user_id
+				id: parseInt(topicId)
 			},
 			select: {
 				id: true,
@@ -2358,7 +2379,7 @@ router.post('/:topicId/update-time', authenticateToken, async (req, res) => {
 		})
 
 		if (!topic) {
-			return res.status(403).json({ error: 'Topic not found or user does not have access' })
+			return res.status(404).json({ error: 'Topic not found' })
 		}
 
 		// Find a recent active session (updated within last 2 minutes)
@@ -2424,15 +2445,26 @@ router.post('/:topicId/update-time', authenticateToken, async (req, res) => {
 			});
 		}
 
-		// Update aggregated time on topic (only adding the new delta)
-		// This fixes the double-counting bug
+		// Update aggregated time on topic in user_topic_progress
 		if (deltaSeconds > 0) {
-			await prisma.topics.update({
-				where: { id: parseInt(topicId) },
-				data: {
+			await prisma.user_topic_progress.upsert({
+				where: {
+					user_id_topic_id: {
+						user_id: user_id,
+						topic_id: parseInt(topicId)
+					}
+				},
+				update: {
 					time_spent_seconds: {
 						increment: Math.floor(deltaSeconds)
-					}
+					},
+					last_accessed_at: new Date()
+				},
+				create: {
+					user_id: user_id,
+					topic_id: parseInt(topicId),
+					time_spent_seconds: Math.floor(deltaSeconds),
+					last_accessed_at: new Date()
 				}
 			});
 		}
@@ -2473,20 +2505,19 @@ router.post('/:topicId/learn-more', authenticateToken, async (req, res) => {
 		console.log('💬 Message:', message || 'Initial greeting');
 		console.log('🆕 Is Initial:', is_initial);
 
-		// Verify topic access
-		const topic = await prisma.topics.findFirst({
+		// Verify topic exists
+		const topic = await prisma.global_topics.findUnique({
 			where: {
-				id: parseInt(topicId),
-				user_id: user_id
+				id: parseInt(topicId)
 			}
 		})
 
 		if (!topic) {
-			return res.status(403).json({ error: 'Topic not found or access denied' })
+			return res.status(404).json({ error: 'Topic not found' })
 		}
 
 		// Fetch topic goals with progress
-		const topicGoals = await prisma.topic_goals.findMany({
+		const topicGoals = await prisma.global_topic_goals.findMany({
 			where: {
 				topic_id: parseInt(topicId)
 			},

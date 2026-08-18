@@ -1,11 +1,12 @@
 const prisma = require('../lib/prisma');
+const { ensureGlobalCurriculum, enrollUserInSubject } = require('./global-curriculum-pipeline');
 
 /**
- * Handle user signup and create pending content generation records
+ * Handle user signup and enroll into global curriculum
  */
 async function handleUserSignup(userId) {
   try {
-    console.log(`Setting up content generation for new user: ${userId}`);
+    console.log(`Setting up global curriculum enrollment for new user: ${userId}`);
 
     // Get user details
     const user = await prisma.users.findUnique({
@@ -15,14 +16,11 @@ async function handleUserSignup(userId) {
     if (!user) {
       throw new Error(`User ${userId} not found`);
     }
-    // Resolve grade level record from the user's stored grade name
-    // The frontend now stores grade name in users.grade_level (e.g., "Grade 6").
-    // Use findFirst since `name` is not unique in the schema.
-    const gradeLevelRecord = user.grade_level
-      ? await prisma.grade_levels.findFirst({ where: { name: user.grade_level } })
-      : null;
 
-    if (!gradeLevelRecord || !user.board) {
+    const gradeLevel = user.grade_level;
+    const board = user.board;
+
+    if (!gradeLevel || !board) {
       console.log(`User ${userId} has incomplete profile, skipping content generation setup`);
       return {
         success: false,
@@ -30,21 +28,37 @@ async function handleUserSignup(userId) {
       };
     }
 
-    // Get user's subjects
-    const userSubjects = await prisma.user_subjects.findMany({
-      where: { user_id: userId },
-      include: {
-        subjects: {
-          select: {
-            id: true,
-            name: true,
-            code: true
+    // Get user's subjects (check user_subject_enrollments or subjects table)
+    let subjectNames = [];
+
+    // Check if user has legacy subjects array
+    if (user.subjects && user.subjects.length > 0) {
+      const subjectRecords = await prisma.subjects.findMany({
+        where: {
+          OR: [
+            { code: { in: user.subjects } },
+            { name: { in: user.subjects } }
+          ]
+        },
+        select: { name: true, code: true, category: true }
+      });
+      subjectNames = subjectRecords;
+    }
+
+    // Fallback: check deprecated user_subjects table
+    if (subjectNames.length === 0) {
+      const userSubjects = await prisma.user_subjects.findMany({
+        where: { user_id: userId },
+        include: {
+          subjects: {
+            select: { id: true, name: true, code: true, category: true }
           }
         }
-      }
-    });
+      });
+      subjectNames = userSubjects.map(us => us.subjects).filter(Boolean);
+    }
 
-    if (userSubjects.length === 0) {
+    if (subjectNames.length === 0) {
       console.log(`User ${userId} has no subjects, skipping content generation setup`);
       return {
         success: false,
@@ -52,54 +66,80 @@ async function handleUserSignup(userId) {
       };
     }
 
-    // Create pending content generation status for each subject
-    const createdStatuses = [];
-    for (const userSubject of userSubjects) {
+    const enrolledStatuses = [];
+
+    for (const sub of subjectNames) {
       try {
-        const status = await prisma.content_generation_status.upsert({
+        // 1. Find or create global_subject
+        let globalSubject = await prisma.global_subjects.findUnique({
           where: {
-            user_id_subject_id_grade_level_board: {
-              user_id: userId,
-              subject_id: userSubject.subject_id,
-              // store and compare using the grade name
-              grade_level: gradeLevelRecord.name,
-              board: user.board
+            board_grade_name: {
+              board: board,
+              grade: gradeLevel,
+              name: sub.name
             }
-          },
-          update: {
-            status: 'pending',
-            updated_at: new Date()
-          },
-          create: {
-            user_id: userId,
-            subject_id: userSubject.subject_id,
-            grade_level: gradeLevelRecord.name,
-            board: user.board,
-            status: 'pending',
-            chapters_generated: false,
-            topics_generated: false,
-            goals_generated: false
           }
         });
 
-        createdStatuses.push({
-          subject: userSubject.subjects.name,
-          status: status.status
+        if (!globalSubject) {
+          globalSubject = await prisma.global_subjects.create({
+            data: {
+              board: board,
+              grade: gradeLevel,
+              name: sub.name,
+              code: sub.code,
+              category: sub.category
+            }
+          });
+
+          // Create pending status in global_curriculum_status
+          await prisma.global_curriculum_status.upsert({
+            where: {
+              board_grade_subject_name: {
+                board: board,
+                grade: gradeLevel,
+                subject_name: sub.name
+              }
+            },
+            update: {
+              global_subject_id: globalSubject.id,
+              status: 'pending'
+            },
+            create: {
+              board: board,
+              grade: gradeLevel,
+              subject_name: sub.name,
+              global_subject_id: globalSubject.id,
+              status: 'pending'
+            }
+          });
+
+          // Trigger generation asynchronously in background
+          ensureGlobalCurriculum(board, gradeLevel, sub.name, sub.code, sub.category)
+            .then(() => console.log(`✓ Global curriculum generated for ${board} ${gradeLevel} ${sub.name}`))
+            .catch(err => console.error(`Error in async global curriculum gen for ${sub.name}:`, err.message));
+        }
+
+        // 2. Enroll user in global subject
+        await enrollUserInSubject(userId, globalSubject.id);
+
+        enrolledStatuses.push({
+          subject: sub.name,
+          globalSubjectId: globalSubject.id
         });
 
-        console.log(`✓ Created pending status for subject: ${userSubject.subjects.name}`);
-      } catch (error) {
-        console.error(`Error creating status for subject ${userSubject.subject_id}:`, error);
+        console.log(`✓ Enrolled user ${userId} in global subject: ${sub.name}`);
+      } catch (subErr) {
+        console.error(`Error enrolling user ${userId} in ${sub.name}:`, subErr);
       }
     }
 
-    console.log(`Content generation setup complete for user ${userId}. Created ${createdStatuses.length} pending task(s).`);
-    console.log('Content will be generated when the backend starts or through the content generation API.');
+    console.log(`Global curriculum setup complete for user ${userId}. Enrolled in ${enrolledStatuses.length} subject(s).`);
 
     return {
       success: true,
-      message: `Content generation scheduled for ${createdStatuses.length} subject(s)`,
-      statuses: createdStatuses
+      message: `Enrolled in ${enrolledStatuses.length} subject(s)`,
+      statuses: enrolledStatuses
     };
 
   } catch (error) {
@@ -113,123 +153,7 @@ async function handleUserSignup(userId) {
  */
 async function handleProfileUpdate(userId, updateData) {
   try {
-    console.log(`Checking content generation setup after profile update for user: ${userId}`);
-
-    // Get updated user details
-    const user = await prisma.users.findUnique({
-      where: { user_id: userId }
-    });
-
-    if (!user) {
-      throw new Error(`User ${userId} not found`);
-    }
-
-    // Resolve grade level record from the user's stored grade code
-    const gradeLevelRecord = user.grade_level
-      ? await prisma.grade_levels.findFirst({ where: { name: user.grade_level } })
-      : null;
-
-    if (!gradeLevelRecord || !user.board) {
-      console.log(`User ${userId} still has incomplete profile, skipping content generation setup`);
-      return {
-        success: false,
-        message: 'User profile incomplete. Grade level and board are required.'
-      };
-    }
-
-    // Get user's subjects from user_subjects table
-    const userSubjects = await prisma.user_subjects.findMany({
-      where: { user_id: userId },
-      include: {
-        subjects: {
-          select: {
-            id: true,
-            name: true,
-            code: true
-          }
-        }
-      }
-    });
-
-    if (userSubjects.length === 0) {
-      console.log(`User ${userId} has no subjects, skipping content generation setup`);
-      return {
-        success: false,
-        message: 'User has no subjects assigned.'
-      };
-    }
-
-    // Create or update pending content generation status for each subject
-    const createdStatuses = [];
-    for (const userSubject of userSubjects) {
-      try {
-        // Check if content generation status already exists
-                const existingStatus = await prisma.content_generation_status.findUnique({
-          where: {
-            user_id_subject_id_grade_level_board: {
-              user_id: userId,
-              subject_id: userSubject.subject_id,
-              grade_level: gradeLevelRecord.name,
-              board: user.board
-            }
-          }
-        });
-
-        // Only create if it doesn't exist or if it failed previously
-        if (!existingStatus || existingStatus.status === 'failed') {
-          const status = await prisma.content_generation_status.upsert({
-            where: {
-              user_id_subject_id_grade_level_board: {
-                user_id: userId,
-                subject_id: userSubject.subject_id,
-                grade_level: gradeLevelRecord.name,
-                board: user.board
-              }
-            },
-            update: {
-              status: 'pending',
-              updated_at: new Date()
-            },
-            create: {
-              user_id: userId,
-              subject_id: userSubject.subject_id,
-              grade_level: gradeLevelRecord.name,
-              board: user.board,
-              status: 'pending',
-              chapters_generated: false,
-              topics_generated: false,
-              goals_generated: false
-            }
-          });
-
-          createdStatuses.push({
-            subject: userSubject.subjects.name,
-            status: status.status
-          });
-
-          console.log(`✓ Created/updated pending status for subject: ${userSubject.subjects.name}`);
-        } else {
-          console.log(`✓ Content generation already ${existingStatus.status} for subject: ${userSubject.subjects.name}`);
-        }
-      } catch (error) {
-        console.error(`Error creating status for subject ${userSubject.subject_id}:`, error);
-      }
-    }
-
-    if (createdStatuses.length > 0) {
-      console.log(`Content generation setup complete for user ${userId}. Created/updated ${createdStatuses.length} pending task(s).`);
-      return {
-        success: true,
-        message: `Content generation scheduled for ${createdStatuses.length} subject(s)`,
-        statuses: createdStatuses
-      };
-    } else {
-      return {
-        success: true,
-        message: 'All subjects already have content generation in progress or completed'
-      };
-    }
-
+    return await handleUserSignup(userId);
   } catch (error) {
     console.error('Error in handleProfileUpdate:', error);
     throw error;
@@ -240,4 +164,5 @@ module.exports = {
   handleUserSignup,
   handleProfileUpdate
 };
+
 

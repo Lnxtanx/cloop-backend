@@ -5,7 +5,7 @@ const { authenticateToken } = require('../../middleware/auth')
 const prisma = require('../../lib/prisma')
 
 // GET /api/chapters/:subjectId
-// Fetch all chapters for a specific subject and user
+// Fetch all global chapters for a specific subject and calculate user progress
 router.get('/:subjectId', authenticateToken, async (req, res) => {
 	let user_id = req.user?.user_id
 	const { subjectId } = req.params
@@ -20,14 +20,17 @@ router.get('/:subjectId', authenticateToken, async (req, res) => {
 	}
 
 	try {
-		// First verify that the user has access to this subject
-		const userSubject = await prisma.user_subjects.findFirst({
+		const parsedSubjectId = parseInt(subjectId)
+
+		// Check enrollment or global subject existence
+		let subjectInfo = null
+		const enrollment = await prisma.user_subject_enrollment.findFirst({
 			where: {
 				user_id: user_id,
-				subject_id: parseInt(subjectId)
+				subject_id: parsedSubjectId
 			},
 			include: {
-				subjects: {
+				subject: {
 					select: {
 						id: true,
 						name: true,
@@ -38,33 +41,68 @@ router.get('/:subjectId', authenticateToken, async (req, res) => {
 			}
 		})
 
-		if (!userSubject) {
-			return res.status(403).json({ error: 'User does not have access to this subject' })
+		if (enrollment) {
+			subjectInfo = enrollment.subject
+		} else {
+			// Check if global subject exists directly
+			const globalSubject = await prisma.global_subjects.findUnique({
+				where: { id: parsedSubjectId },
+				select: {
+					id: true,
+					name: true,
+					code: true,
+					category: true
+				}
+			})
+
+			if (!globalSubject) {
+				return res.status(404).json({ error: 'Subject not found' })
+			}
+
+			subjectInfo = globalSubject
+
+			// Auto-enroll user if not yet enrolled
+			await prisma.user_subject_enrollment.upsert({
+				where: {
+					user_id_subject_id: {
+						user_id: user_id,
+						subject_id: parsedSubjectId
+					}
+				},
+				update: {},
+				create: {
+					user_id: user_id,
+					subject_id: parsedSubjectId
+				}
+			}).catch(() => {})
 		}
 
-		// Fetch chapters for this subject and user
-		const chapters = await prisma.chapters.findMany({
+		// Fetch global chapters and user's topic progress
+		const chapters = await prisma.global_chapters.findMany({
 			where: {
-				subject_id: parseInt(subjectId),
-				user_id: user_id
+				subject_id: parsedSubjectId
 			},
-			orderBy: {
-				created_at: 'asc'
-			},
+			orderBy: [
+				{ order: 'asc' },
+				{ id: 'asc' }
+			],
 			select: {
 				id: true,
 				title: true,
 				content: true,
+				order: true,
 				created_at: true,
-				total_topics: true,
-				completed_topics: true,
-				completion_percent: true,
 				subject_id: true,
-				user_id: true,
 				topics: {
 					select: {
-						is_completed: true,
-						completion_percent: true
+						id: true,
+						user_progress: {
+							where: { user_id: user_id },
+							select: {
+								is_completed: true,
+								completion_percent: true
+							}
+						}
 					}
 				}
 			}
@@ -74,26 +112,37 @@ router.get('/:subjectId', authenticateToken, async (req, res) => {
 		const chaptersWithProgress = chapters.map(chapter => {
 			const topics = chapter.topics || []
 			const total_topics = topics.length
-			const completed_topics = topics.filter(t => t.is_completed).length
+			let completed_topics = 0
+			let sumPercent = 0
+
+			for (const t of topics) {
+				const prog = t.user_progress?.[0]
+				if (prog?.is_completed) {
+					completed_topics++
+				}
+				sumPercent += Number(prog?.completion_percent || 0)
+			}
 
 			let completion_percent = 0
 			if (total_topics > 0) {
-				const sumPercent = topics.reduce((acc, t) => acc + (Number(t.completion_percent) || 0), 0)
 				completion_percent = Number((sumPercent / total_topics).toFixed(2))
 			}
 
 			return {
-				...chapter,
+				id: chapter.id,
+				title: chapter.title,
+				content: chapter.content,
+				created_at: chapter.created_at,
 				total_topics,
 				completed_topics,
 				completion_percent,
-				// Remove topics from response if not needed by client to keep payload small
-				topics: undefined
+				subject_id: chapter.subject_id,
+				user_id: user_id
 			}
 		})
 
 		return res.status(200).json({
-			subject: userSubject.subjects,
+			subject: subjectInfo,
 			chapters: chaptersWithProgress
 		})
 	} catch (err) {
@@ -103,4 +152,5 @@ router.get('/:subjectId', authenticateToken, async (req, res) => {
 })
 
 module.exports = router
+
 

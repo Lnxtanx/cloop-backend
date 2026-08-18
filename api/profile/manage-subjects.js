@@ -3,7 +3,7 @@ const router = express.Router();
 const { authenticateToken } = require('../../middleware/auth');
 
 const prisma = require('../../lib/prisma');
-const CurriculumAutoTrigger = require('../../services/curriculum-auto-trigger');
+const { enrollUserInSubject, ensureGlobalCurriculum } = require('../../services/global-curriculum-pipeline');
 
 // POST /api/profile/add-subject
 router.post('/add-subject', authenticateToken, async (req, res) => {
@@ -19,73 +19,67 @@ router.post('/add-subject', authenticateToken, async (req, res) => {
   }
 
   try {
-    // Check if user already has this subject
-    const existingUserSubject = await prisma.user_subjects.findUnique({
+    const parsedSubjectId = parseInt(subject_id);
+
+    // Check if user already enrolled
+    const existingEnrollment = await prisma.user_subject_enrollment.findUnique({
       where: {
         user_id_subject_id: {
           user_id: user_id,
-          subject_id: subject_id
+          subject_id: parsedSubjectId
         }
       }
     });
 
-    if (existingUserSubject) {
+    if (existingEnrollment) {
       return res.status(400).json({ error: 'Subject already added to your profile' });
     }
 
-    // Verify subject exists
-    const subject = await prisma.subjects.findUnique({
-      where: { id: subject_id }
+    // Verify global subject exists
+    let subject = await prisma.global_subjects.findUnique({
+      where: { id: parsedSubjectId },
+      include: {
+        chapters: true
+      }
     });
+
+    // Fallback: check legacy subjects table
+    if (!subject) {
+      const legacySub = await prisma.subjects.findUnique({
+        where: { id: parsedSubjectId }
+      });
+
+      if (legacySub) {
+        const user = await prisma.users.findUnique({ where: { user_id: user_id } });
+        if (user && user.board && user.grade_level) {
+          const genResult = await ensureGlobalCurriculum(user.board, user.grade_level, legacySub.name, legacySub.code, legacySub.category);
+          subject = genResult.globalSubject;
+        }
+      }
+    }
 
     if (!subject) {
       return res.status(404).json({ error: 'Subject not found' });
     }
 
-    // Count existing chapters for this subject and user
-    const totalChapters = await prisma.chapters.count({
-      where: {
-        subject_id: subject_id,
-        user_id: user_id
-      }
-    });
-
-    // Add subject to user_subjects table
-    const userSubject = await prisma.user_subjects.create({
-      data: {
-        user_id: user_id,
-        subject_id: subject_id,
-        total_chapters: totalChapters,
-        completed_chapters: 0,
-        completion_percent: 0
-      },
-      include: {
-        subjects: {
-          select: {
-            id: true,
-            name: true,
-            code: true,
-            category: true
-          }
-        }
-      }
-    });
-
-    // Trigger background curriculum generation setup for the newly added subject
-    CurriculumAutoTrigger.handleProfileUpdate(user_id, {}).catch(err => {
-      console.error('Error triggering curriculum generation for added subject:', err);
-    });
+    // Enroll user in global subject
+    const enrollment = await enrollUserInSubject(user_id, subject.id);
 
     return res.json({
       success: true,
       userSubject: {
-        id: userSubject.id,
-        subject_id: userSubject.subject_id,
-        total_chapters: userSubject.total_chapters,
-        completed_chapters: userSubject.completed_chapters,
-        completion_percent: userSubject.completion_percent,
-        created_at: userSubject.created_at,
-        subject: userSubject.subjects
+        id: enrollment.id,
+        subject_id: subject.id,
+        total_chapters: subject.chapters?.length || 0,
+        completed_chapters: 0,
+        completion_percent: 0,
+        created_at: enrollment.enrolled_at,
+        subject: {
+          id: subject.id,
+          name: subject.name,
+          code: subject.code,
+          category: subject.category
+        }
       }
     });
 
@@ -109,27 +103,13 @@ router.delete('/remove-subject', authenticateToken, async (req, res) => {
   }
 
   try {
-    // Check if user has this subject
-    const existingUserSubject = await prisma.user_subjects.findUnique({
-      where: {
-        user_id_subject_id: {
-          user_id: user_id,
-          subject_id: subject_id
-        }
-      }
-    });
+    const parsedSubjectId = parseInt(subject_id);
 
-    if (!existingUserSubject) {
-      return res.status(404).json({ error: 'Subject not found in your profile' });
-    }
-
-    // Remove subject from user_subjects table
-    await prisma.user_subjects.delete({
+    // Remove enrollment
+    await prisma.user_subject_enrollment.deleteMany({
       where: {
-        user_id_subject_id: {
-          user_id: user_id,
-          subject_id: subject_id
-        }
+        user_id: user_id,
+        subject_id: parsedSubjectId
       }
     });
 
@@ -142,4 +122,5 @@ router.delete('/remove-subject', authenticateToken, async (req, res) => {
 });
 
 module.exports = router;
+
 

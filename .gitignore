@@ -7,3 +7,7 @@ node_modules
 # Service Account Keys
 premium-aloe-*.json
 *.json.key
+
+# Logs
+logs/
+

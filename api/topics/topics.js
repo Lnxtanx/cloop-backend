@@ -5,21 +5,17 @@ const { authenticateToken } = require('../../middleware/auth')
 const prisma = require('../../lib/prisma')
 
 // GET /api/topics/search
-// Search topics with filters
+// Search global topics with filters and user progress
 router.get('/search', authenticateToken, async (req, res) => {
 	let user_id = parseInt(req.user?.user_id)
-	const { q, subjectId, chapterId, status, limit } = req.query // Added limit
-
-	console.log(`Search request: user_id=${user_id}, q="${q}", filters={subject:${subjectId}, chapter:${chapterId}, status:${status}}, limit=${limit}`)
+	const { q, subjectId, chapterId, status, limit } = req.query
 
 	if (!user_id) {
 		return res.status(401).json({ error: 'Authentication required' })
 	}
 
 	try {
-		const whereClause = {
-			user_id: user_id,
-		}
+		const whereClause = {}
 
 		// Text search
 		if (q && q.trim().length > 0) {
@@ -31,45 +27,63 @@ router.get('/search', authenticateToken, async (req, res) => {
 
 		// Filters
 		if (subjectId && !isNaN(parseInt(subjectId))) {
-			whereClause.subject_id = parseInt(subjectId) // Ensure it's an integer
+			whereClause.subject_id = parseInt(subjectId)
 		}
 
 		if (chapterId && !isNaN(parseInt(chapterId))) {
 			whereClause.chapter_id = parseInt(chapterId)
 		}
 
-		if (status) {
-			if (status === 'completed') {
-				whereClause.is_completed = true
-			} else if (status === 'in_progress') {
-				whereClause.is_completed = false
-				whereClause.completion_percent = { gt: 0 }
-			} else if (status === 'not_started') {
-				whereClause.is_completed = false
-				whereClause.completion_percent = { equals: 0 } // Explicitly 0
-			}
-		}
+		const resultLimit = limit ? parseInt(limit) : 5
 
-		console.log('Search WHERE clause:', JSON.stringify(whereClause, null, 2))
-
-		const resultLimit = limit ? parseInt(limit) : 5; // Default to 5 as requested (3-5)
-
-		const topics = await prisma.topics.findMany({
+		const topics = await prisma.global_topics.findMany({
 			where: whereClause,
 			take: resultLimit,
-			orderBy: { id: 'desc' }, // Use ID desc for consistent "newest" behavior if updated_at isn't reliable
+			orderBy: { id: 'desc' },
 			include: {
-				chapters: {
+				chapter: {
 					select: { title: true }
 				},
-				subjects: {
-					select: { name: true }
+				user_progress: {
+					where: { user_id: user_id },
+					select: {
+						is_completed: true,
+						completion_percent: true,
+						time_spent_seconds: true
+					}
 				}
 			}
 		})
 
-		console.log(`Search results found: ${topics.length}`)
-		return res.json(topics)
+		const formattedTopics = topics.map(t => {
+			const progress = t.user_progress?.[0] || {}
+			return {
+				id: t.id,
+				title: t.title,
+				content: t.content,
+				subject_id: t.subject_id,
+				chapter_id: t.chapter_id,
+				order: t.order,
+				is_completed: progress.is_completed || false,
+				completion_percent: progress.completion_percent || 0,
+				time_spent_seconds: progress.time_spent_seconds || 0,
+				chapters: { title: t.chapter?.title }
+			}
+		})
+
+		// Apply status filtering in-memory if needed
+		let filtered = formattedTopics
+		if (status) {
+			if (status === 'completed') {
+				filtered = formattedTopics.filter(t => t.is_completed)
+			} else if (status === 'in_progress') {
+				filtered = formattedTopics.filter(t => !t.is_completed && Number(t.completion_percent) > 0)
+			} else if (status === 'not_started') {
+				filtered = formattedTopics.filter(t => !t.is_completed && Number(t.completion_percent) === 0)
+			}
+		}
+
+		return res.json(filtered)
 	} catch (err) {
 		console.error('Error searching topics:', err)
 		return res.status(500).json({ error: 'Search failed' })
@@ -77,12 +91,11 @@ router.get('/search', authenticateToken, async (req, res) => {
 })
 
 // GET /api/topics/:chapterId
-// Fetch all topics for a specific chapter and user
+// Fetch all topics for a specific chapter with user progress
 router.get('/:chapterId', authenticateToken, async (req, res) => {
 	let user_id = req.user?.user_id
 	const { chapterId } = req.params
 
-	// For production, always require authenticated user
 	if (!user_id) {
 		return res.status(401).json({ error: 'Authentication required - please login' })
 	}
@@ -92,14 +105,13 @@ router.get('/:chapterId', authenticateToken, async (req, res) => {
 	}
 
 	try {
-		// First verify that the user has access to this chapter
-		const chapter = await prisma.chapters.findFirst({
-			where: {
-				id: parseInt(chapterId),
-				user_id: user_id
-			},
+		const parsedChapterId = parseInt(chapterId)
+
+		// Fetch the global chapter
+		const chapter = await prisma.global_chapters.findUnique({
+			where: { id: parsedChapterId },
 			include: {
-				subjects: {
+				subject: {
 					select: {
 						id: true,
 						name: true,
@@ -111,31 +123,65 @@ router.get('/:chapterId', authenticateToken, async (req, res) => {
 		})
 
 		if (!chapter) {
-			return res.status(403).json({ error: 'Chapter not found or user does not have access' })
+			return res.status(404).json({ error: 'Chapter not found' })
 		}
 
-		// Fetch topics for this chapter and user
-		const topics = await prisma.topics.findMany({
+		// Fetch all global topics for this chapter with user progress
+		const topics = await prisma.global_topics.findMany({
 			where: {
-				chapter_id: parseInt(chapterId),
-				user_id: user_id
+				chapter_id: parsedChapterId
 			},
-			orderBy: {
-				created_at: 'asc'
-			},
+			orderBy: [
+				{ order: 'asc' },
+				{ id: 'asc' }
+			],
 			select: {
 				id: true,
 				title: true,
 				content: true,
+				order: true,
 				created_at: true,
-				is_completed: true,
-				completion_percent: true,
 				subject_id: true,
 				chapter_id: true,
-				user_id: true,
-				time_spent_seconds: true
+				user_progress: {
+					where: { user_id: user_id },
+					select: {
+						is_completed: true,
+						completion_percent: true,
+						time_spent_seconds: true
+					}
+				}
 			}
 		})
+
+		let completed_topics = 0
+		let sumPercent = 0
+
+		const topicsWithProgress = topics.map(topic => {
+			const progress = topic.user_progress?.[0] || {}
+			const is_completed = progress.is_completed || false
+			const completion_percent = progress.completion_percent ? Number(progress.completion_percent) : 0
+			const time_spent_seconds = progress.time_spent_seconds || 0
+
+			if (is_completed) completed_topics++
+			sumPercent += completion_percent
+
+			return {
+				id: topic.id,
+				title: topic.title,
+				content: topic.content,
+				created_at: topic.created_at,
+				is_completed,
+				completion_percent,
+				subject_id: topic.subject_id,
+				chapter_id: topic.chapter_id,
+				user_id: user_id,
+				time_spent_seconds
+			}
+		})
+
+		const total_topics = topics.length
+		const chapter_completion_percent = total_topics > 0 ? Number((sumPercent / total_topics).toFixed(2)) : 0
 
 		return res.status(200).json({
 			chapter: {
@@ -143,12 +189,12 @@ router.get('/:chapterId', authenticateToken, async (req, res) => {
 				title: chapter.title,
 				content: chapter.content,
 				created_at: chapter.created_at,
-				total_topics: chapter.total_topics,
-				completed_topics: chapter.completed_topics,
-				completion_percent: chapter.completion_percent,
-				subject: chapter.subjects
+				total_topics,
+				completed_topics,
+				completion_percent: chapter_completion_percent,
+				subject: chapter.subject
 			},
-			topics: topics
+			topics: topicsWithProgress
 		})
 	} catch (err) {
 		console.error('Error fetching topics:', err)
@@ -157,4 +203,5 @@ router.get('/:chapterId', authenticateToken, async (req, res) => {
 })
 
 module.exports = router
+
 
