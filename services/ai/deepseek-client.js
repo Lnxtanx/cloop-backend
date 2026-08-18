@@ -60,8 +60,17 @@ async function invokeModel(systemPrompt, messages, options = {}) {
 
     if (options.responseFormat) {
         payload.response_format = options.responseFormat;
-    } else if (options.jsonFormat !== false && !model.includes('reasoner')) {
+    } else if (options.jsonFormat === true && !model.includes('reasoner')) {
         payload.response_format = { type: 'json_object' };
+        // DeepSeek requires the word 'json' to appear in the prompt when using response_format: { type: 'json_object' }
+        const hasJsonWord = formattedMessages.some(m => /json/i.test(m.content));
+        if (!hasJsonWord) {
+            if (formattedMessages.length > 0 && formattedMessages[0].role === 'system') {
+                formattedMessages[0].content += '\nRespond in valid JSON format.';
+            } else {
+                formattedMessages.unshift({ role: 'system', content: 'Respond in valid JSON format.' });
+            }
+        }
     }
 
     console.log(`[DeepSeek] 🚀 Invoking model: ${model} (${formattedMessages.length} messages)`);

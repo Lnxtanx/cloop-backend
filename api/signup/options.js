@@ -34,8 +34,34 @@ router.get('/', async (req, res) => {
 			return a.name.localeCompare(b.name);
 		});
 
+		// Dynamic board-specific subject filtering
+		const boardIdParam = req.query.board_id ? parseInt(req.query.board_id) : null;
+		let filteredSubjects = subjects;
+
+		if (boardIdParam) {
+			const selectedBoard = boards.find(b => b.id === boardIdParam);
+			if (selectedBoard) {
+				const code = selectedBoard.code?.toUpperCase() || '';
+				const name = selectedBoard.name?.toLowerCase() || '';
+
+				if (code === 'KA_STATE' || name.includes('karnataka')) {
+					const allowed = ['Mathematics', 'Science', 'Social Studies', 'Kannada', 'English', 'Hindi', 'Computer Science', 'Environmental Studies', 'Art & Craft'];
+					filteredSubjects = subjects.filter(s => allowed.includes(s.name));
+				} else if (code === 'MH_STATE' || name.includes('maharashtra')) {
+					const allowed = ['Mathematics', 'Science', 'Social Studies', 'Marathi', 'English', 'Hindi', 'Computer Science', 'Environmental Studies', 'Art & Craft'];
+					filteredSubjects = subjects.filter(s => allowed.includes(s.name));
+				} else if (code === 'CBSE' || name.includes('cbse') || name.includes('central board')) {
+					const allowed = ['Mathematics', 'Science', 'Social Studies', 'English', 'Hindi', 'Sanskrit', 'Computer Science', 'Environmental Studies', 'Art & Craft'];
+					filteredSubjects = subjects.filter(s => allowed.includes(s.name));
+				} else if (code === 'ICSE' || name.includes('icse') || name.includes('indian certificate')) {
+					const allowed = ['Mathematics', 'Science', 'Social Studies', 'English', 'Hindi', 'Computer Science', 'Environmental Studies', 'Art & Craft'];
+					filteredSubjects = subjects.filter(s => allowed.includes(s.name));
+				}
+			}
+		}
+
 		return res.status(200).json({
-			// Return only grade names as an array of strings. Frontend expects only the name now.
+			// Return only grade names as an array of strings.
 			grades: grades.map(grade => grade.name),
 			boards: boards.map(board => ({
 				id: board.id,
@@ -43,7 +69,7 @@ router.get('/', async (req, res) => {
 				name: board.name,
 				description: board.description
 			})),
-			subjects: subjects.map(subject => ({
+			subjects: filteredSubjects.map(subject => ({
 				id: subject.id,
 				code: subject.code,
 				name: subject.name,

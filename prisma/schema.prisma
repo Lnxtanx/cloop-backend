@@ -310,6 +310,7 @@ model user_subject_enrollment {
   subject     global_subjects  @relation(fields: [subject_id], references: [id], onDelete: Cascade)
 
   @@unique([user_id, subject_id])
+  @@index([user_id])
 }
 
 /// Per-user chapter progress tracking
@@ -327,6 +328,7 @@ model user_chapter_progress {
   chapter            global_chapters  @relation(fields: [chapter_id], references: [id], onDelete: Cascade)
 
   @@unique([user_id, chapter_id])
+  @@index([user_id])
 }
 
 /// Per-user topic progress tracking
@@ -344,6 +346,7 @@ model user_topic_progress {
   topic              global_topics  @relation(fields: [topic_id], references: [id], onDelete: Cascade)
 
   @@unique([user_id, topic_id])
+  @@index([user_id])
 }
 
 model admin_chat {
