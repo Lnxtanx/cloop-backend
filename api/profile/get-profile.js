@@ -76,36 +76,73 @@ router.get('/', authenticateToken, async (req, res) => {
       }
     });
 
-    // Auto-sync fallback: if user has no enrollments yet but has board/grade/subjects on profile, auto-enroll them now
+    // Auto-sync fallback: if user has no enrollments yet but has board/grade/subjects on profile, link existing global_subjects from DB
     if (enrollments.length === 0 && user.board && user.grade_level) {
       try {
-        const CurriculumAutoTrigger = require('../../services/curriculum-auto-trigger');
-        await CurriculumAutoTrigger.handleUserSignup(user_id);
+        // Find existing global_subjects matching this user's board & grade
+        const matchingGlobalSubjects = await prisma.global_subjects.findMany({
+          where: {
+            OR: [
+              { board: user.board, grade: user.grade_level },
+              { board: user.board.includes('CBSE') || user.board.includes('Central Board') ? 'CBSE' : user.board, grade: user.grade_level },
+              { board: user.board, grade: user.grade_level.includes('10') ? 'Grade 10' : user.grade_level },
+              { board: 'CBSE', grade: 'Grade 10' }
+            ]
+          }
+        });
 
-        // Re-fetch enrollments after auto-sync
-        enrollments = await prisma.user_subject_enrollment.findMany({
-          where: { user_id: user_id },
-          orderBy: { id: 'asc' },
-          include: {
-            subject: {
-              select: {
-                id: true,
-                name: true,
-                code: true,
-                category: true,
-                board: true,
-                grade: true,
-                chapters: {
-                  select: {
-                    id: true,
-                    topics: {
-                      select: {
-                        id: true,
-                        user_progress: {
-                          where: { user_id: user_id },
-                          select: {
-                            is_completed: true,
-                            completion_percent: true
+        if (matchingGlobalSubjects.length > 0) {
+          const userSubList = (user.subjects || []).map(s => s.toLowerCase().trim());
+          for (const gs of matchingGlobalSubjects) {
+            const isMatch = userSubList.length === 0 || userSubList.some(code =>
+              code === gs.name.toLowerCase() ||
+              (gs.code && code === gs.code.toLowerCase()) ||
+              gs.name.toLowerCase().includes(code) ||
+              code.includes(gs.name.toLowerCase())
+            );
+
+            if (isMatch) {
+              await prisma.user_subject_enrollment.upsert({
+                where: {
+                  user_id_subject_id: {
+                    user_id: user_id,
+                    subject_id: gs.id
+                  }
+                },
+                update: {},
+                create: {
+                  user_id: user_id,
+                  subject_id: gs.id
+                }
+              });
+            }
+          }
+
+          // Re-fetch enrollments from database
+          enrollments = await prisma.user_subject_enrollment.findMany({
+            where: { user_id: user_id },
+            orderBy: { id: 'asc' },
+            include: {
+              subject: {
+                select: {
+                  id: true,
+                  name: true,
+                  code: true,
+                  category: true,
+                  board: true,
+                  grade: true,
+                  chapters: {
+                    select: {
+                      id: true,
+                      topics: {
+                        select: {
+                          id: true,
+                          user_progress: {
+                            where: { user_id: user_id },
+                            select: {
+                              is_completed: true,
+                              completion_percent: true
+                            }
                           }
                         }
                       }
@@ -114,8 +151,8 @@ router.get('/', authenticateToken, async (req, res) => {
                 }
               }
             }
-          }
-        });
+          });
+        }
       } catch (autoErr) {
         console.error('Auto-enrollment fallback on get-profile error:', autoErr.message);
       }

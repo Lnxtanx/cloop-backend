@@ -70,7 +70,7 @@ async function handleUserSignup(userId) {
 
     for (const sub of subjectNames) {
       try {
-        // 1. Find or create global_subject
+        // 1. Find global_subject in DB
         let globalSubject = await prisma.global_subjects.findUnique({
           where: {
             board_grade_name: {
@@ -82,55 +82,29 @@ async function handleUserSignup(userId) {
         });
 
         if (!globalSubject) {
-          globalSubject = await prisma.global_subjects.create({
-            data: {
-              board: board,
-              grade: gradeLevel,
-              name: sub.name,
-              code: sub.code,
-              category: sub.category
-            }
-          });
-
-          // Create pending status in global_curriculum_status
-          await prisma.global_curriculum_status.upsert({
+          // Try flexible matching on name
+          globalSubject = await prisma.global_subjects.findFirst({
             where: {
-              board_grade_subject_name: {
-                board: board,
-                grade: gradeLevel,
-                subject_name: sub.name
-              }
-            },
-            update: {
-              global_subject_id: globalSubject.id,
-              status: 'pending'
-            },
-            create: {
-              board: board,
-              grade: gradeLevel,
-              subject_name: sub.name,
-              global_subject_id: globalSubject.id,
-              status: 'pending'
+              name: { equals: sub.name, mode: 'insensitive' }
             }
           });
-
-          // Trigger generation asynchronously in background
-          ensureGlobalCurriculum(board, gradeLevel, sub.name, sub.code, sub.category)
-            .then(() => console.log(`✓ Global curriculum generated for ${board} ${gradeLevel} ${sub.name}`))
-            .catch(err => console.error(`Error in async global curriculum gen for ${sub.name}:`, err.message));
         }
 
-        // 2. Enroll user in global subject
-        await enrollUserInSubject(userId, globalSubject.id);
+        if (globalSubject) {
+          // 2. Enroll user in global subject
+          await enrollUserInSubject(userId, globalSubject.id);
 
-        enrolledStatuses.push({
-          subject: sub.name,
-          globalSubjectId: globalSubject.id
-        });
+          enrolledStatuses.push({
+            subject: sub.name,
+            globalSubjectId: globalSubject.id
+          });
 
-        console.log(`✓ Enrolled user ${userId} in global subject: ${sub.name}`);
+          console.log(`✓ Enrolled user ${userId} in global subject: ${sub.name}`);
+        } else {
+          console.log(`ℹ Global subject ${sub.name} not found in database for ${board} ${gradeLevel}, skipping.`);
+        }
       } catch (subErr) {
-        console.error(`Error enrolling user ${userId} in ${sub.name}:`, subErr);
+        console.error(`Error enrolling user ${userId} in ${sub.name}:`, subErr.message);
       }
     }
 

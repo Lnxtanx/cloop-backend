@@ -92,17 +92,6 @@ async function processPendingTasks() {
     });
 
     if (pendingTasks.length === 0) {
-      console.log('📋 No pending global curriculum tasks');
-      console.log('🔍 [background-processor] Checking for global topics without goals...');
-
-      const missingGoalsResult = await generateMissingGlobalGoals();
-
-      if (missingGoalsResult && missingGoalsResult.generated > 0) {
-        console.log(`✅ Generated goals for ${missingGoalsResult.generated} global topics\n`);
-      } else {
-        console.log('✅ All global topics have goals\n');
-      }
-
       return;
     }
 
