@@ -270,10 +270,17 @@ async function ensureGlobalCurriculum(board, grade, subjectName, subjectCode = n
 		return { globalSubject: null, alreadyExisted: false, inProgress: true };
 	}
 
-	// Also check DB status for in_progress
+	// Also check DB status for in_progress (allow auto-resume if older than 5 minutes or explicitly restarting)
 	if (existingStatus && existingStatus.status === 'in_progress') {
-		logger.log('Generation already in progress (DB status), skipping.');
-		return { globalSubject: null, alreadyExisted: false, inProgress: true };
+		const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+		const lastUpdated = existingStatus.updated_at ? new Date(existingStatus.updated_at) : new Date(existingStatus.created_at);
+		
+		if (lastUpdated > fiveMinutesAgo) {
+			logger.log('Generation currently active by another worker, skipping.');
+			return { globalSubject: null, alreadyExisted: false, inProgress: true };
+		} else {
+			logger.log('🔄 Found previous interrupted generation (>5 min ago). Resuming exactly where it stopped...');
+		}
 	}
 
 	// Acquire lock

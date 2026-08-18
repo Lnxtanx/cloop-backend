@@ -130,6 +130,26 @@ async function main() {
 	console.log(`⚡ Concurrency Level: ${options.concurrency}`);
 	console.log('======================================================\n');
 
+	// Reset any stale in_progress records older than 3 minutes so they resume
+	try {
+		const resetRes = await prisma.global_curriculum_status.updateMany({
+			where: {
+				status: 'in_progress',
+				updated_at: {
+					lt: new Date(Date.now() - 3 * 60 * 1000)
+				}
+			},
+			data: {
+				status: 'pending'
+			}
+		});
+		if (resetRes.count > 0) {
+			console.log(`🔄 Reset ${resetRes.count} interrupted in_progress tasks to pending so they resume cleanly.\n`);
+		}
+	} catch (resetErr) {
+		// Non-fatal
+	}
+
 	const limit = pLimit(options.concurrency);
 	const results = {
 		successful: 0,
@@ -177,6 +197,20 @@ async function main() {
 	});
 
 	await Promise.all(taskPromises);
+
+	// Check and fill any missing goals across all generated topics
+	try {
+		const { generateMissingGlobalGoals } = require('../services/global-curriculum-pipeline');
+		console.log('\n🔍 Checking for any remaining global topics without goals...');
+		const missingGoalsResult = await generateMissingGlobalGoals();
+		if (missingGoalsResult && missingGoalsResult.generated > 0) {
+			console.log(`✅ Generated goals for ${missingGoalsResult.generated} additional topics.`);
+		} else {
+			console.log('✅ All global topics have complete goals.');
+		}
+	} catch (goalsErr) {
+		console.error('Error during final missing goals check:', goalsErr.message);
+	}
 
 	const durationSec = Math.round((Date.now() - startTime) / 1000);
 
