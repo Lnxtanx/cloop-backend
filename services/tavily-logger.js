@@ -1,10 +1,12 @@
 /**
  * Web Search Logger & Audit Service
- * Persists all Tavily search queries, cited URLs, domains, snippets, and LLM grounding details to disk.
+ * Persists all Tavily search queries, cited URLs, domains, snippets, and LLM grounding details
+ * directly to the PostgreSQL `web_search_logs` Prisma database table as well as disk log files.
  */
 
 const fs = require('fs');
 const path = require('path');
+const prisma = require('../lib/prisma');
 
 const LOGS_DIR = path.join(__dirname, '../logs');
 const LOG_FILE_PATH = path.join(LOGS_DIR, 'tavily-search-history.log');
@@ -20,9 +22,9 @@ if (!fs.existsSync(LOGS_DIR)) {
 }
 
 /**
- * Log a Tavily web search event with all cited links, snippets, and metadata
+ * Log a Tavily web search event to both PostgreSQL (prisma.web_search_logs) and disk files
  */
-function logWebSearch(searchData = {}) {
+async function logWebSearch(searchData = {}) {
   const timestamp = new Date().toISOString();
   
   const sources = (searchData.results || []).map((r, i) => {
@@ -46,20 +48,47 @@ function logWebSearch(searchData = {}) {
     timestamp,
     query: searchData.query || '',
     featureArea: searchData.featureArea || 'curriculum_generation',
-    gradeLevel: searchData.gradeLevel || null,
-    board: searchData.board || null,
-    subject: searchData.subject || null,
-    chapterTitle: searchData.chapterTitle || null,
-    userId: searchData.userId || null,
+    gradeLevel: searchData.gradeLevel ? String(searchData.gradeLevel) : null,
+    board: searchData.board ? String(searchData.board) : null,
+    subject: searchData.subject ? String(searchData.subject) : null,
+    chapterTitle: searchData.chapterTitle ? String(searchData.chapterTitle) : null,
+    userId: searchData.userId ? parseInt(searchData.userId, 10) || null : null,
     durationMs: searchData.durationMs || 0,
     resultCount: sources.length,
-    answerSummary: searchData.answerSummary ? searchData.answerSummary.substring(0, 400) : null,
+    answerSummary: searchData.answerSummary ? searchData.answerSummary.substring(0, 500) : null,
     citedSourcesCount: sources.length,
     citedUrls: sources.map(s => s.url).filter(Boolean),
     sources,
   };
 
-  // 1. Append JSON line to log file
+  // 1. Insert record into PostgreSQL database via Prisma (prisma.web_search_logs)
+  try {
+    if (prisma && prisma.web_search_logs) {
+      await prisma.web_search_logs.create({
+        data: {
+          user_id: logRecord.userId,
+          feature_area: logRecord.featureArea,
+          search_query: logRecord.query,
+          grade_level: logRecord.gradeLevel,
+          board: logRecord.board,
+          subject: logRecord.subject,
+          chapter_title: logRecord.chapterTitle,
+          duration_ms: logRecord.durationMs,
+          result_count: logRecord.resultCount,
+          answer_summary: logRecord.answerSummary,
+          cited_urls: logRecord.citedUrls,
+          sources: logRecord.sources,
+          status: 'success',
+        },
+      });
+      console.log(`[tavily-logger] 🗄️ Saved web search audit record to database table (web_search_logs)`);
+    }
+  } catch (dbErr) {
+    // Non-blocking fallback if local DB is unreachable during dev/tests
+    console.warn('[tavily-logger] ⚠️ Note: DB insertion skipped/failed (will persist to log file):', dbErr.message);
+  }
+
+  // 2. Append JSON line to disk log file
   try {
     const jsonLine = JSON.stringify(logRecord) + '\n';
     fs.appendFileSync(LOG_FILE_PATH, jsonLine, 'utf8');
@@ -67,7 +96,7 @@ function logWebSearch(searchData = {}) {
     console.error('[tavily-logger] ❌ Failed to write to log file:', err.message);
   }
 
-  // 2. Maintain rolling JSON file for easy inspection (last 50 searches)
+  // 3. Maintain rolling JSON file for easy inspection (last 50 searches)
   try {
     let history = [];
     if (fs.existsSync(RECENT_JSON_PATH)) {
@@ -86,7 +115,7 @@ function logWebSearch(searchData = {}) {
     console.error('[tavily-logger] Failed to update recent JSON file:', err.message);
   }
 
-  // 3. Print formatted log output to PM2 / terminal console
+  // 4. Print formatted log output to PM2 / terminal console
   console.log(`\n===============================================================`);
   console.log(`[tavily-logger] 📜 WEB SEARCH AUDIT LOG | ${timestamp}`);
   console.log(`[tavily-logger] 🔎 Query: "${logRecord.query}"`);
@@ -107,9 +136,23 @@ function logWebSearch(searchData = {}) {
 }
 
 /**
- * Retrieve recent web search logs from file
+ * Retrieve recent web search logs (tries Prisma DB first, falls back to disk file)
  */
-function getRecentSearchLogs(limit = 20) {
+async function getRecentSearchLogs(limit = 20) {
+  try {
+    if (prisma && prisma.web_search_logs) {
+      const records = await prisma.web_search_logs.findMany({
+        take: limit,
+        orderBy: { created_at: 'desc' },
+      });
+      if (records && records.length > 0) {
+        return records;
+      }
+    }
+  } catch (_) {
+    // Fall back to reading from disk file below
+  }
+
   if (!fs.existsSync(LOG_FILE_PATH)) return [];
 
   try {

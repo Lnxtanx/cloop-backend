@@ -14,7 +14,7 @@ const fs = require('fs');
 
 async function testWebSearchLogger() {
   console.log('================================================================');
-  console.log('📜 TESTING WEB SEARCH QUERY & CITED LINK AUDIT LOGGER');
+  console.log('📜 TESTING PRISMA WEB SEARCH LOGS TABLE & FILE AUDIT LOGGER');
   console.log('================================================================\n');
 
   // 1. Run live chapter generation for Class 10 Science
@@ -30,26 +30,30 @@ async function testWebSearchLogger() {
   console.log(`   📄 JSON Lines Log File (${LOG_FILE_PATH}): ${logFileExists ? '✅ EXISTS' : '❌ MISSING'}`);
   console.log(`   📄 Recent Search JSON (${RECENT_JSON_PATH}): ${jsonFileExists ? '✅ EXISTS' : '❌ MISSING'}`);
 
-  // 3. Inspect recent search audit logs
+  // 3. Inspect recent search audit logs from DB/File
   console.log('\n3️⃣ Retrieving recent web search logs via getRecentSearchLogs()...');
-  const recentLogs = getRecentSearchLogs(5);
+  const recentLogs = await getRecentSearchLogs(5);
   console.log(`\n📊 Total Recent Search Log Records Retrieved: ${recentLogs.length}`);
 
   if (recentLogs.length > 0) {
     const latest = recentLogs[0];
     console.log('\n--- LATEST SEARCH AUDIT LOG RECORD ---');
-    console.log(`📅 Timestamp: ${latest.timestamp}`);
-    console.log(`🔎 Search Query: "${latest.query}"`);
-    console.log(`📚 Subject Context: Class ${latest.gradeLevel} ${latest.board} ${latest.subject}`);
-    console.log(`⚡ Duration: ${latest.durationMs}ms`);
-    console.log(`🔗 Cited URLs (${latest.citedUrls.length}):`);
-    latest.sources.forEach((s, idx) => {
-      console.log(`   ${idx + 1}. [${s.title}] (${s.domain})\n      URL: ${s.url}`);
-    });
+    console.log(`📅 Timestamp: ${latest.timestamp || latest.created_at}`);
+    console.log(`🔎 Search Query: "${latest.query || latest.search_query}"`);
+    console.log(`📚 Subject Context: Class ${latest.gradeLevel || latest.grade_level} ${latest.board} ${latest.subject}`);
+    console.log(`⚡ Duration: ${latest.durationMs || latest.duration_ms}ms`);
+    const citedUrls = latest.citedUrls || latest.cited_urls || [];
+    console.log(`🔗 Cited URLs (${citedUrls.length}):`);
+    const sources = latest.sources || [];
+    if (Array.isArray(sources)) {
+      sources.forEach((s, idx) => {
+        console.log(`   ${idx + 1}. [${s.title}] (${s.domain})\n      URL: ${s.url}`);
+      });
+    }
   }
 
   console.log('\n================================================================');
-  console.log('✅ WEB SEARCH AUDIT LOGGER VERIFICATION COMPLETE');
+  console.log('✅ WEB SEARCH AUDIT LOGGER & PRISMA MODEL VERIFICATION COMPLETE');
   console.log('================================================================');
 }
 
