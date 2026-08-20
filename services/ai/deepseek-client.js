@@ -80,6 +80,9 @@ async function invokeModel(systemPrompt, messages, options = {}) {
     let lastError = null;
 
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(new Error('DeepSeek API request timed out after 30s')), 30000);
+
         try {
             const response = await fetch(`${DEEPSEEK_BASE_URL}/chat/completions`, {
                 method: 'POST',
@@ -87,8 +90,10 @@ async function invokeModel(systemPrompt, messages, options = {}) {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${apiKey}`
                 },
-                body: JSON.stringify(payload)
+                body: JSON.stringify(payload),
+                signal: controller.signal
             });
+            clearTimeout(timeoutId);
 
             if (!response.ok) {
                 const errText = await response.text();
@@ -156,6 +161,7 @@ async function invokeModel(systemPrompt, messages, options = {}) {
 
             throw new Error('Unexpected response format from DeepSeek API');
         } catch (error) {
+            clearTimeout(timeoutId);
             lastError = error;
             console.error(`[DeepSeek] ❌ Attempt ${attempt}/${maxAttempts} failed:`, error.message);
 
