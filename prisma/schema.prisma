@@ -207,7 +207,7 @@ model topic_goals {
 /// Global catalog: one row per board+grade+subject combination
 model global_subjects {
   id          Int                @id @default(autoincrement())
-  board       String             @db.VarChar(50)
+  board       String             @db.VarChar(100)
   grade       String             @db.VarChar(50)
   name        String             @db.VarChar(100)
   code        String?            @db.VarChar(50)
@@ -277,7 +277,7 @@ model global_topic_goals {
 /// Tracks generation status per board+grade+subject (replaces per-user content_generation_status)
 model global_curriculum_status {
   id                      Int       @id @default(autoincrement())
-  board                   String    @db.VarChar(50)
+  board                   String    @db.VarChar(100)
   grade                   String    @db.VarChar(50)
   subject_name            String    @db.VarChar(100)
   global_subject_id       Int?
