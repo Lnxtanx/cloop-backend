@@ -48,45 +48,43 @@ async function fillMissingGoals() {
 			return;
 		}
 
-		const limit = pLimit(2);
 		let completedCount = 0;
 		let failedCount = 0;
 
-		const promises = topicsNeedingGoals.map((topic, index) => {
-			return limit(async () => {
-				const subjectName = topic.chapter?.subject?.name || 'Unknown';
-				const grade = topic.chapter?.subject?.grade || '';
-				const board = topic.chapter?.subject?.board || '';
-				const label = `[${index + 1}/${topicsNeedingGoals.length}] ${board} ${grade} ${subjectName} > ${topic.title}`;
+		for (let i = 0; i < topicsNeedingGoals.length; i++) {
+			const topic = topicsNeedingGoals[i];
+			const subjectName = topic.chapter?.subject?.name || 'Unknown';
+			const grade = topic.chapter?.subject?.grade || '';
+			const board = topic.chapter?.subject?.board || '';
+			const percent = ((i / topicsNeedingGoals.length) * 100).toFixed(1);
+			const label = `[${i + 1}/${topicsNeedingGoals.length} - ${percent}%] ${board} ${grade} ${subjectName} > ${topic.title}`;
 
-				try {
-					console.log(`⏳ Generating goals for: ${label}`);
-					const goalsData = await generateTopicGoals(topic.title, topic.content);
-					const goals = goalsData.goals || [];
+			try {
+				console.log(`⏳ Generating goals for: ${label}`);
+				const goalsData = await generateTopicGoals(topic.title, topic.content);
+				const goals = goalsData.goals || [];
 
-					for (let i = 0; i < goals.length; i++) {
-						const g = goals[i];
-						await prisma.global_topic_goals.create({
-							data: {
-								topic_id: topic.id,
-								title: `Goal ${i + 1}: ${g.title}`,
-								description: g.description,
-								order: i + 1
-							}
-						});
-					}
-
-					console.log(`  ✓ Created ${goals.length} goals for: ${topic.title}`);
-					completedCount++;
-					await new Promise(r => setTimeout(r, 1000));
-				} catch (err) {
-					console.error(`  ❌ Failed for ${topic.title}:`, err.message);
-					failedCount++;
+				for (let gIdx = 0; gIdx < goals.length; gIdx++) {
+					const g = goals[gIdx];
+					await prisma.global_topic_goals.create({
+						data: {
+							topic_id: topic.id,
+							title: `Goal ${gIdx + 1}: ${g.title}`,
+							description: g.description,
+							order: gIdx + 1
+						}
+					});
 				}
-			});
-		});
 
-		await Promise.all(promises);
+				console.log(`  ✓ Created ${goals.length} goals for: ${topic.title}`);
+				completedCount++;
+				await new Promise(r => setTimeout(r, 600));
+			} catch (err) {
+				console.error(`  ❌ Failed for ${topic.title}:`, err.message);
+				failedCount++;
+				await new Promise(r => setTimeout(r, 1000));
+			}
+		}
 
 		// Update global_curriculum_status records to completed where all topics now have goals
 		const subjects = await prisma.global_subjects.findMany({
