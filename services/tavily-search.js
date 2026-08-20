@@ -11,7 +11,7 @@ require('dotenv').config({ path: path.join(__dirname, '../.env'), override: true
 const { logWebSearch } = require('./tavily-logger');
 
 const TAVILY_API_URL = 'https://api.tavily.com/search';
-const DEFAULT_API_KEY = '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';
+const DEFAULT_API_KEY = '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';
 
 // Trusted official & educational domains for accurate curriculum verification
 const TRUSTED_CURRICULUM_DOMAINS = [
