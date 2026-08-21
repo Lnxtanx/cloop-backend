@@ -1957,16 +1957,30 @@ Write a SHORT 2-3 sentence performance summary for the student.
 			data: { num_chats: { increment: 1 } }
 		})
 
-		// Update topic time spent if provided
+		// Update per-user topic time spent if provided
 		if (session_time_seconds && session_time_seconds > 0) {
-			await prisma.topics.update({
-				where: { id: parseInt(topicId) },
-				data: {
+			await prisma.user_topic_progress.upsert({
+				where: {
+					user_id_topic_id: {
+						user_id: user_id,
+						topic_id: parseInt(topicId)
+					}
+				},
+				update: {
 					time_spent_seconds: {
 						increment: Math.floor(session_time_seconds)
-					}
+					},
+					last_accessed_at: new Date()
+				},
+				create: {
+					user_id: user_id,
+					topic_id: parseInt(topicId),
+					time_spent_seconds: Math.floor(session_time_seconds),
+					last_accessed_at: new Date()
 				}
-			})
+			}).catch(err => {
+				console.warn('[topic-chats] Warning updating user_topic_progress time_spent:', err.message);
+			});
 		}
 
 		return res.status(201).json({
