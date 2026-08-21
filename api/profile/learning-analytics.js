@@ -331,17 +331,21 @@ router.get('/subject/:subjectId', authenticateToken, async (req, res) => {
 
     // --- NEW: Concepts Mastery & Recommendations ---
     // Fetch ALL topics for this subject to include "Not Started"
-    const allTopics = await prisma.topics.findMany({
+    const allTopics = await prisma.global_topics.findMany({
       where: {
-        subject_id: parseInt(subjectId),
-        user_id: user_id
+        subject_id: parseInt(subjectId)
       },
       select: {
         id: true,
         title: true,
-        completion_percent: true,
-        is_completed: true,
-        time_spent_seconds: true // Use this for identifying "Not Started"
+        user_progress: {
+          where: { user_id: user_id },
+          select: {
+            is_completed: true,
+            completion_percent: true,
+            time_spent_seconds: true
+          }
+        }
       }
     });
 
@@ -351,26 +355,28 @@ router.get('/subject/:subjectId', authenticateToken, async (req, res) => {
     const recommendedFocus = [];
 
     allTopics.forEach(topic => {
-      // Find performance for this topic
+      const prog = topic.user_progress?.[0] || {};
       const topicPerf = byTopic[topic.id];
       const avgScore = topicPerf ? topicPerf.average_score : 0;
-      const hasActivity = topicPerf || (topic.time_spent_seconds > 60); // Considered started if > 1 min or has turns
+      const isCompleted = prog.is_completed || false;
+      const timeSpent = prog.time_spent_seconds || 0;
+      const hasActivity = topicPerf || (timeSpent > 60);
 
       if (!hasActivity) {
         notStartedCount++;
-      } else if (avgScore >= 80 || topic.is_completed) {
+      } else if (avgScore >= 80 || isCompleted) {
         masteredCount++;
       } else {
         learningCount++;
 
         // Add to recommended focus if score is low or not completed
         if (avgScore < 75) {
-          const potentialGain = Math.round((100 - avgScore) / 5) * 5; // Heuristic: gain is gap rounded to 5
+          const potentialGain = Math.max(5, Math.round((100 - avgScore) / 5) * 5); // Heuristic: gain is gap rounded to 5
           recommendedFocus.push({
             topic_id: topic.id,
             title: topic.title,
-            current_score: avgScore,
-            potential_gain: potentialGain > 0 ? potentialGain : 5,
+            current_score: avgScore || 50,
+            potential_gain: potentialGain,
             marks_value: 5 // Placeholder for marks weight
           });
         }
