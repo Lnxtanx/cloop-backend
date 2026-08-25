@@ -37,13 +37,17 @@ router.post('/', async (req, res) => {
 		}
 		
 		if (board) {
-			const boardRecord = await prisma.boards.findUnique({ 
-				where: { id: parseInt(board) }
-			});
-			if (!boardRecord) {
-				return res.status(400).json({ error: 'Invalid board ID' });
+			const parsedBoardId = parseInt(board);
+			if (!isNaN(parsedBoardId)) {
+				const boardRecord = await prisma.boards.findUnique({ 
+					where: { id: parsedBoardId }
+				});
+				if (boardRecord) {
+					boardName = boardRecord.name;
+				}
+			} else {
+				boardName = board;
 			}
-			boardName = boardRecord.name;
 		}
 		
 		if (preferred_language) {
@@ -87,25 +91,34 @@ router.post('/', async (req, res) => {
 
 		// Create user_subjects entries if subjects were selected
 		let subjectCodes = [];
-		if (subjects && subjects.length > 0) {
-			const userSubjectsData = subjects.map(subjectId => ({
-				user_id: user.user_id,
-				subject_id: parseInt(subjectId)
-			}))
-			
-			await prisma.user_subjects.createMany({
-				data: userSubjectsData,
-				skipDuplicates: true
-			})
+		if (subjects && Array.isArray(subjects) && subjects.length > 0) {
+			const validNumericSubjectIds = subjects
+				.map(id => parseInt(id))
+				.filter(id => !isNaN(id));
 
-			// Get subject codes for the users.subjects array
-			const subjectRecords = await prisma.subjects.findMany({
-				where: {
-					id: { in: subjects.map(id => parseInt(id)) }
-				},
-				select: { code: true }
-			});
-			subjectCodes = subjectRecords.map(s => s.code).filter(Boolean);
+			if (validNumericSubjectIds.length > 0) {
+				const userSubjectsData = validNumericSubjectIds.map(subjectId => ({
+					user_id: user.user_id,
+					subject_id: subjectId
+				}));
+				
+				await prisma.user_subjects.createMany({
+					data: userSubjectsData,
+					skipDuplicates: true
+				});
+
+				// Get subject codes for the users.subjects array
+				const subjectRecords = await prisma.subjects.findMany({
+					where: {
+						id: { in: validNumericSubjectIds }
+					},
+					select: { code: true }
+				});
+				subjectCodes = subjectRecords.map(s => s.code).filter(Boolean);
+			} else {
+				// Non-numeric subject names passed directly, e.g. ["English"]
+				subjectCodes = subjects.filter(s => typeof s === 'string' && isNaN(parseInt(s)));
+			}
 
 			// Update user with subject codes
 			if (subjectCodes.length > 0) {
