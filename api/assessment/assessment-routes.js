@@ -158,7 +158,15 @@ router.post('/sessions/:id/complete', async (req, res) => {
 			},
 		})
 
-		console.log(`[Assessment] Session ${sessionId} completed, triggering assessment`)
+		// Flush in-memory turns to database before evaluation
+		const { flushSessionTurns } = require('../../services/gemini-live-proxy')
+		if (flushSessionTurns) {
+			await flushSessionTurns(sessionId).catch((err) => {
+				console.error(`[Assessment] Error flushing turns for session ${sessionId}:`, err)
+			})
+		}
+
+		console.log(`[Assessment] Session ${sessionId} completed, triggering evaluation engine`)
 
 		// Trigger async assessment processing (non-blocking)
 		const { processAssessment } = require('../../services/assessment-engine')

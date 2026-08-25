@@ -224,13 +224,12 @@ function handleAssessmentWsUpgrade(server) {
 				if (msg.serverContent) {
 					const content = msg.serverContent
 
-					// Extract text parts for transcript
+					// 1. Audio data from Gemini
 					if (content.modelTurn && content.modelTurn.parts) {
 						for (const part of content.modelTurn.parts) {
-							// Audio data — relay to client
 							if (part.inlineData) {
 								sessionState.aiAudioChunksCount++
-								if (sessionState.aiAudioChunksCount % 15 === 1) {
+								if (sessionState.aiAudioChunksCount % 20 === 1) {
 									console.log(`🔊 [Assessment WS] Eva speaking... (Relayed ${sessionState.aiAudioChunksCount} audio chunks to user)`)
 								}
 								clientWs.send(JSON.stringify({
@@ -239,19 +238,40 @@ function handleAssessmentWsUpgrade(server) {
 									mimeType: part.inlineData.mimeType,
 								}))
 							}
-							// Text transcript from Gemini
 							if (part.text) {
-								sessionState.currentSpeaker = 'ai'
-								sessionState.currentTurnText += part.text
+								sessionState.currentAiText = (sessionState.currentAiText || '') + part.text
 							}
 						}
 					}
 
-					// Turn complete — save the AI turn
+					// 2. Real-time transcriptions from Gemini Live
+					if (content.outputTranscription?.text) {
+						sessionState.currentAiText = (sessionState.currentAiText || '') + content.outputTranscription.text
+					}
+
+					if (content.inputTranscription?.text) {
+						sessionState.currentUserText = (sessionState.currentUserText || '') + content.inputTranscription.text
+					}
+
+					// 3. User turn finished (when user stops speaking)
+					if (sessionState.currentUserText && sessionState.currentUserText.trim().length > 3 && content.modelTurn) {
+						sessionState.turnSequence++
+						const userTurnText = sessionState.currentUserText.trim()
+						console.log(`\n🗣️ [Candidate Transcript Turn ${sessionState.turnSequence}]: "${userTurnText}"`)
+						sessionState.turns.push({
+							sequence: sessionState.turnSequence,
+							speaker: 'user',
+							content: userTurnText,
+							timestamp: new Date(),
+						})
+						sessionState.currentUserText = ''
+					}
+
+					// 4. AI Turn complete — save the AI turn
 					if (content.turnComplete) {
-						if (sessionState.currentTurnText && sessionState.currentSpeaker === 'ai') {
+						const turnContent = (sessionState.currentAiText || '').trim()
+						if (turnContent) {
 							sessionState.turnSequence++
-							const turnContent = sessionState.currentTurnText.trim()
 							console.log(`\n💬 [Eva Transcript Turn ${sessionState.turnSequence}]: "${turnContent}"`)
 
 							sessionState.turns.push({
@@ -272,15 +292,24 @@ function handleAssessmentWsUpgrade(server) {
 								questionCount: sessionState.questionCount,
 							}))
 						}
-						sessionState.currentTurnText = ''
-						sessionState.currentSpeaker = null
+						sessionState.currentAiText = ''
 					}
 
-					// Interrupted
+					// 5. Interrupted
 					if (content.interrupted) {
-						console.log(`⚡ [Assessment WS] Eva audio playback interrupted by user speech!`)
+						console.log(`⚡ [Assessment WS] Interruption detected from user speech`)
+						// If Eva had spoken something, keep it recorded before clearing
+						if (sessionState.currentAiText && sessionState.currentAiText.trim().length > 5) {
+							sessionState.turnSequence++
+							sessionState.turns.push({
+								sequence: sessionState.turnSequence,
+								speaker: 'ai',
+								content: sessionState.currentAiText.trim() + ' [interrupted]',
+								timestamp: new Date(),
+							})
+						}
 						clientWs.send(JSON.stringify({ type: 'interrupted' }))
-						sessionState.currentTurnText = ''
+						sessionState.currentAiText = ''
 					}
 				}
 
@@ -412,4 +441,14 @@ async function persistSessionData(sessionState) {
 	}
 }
 
-module.exports = { handleAssessmentWsUpgrade }
+/**
+ * Flush active in-memory turns for a session to DB immediately
+ */
+async function flushSessionTurns(sessionId) {
+	const active = activeSessions.get(sessionId)
+	if (active && active.sessionState) {
+		await persistSessionData(active.sessionState)
+	}
+}
+
+module.exports = { handleAssessmentWsUpgrade, flushSessionTurns }
