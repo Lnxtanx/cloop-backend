@@ -324,12 +324,10 @@ function handleAssessmentWsUpgrade(server) {
 						if (geminiWs && geminiWs.readyState === WebSocket.OPEN) {
 							const realtimeMsg = {
 								realtimeInput: {
-									mediaChunks: [
-										{
-											mimeType: parsed.mimeType || 'audio/pcm;rate=16000',
-											data: parsed.data,
-										},
-									],
+									audio: {
+										mimeType: parsed.mimeType || 'audio/pcm;rate=16000',
+										data: parsed.data,
+									},
 								},
 							}
 							geminiWs.send(JSON.stringify(realtimeMsg))
