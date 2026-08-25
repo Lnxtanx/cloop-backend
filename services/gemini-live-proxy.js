@@ -14,7 +14,7 @@ const jwt = require('jsonwebtoken')
 const prisma = require('../lib/prisma')
 
 const GEMINI_API_KEY = () => process.env.GEMINI_API_KEY
-const GEMINI_MODEL = process.env.GEMINI_LIVE_MODEL || 'gemini-2.0-flash-exp'
+const GEMINI_MODEL = process.env.GEMINI_LIVE_MODEL || 'gemini-3.1-flash-live-preview'
 const GEMINI_WS_URL = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent`
 
 // Active sessions map: sessionId -> { geminiWs, clientWs, turns, ... }
@@ -68,6 +68,10 @@ function handleAssessmentWsUpgrade(server) {
 		const pathname = url.parse(request.url).pathname
 		if (pathname !== '/ws/assessment') return
 
+		console.log(`\n======================================================`)
+		console.log(`🌐 [Assessment WS] Incoming Upgrade request: ${request.url}`)
+		console.log(`======================================================`)
+
 		wss.handleUpgrade(request, socket, head, (ws) => {
 			wss.emit('connection', ws, request)
 		})
@@ -77,19 +81,23 @@ function handleAssessmentWsUpgrade(server) {
 		const query = url.parse(request.url, true).query
 		const { sessionId, token } = query
 
+		console.log(`🔌 [Assessment WS] Client connection attempt. Session: ${sessionId}, Token present: ${Boolean(token)}`)
+
 		// Authenticate
 		let userId = null
 		try {
 			const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key')
 			userId = decoded.userId || decoded.id || decoded.user_id
+			console.log(`🔑 [Assessment WS] Auth successful. User ID: ${userId} (${decoded.name || decoded.email || 'guest'})`)
 		} catch (err) {
-			console.error('[Gemini WS] Auth failed:', err.message)
-			clientWs.send(JSON.stringify({ type: 'error', message: 'Authentication failed' }))
+			console.error('❌ [Assessment WS] Authentication failed:', err.message)
+			clientWs.send(JSON.stringify({ type: 'error', message: 'Authentication failed: ' + err.message }))
 			clientWs.close(4001, 'Authentication failed')
 			return
 		}
 
 		if (!sessionId || !userId) {
+			console.error('❌ [Assessment WS] Missing sessionId or userId')
 			clientWs.send(JSON.stringify({ type: 'error', message: 'Missing sessionId or auth' }))
 			clientWs.close(4002, 'Missing parameters')
 			return
@@ -103,17 +111,17 @@ function handleAssessmentWsUpgrade(server) {
 				where: { id: sid, user_id: userId },
 			})
 			if (!session) {
+				console.error(`❌ [Assessment WS] Session ${sid} not found for user ${userId}`)
 				clientWs.send(JSON.stringify({ type: 'error', message: 'Session not found' }))
 				clientWs.close(4004, 'Session not found')
 				return
 			}
+			console.log(`✅ [Assessment WS] Session ${sid} verified in database. Status: ${session.status}`)
 		} catch (err) {
-			console.error('[Gemini WS] DB error:', err)
+			console.error('❌ [Assessment WS] DB verification error:', err)
 			clientWs.close(4500, 'Server error')
 			return
 		}
-
-		console.log(`[Gemini WS] Client connected: session=${sid}, user=${userId}`)
 
 		// Session state
 		const sessionState = {
@@ -124,25 +132,29 @@ function handleAssessmentWsUpgrade(server) {
 			currentSpeaker: null,
 			turnSequence: 0,
 			questionCount: 0,
+			userAudioChunksCount: 0,
+			aiAudioChunksCount: 0,
 			startedAt: new Date(),
 		}
 
 		// Connect to Gemini Live
 		const apiKey = GEMINI_API_KEY()
 		if (!apiKey) {
-			clientWs.send(JSON.stringify({ type: 'error', message: 'Gemini API key not configured' }))
+			console.error('❌ [Assessment WS] GEMINI_API_KEY is missing in backend .env')
+			clientWs.send(JSON.stringify({ type: 'error', message: 'Gemini API key not configured on server' }))
 			clientWs.close(4500, 'API key missing')
 			return
 		}
 
 		const geminiUrl = `${GEMINI_WS_URL}?key=${apiKey}`
+		console.log(`🤖 [Assessment WS] Connecting to Gemini Live (${GEMINI_MODEL}) at Google...`)
 		let geminiWs = null
 
 		try {
 			geminiWs = new WebSocket(geminiUrl)
 		} catch (err) {
-			console.error('[Gemini WS] Failed to create Gemini connection:', err)
-			clientWs.send(JSON.stringify({ type: 'error', message: 'Failed to connect to Gemini' }))
+			console.error('❌ [Assessment WS] Failed to create Gemini WebSocket:', err)
+			clientWs.send(JSON.stringify({ type: 'error', message: 'Failed to connect to Gemini Live' }))
 			clientWs.close(4500, 'Connection failed')
 			return
 		}
@@ -150,7 +162,7 @@ function handleAssessmentWsUpgrade(server) {
 		activeSessions.set(sid, { geminiWs, clientWs, sessionState })
 
 		geminiWs.on('open', () => {
-			console.log(`[Gemini WS] Connected to Gemini Live for session ${sid}`)
+			console.log(`✅ [Assessment WS] Connected to Gemini Live for session ${sid}! Sending initial setup...`)
 
 			// Send setup message
 			const setupMsg = {
@@ -181,17 +193,18 @@ function handleAssessmentWsUpgrade(server) {
 
 				// Setup complete
 				if (msg.setupComplete) {
-					console.log(`[Gemini WS] Setup complete for session ${sid}`)
+					console.log(`🎉 [Assessment WS] Setup complete from Gemini for session ${sid}! Eva is ready.`)
 
 					// Update session status
 					prisma.assessment_sessions.update({
 						where: { id: sid },
 						data: { status: 'IN_PROGRESS', started_at: new Date(), updated_at: new Date() },
-					}).catch(err => console.error('[Gemini WS] DB update error:', err))
+					}).catch(err => console.error('[Assessment WS] DB update error:', err))
 
 					clientWs.send(JSON.stringify({ type: 'setup_complete' }))
 
 					// Send initial prompt to start conversation
+					console.log(`📣 [Assessment WS] Triggering Eva to begin greeting and first question...`)
 					const initialMsg = {
 						clientContent: {
 							turns: [
@@ -216,6 +229,10 @@ function handleAssessmentWsUpgrade(server) {
 						for (const part of content.modelTurn.parts) {
 							// Audio data — relay to client
 							if (part.inlineData) {
+								sessionState.aiAudioChunksCount++
+								if (sessionState.aiAudioChunksCount % 15 === 1) {
+									console.log(`🔊 [Assessment WS] Eva speaking... (Relayed ${sessionState.aiAudioChunksCount} audio chunks to user)`)
+								}
 								clientWs.send(JSON.stringify({
 									type: 'audio',
 									data: part.inlineData.data,
@@ -234,16 +251,19 @@ function handleAssessmentWsUpgrade(server) {
 					if (content.turnComplete) {
 						if (sessionState.currentTurnText && sessionState.currentSpeaker === 'ai') {
 							sessionState.turnSequence++
+							const turnContent = sessionState.currentTurnText.trim()
+							console.log(`\n💬 [Eva Transcript Turn ${sessionState.turnSequence}]: "${turnContent}"`)
+
 							sessionState.turns.push({
 								sequence: sessionState.turnSequence,
 								speaker: 'ai',
-								content: sessionState.currentTurnText.trim(),
+								content: turnContent,
 								timestamp: new Date(),
 							})
 
-							// Count AI questions (rough heuristic: AI turns with ? mark)
-							if (sessionState.currentTurnText.includes('?')) {
+							if (turnContent.includes('?')) {
 								sessionState.questionCount++
+								console.log(`❓ [Assessment WS] Question count: ${sessionState.questionCount}`)
 							}
 
 							clientWs.send(JSON.stringify({
@@ -258,47 +278,49 @@ function handleAssessmentWsUpgrade(server) {
 
 					// Interrupted
 					if (content.interrupted) {
+						console.log(`⚡ [Assessment WS] Eva audio playback interrupted by user speech!`)
 						clientWs.send(JSON.stringify({ type: 'interrupted' }))
 						sessionState.currentTurnText = ''
 					}
 				}
 
-				// Tool calls if any (forward to client for handling)
+				// Tool calls if any
 				if (msg.toolCall) {
 					clientWs.send(JSON.stringify({ type: 'tool_call', data: msg.toolCall }))
 				}
 
 			} catch (err) {
-				console.error('[Gemini WS] Error processing Gemini message:', err)
+				console.error('❌ [Assessment WS] Error processing Gemini message:', err)
 			}
 		})
 
 		geminiWs.on('error', (err) => {
-			console.error(`[Gemini WS] Gemini connection error for session ${sid}:`, err.message)
-			clientWs.send(JSON.stringify({ type: 'error', message: 'Gemini connection error' }))
+			console.error(`❌ [Assessment WS] Gemini Live connection error for session ${sid}:`, err.message)
+			clientWs.send(JSON.stringify({ type: 'error', message: 'Gemini Live error: ' + err.message }))
 		})
 
 		geminiWs.on('close', (code, reason) => {
-			console.log(`[Gemini WS] Gemini disconnected for session ${sid}: ${code} ${reason}`)
-			clientWs.send(JSON.stringify({ type: 'gemini_disconnected', code }))
+			console.log(`🔌 [Assessment WS] Gemini Live disconnected for session ${sid}: code=${code}, reason=${reason?.toString() || 'normal'}`)
+			clientWs.send(JSON.stringify({ type: 'gemini_disconnected', code, reason: reason?.toString() }))
 		})
 
 		// Handle client messages (audio from microphone)
 		clientWs.on('message', (data) => {
 			try {
-				// Check if it's a binary audio message or JSON control message
 				if (typeof data === 'string' || data instanceof Buffer) {
 					let parsed
 					try {
 						parsed = JSON.parse(data.toString())
 					} catch {
-						// Binary audio data — should not happen with our protocol
 						return
 					}
 
-					// Control messages from client
+					// User audio chunk — forward to Gemini
 					if (parsed.type === 'audio_chunk') {
-						// User audio chunk — forward to Gemini
+						sessionState.userAudioChunksCount++
+						if (sessionState.userAudioChunksCount % 20 === 1) {
+							console.log(`🎤 [Assessment WS] Streaming microphone audio to Gemini (Chunk #${sessionState.userAudioChunksCount})`)
+						}
 						if (geminiWs && geminiWs.readyState === WebSocket.OPEN) {
 							const realtimeMsg = {
 								realtimeInput: {
@@ -313,8 +335,8 @@ function handleAssessmentWsUpgrade(server) {
 							geminiWs.send(JSON.stringify(realtimeMsg))
 						}
 					} else if (parsed.type === 'user_transcript') {
-						// User text/transcript for record-keeping
 						sessionState.turnSequence++
+						console.log(`🗣️ [User Transcript Turn ${sessionState.turnSequence}]: "${parsed.text}"`)
 						sessionState.turns.push({
 							sequence: sessionState.turnSequence,
 							speaker: 'user',
@@ -322,8 +344,7 @@ function handleAssessmentWsUpgrade(server) {
 							timestamp: new Date(),
 						})
 					} else if (parsed.type === 'end_session') {
-						// Client requested session end
-						console.log(`[Gemini WS] Client ending session ${sid}`)
+						console.log(`🛑 [Assessment WS] User requested session end for session ${sid}`)
 						if (geminiWs && geminiWs.readyState === WebSocket.OPEN) {
 							geminiWs.close(1000, 'Session ended by user')
 						}
@@ -331,12 +352,12 @@ function handleAssessmentWsUpgrade(server) {
 					}
 				}
 			} catch (err) {
-				console.error('[Gemini WS] Error handling client message:', err)
+				console.error('❌ [Assessment WS] Error handling client message:', err)
 			}
 		})
 
-		clientWs.on('close', () => {
-			console.log(`[Gemini WS] Client disconnected for session ${sid}`)
+		clientWs.on('close', (code, reason) => {
+			console.log(`🔌 [Assessment WS] Client browser disconnected for session ${sid} (code=${code})`)
 			if (geminiWs && geminiWs.readyState === WebSocket.OPEN) {
 				geminiWs.close(1000, 'Client disconnected')
 			}
@@ -345,7 +366,7 @@ function handleAssessmentWsUpgrade(server) {
 		})
 
 		clientWs.on('error', (err) => {
-			console.error(`[Gemini WS] Client WS error for session ${sid}:`, err.message)
+			console.error(`❌ [Assessment WS] Client WS connection error for session ${sid}:`, err.message)
 		})
 	})
 
