@@ -1,10 +1,12 @@
 const express = require('express')
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 const CurriculumAutoTrigger = require('../../services/curriculum-auto-trigger')
 
 const router = express.Router()
 
 const prisma = require('../../lib/prisma')
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key'
 
 // POST /api/signup/
 // body: { name, guestId?, grade_level?, board?, subjects?, preferred_language?, study_goal? }
@@ -144,8 +146,21 @@ router.post('/', async (req, res) => {
 			console.log(`ℹ Curriculum generation skipped for user ${user.user_id} (English App/Custom focus)`);
 		}
 
+		const tokenPayload = {
+			user_id: user.user_id,
+			email: user.email,
+			name: user.name,
+		}
+		const token = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: '7d' })
+
 		return res.status(201).json({ 
-			user,
+			token,
+			user: {
+				id: String(user.user_id),
+				user_id: user.user_id,
+				name: user.name,
+				email: user.email,
+			},
 			guestId: finalGuestId, // Return the Guest ID to frontend
 		})
 

@@ -16,7 +16,7 @@ router.use(authenticateToken)
  * Create a new assessment session
  */
 router.post('/sessions', async (req, res) => {
-	const userId = req.user?.user_id
+	const userId = req.user?.user_id || req.user?.id || req.user?.userId
 	if (!userId) return res.status(401).json({ error: 'Authentication required' })
 
 	try {
@@ -47,7 +47,7 @@ router.post('/sessions', async (req, res) => {
  * List user's assessment sessions (most recent first)
  */
 router.get('/sessions', async (req, res) => {
-	const userId = req.user?.user_id
+	const userId = req.user?.user_id || req.user?.id || req.user?.userId
 	if (!userId) return res.status(401).json({ error: 'Authentication required' })
 
 	const limit = Math.min(parseInt(req.query.limit) || 20, 50)
@@ -82,7 +82,7 @@ router.get('/sessions', async (req, res) => {
  * Get session state (ownership enforced)
  */
 router.get('/sessions/:id', async (req, res) => {
-	const userId = req.user?.user_id
+	const userId = req.user?.user_id || req.user?.id || req.user?.userId
 	if (!userId) return res.status(401).json({ error: 'Authentication required' })
 
 	const sessionId = parseInt(req.params.id)
@@ -118,7 +118,7 @@ router.get('/sessions/:id', async (req, res) => {
  * Mark session as completed and trigger async assessment processing
  */
 router.post('/sessions/:id/complete', async (req, res) => {
-	const userId = req.user?.user_id
+	const userId = req.user?.user_id || req.user?.id || req.user?.userId
 	if (!userId) return res.status(401).json({ error: 'Authentication required' })
 
 	const sessionId = parseInt(req.params.id)
@@ -180,7 +180,7 @@ router.post('/sessions/:id/complete', async (req, res) => {
  * Get the completed assessment result (ownership enforced)
  */
 router.get('/sessions/:id/result', async (req, res) => {
-	const userId = req.user?.user_id
+	const userId = req.user?.user_id || req.user?.id || req.user?.userId
 	if (!userId) return res.status(401).json({ error: 'Authentication required' })
 
 	const sessionId = parseInt(req.params.id)
@@ -243,7 +243,7 @@ router.get('/sessions/:id/result', async (req, res) => {
  * Get session turns/transcript (ownership enforced)
  */
 router.get('/sessions/:id/turns', async (req, res) => {
-	const userId = req.user?.user_id
+	const userId = req.user?.user_id || req.user?.id || req.user?.userId
 	if (!userId) return res.status(401).json({ error: 'Authentication required' })
 
 	const sessionId = parseInt(req.params.id)

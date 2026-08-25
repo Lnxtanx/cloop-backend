@@ -14,8 +14,8 @@ const jwt = require('jsonwebtoken')
 const prisma = require('../lib/prisma')
 
 const GEMINI_API_KEY = () => process.env.GEMINI_API_KEY
-const GEMINI_MODEL = 'gemini-3.1-flash-live-preview'
-const GEMINI_WS_URL = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent`
+const GEMINI_MODEL = process.env.GEMINI_LIVE_MODEL || 'gemini-2.0-flash-exp'
+const GEMINI_WS_URL = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent`
 
 // Active sessions map: sessionId -> { geminiWs, clientWs, turns, ... }
 const activeSessions = new Map()
