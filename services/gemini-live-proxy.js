@@ -4,8 +4,11 @@
  * Handles the realtime audio path:
  *   Browser Mic → WS → Backend Proxy → Gemini Live API → Audio response → WS → Browser Speaker
  * 
- * Completely separate from existing voice-chat routes.
- * The Gemini API key stays server-side.
+ * Conducts native multimodal in-session evaluation:
+ * - Gemini Live conducts a 5-question interview
+ * - Once question 5 is answered, Eva automatically concludes and invokes `submit_speaking_evaluation`
+ * - Pronunciation & Fluency are evaluated from actual spoken audio
+ * - Results are persisted to PostgreSQL and the browser is notified automatically
  */
 
 const WebSocket = require('ws')
@@ -17,46 +20,100 @@ const GEMINI_API_KEY = () => process.env.GEMINI_API_KEY
 const GEMINI_MODEL = process.env.GEMINI_LIVE_MODEL || 'gemini-3.1-flash-live-preview'
 const GEMINI_WS_URL = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent`
 
-// Active sessions map: sessionId -> { geminiWs, clientWs, turns, ... }
+// Active sessions map: sessionId -> { geminiWs, clientWs, sessionState }
 const activeSessions = new Map()
 
-// System prompt for the English interview assessor
-const INTERVIEWER_SYSTEM_PROMPT = `You are Eva, a warm, professional English speaking assessment interviewer. You are conducting a natural English conversation to evaluate the speaker's English proficiency.
+// Tool declaration for native in-session evaluation
+const EVALUATION_TOOL = {
+	functionDeclarations: [
+		{
+			name: 'submit_speaking_evaluation',
+			description: 'Submits the comprehensive English speaking assessment report evaluating the candidate across all 8 dimensions based on both spoken audio (pronunciation, phonetics, fluency, speech rate) and linguistic content (grammar, vocabulary, comprehension, coherence).',
+			parameters: {
+				type: 'OBJECT',
+				properties: {
+					overall_score: { type: 'INTEGER', description: 'Overall score from 0 to 100' },
+					cefr_level: { type: 'STRING', enum: ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'], description: 'CEFR proficiency level' },
+					pronunciation_score: { type: 'INTEGER', description: 'Pronunciation score 0-100 based on spoken audio' },
+					pronunciation_feedback: { type: 'STRING', description: 'Detailed phonetic observations, sound articulation, and word stress based on spoken audio' },
+					fluency_score: { type: 'INTEGER', description: 'Fluency score 0-100 based on spoken audio' },
+					fluency_feedback: { type: 'STRING', description: 'Detailed observations on rhythm, pauses, and speech rate' },
+					grammar_score: { type: 'INTEGER', description: 'Grammar score 0-100' },
+					grammar_feedback: { type: 'STRING', description: 'Grammar accuracy and range feedback' },
+					vocabulary_score: { type: 'INTEGER', description: 'Vocabulary score 0-100' },
+					vocabulary_feedback: { type: 'STRING', description: 'Lexical diversity and word choice feedback' },
+					sentence_construction_score: { type: 'INTEGER', description: 'Sentence construction score 0-100' },
+					comprehension_score: { type: 'INTEGER', description: 'Comprehension score 0-100' },
+					coherence_score: { type: 'INTEGER', description: 'Coherence and organization score 0-100' },
+					conversational_score: { type: 'INTEGER', description: 'Conversational interaction score 0-100' },
+					strengths: { type: 'ARRAY', items: { type: 'STRING' }, description: 'Top 3-4 strengths' },
+					weaknesses: { type: 'ARRAY', items: { type: 'STRING' }, description: 'Top 3-4 areas for improvement' },
+					recommendations: { type: 'ARRAY', items: { type: 'STRING' }, description: 'Top 3 actionable recommendations' },
+					detected_errors: {
+						type: 'ARRAY',
+						items: {
+							type: 'OBJECT',
+							properties: {
+								category: { type: 'STRING', description: 'grammar, pronunciation, vocabulary, or sentence' },
+								severity: { type: 'STRING', description: 'low, medium, or high' },
+								detectedText: { type: 'STRING', description: 'What the user said' },
+								correction: { type: 'STRING', description: 'Correct English phrase' },
+								explanation: { type: 'STRING', description: 'Explanation of the error' }
+							}
+						}
+					}
+				},
+				required: [
+					'overall_score',
+					'cefr_level',
+					'pronunciation_score',
+					'pronunciation_feedback',
+					'fluency_score',
+					'fluency_feedback',
+					'grammar_score',
+					'vocabulary_score',
+					'sentence_construction_score',
+					'comprehension_score',
+					'coherence_score',
+					'conversational_score',
+					'strengths',
+					'weaknesses',
+					'recommendations'
+				]
+			}
+		}
+	]
+}
 
-IMPORTANT RULES:
-- Speak naturally and warmly, like a real human interviewer
-- Do NOT mention that you are AI, a language model, or that you are evaluating them
-- Do NOT give scores, corrections, or feedback during the conversation
-- Ask clear, open-ended questions and listen attentively
-- Ask follow-up questions based on the user's actual responses
-- Keep your responses concise (2-3 sentences max) so the user speaks more than you
-- Be encouraging but not excessively so
-- If the user's response is unclear, politely ask them to elaborate
+// System prompt for Eva
+const INTERVIEWER_SYSTEM_PROMPT = `You are Eva, a warm, professional English speaking assessment examiner. You are conducting an interactive speaking assessment to evaluate the candidate's English proficiency.
 
-INTERVIEW STRUCTURE (follow this order, adapting based on responses):
+IMPORTANT CONVERSATIONAL RULES:
+- Speak naturally and warmly, like a real human interviewer.
+- Keep your conversational responses concise (2-3 sentences max) so the candidate speaks more than you.
+- Ask clear, open-ended questions and listen attentively to what the candidate actually says.
+- Do NOT reveal scores or critique errors during the conversation.
 
+INTERVIEW STRUCTURE (Conduct exactly 5 progressive questions):
 Question 1 — Introduction:
-Start with a warm greeting, then ask "Tell me a bit about yourself."
+Start with a warm greeting: "Hello! Welcome to your speaking assessment. Tell me a bit about yourself."
 
-Question 2 — Background:
-Ask about what they are currently studying or working on.
+Question 2 — Background / Daily Life:
+Follow up naturally based on their answer and ask about what they are currently studying or working on.
 
-Question 3 — Experience:
-Ask them to describe a project, achievement, or experience they are proud of.
+Question 3 — Past Experience / Story:
+Ask them to describe a project, achievement, or memorable experience they are proud of.
 
-Question 4 — Reasoning:
-Ask about a challenge they faced and how they solved it.
+Question 4 — Problem Solving / Challenge:
+Ask about a challenge or difficult situation they encountered and how they handled it.
 
-Question 5 — Adaptive Follow-up:
-Based on their previous answer, ask a deeper follow-up question that tests their ability to explain complex ideas.
+Question 5 — Opinions & Future Goals:
+Ask an adaptive question about their future aspirations or their thoughts on a relevant topic.
 
-After completing at least 5 questions (and any necessary follow-ups), say: "Thank you so much for this conversation! It was great speaking with you. That concludes our session."
-
-CONVERSATIONAL GUIDELINES:
-- Progressively test: basic communication → description → narrative → vocabulary → reasoning → complex explanation
-- Maintain context from previous answers to make follow-up questions natural
-- If the user gives very short answers, gently encourage elaboration
-- Keep the conversation flowing naturally`
+AUTOMATIC SESSION CONCLUSION & EVALUATION TRIGGER:
+- After the candidate finishes answering Question 5 (or after 5 full conversational turns), say your final closing sentence warmly:
+  "Thank you so much! That completes your speaking assessment. I am compiling your detailed evaluation report right now."
+- IMMEDIATELY after concluding, you MUST call the tool function "submit_speaking_evaluation" with the comprehensive assessment report based on both the spoken audio (pronunciation, phonetics, rhythm, speech rate) and conversation content.`
 
 /**
  * Handle WebSocket upgrade for /ws/assessment
@@ -66,7 +123,7 @@ function handleAssessmentWsUpgrade(server) {
 
 	server.on('upgrade', (request, socket, head) => {
 		const pathname = url.parse(request.url).pathname
-		if (pathname !== '/ws/assessment') return
+		if (pathname !== '/ws/assessment' && pathname !== '/api/assessment/ws' && !pathname.startsWith('/ws/assessment')) return
 
 		console.log(`\n======================================================`)
 		console.log(`🌐 [Assessment WS] Incoming Upgrade request: ${request.url}`)
@@ -128,13 +185,14 @@ function handleAssessmentWsUpgrade(server) {
 			sessionId: sid,
 			userId,
 			turns: [],
-			currentTurnText: '',
-			currentSpeaker: null,
+			currentAiText: '',
+			currentUserText: '',
 			turnSequence: 0,
 			questionCount: 0,
 			userAudioChunksCount: 0,
 			aiAudioChunksCount: 0,
 			startedAt: new Date(),
+			evaluationReceived: false,
 		}
 
 		// Connect to Gemini Live
@@ -162,9 +220,9 @@ function handleAssessmentWsUpgrade(server) {
 		activeSessions.set(sid, { geminiWs, clientWs, sessionState })
 
 		geminiWs.on('open', () => {
-			console.log(`✅ [Assessment WS] Connected to Gemini Live for session ${sid}! Sending initial setup...`)
+			console.log(`✅ [Assessment WS] Connected to Gemini Live for session ${sid}! Sending initial setup with evaluation tools...`)
 
-			// Send setup message
+			// Send setup message with native evaluation tool declaration
 			const setupMsg = {
 				setup: {
 					model: `models/${GEMINI_MODEL}`,
@@ -181,21 +239,21 @@ function handleAssessmentWsUpgrade(server) {
 					systemInstruction: {
 						parts: [{ text: INTERVIEWER_SYSTEM_PROMPT }],
 					},
+					tools: [EVALUATION_TOOL],
 				},
 			}
 
 			geminiWs.send(JSON.stringify(setupMsg))
 		})
 
-		geminiWs.on('message', (data) => {
+		geminiWs.on('message', async (data) => {
 			try {
 				const msg = JSON.parse(data.toString())
 
-				// Setup complete
+				// 1. Setup complete
 				if (msg.setupComplete) {
 					console.log(`🎉 [Assessment WS] Setup complete from Gemini for session ${sid}! Eva is ready.`)
 
-					// Update session status
 					prisma.assessment_sessions.update({
 						where: { id: sid },
 						data: { status: 'IN_PROGRESS', started_at: new Date(), updated_at: new Date() },
@@ -203,14 +261,14 @@ function handleAssessmentWsUpgrade(server) {
 
 					clientWs.send(JSON.stringify({ type: 'setup_complete' }))
 
-					// Send initial prompt to start conversation
+					// Send initial prompt to trigger Eva's opening greeting
 					console.log(`📣 [Assessment WS] Triggering Eva to begin greeting and first question...`)
 					const initialMsg = {
 						clientContent: {
 							turns: [
 								{
 									role: 'user',
-									parts: [{ text: 'Please start the interview by greeting me warmly and asking your first question.' }],
+									parts: [{ text: 'Please start the assessment by greeting me warmly and asking your first question.' }],
 								},
 							],
 							turnComplete: true,
@@ -220,11 +278,18 @@ function handleAssessmentWsUpgrade(server) {
 					return
 				}
 
-				// Server content (audio/text from Gemini)
+				// 2. Tool Call received from Gemini Live (Native In-Session Evaluation)
+				if (msg.toolCall) {
+					console.log(`🎯 [Assessment WS] Tool Call received from Eva for session ${sid}!`)
+					await handleEvaluationToolCall(msg.toolCall, sessionState, clientWs, geminiWs)
+					return
+				}
+
+				// 3. Server content (audio, text, functionCall from Gemini)
 				if (msg.serverContent) {
 					const content = msg.serverContent
 
-					// 1. Audio data from Gemini
+					// Audio & inline function calls
 					if (content.modelTurn && content.modelTurn.parts) {
 						for (const part of content.modelTurn.parts) {
 							if (part.inlineData) {
@@ -238,13 +303,18 @@ function handleAssessmentWsUpgrade(server) {
 									mimeType: part.inlineData.mimeType,
 								}))
 							}
+							if (part.functionCall) {
+								console.log(`🎯 [Assessment WS] Function call in modelTurn for session ${sid}!`)
+								await handleEvaluationToolCall({ functionCalls: [part.functionCall] }, sessionState, clientWs, geminiWs)
+								return
+							}
 							if (part.text) {
 								sessionState.currentAiText = (sessionState.currentAiText || '') + part.text
 							}
 						}
 					}
 
-					// 2. Real-time transcriptions from Gemini Live
+					// Live transcripts
 					if (content.outputTranscription?.text) {
 						sessionState.currentAiText = (sessionState.currentAiText || '') + content.outputTranscription.text
 					}
@@ -253,7 +323,7 @@ function handleAssessmentWsUpgrade(server) {
 						sessionState.currentUserText = (sessionState.currentUserText || '') + content.inputTranscription.text
 					}
 
-					// 3. User turn finished (when user stops speaking)
+					// User turn finished
 					if (sessionState.currentUserText && sessionState.currentUserText.trim().length > 3 && content.modelTurn) {
 						sessionState.turnSequence++
 						const userTurnText = sessionState.currentUserText.trim()
@@ -267,7 +337,7 @@ function handleAssessmentWsUpgrade(server) {
 						sessionState.currentUserText = ''
 					}
 
-					// 4. AI Turn complete — save the AI turn
+					// AI Turn complete
 					if (content.turnComplete) {
 						const turnContent = (sessionState.currentAiText || '').trim()
 						if (turnContent) {
@@ -295,10 +365,9 @@ function handleAssessmentWsUpgrade(server) {
 						sessionState.currentAiText = ''
 					}
 
-					// 5. Interrupted
+					// Interrupted
 					if (content.interrupted) {
 						console.log(`⚡ [Assessment WS] Interruption detected from user speech`)
-						// If Eva had spoken something, keep it recorded before clearing
 						if (sessionState.currentAiText && sessionState.currentAiText.trim().length > 5) {
 							sessionState.turnSequence++
 							sessionState.turns.push({
@@ -311,11 +380,6 @@ function handleAssessmentWsUpgrade(server) {
 						clientWs.send(JSON.stringify({ type: 'interrupted' }))
 						sessionState.currentAiText = ''
 					}
-				}
-
-				// Tool calls if any
-				if (msg.toolCall) {
-					clientWs.send(JSON.stringify({ type: 'tool_call', data: msg.toolCall }))
 				}
 
 			} catch (err) {
@@ -333,8 +397,8 @@ function handleAssessmentWsUpgrade(server) {
 			clientWs.send(JSON.stringify({ type: 'gemini_disconnected', code, reason: reason?.toString() }))
 		})
 
-		// Handle client messages (audio from microphone)
-		clientWs.on('message', (data) => {
+		// Handle client messages (audio from microphone or completion trigger)
+		clientWs.on('message', async (data) => {
 			try {
 				if (typeof data === 'string' || data instanceof Buffer) {
 					let parsed
@@ -344,7 +408,7 @@ function handleAssessmentWsUpgrade(server) {
 						return
 					}
 
-					// User audio chunk — forward to Gemini
+					// User audio chunk
 					if (parsed.type === 'audio_chunk') {
 						sessionState.userAudioChunksCount++
 						if (sessionState.userAudioChunksCount % 20 === 1) {
@@ -370,12 +434,22 @@ function handleAssessmentWsUpgrade(server) {
 							content: parsed.text || '',
 							timestamp: new Date(),
 						})
-					} else if (parsed.type === 'end_session') {
-						console.log(`🛑 [Assessment WS] User requested session end for session ${sid}`)
-						if (geminiWs && geminiWs.readyState === WebSocket.OPEN) {
-							geminiWs.close(1000, 'Session ended by user')
+					} else if (parsed.type === 'trigger_evaluation' || parsed.type === 'end_session') {
+						console.log(`🛑 [Assessment WS] User requested early session completion for session ${sid}`)
+						if (geminiWs && geminiWs.readyState === WebSocket.OPEN && !sessionState.evaluationReceived) {
+							const triggerMsg = {
+								clientContent: {
+									turns: [
+										{
+											role: 'user',
+											parts: [{ text: 'The interview is now completed. Please call the submit_speaking_evaluation function now to produce the complete speaking assessment report.' }],
+										},
+									],
+									turnComplete: true,
+								},
+							}
+							geminiWs.send(JSON.stringify(triggerMsg))
 						}
-						persistSessionData(sessionState)
 					}
 				}
 			} catch (err) {
@@ -401,13 +475,169 @@ function handleAssessmentWsUpgrade(server) {
 }
 
 /**
+ * Handle evaluation tool call generated natively by Gemini Live
+ */
+async function handleEvaluationToolCall(toolCall, sessionState, clientWs, geminiWs) {
+	const { sessionId, startedAt } = sessionState
+	const functionCall = toolCall.functionCalls?.[0] || toolCall
+
+	if (!functionCall || functionCall.name !== 'submit_speaking_evaluation') return
+
+	const args = functionCall.args || {}
+	console.log(`\n======================================================`)
+	console.log(`🎉 [Assessment WS] IN-SESSION EVALUATION RECEIVED FOR SESSION ${sessionId}!`)
+	console.log(`   Overall Score: ${args.overall_score}/100 | CEFR: ${args.cefr_level}`)
+	console.log(`   Pronunciation: ${args.pronunciation_score}/100 | Feedback: ${args.pronunciation_feedback?.substring(0, 60)}...`)
+	console.log(`   Fluency: ${args.fluency_score}/100 | Feedback: ${args.fluency_feedback?.substring(0, 60)}...`)
+	console.log(`======================================================\n`)
+
+	sessionState.evaluationReceived = true
+
+	// Respond to tool call to complete Gemini protocol
+	if (geminiWs && geminiWs.readyState === WebSocket.OPEN && functionCall.id) {
+		const toolResponse = {
+			toolResponse: {
+				functionResponses: [
+					{
+						response: { output: { status: 'success', message: 'Evaluation recorded' } },
+						id: functionCall.id,
+					},
+				],
+			},
+		}
+		geminiWs.send(JSON.stringify(toolResponse))
+	}
+
+	try {
+		// 1. Save turns to DB
+		await persistSessionData(sessionState)
+
+		// 2. Persist comprehensive results
+		const durationSeconds = Math.round((Date.now() - startedAt.getTime()) / 1000)
+
+		// Upsert assessment_results
+		await prisma.assessment_results.upsert({
+			where: { session_id: sessionId },
+			update: {
+				overall_score: args.overall_score || 75,
+				cefr_level: args.cefr_level || 'B2',
+				strengths: args.strengths || ['Good conversational flow'],
+				weaknesses: args.weaknesses || ['Slight pronunciation variations'],
+				recommendations: args.recommendations || ['Continue conversational practice'],
+				pronunciation_score: args.pronunciation_score || 75,
+				fluency_score: args.fluency_score || 75,
+				grammar_score: args.grammar_score || 75,
+				vocabulary_score: args.vocabulary_score || 75,
+				sentence_construction_score: args.sentence_construction_score || 75,
+				comprehension_score: args.comprehension_score || 75,
+				coherence_score: args.coherence_score || 75,
+				conversational_score: args.conversational_score || 75,
+				updated_at: new Date(),
+			},
+			create: {
+				session_id: sessionId,
+				overall_score: args.overall_score || 75,
+				cefr_level: args.cefr_level || 'B2',
+				strengths: args.strengths || ['Good conversational flow'],
+				weaknesses: args.weaknesses || ['Slight pronunciation variations'],
+				recommendations: args.recommendations || ['Continue conversational practice'],
+				pronunciation_score: args.pronunciation_score || 75,
+				fluency_score: args.fluency_score || 75,
+				grammar_score: args.grammar_score || 75,
+				vocabulary_score: args.vocabulary_score || 75,
+				sentence_construction_score: args.sentence_construction_score || 75,
+				comprehension_score: args.comprehension_score || 75,
+				coherence_score: args.coherence_score || 75,
+				conversational_score: args.conversational_score || 75,
+			},
+		})
+
+		// Upsert 8 assessment_metrics
+		const dimensions = [
+			{ name: 'pronunciation', score: args.pronunciation_score || 75, evidence: [args.pronunciation_feedback || 'Audio pronunciation analysis'] },
+			{ name: 'fluency', score: args.fluency_score || 75, evidence: [args.fluency_feedback || 'Speech rhythm and pacing analysis'] },
+			{ name: 'grammar', score: args.grammar_score || 75, evidence: [args.grammar_feedback || 'Grammar usage'] },
+			{ name: 'vocabulary', score: args.vocabulary_score || 75, evidence: [args.vocabulary_feedback || 'Vocabulary range'] },
+			{ name: 'sentence_construction', score: args.sentence_construction_score || 75, evidence: ['Sentence complexity'] },
+			{ name: 'comprehension', score: args.comprehension_score || 75, evidence: ['Understanding of questions'] },
+			{ name: 'coherence', score: args.coherence_score || 75, evidence: ['Topic flow and organization'] },
+			{ name: 'conversational', score: args.conversational_score || 75, evidence: ['Turn-taking and natural interaction'] },
+		]
+
+		for (const dim of dimensions) {
+			await prisma.assessment_metrics.upsert({
+				where: {
+					session_id_dimension: {
+						session_id: sessionId,
+						dimension: dim.name,
+					},
+				},
+				update: {
+					score: dim.score,
+					confidence: 0.95,
+					evidence: dim.evidence,
+					updated_at: new Date(),
+				},
+				create: {
+					session_id: sessionId,
+					dimension: dim.name,
+					score: dim.score,
+					confidence: 0.95,
+					evidence: dim.evidence,
+				},
+			})
+		}
+
+		// Insert detected errors if any
+		if (args.detected_errors && args.detected_errors.length > 0) {
+			await prisma.assessment_errors.createMany({
+				data: args.detected_errors.map((e) => ({
+					session_id: sessionId,
+					category: e.category || 'grammar',
+					severity: e.severity || 'low',
+					detected_text: e.detectedText || '',
+					correction: e.correction || '',
+					explanation: e.explanation || '',
+				})),
+				skipDuplicates: true,
+			})
+		}
+
+		// 3. Mark session COMPLETED & READY
+		await prisma.assessment_sessions.update({
+			where: { id: sessionId },
+			data: {
+				status: 'COMPLETED',
+				assessment_status: 'READY',
+				overall_score: args.overall_score || 75,
+				duration_seconds: durationSeconds,
+				completed_at: new Date(),
+				updated_at: new Date(),
+			},
+		})
+
+		// 4. Notify client WebSocket for instant transition
+		clientWs.send(JSON.stringify({
+			type: 'assessment_completed',
+			sessionId,
+			overallScore: args.overall_score,
+			cefrLevel: args.cefr_level,
+		}))
+
+		console.log(`✅ [Assessment WS] Session ${sessionId} assessment finalized and persisted! Client notified.`)
+
+	} catch (err) {
+		console.error(`❌ [Assessment WS] Error persisting in-session evaluation for ${sessionId}:`, err)
+	}
+}
+
+/**
  * Persist accumulated session data (turns) to database
  */
 async function persistSessionData(sessionState) {
 	const { sessionId, turns, questionCount, startedAt } = sessionState
 
 	try {
-		// Save all turns
 		if (turns.length > 0) {
 			const turnData = turns.map((t) => ({
 				session_id: sessionId,
@@ -424,7 +654,6 @@ async function persistSessionData(sessionState) {
 			})
 		}
 
-		// Update session metadata
 		const durationSeconds = Math.round((Date.now() - startedAt.getTime()) / 1000)
 		await prisma.assessment_sessions.update({
 			where: { id: sessionId },

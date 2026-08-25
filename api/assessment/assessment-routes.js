@@ -158,7 +158,7 @@ router.post('/sessions/:id/complete', async (req, res) => {
 			},
 		})
 
-		// Flush in-memory turns to database before evaluation
+		// Flush in-memory turns to database
 		const { flushSessionTurns } = require('../../services/gemini-live-proxy')
 		if (flushSessionTurns) {
 			await flushSessionTurns(sessionId).catch((err) => {
@@ -166,9 +166,19 @@ router.post('/sessions/:id/complete', async (req, res) => {
 			})
 		}
 
-		console.log(`[Assessment] Session ${sessionId} completed, triggering evaluation engine`)
+		// Check if session was already evaluated natively by Gemini Live in-session tool
+		const latestSession = await prisma.assessment_sessions.findUnique({
+			where: { id: sessionId },
+		})
 
-		// Trigger async assessment processing (non-blocking)
+		if (latestSession && latestSession.assessment_status === 'READY') {
+			console.log(`✅ [Assessment] Session ${sessionId} was already evaluated natively by Gemini Live tool!`)
+			return res.json({ session: latestSession, message: 'Assessment ready' })
+		}
+
+		console.log(`[Assessment] Session ${sessionId} triggering fallback evaluation engine`)
+
+		// Trigger async assessment processing (fallback)
 		const { processAssessment } = require('../../services/assessment-engine')
 		setImmediate(() => {
 			processAssessment(sessionId).catch((err) => {
