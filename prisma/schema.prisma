@@ -61,6 +61,8 @@ model users {
   subject_enrollments       user_subject_enrollment[]
   chapter_progress          user_chapter_progress[]
   topic_progress            user_topic_progress[]
+  // --- English Speaking Assessment ---
+  assessment_sessions       assessment_sessions[]
   // --- Deprecated (old per-user curriculum) ---
   chapters_deprecated       chapters[]
   topics_deprecated         topics[]
@@ -723,3 +725,99 @@ model web_search_logs {
   @@index([created_at])
 }
 
+// ============================================================
+// ENGLISH SPEAKING ASSESSMENT TABLES
+// ============================================================
+
+model assessment_sessions {
+  id                 Int       @id @default(autoincrement())
+  user_id            Int
+  status             String    @default("NOT_STARTED") @db.VarChar(30)
+  assessment_status  String    @default("PENDING") @db.VarChar(30)
+  started_at         DateTime? @db.Timestamp(6)
+  completed_at       DateTime? @db.Timestamp(6)
+  duration_seconds   Int?      @default(0)
+  question_count     Int?      @default(0)
+  overall_score      Float?
+  created_at         DateTime? @default(now()) @db.Timestamp(6)
+  updated_at         DateTime? @default(now()) @db.Timestamp(6)
+
+  users              users     @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  turns              assessment_turns[]
+  metrics            assessment_metrics[]
+  errors             assessment_errors[]
+  result             assessment_results?
+
+  @@index([user_id])
+  @@index([status])
+}
+
+model assessment_turns {
+  id              Int       @id @default(autoincrement())
+  session_id      Int
+  sequence        Int       @default(1)
+  speaker         String    @db.VarChar(20)
+  content         String?   @db.Text
+  start_time      DateTime? @db.Timestamp(6)
+  end_time        DateTime? @db.Timestamp(6)
+  duration_ms     Int?      @default(0)
+  audio_reference String?   @db.VarChar(500)
+  metadata        Json?
+  created_at      DateTime? @default(now()) @db.Timestamp(6)
+
+  session         assessment_sessions @relation(fields: [session_id], references: [id], onDelete: Cascade)
+
+  @@index([session_id])
+}
+
+model assessment_metrics {
+  id          Int       @id @default(autoincrement())
+  session_id  Int
+  dimension   String    @db.VarChar(50)
+  score       Float?
+  confidence  Float?
+  evidence    Json?
+  created_at  DateTime? @default(now()) @db.Timestamp(6)
+
+  session     assessment_sessions @relation(fields: [session_id], references: [id], onDelete: Cascade)
+
+  @@index([session_id])
+  @@unique([session_id, dimension])
+}
+
+model assessment_errors {
+  id            Int       @id @default(autoincrement())
+  session_id    Int
+  turn_sequence Int?
+  category      String    @db.VarChar(50)
+  severity      String    @default("medium") @db.VarChar(20)
+  detected_text String?   @db.Text
+  correction    String?   @db.Text
+  explanation   String?   @db.Text
+  created_at    DateTime? @default(now()) @db.Timestamp(6)
+
+  session       assessment_sessions @relation(fields: [session_id], references: [id], onDelete: Cascade)
+
+  @@index([session_id])
+}
+
+model assessment_results {
+  id                          Int       @id @default(autoincrement())
+  session_id                  Int       @unique
+  overall_score               Float?
+  pronunciation_score         Float?
+  fluency_score               Float?
+  grammar_score               Float?
+  vocabulary_score            Float?
+  sentence_construction_score Float?
+  comprehension_score         Float?
+  coherence_score             Float?
+  conversational_score        Float?
+  strengths                   Json?
+  weaknesses                  Json?
+  recommendations             Json?
+  completed_at                DateTime? @db.Timestamp(6)
+  created_at                  DateTime? @default(now()) @db.Timestamp(6)
+
+  session                     assessment_sessions @relation(fields: [session_id], references: [id], onDelete: Cascade)
+}

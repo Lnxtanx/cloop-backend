@@ -96,6 +96,8 @@ app.use('/api/english/chat', require('./api/english/english-chat-routes'))
 app.use('/api/english/analytics', require('./api/english/english-analytics-routes'))
 app.use('/api/english/vocabulary', require('./api/english/english-vocabulary-routes'))
 
+// English Speaking Assessment routes (completely separate from voice-chat)
+app.use('/api/assessment', require('./api/assessment/assessment-routes'))
 
 const PORT = process.env.PORT || 4000
 const HOST = process.env.HOST || '0.0.0.0' // Listen on all network interfaces
@@ -115,6 +117,10 @@ const prisma = require('./lib/prisma')
 // Handle WebSocket upgrade requests
 // WebSocket handling for voice chat has been moved to Python microservice
 // wss.handleUpgrade and wss.on('connection') logic removed.
+
+// English Speaking Assessment — Gemini Live WebSocket proxy
+const { handleAssessmentWsUpgrade } = require('./services/gemini-live-proxy')
+handleAssessmentWsUpgrade(server)
 
 server.listen(PORT, HOST, async () => {
 	console.log(`\n🚀 Backend server listening on ${HOST}:${PORT}`)

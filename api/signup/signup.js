@@ -47,13 +47,19 @@ router.post('/', async (req, res) => {
 		}
 		
 		if (preferred_language) {
-			const languageRecord = await prisma.languages.findUnique({ 
-				where: { id: parseInt(preferred_language) }
-			});
-			if (!languageRecord) {
-				return res.status(400).json({ error: 'Invalid language ID' });
+			const parsedLangId = parseInt(preferred_language);
+			if (!isNaN(parsedLangId)) {
+				// Numeric ID — look up by id
+				const languageRecord = await prisma.languages.findUnique({ 
+					where: { id: parsedLangId }
+				});
+				if (languageRecord) {
+					languageName = languageRecord.name;
+				}
+			} else {
+				// String name (e.g. "English") — use directly
+				languageName = preferred_language;
 			}
-			languageName = languageRecord.name;
 		}
 
 		// Create the user (store Guest ID in email field)
