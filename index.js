@@ -99,6 +99,10 @@ app.use('/api/english/vocabulary', require('./api/english/english-vocabulary-rou
 // English Speaking Assessment routes (completely separate from voice-chat)
 app.use('/api/assessment', require('./api/assessment/assessment-routes'))
 
+// Voice Practice Sessions & Learner Profile (v2 Architecture)
+app.use('/api/voice-sessions', require('./api/voice-sessions/voice-session-routes'))
+app.use('/api/learner-profile', require('./api/voice-sessions/learner-profile-routes'))
+
 const PORT = process.env.PORT || 4000
 const HOST = process.env.HOST || '0.0.0.0' // Listen on all network interfaces
 

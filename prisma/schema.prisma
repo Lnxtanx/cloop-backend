@@ -63,6 +63,9 @@ model users {
   topic_progress            user_topic_progress[]
   // --- English Speaking Assessment ---
   assessment_sessions       assessment_sessions[]
+  // --- Voice Practice Sessions ---
+  voice_sessions            voice_sessions[]
+  learner_profile           learner_profiles?
   // --- Deprecated (old per-user curriculum) ---
   chapters_deprecated       chapters[]
   topics_deprecated         topics[]
@@ -820,4 +823,90 @@ model assessment_results {
   created_at                  DateTime? @default(now()) @db.Timestamp(6)
 
   session                     assessment_sessions @relation(fields: [session_id], references: [id], onDelete: Cascade)
+}
+
+// ============================================================
+// VOICE PRACTICE SESSION TABLES (v2 architecture)
+// ============================================================
+
+model voice_sessions {
+  id               Int       @id @default(autoincrement())
+  user_id          Int
+  track_key        String    @db.VarChar(50)
+  chapter_key      String?   @db.VarChar(100)
+  session_mode     String    @default("practice") @db.VarChar(30)
+  status           String    @default("ACTIVE") @db.VarChar(30)
+  duration_seconds Int?      @default(0)
+  words_spoken     Int?      @default(0)
+  questions_asked  Int?      @default(0)
+  tutor_name       String?   @default("Ravi") @db.VarChar(30)
+  audio_url        String?   @db.VarChar(500)
+  summary_text     String?   @db.Text
+  learner_did_well String?   @db.Text
+  one_thing_to_fix String?   @db.Text
+  started_at       DateTime? @db.Timestamp(6)
+  completed_at     DateTime? @db.Timestamp(6)
+  created_at       DateTime? @default(now()) @db.Timestamp(6)
+
+  user             users     @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  errors           session_errors[]
+  turns            voice_session_turns[]
+
+  @@index([user_id, created_at])
+  @@index([track_key])
+}
+
+model session_errors {
+  id                          Int       @id @default(autoincrement())
+  session_id                  Int
+  error_type                  String    @db.VarChar(30)
+  said                        String?   @db.Text
+  correct                     String?   @db.Text
+  target_word                 String?   @db.VarChar(100)
+  detail                      String?   @db.Text
+  severity                    String    @default("sounds_non_native") @db.VarChar(30)
+  confidence                  String    @default("medium") @db.VarChar(10)
+  corrected_aloud             Boolean   @default(false)
+  learner_repeated_correctly  Boolean?
+  tier                        String?   @db.VarChar(20)
+  created_at                  DateTime? @default(now()) @db.Timestamp(6)
+
+  session                     voice_sessions @relation(fields: [session_id], references: [id], onDelete: Cascade)
+
+  @@index([session_id])
+  @@index([error_type])
+}
+
+model voice_session_turns {
+  id              Int       @id @default(autoincrement())
+  session_id      Int
+  sequence        Int       @default(1)
+  speaker         String    @db.VarChar(20)
+  content         String?   @db.Text
+  created_at      DateTime? @default(now()) @db.Timestamp(6)
+
+  session         voice_sessions @relation(fields: [session_id], references: [id], onDelete: Cascade)
+
+  @@index([session_id])
+}
+
+model learner_profiles {
+  id                Int       @id @default(autoincrement())
+  user_id           Int       @unique
+  native_language   String?   @db.VarChar(50)
+  english_level     String?   @db.VarChar(30)
+  cefr_estimate     String?   @db.VarChar(5)
+  strengths         Json?
+  weak_language     Json?
+  weak_situations   Json?
+  track_preferences Json?
+  current_track     String?   @db.VarChar(50)
+  current_chapter   String?   @db.VarChar(100)
+  open_errors       Json?
+  total_sessions    Int       @default(0)
+  total_minutes     Int       @default(0)
+  updated_at        DateTime? @default(now()) @db.Timestamp(6)
+  created_at        DateTime? @default(now()) @db.Timestamp(6)
+
+  user              users     @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
 }
