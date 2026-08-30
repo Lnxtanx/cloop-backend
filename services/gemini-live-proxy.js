@@ -293,9 +293,12 @@ function handleAssessmentWsUpgrade(server) {
 
 					// Trigger initial greeting
 					console.log(`📣 [Voice WS] Triggering tutor to begin session...`)
-					const greetingPrompt = isVoiceSession
-						? `Hello! I am ready to practise. Please greet me warmly in 1-2 short sentences and start our practice.`
-						: `Please start the assessment by greeting me warmly and asking your first question.`
+					let greetingPrompt = 'Please start the assessment by greeting me warmly and asking your first question.'
+					if (sessionState.mode === 'cloop_ai' || sessionState.trackKey === 'cloop_tutor' || sessionState.trackKey === 'general_tutor') {
+						greetingPrompt = 'Hello! Please greet me warmly as Cloop AI in 1-2 short sentences and ask what topic, subject, or doubt I would like to explore today.'
+					} else if (isVoiceSession) {
+						greetingPrompt = 'Hello! I am ready to practise. Please greet me warmly in 1-2 short sentences and start our practice.'
+					}
 
 					const initialMsg = {
 						clientContent: {
