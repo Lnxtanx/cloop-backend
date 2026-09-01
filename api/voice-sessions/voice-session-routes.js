@@ -173,7 +173,69 @@ router.get('/dashboard/summary', async (req, res) => {
       recentSessions.reduce((sum, s) => sum + (s.duration_seconds || 0), 0) / 60
     )
 
-    // 4. Top 3 mistakes this week for teaser
+    // 4. Latest completed session feedback paragraph and tiers
+    const latestCompletedSession = await prisma.voice_sessions.findFirst({
+      where: { user_id: userId, status: 'COMPLETED' },
+      orderBy: { completed_at: 'desc' },
+      include: {
+        errors: true,
+      },
+    })
+
+    const summaryParagraph = latestCompletedSession?.summary_text || (
+      totalSessions > 0
+        ? `You have completed ${totalSessions} speaking sessions totaling ${totalMinutes} minutes. Your consistency is building strong conversational fluency. Keep practicing daily!`
+        : "Welcome to Cloop English! Start your first speaking practice session with Ravi to see your fluency insights, 4 core areas, and error tracking."
+    )
+    const learnerDidWell = latestCompletedSession?.learner_did_well || (totalSessions > 0 ? "You are speaking regularly and engaging with the tutor." : null)
+    const oneThingToFix = latestCompletedSession?.one_thing_to_fix || null
+
+    // 5. Compute the 4 Core Fluency Areas (Part 5.2 of Design Doc)
+    // Levels: 'Getting Started' (1) -> 'Coming Along' (2) -> 'Mostly Clear' (3) -> 'Clear' (4)
+    const allErrors = await prisma.session_errors.findMany({
+      where: { session: { user_id: userId } },
+      select: { error_type: true, severity: true, created_at: true },
+      take: 200,
+    })
+
+    const soundErrors = allErrors.filter(e => ['sound_swap', 'word_stress', 'unclear'].includes(e.error_type)).length
+    const smoothErrors = allErrors.filter(e => ['hesitation', 'speed'].includes(e.error_type)).length
+    const grammarErrors = allErrors.filter(e => ['grammar', 'sentence_shape', 'word_choice', 'indian_english'].includes(e.error_type)).length
+    const lengthErrors = allErrors.filter(e => e.error_type === 'too_short').length
+
+    const getAreaLevel = (errCount, sessionCount) => {
+      if (sessionCount === 0) return { level: 'Getting Started', step: 1, percent: 25 }
+      const errPerSession = errCount / Math.max(1, sessionCount)
+      if (errPerSession <= 0.5) return { level: 'Clear', step: 4, percent: 100 }
+      if (errPerSession <= 1.5) return { level: 'Mostly Clear', step: 3, percent: 75 }
+      if (errPerSession <= 3.0) return { level: 'Coming Along', step: 2, percent: 50 }
+      return { level: 'Getting Started', step: 1, percent: 25 }
+    }
+
+    const fluencyAreas = {
+      speakingClearly: {
+        title: 'Speaking Clearly',
+        question: 'Can people understand your words?',
+        ...getAreaLevel(soundErrors, totalSessions),
+      },
+      speakingSmoothly: {
+        title: 'Speaking Smoothly',
+        question: 'Do you stop and search for words?',
+        ...getAreaLevel(smoothErrors, totalSessions),
+      },
+      speakingCorrectly: {
+        title: 'Speaking Correctly',
+        question: 'Are your sentences right?',
+        ...getAreaLevel(grammarErrors, totalSessions),
+      },
+      sayingEnough: {
+        title: 'Saying Enough',
+        question: 'Do you give full answers?',
+        ...getAreaLevel(lengthErrors, totalSessions),
+      },
+    }
+
+    // 6. Top mistakes this week
     const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
     const weekErrors = await prisma.session_errors.findMany({
       where: {
@@ -185,6 +247,7 @@ router.get('/dashboard/summary', async (req, res) => {
         said: true,
         correct: true,
         severity: true,
+        detail: true,
       },
     })
 
@@ -201,14 +264,19 @@ router.get('/dashboard/summary', async (req, res) => {
           said: e.said,
           correct: e.correct,
           severity: e.severity,
+          detail: e.detail,
           countThisWeek: 1,
         })
       }
     }
 
-    const topMistakes = Array.from(errorCounts.values())
-      .sort((a, b) => b.countThisWeek - a.countThisWeek)
-      .slice(0, 3)
+    const rankedErrors = Array.from(errorCounts.values()).sort((a, b) => b.countThisWeek - a.countThisWeek)
+    const topMistakes = rankedErrors.slice(0, 3)
+
+    // 3-Tier Recent Error Lists
+    const fixFirst = rankedErrors.filter(e => e.severity === 'blocks_understanding' || e.error_type === 'sentence_shape').slice(0, 3)
+    const soundsOff = rankedErrors.filter(e => e.severity === 'sounds_non_native' && !fixFirst.includes(e))
+    const smallThings = rankedErrors.filter(e => e.severity === 'minor' || e.error_type === 'indian_english')
 
     return res.json({
       continueSession,
@@ -217,8 +285,18 @@ router.get('/dashboard/summary', async (req, res) => {
       recentSessionMinutes,
       totalSessions,
       totalMinutes,
+      summaryParagraph,
+      learnerDidWell,
+      oneThingToFix,
+      fluencyAreas,
       topMistakes,
       topMistakeCount: errorCounts.size,
+      tiers: {
+        fixFirst,
+        soundsOff,
+        smallThings,
+        totalCount: errorCounts.size,
+      },
     })
   } catch (error) {
     console.error('[Voice API] Error fetching dashboard:', error)
