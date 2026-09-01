@@ -66,7 +66,7 @@ router.get('/', async (req, res) => {
 			boards: boards.map(board => ({
 				id: board.id,
 				code: board.code,
-				name: board.name,
+				name: board.code === 'STATE' ? 'State Board' : (board.code || board.name),
 				description: board.description
 			})),
 			subjects: filteredSubjects.map(subject => ({
