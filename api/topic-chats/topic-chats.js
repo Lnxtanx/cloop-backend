@@ -1049,9 +1049,9 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 		try {
 			const lastAi = chatHistory.slice().reverse().find(m => m.sender === 'ai')
 			if (aiResponse && Array.isArray(aiResponse.messages) && lastAi) {
-				const candidate = aiResponse.messages.find(m => m.message && m.message.includes('?')) || aiResponse.messages[0]
-				if (candidate && candidate.message) {
-					const candText = normalizeText(candidate.message)
+				const candidate = aiResponse.messages.find(m => (m.message ?? m.content) && (String(m.message ?? m.content)).includes('?')) || aiResponse.messages[0]
+				if (candidate && (candidate.message ?? candidate.content)) {
+					const candText = normalizeText(candidate.message ?? candidate.content)
 					const lastText = normalizeText(lastAi.message)
 					if (candText && lastText && candText === lastText) {
 						// Retry once with a firm instruction in the history
@@ -1079,14 +1079,14 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 		// Edge case: some model outputs send the correction as an AI message with message_type 'user_correction'
 		// instead of as aiResponse.user_correction. Detect that and apply it to the user's placeholder.
 		if (!aiResponse.user_correction && Array.isArray(aiResponse.messages)) {
-			const idx = aiResponse.messages.findIndex(m => m.message_type === 'user_correction' || (m.message && /<del>|<ins>/.test(m.message)));
+			const idx = aiResponse.messages.findIndex(m => (m.message_type ?? m.type) === 'user_correction' || ((m.message ?? m.content) && /<del>|<ins>/.test(m.message ?? m.content)));
 			if (idx !== -1) {
 				const correctionMsg = aiResponse.messages.splice(idx, 1)[0];
 				// Normalize to user_correction shape
 				const inferredUserCorrection = {
 					message_type: 'user_correction',
-					diff_html: correctionMsg.message || null,
-					complete_answer: correctionMsg.complete_answer || correctionMsg.message || null,
+					diff_html: (correctionMsg.message ?? correctionMsg.content) || null,
+					complete_answer: correctionMsg.complete_answer || (correctionMsg.message ?? correctionMsg.content) || null,
 					options: [],
 					feedback: correctionMsg.feedback || { is_correct: false, bubble_color: 'red' }
 				};
@@ -1209,12 +1209,17 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 			const createdAt = new Date(baseTime + timeOffset);
 			timeOffset += 10; // Increment time offset by 10ms to ensure strict ordering
 
+			// Normalize the model's message item shape. DeepSeek may return items as
+			// { "message", "message_type" } OR { "type": "text", "content": "..." }.
+			const message = data.message ?? data.content ?? '';
+			const messageType = data.message_type ?? data.type ?? 'text';
+
 			const savedMessage = await prisma.admin_chat.create({
 				data: {
 					user_id: user_id,
 					sender: 'ai',
-					message: data.message,
-					message_type: data.message_type || 'text',
+					message: message,
+					message_type: messageType,
 					options: data.options || [],
 					diff_html: data.diff_html || null,
 					emoji: data.emoji || null,
@@ -1734,7 +1739,7 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 				try {
 					// Generate session summary with updated goals
 					const summaryResponse = await generateTopicChatResponse({
-						userMessage: '', // Empty message triggers session summary
+						userMessage: '__SESSION_COMPLETE__', // Sentinel triggers a hard WRAP/revision_sheet directive
 						topicTitle: topic.title,
 						topicContent: topic.content || 'No additional content provided',
 						chatHistory,
@@ -1830,6 +1835,48 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 								...savedSummaryMsg,
 								session_summary: metricsData // Ensure frontend gets the object
 							});
+						}
+					}
+
+					// GUARANTEED revision_sheet: if the model failed to emit a revision_sheet
+					// (or the whole summary generation errored), synthesize one from session
+					// analytics so the end-of-session card ALWAYS renders.
+					const { calculateSessionMetrics } = require('../../services/topic-chat/topic_chat_metrics');
+					let hadRevisionSheet = aiMessages.some(m => m.message_type === 'revision_sheet');
+
+					// If the model DID emit a revision_sheet in the summary response, persist it
+					// as a card message so it shows and reloads from history.
+					if (!hadRevisionSheet && summaryResponse && summaryResponse.revision_sheet) {
+						const savedRevModel = await savePhaseBlock('revision_sheet', summaryResponse.revision_sheet, '');
+						if (savedRevModel) hadRevisionSheet = true;
+					}
+
+					if (!hadRevisionSheet) {
+						try {
+							console.log('[topic-chats] revision_sheet missing — synthesizing from session analytics');
+							const metricsData = await calculateSessionMetrics(user_id, parseInt(topicId), updatedGoalsAfterProgress);
+							const goalPerf = Array.isArray(metricsData.goal_performance) ? metricsData.goal_performance : [];
+							const revisionSheetData = {
+								topic: topic.title,
+								concepts_covered: goalPerf.length > 0 ? goalPerf.map(g => g.goal_title) : updatedGoalsAfterProgress.map(g => g.title),
+								definitions: [],
+								key_points: goalPerf.length > 0
+									? goalPerf.map(g => `${g.goal_title}: ${g.questions_asked} questions, ${g.correct_answers} correct (${g.score_percent}% accuracy)`)
+									: [],
+								common_mistakes: (metricsData.top_error_types || []).map(t => t.type),
+								one_minute_recall: [],
+								your_weak_spots: (metricsData.weak_goals || []).map(g => g.goal_title),
+								overall_score_percent: metricsData.overall_score_percent,
+								star_rating: metricsData.star_rating,
+								performance_level: metricsData.performance_level
+							};
+							const savedRev = await savePhaseBlock('revision_sheet', revisionSheetData, '');
+							if (savedRev) {
+								if (!aiResponse.revision_sheet) aiResponse.revision_sheet = revisionSheetData;
+								console.log('🔖 revision_sheet synthesized and saved as end card');
+							}
+						} catch (revErr) {
+							console.error('❌ Failed to synthesize revision_sheet:', revErr.message);
 						}
 					}
 
@@ -2328,8 +2375,8 @@ router.post('/:topicId/option', authenticateToken, async (req, res) => {
 				data: {
 					user_id: user_id,
 					sender: 'ai',
-					message: aiMsg.message,
-					message_type: aiMsg.message_type || 'text',
+					message: aiMsg.message ?? aiMsg.content ?? '',
+					message_type: aiMsg.message_type ?? aiMsg.type ?? 'text',
 					options: aiMsg.options || [],
 					images: (aiMsg.images || []).map(x => typeof x === 'string' ? x : (x.url || JSON.stringify(x))),
 					videos: (aiMsg.videos || []).map(x => typeof x === 'string' ? x : (x.url || JSON.stringify(x))),
@@ -2690,8 +2737,8 @@ router.post('/:topicId/learn-more', authenticateToken, async (req, res) => {
 					data: {
 						user_id: user_id,
 						sender: 'ai',
-						message: msg.message || '',
-						message_type: msg.message_type || 'text',
+						message: (msg.message ?? msg.content) || '',
+					message_type: (msg.message_type ?? msg.type) || 'text',
 						options: msg.options || [],
 						images: [],
 						videos: [],

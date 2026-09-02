@@ -88,7 +88,15 @@ async function generateTopicChatResponse({
         content: msg.message || ''
       });
     }
-    messages.push({ role: 'user', content: userMessage });
+
+    // WRAP sentinel: the route signals "all goals complete — generate the end-of-session
+    // revision artefact". Pass the model an explicit directive (an empty string invites the
+    // model to re-teach / ask another question). The model must emit revision_sheet + summary.
+    const isWrapTurn = phase === 'WRAP' && (userMessage === '__SESSION_COMPLETE__' || userMessage === '');
+    const userTurn = isWrapTurn
+      ? 'SESSION COMPLETE. All learning goals are done. Emit the revision_sheet covering EVERY concept studied in this session, plus session_metrics with the overall score breakdown. Do NOT ask any further question — this is the final turn.'
+      : userMessage;
+    messages.push({ role: 'user', content: userTurn });
 
     // Log
     console.log('\n========== AI INPUT (v2 Teaching Arc) ==========');
@@ -133,6 +141,25 @@ async function generateTopicChatResponse({
           throw new Error('Failed to extract valid JSON from response');
         }
 
+        // WRAP validation: the final turn MUST produce a revision_sheet. If the model
+        // dropped the structured JSON (emitted rambling text) or forgot the block,
+        // retry with an explicit instruction before giving up.
+        if (phase === 'WRAP' && (!parsed.revision_sheet || typeof parsed.revision_sheet !== 'object')) {
+          lastError = new Error('WRAP response missing revision_sheet');
+          console.warn(`[topic_chat] WRAP response missing revision_sheet (attempt ${attempts}), retrying with directive`);
+          if (attempts < maxAttempts) {
+            // Reinforce the directive with the goal titles so the model knows what to cover.
+            const goalTitles = topicGoals.map((g, i) => `${i + 1}. ${g.title || (g.chat_goal_progress?.[0] && g.title) || g.title}`).join('\n');
+            messages.push({
+              role: 'user',
+              content: `You did not emit the revision_sheet. This session is COMPLETE. Return valid JSON with a "revision_sheet" block (concepts_covered, definitions[], key_points[], common_mistakes[], one_minute_recall[]) covering ALL goals studied:\n${goalTitles}\nNo questions.`
+            });
+            await new Promise(resolve => setTimeout(resolve, 500));
+            continue;
+          }
+          throw lastError;
+        }
+
         console.log(`[topic_chat] Parsed JSON on attempt ${attempts}`);
         break;
 
@@ -161,10 +188,13 @@ async function generateTopicChatResponse({
     // Normalize user_correction
     parsed = normalizeUserCorrectionOptions(parsed);
 
-    // Grounded evaluation: if question was asked and no user_correction, grade it
-    if (analysis.hasAskedQuestion && !parsed.user_correction && userMessage && userMessage.trim() !== '' && phase !== 'WRAP') {
+    // Grounded evaluation: if question was asked and there's no user_correction, grade it.
+    // Also grade when a model user_correction exists but lacks diff_html (the source of the
+    // strikethrough) so we still produce <del>/<ins> markup instead of a plain red bubble.
+    const hasDiffMarkup = !!(parsed.user_correction?.diff_html && /<del>|<ins>/.test(parsed.user_correction.diff_html));
+    if (analysis.hasAskedQuestion && !hasDiffMarkup && userMessage && userMessage.trim() !== '' && phase !== 'WRAP') {
       try {
-        console.log('[topic_chat] No user_correction — using grounded answer grader (temp 0)');
+        console.log('[topic_chat] Grading answer with grounded answer grader (temp 0)');
         const graded = await gradeAnswer({
           answer: userMessage,
           question: lastQuestion,
@@ -173,20 +203,31 @@ async function generateTopicChatResponse({
         });
 
         if (graded) {
-          parsed.user_correction = {
-            message_type: 'user_correction',
-            diff_html: graded.diff_html,
-            complete_answer: graded.complete_answer,
-            emoji: graded.is_correct ? '😊' : (graded.score_percent >= 50 ? '😅' : '😓'),
-            feedback: {
-              is_correct: graded.is_correct,
-              bubble_color: graded.is_correct ? 'green' : 'red',
-              error_type: graded.error_type,
-              score_percent: graded.score_percent
+          if (!parsed.user_correction) {
+            // No model correction: build a full grounded correction
+            parsed.user_correction = {
+              message_type: 'user_correction',
+              diff_html: graded.diff_html,
+              complete_answer: graded.complete_answer,
+              emoji: graded.is_correct ? '😊' : (graded.score_percent >= 50 ? '😅' : '😓'),
+              feedback: {
+                is_correct: graded.is_correct,
+                bubble_color: graded.is_correct ? 'green' : 'red',
+                error_type: graded.error_type,
+                score_percent: graded.score_percent
+              }
+            };
+            console.log('[topic_chat] Obtained grounded user_correction');
+          } else {
+            // Model gave a correction but no strikethrough markup: backfill diff_html only,
+            // keep the model's complete_answer, feedback, and emoji.
+            parsed.user_correction.diff_html = graded.diff_html || null;
+            if (!parsed.user_correction.complete_answer) {
+              parsed.user_correction.complete_answer = graded.complete_answer;
             }
-          };
+            console.log('[topic_chat] Backfilled diff_html from grounded grader');
+          }
           parsed = normalizeUserCorrectionOptions(parsed);
-          console.log('[topic_chat] Obtained grounded user_correction');
         }
       } catch (retryErr) {
         console.error('[topic_chat] Grounded grader failed:', retryErr.message);

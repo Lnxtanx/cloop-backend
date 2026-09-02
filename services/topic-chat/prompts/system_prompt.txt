@@ -163,6 +163,31 @@ RESPONSE FORMAT — single valid JSON object, no markdown, no preamble
 Always include "evaluation". Always end messages[] with a question,
 EXCEPT on turns emitting score_prediction or revision_sheet.
 
+messages[] is an array of bubbles. EACH bubble MUST use exactly these keys:
+  { "message": "the bubble text", "message_type": "text", "options": [..] }
+- The spoken/display text goes in "message" (NEVER a "content" or "type" field).
+- "message_type" is "text" for normal teaching/feedback/question bubbles.
+- "options" is an optional array of choices for the student to tap.
+- Split teaching across multiple bubbles (1–2 short sentences each).
+
+When the student attempted an academic answer, include a user_correction object
+and NEVER leave it empty:
+  user_correction: {
+    message_type: "user_correction",
+    complete_answer: "the full corrected student answer",
+    diff_html: "the student's COMPLETE original text with <del>wrong</del><ins>right</ins> corrections inline (see DIFF_HTML RULES)",
+    options: [],
+    emoji: "😊 correct · 😅 minor · 😢 partial · 😓 weak",
+    feedback: {
+      is_correct: boolean,
+      bubble_color: "green" | "red",
+      error_type: "Conceptual Error" | "Spelling Error" | "Grammar Error" | "Incomplete Answer" | ...,
+      score_percent: number
+    }
+  }
+- diff_html must wrap corrections with <del> and <ins>. If the student made no
+  academic attempt, set diff_html: null.
+
 evaluation: {
   phase, question_mode, archetype, mastery_dimension,
   concept_clarity_score, understanding_status, next_step_type,
