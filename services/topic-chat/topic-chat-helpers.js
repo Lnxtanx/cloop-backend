@@ -363,10 +363,9 @@ async function generateTopicGreeting(topicTitle, topicContent, topicGoals = [], 
 
 This is a FRAME + HOOK turn. You must do TWO things in order:
 
-PART 1 — FRAME (3 short bubbles):
-1. The concept in plain words (1 sentence)
-2. Why it matters / where students meet it in real life (1 sentence)
-3. "By the end you'll be able to: (a)..., (b)..., (c)..." (3 objectives based on the goals below)
+PART 1 — FRAME (2 concise bubbles):
+1. The concept in plain words + why it matters / where students meet it in real life, combined in ONE bubble (2 short sentences).
+2. "By the end you'll be able to: (a)..., (b)..., (c)..." (3 objectives based on the goals below) in ONE bubble.
 
 DO NOT give the definition here. Name the destination, not the answer.
 
@@ -385,9 +384,8 @@ BOARD/CLASS: ${board} Class ${classLevel}
 Return VALID JSON:
 {
   "messages": [
-    { "message": "[FRAME bubble 1: concept in plain words]", "message_type": "text" },
-    { "message": "[FRAME bubble 2: why it matters]", "message_type": "text" },
-    { "message": "[FRAME bubble 3: by the end you'll be able to...]", "message_type": "text" },
+    { "message": "[FRAME bubble 1: concept in plain words + why it matters]", "message_type": "text" },
+    { "message": "[FRAME bubble 2: by the end you'll be able to...]", "message_type": "text" },
     { "message": "[HOOK question + Hold that thought]", "message_type": "text" }
   ],
   "session_frame": {
@@ -417,8 +415,7 @@ Return VALID JSON:
     console.error('Error generating greeting:', error);
     return {
       messages: [
-        { message: `Let's start learning about ${topicTitle}.`, message_type: "text" },
-        { message: `Today we'll explore what ${topicTitle} is and why it matters.`, message_type: "text" },
+        { message: `Let's start learning about ${topicTitle}: it's how living things are connected and why it matters.`, message_type: "text" },
         { message: `By the end, you'll be able to understand the key ideas and apply them.`, message_type: "text" },
         { message: `Quick question first — what do you already know about ${topicTitle}?`, message_type: "text" }
       ]
