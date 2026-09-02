@@ -13,7 +13,7 @@ const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '../.env'), override: true });
 
 const { loadChapterGraph, getAvailableScienceChapters } = require('../services/graph-loader');
-const { buildSystemPrompt, analyzeChatHistory } = require('../services/ai/topic-chat-helpers');
+const { buildSystemPrompt, analyzeChatHistory } = require('../services/topic-chat/topic-chat-helpers');
 const { invokeModel, extractJson } = require('../services/ai/deepseek-client');
 const { searchYouTube, searchImages } = require('../services/media-search');
 

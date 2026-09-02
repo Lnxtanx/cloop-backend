@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const axios = require('axios')
 const { authenticateToken } = require('../../middleware/auth')
-const { generateTopicChatResponse, generateTopicGreeting, generateTopicGoals } = require('../../services/ai/topic-chat')
+const { generateTopicChatResponse, generateTopicGreeting, generateTopicGoals } = require('../../services/topic-chat/topic-chat')
 const { invokeModel } = require('../../services/ai/deepseek-client')
 const { createLearningTurn, incrementExplainCount, calculateMasteryScore } = require('../../services/learning_turns_tracker')
 const { searchYouTube, searchImages } = require('../../services/media-search')
@@ -448,8 +448,14 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 			console.log('💬 Existing Messages:', chatMessages.length);
 			console.log('\n🎬 Generating initial greeting...');
 
+			// Fetch user profile for board/classLevel context
+			const userProfile = await prisma.users.findUnique({
+				where: { user_id: user_id },
+				select: { board: true, grade_level: true, name: true }
+			});
+
 			// Generate greeting with goals context
-			const greetingData = await generateTopicGreeting(topic.title, topic.content, topicGoals)
+			const greetingData = await generateTopicGreeting(topic.title, topic.content, topicGoals, userProfile)
 			initialGreeting = greetingData.messages
 
 			console.log('\n✅ Greeting Generated and Will Be Sent to Frontend:');
@@ -464,23 +470,41 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 			if (initialGreeting && initialGreeting.length > 0 && topicGoals.length > 0) {
 				const firstGoal = topicGoals[0];
 
+				// Store session_frame and hook_prediction data in diff_html as JSON
+				const sessionFrameData = greetingData.session_frame || null;
+				const hookPredictionData = greetingData.hook_prediction || null;
+
 				// Store each greeting message in database
-				for (const msg of initialGreeting) {
-					// First create the admin_chat record
+				for (let i = 0; i < initialGreeting.length; i++) {
+					const msg = initialGreeting[i];
+					// Determine message_type: use the type from the greeting response
+					// For the hook question, attach the session_frame/hook_prediction data
+					const isLastMsg = i === initialGreeting.length - 1;
+					const messageType = msg.message_type || 'text';
+
+					// Store extra data as diff_html JSON for special message types
+					let diffHtml = null;
+					if (isLastMsg && sessionFrameData) {
+						diffHtml = JSON.stringify({
+							session_frame: sessionFrameData,
+							hook_prediction: hookPredictionData
+						});
+					}
+
 					const chatRecord = await prisma.admin_chat.create({
 						data: {
 							sender: 'ai',
 							message: msg.message,
-							message_type: msg.message_type || 'text',
+							message_type: messageType,
 							emoji: msg.emoji || null,
 							options: msg.options || [],
+							diff_html: diffHtml,
 							users: {
 								connect: { user_id: user_id }
 							}
 						}
 					});
 
-					// Then create or connect to chat_goal_progress using the chat_id
 					await prisma.chat_goal_progress.upsert({
 						where: {
 							chat_id_goal_id_user_id: {
@@ -625,7 +649,7 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 router.post('/:topicId/message', authenticateToken, async (req, res) => {
 	let user_id = req.user?.user_id
 	const { topicId } = req.params
-	const { message, file_url, file_type, session_time_seconds, voice_enabled } = req.body
+	const { message, file_url, file_type, voice_enabled } = req.body
 
 	// For production, always require authenticated user
 	if (!user_id) {
@@ -839,16 +863,23 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 		// Generate AI response using agentic tutor
 		let aiResponse
 		try {
-			aiResponse = await generateTopicChatResponse(
-				message || 'User shared a file',
-				topic.title,
-				topic.content || 'No additional content provided',
+			// Fetch user profile for board/classLevel context
+			const userProfile = await prisma.users.findUnique({
+				where: { user_id: user_id },
+				select: { board: true, grade_level: true, name: true }
+			});
+
+			aiResponse = await generateTopicChatResponse({
+				userMessage: message || 'User shared a file',
+				topicTitle: topic.title,
+				topicContent: topic.content || 'No additional content provided',
 				chatHistory,
 				currentGoal,
 				topicGoals,
-				user_id,
-				parseInt(topicId)
-			)
+				userId: user_id,
+				topicId: parseInt(topicId),
+				user: userProfile
+			})
 		} catch (aiError) {
 			console.error('❌ Error generating AI response:', aiError.message)
 			console.error('Stack:', aiError.stack)
@@ -1026,7 +1057,14 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 						// Retry once with a firm instruction in the history
 						chatHistory.push({ sender: 'system', message: 'Do NOT repeat the previous AI question. Rephrase or ask a different sub-question about the same goal.' })
 						try {
-							const retryResp = await generateTopicChatResponse(message || 'User shared a file', topic.title, topic.content || 'No additional content provided', chatHistory, currentGoal, topicGoals)
+							const retryResp = await generateTopicChatResponse({
+							userMessage: message || 'User shared a file',
+							topicTitle: topic.title,
+							topicContent: topic.content || 'No additional content provided',
+							chatHistory,
+							currentGoal,
+							topicGoals
+						})
 							if (retryResp) aiResponse = retryResp
 						} catch (retryErr) {
 							console.error('Retry for duplicate question failed:', retryErr)
@@ -1413,6 +1451,44 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 			aiMessages.push(saved);
 		}
 
+		// ===== TEACHING ARC: Persist phase-specific rich blocks as card messages =====
+		// Each phase emits a top-level block (exam_definition, concept_card,
+		// revision_sheet, session_frame). We store each as an admin_chat message so
+		// the frontend renders it as a card and reloads it from history.
+		async function savePhaseBlock(messageType, data, fallbackMessage) {
+			if (!data) return null;
+			try {
+				const saved = await saveAndLinkAiMessage({
+					message: fallbackMessage || '',
+					message_type: messageType,
+					diff_html: JSON.stringify(data),
+					options: []
+				});
+				// Attach the parsed data so the frontend response carries it directly
+				const enriched = { ...saved, [messageType]: data };
+				aiMessages.push(enriched);
+				console.log(`🔖 ${messageType} card saved (${messageType.replace(/_/g, ' ')})`);
+				return enriched;
+			} catch (blockErr) {
+				console.error(`❌ Error saving ${messageType} block:`, blockErr.message);
+				return null;
+			}
+		}
+
+		// Attach from aiResponse (may be in the parsed response of the live call)
+		const phaseBlocks = [
+			['session_frame', aiResponse.session_frame, ''],
+			['hook_prediction', aiResponse.hook_prediction, ''],
+			['exam_definition', aiResponse.exam_definition, ''],
+			['concept_card', aiResponse.concept_card, ''],
+			['revision_sheet', aiResponse.revision_sheet, '']
+		];
+		for (const [type, data] of phaseBlocks) {
+			if (data) {
+				await savePhaseBlock(type, data, '');
+			}
+		}
+
 		// Update goal progress if user_correction feedback is provided
 		let completedGoalsCount = 0 // Track for session end detection
 		let totalGoalsCount = topicGoals.length // Track total goals
@@ -1657,16 +1733,16 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 
 				try {
 					// Generate session summary with updated goals
-					const summaryResponse = await generateTopicChatResponse(
-						'', // Empty message triggers session summary
-						topic.title,
-						topic.content || 'No additional content provided',
+					const summaryResponse = await generateTopicChatResponse({
+						userMessage: '', // Empty message triggers session summary
+						topicTitle: topic.title,
+						topicContent: topic.content || 'No additional content provided',
 						chatHistory,
-						null, // No current goal - all complete
-						updatedGoalsAfterProgress,
-						user_id,
-						parseInt(topicId)
-					)
+						currentGoal: null, // No current goal - all complete
+						topicGoals: updatedGoalsAfterProgress,
+						userId: user_id,
+						topicId: parseInt(topicId)
+					})
 
 					if (summaryResponse && summaryResponse.messages) {
 						for (const summaryMsg of summaryResponse.messages) {
@@ -1843,14 +1919,14 @@ Write a SHORT 2-3 sentence performance summary for the student.
 						...aiMessages.map(m => ({ sender: 'ai', message: m.message, message_type: m.message_type || 'text', created_at: m.created_at }))
 					]
 
-					const followUpResponse = await generateTopicChatResponse(
-						`Start ${currentGoal.title}`,
-						topic.title,
-						topic.content || 'No additional content provided',
-						updatedHistory,
+					const followUpResponse = await generateTopicChatResponse({
+						userMessage: `Start ${currentGoal.title}`,
+						topicTitle: topic.title,
+						topicContent: topic.content || 'No additional content provided',
+						chatHistory: updatedHistory,
 						currentGoal,
 						topicGoals
-					)
+					})
 
 					if (followUpResponse && followUpResponse.messages) {
 						for (const fuMsg of followUpResponse.messages) {
@@ -1956,32 +2032,6 @@ Write a SHORT 2-3 sentence performance summary for the student.
 			where: { user_id: user_id },
 			data: { num_chats: { increment: 1 } }
 		})
-
-		// Update per-user topic time spent if provided
-		if (session_time_seconds && session_time_seconds > 0) {
-			await prisma.user_topic_progress.upsert({
-				where: {
-					user_id_topic_id: {
-						user_id: user_id,
-						topic_id: parseInt(topicId)
-					}
-				},
-				update: {
-					time_spent_seconds: {
-						increment: Math.floor(session_time_seconds)
-					},
-					last_accessed_at: new Date()
-				},
-				create: {
-					user_id: user_id,
-					topic_id: parseInt(topicId),
-					time_spent_seconds: Math.floor(session_time_seconds),
-					last_accessed_at: new Date()
-				}
-			}).catch(err => {
-				console.warn('[topic-chats] Warning updating user_topic_progress time_spent:', err.message);
-			});
-		}
 
 		return res.status(201).json({
 			userMessage,
@@ -2237,12 +2287,33 @@ router.post('/:topicId/option', authenticateToken, async (req, res) => {
 		try {
 			if (option === 'Got it') {
 				const modifiedHistory = [...chatHistory, { sender: 'system', message: 'IMPORTANT: The user has acknowledged the previous correction. Do NOT repeat the previous question or treat this as an answer. Ask a NEW question about the current goal to continue the lesson. Generate a "messages" array with the next question - do NOT use user_correction format.' }];
-				aiResponse = await generateTopicChatResponse(option, topic.title, topic.content || 'No additional content provided', modifiedHistory, finalCurrentGoal, finalTopicGoals);
+				aiResponse = await generateTopicChatResponse({
+					userMessage: option,
+					topicTitle: topic.title,
+					topicContent: topic.content || 'No additional content provided',
+					chatHistory: modifiedHistory,
+					currentGoal: finalCurrentGoal,
+					topicGoals: finalTopicGoals
+				});
 			} else if (option === 'Explain' || option === 'Explain more') {
 				const modifiedHistory = [...chatHistory, { sender: 'system', message: `IMPORTANT: The user clicked "${option}". Provide a clear, detailed explanation of the concept with examples. Use 2-3 short messages. The LAST message should include options: ["Got it", "Explain more"]. Do NOT ask a new question yet - focus on explaining the previous correction thoroughly.` }];
-				aiResponse = await generateTopicChatResponse(option, topic.title, topic.content || 'No additional content provided', modifiedHistory, finalCurrentGoal, finalTopicGoals);
+				aiResponse = await generateTopicChatResponse({
+					userMessage: option,
+					topicTitle: topic.title,
+					topicContent: topic.content || 'No additional content provided',
+					chatHistory: modifiedHistory,
+					currentGoal: finalCurrentGoal,
+					topicGoals: finalTopicGoals
+				});
 			} else {
-				aiResponse = await generateTopicChatResponse(option, topic.title, topic.content || 'No additional content provided', chatHistory, finalCurrentGoal, finalTopicGoals);
+				aiResponse = await generateTopicChatResponse({
+					userMessage: option,
+					topicTitle: topic.title,
+					topicContent: topic.content || 'No additional content provided',
+					chatHistory,
+					currentGoal: finalCurrentGoal,
+					topicGoals: finalTopicGoals
+				});
 			}
 		} catch (aiError) {
 			console.error('Error generating AI response for option selection:', aiError);
@@ -2362,11 +2433,17 @@ router.post('/:topicId/option', authenticateToken, async (req, res) => {
 });
 
 // POST /api/topic-chats/:topicId/update-time
-// Update time spent on topic with session tracking
+// Sole writer of study time. session_time_seconds is a DELTA accrued since the
+// last write (not cumulative). action drives the session lifecycle:
+//   heartbeat -> session stays open (end_time = NULL), seconds recorded
+//   pause     -> seconds recorded, then session closed (end_time stamped)
+//   complete  -> seconds recorded, then session closed and marked complete
+// Reopening a topic with no open (end_time IS NULL) session starts a fresh one.
 router.post('/:topicId/update-time', authenticateToken, async (req, res) => {
 	let user_id = req.user?.user_id
 	const { topicId } = req.params
-	const { session_time_seconds } = req.body
+	const { session_time_seconds: deltaSeconds, action } = req.body
+	const requestedAction = action === 'complete' ? 'complete' : (action === 'pause' ? 'pause' : 'heartbeat')
 
 	if (!user_id) {
 		return res.status(401).json({ error: 'Authentication required - please login' })
@@ -2376,9 +2453,7 @@ router.post('/:topicId/update-time', authenticateToken, async (req, res) => {
 		return res.status(400).json({ error: 'Valid topic ID is required' })
 	}
 
-	if (session_time_seconds === undefined || session_time_seconds < 0) {
-		return res.status(400).json({ error: 'Valid session time is required' })
-	}
+	const safeDelta = deltaSeconds === undefined || deltaSeconds < 0 ? 0 : Math.floor(deltaSeconds)
 
 	try {
 		// Verify topic exists
@@ -2396,71 +2471,61 @@ router.post('/:topicId/update-time', authenticateToken, async (req, res) => {
 			return res.status(404).json({ error: 'Topic not found' })
 		}
 
-		// Find a recent active session (updated within last 2 minutes)
-		// This handles the heartbeat logic
-		const twoMinutesAgo = new Date(Date.now() - 2 * 60 * 1000);
-
-		let activeSession = await prisma.study_sessions.findFirst({
+		// Locate the open session for this user/topic (end_time IS NULL = in progress)
+		const activeSession = await prisma.study_sessions.findFirst({
 			where: {
 				user_id: user_id,
 				topic_id: parseInt(topicId),
-				end_time: {
-					gte: twoMinutesAgo
-				}
+				end_time: null
 			},
 			orderBy: {
-				end_time: 'desc'
+				start_time: 'desc'
 			}
 		});
 
-		let deltaSeconds = 0;
-
+		// For heartbeat: just accumulate seconds against the open session.
+		// For pause/complete WITHOUT an open session (e.g. reload, or completed in
+		// a prior send), nothing is accrued — the delta is already persisted.
 		if (activeSession) {
-			// Check if this is a continuation (monotonic increase)
-			if (session_time_seconds >= activeSession.duration_seconds) {
-				deltaSeconds = session_time_seconds - activeSession.duration_seconds;
-
-				// Update existing session
+			if (safeDelta > 0) {
 				await prisma.study_sessions.update({
 					where: { id: activeSession.id },
 					data: {
-						duration_seconds: session_time_seconds,
-						end_time: new Date()
-					}
-				});
-			} else {
-				// Time went backwards (page reload?) -> Start new session
-				deltaSeconds = session_time_seconds;
-
-				await prisma.study_sessions.create({
-					data: {
-						user_id: user_id,
-						topic_id: parseInt(topicId),
-						subject_id: topic.subject_id,
-						start_time: new Date(),
-						end_time: new Date(),
-						duration_seconds: session_time_seconds
+						duration_seconds: {
+							increment: safeDelta
+						}
 					}
 				});
 			}
-		} else {
-			// No active session -> Create new one
-			deltaSeconds = session_time_seconds;
 
+			// Close the session on pause/complete
+			if (requestedAction === 'pause' || requestedAction === 'complete') {
+				await prisma.study_sessions.update({
+					where: { id: activeSession.id },
+					data: {
+						end_time: new Date()
+					}
+				});
+			}
+		} else if (safeDelta > 0) {
+			// No open session: a fresh start after the prior one was closed.
+			// The delta represents seconds on this new visit.
 			await prisma.study_sessions.create({
 				data: {
 					user_id: user_id,
 					topic_id: parseInt(topicId),
 					subject_id: topic.subject_id,
 					start_time: new Date(),
-					end_time: new Date(),
-					duration_seconds: session_time_seconds
+					end_time: requestedAction === 'pause' || requestedAction === 'complete'
+						? new Date()
+						: null,
+					duration_seconds: safeDelta
 				}
 			});
 		}
 
 		// Update aggregated time on topic in user_topic_progress
-		if (deltaSeconds > 0) {
+		if (safeDelta > 0) {
 			await prisma.user_topic_progress.upsert({
 				where: {
 					user_id_topic_id: {
@@ -2470,14 +2535,14 @@ router.post('/:topicId/update-time', authenticateToken, async (req, res) => {
 				},
 				update: {
 					time_spent_seconds: {
-						increment: Math.floor(deltaSeconds)
+						increment: safeDelta
 					},
 					last_accessed_at: new Date()
 				},
 				create: {
 					user_id: user_id,
 					topic_id: parseInt(topicId),
-					time_spent_seconds: Math.floor(deltaSeconds),
+					time_spent_seconds: safeDelta,
 					last_accessed_at: new Date()
 				}
 			});
@@ -2506,12 +2571,12 @@ router.post('/:topicId/learn-more', authenticateToken, async (req, res) => {
 	}
 
 	try {
-		const { calculateSessionMetrics } = require('../../services/topic_chat_metrics')
+		const { calculateSessionMetrics } = require('../../services/topic-chat/topic_chat_metrics')
 		const {
 			analyzeMistakesForLearnMore,
 			generateLearnMoreGreeting,
 			generateLearnMoreResponse
-		} = require('../../services/ai/learn-more')
+		} = require('../../services/topic-chat/learn-more')
 
 		console.log('\n========== LEARN MORE REQUEST ==========');
 		console.log('👤 User:', user_id);

@@ -1,5 +1,5 @@
 const prisma = require('../lib/prisma');
-const { calculateSessionMetrics, generateSessionSummaryMessage } = require('../services/topic_chat_metrics');
+const { calculateSessionMetrics, generateSessionSummaryMessage } = require('../services/topic-chat/topic_chat_metrics');
 
 async function main() {
   console.log('Scanning for legacy session summary messages...');

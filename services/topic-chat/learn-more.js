@@ -1,4 +1,4 @@
-const { invokeModel, extractJson } = require('./deepseek-client');
+const { invokeModel, extractJson } = require('../ai/deepseek-client');
 
 /**
  * Topic Chat Learn More Service
