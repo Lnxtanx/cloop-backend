@@ -142,10 +142,16 @@ function buildSystemPrompt({
   completedConcepts,
   board,
   classLevel,
-  misconceptions
+  misconceptions,
+  evaluationVerdict = null
 }) {
   const promptPath = path.join(__dirname, 'prompts', 'system_prompt.txt');
   let promptTemplate = fs.readFileSync(promptPath, 'utf8');
+
+  // Objective grading verdict (ground truth) for the current student answer, if available.
+  const evaluationVerdictStr = evaluationVerdict
+    ? `The student's answer to the last question was objectively ${evaluationVerdict.is_correct ? 'CORRECT' : 'INCORRECT'} (${evaluationVerdict.error_type || 'Unknown'}, score ${evaluationVerdict.score_percent}%).`
+    : 'Not yet evaluated (no student answer to grade).';
 
   // Build learning goals progress string
   const learningGoals = topicGoals.map((g, i) => {
@@ -198,6 +204,7 @@ function buildSystemPrompt({
     .replace(/\{\{board\}\}/g, board || 'General')
     .replace(/\{\{classLevel\}\}/g, classLevel || '8')
     .replace(/\{\{misconceptions\}\}/g, misconceptions || 'None known')
+    .replace(/\{\{evaluationVerdict\}\}/g, evaluationVerdictStr)
     .replace(/\{\{learningGoals\}\}/g, learningGoals)
     .replace(/\{\{allQuestions\}\}/g, allQuestionsStr);
 
@@ -402,7 +409,7 @@ Return VALID JSON:
 
     const responseText = await invokeModel(systemPrompt, [
       { role: 'user', content: `Generate FRAME + HOOK for: ${topicTitle}` }
-    ], { temperature: 0.7, maxTokens: 1024 });
+    ], { temperature: 0.7, maxTokens: 1024, jsonFormat: true });
 
     const parsed = extractJson(responseText);
 

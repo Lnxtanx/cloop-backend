@@ -12,6 +12,42 @@ function snap(n) {
 }
 
 /**
+ * Assert whether the student made a genuine academic attempt (vs. off-task chatter,
+ * "I don't know", or empty input). Used to decide whether diff_html should be produced.
+ */
+function isRealAttempt(answer) {
+  const trimmed = (answer || '').trim();
+  if (!trimmed) return false;
+  const lower = trimmed.toLowerCase();
+  if (/(^|[.]\s*)(i don't know|no idea|idk|i don't understand|i am not sure|i'm not sure|guess|maybe)\b/.test(lower)) return false;
+  if (trimmed.length < 3) return false;
+  if (!/[a-z]/i.test(trimmed)) return false;
+  return true;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+/**
+ * Deterministic fallback diff_html: only produced when the student made a real attempt
+ * but the grading model omitted the <del>/<ins> markup. Builds a minimal, always-valid
+ * strikethrough using the corrected answer so the correction bubble always renders with
+ * strike-through even if the model under-delivers. Right answers produce no markup.
+ */
+function buildFallbackDiffHtml(answer, isCorrect, completeAnswer, correctTerm) {
+  if (isCorrect) return null;
+  if (!isRealAttempt(answer)) return null;
+  const shown = (answer || '').replace(/<\/?[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+  if (!shown) return null;
+  const corrected = (correctTerm && correctTerm.trim())
+    ? correctTerm.trim().replace(/<\/?[^>]+>/g, '').replace(/\s+/g, ' ').trim()
+    : (completeAnswer && completeAnswer.trim().replace(/<\/?[^>]+>/g, '').replace(/\s+/g, ' ').trim());
+  if (!corrected) return null;
+  return `<del>${escapeHtml(shown)}</del><ins>${escapeHtml(corrected)}</ins>`;
+}
+
+/**
  * Grounded Answer Evaluation Engine
  * Evaluates student answer against reference topicContent at temperature: 0
  * Derives is_correct from rubric scores (correctness === 1 and completeness >= 0.5)
@@ -77,7 +113,7 @@ Return JSON matching this exact structure:
       completeness: m,
       score_percent: typeof raw.score_percent === 'number' ? raw.score_percent : (isCorrect ? 100 : Math.round((c * 0.6 + m * 0.4) * 100)),
       error_type: isCorrect ? null : (raw.error_type || "Conceptual Error"),
-      diff_html: raw.diff_html || null,
+      diff_html: raw.diff_html || buildFallbackDiffHtml(answer, isCorrect, raw.complete_answer, raw.correct_term),
       complete_answer: raw.complete_answer || answer,
       correct_term: raw.correct_term || null
     };
@@ -90,7 +126,7 @@ Return JSON matching this exact structure:
       completeness: 0.5,
       score_percent: 50,
       error_type: "Conceptual Error",
-      diff_html: null,
+      diff_html: buildFallbackDiffHtml(answer, false, null, null),
       complete_answer: answer,
       correct_term: null
     };
@@ -99,5 +135,7 @@ Return JSON matching this exact structure:
 
 module.exports = {
   gradeAnswer,
-  snap
+  snap,
+  isRealAttempt,
+  buildFallbackDiffHtml
 };

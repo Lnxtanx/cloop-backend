@@ -57,6 +57,38 @@ async function generateTopicChatResponse({
     const board = user?.board || 'General';
     const classLevel = user?.grade_level || '8';
 
+    // Objective pre-grade: when the student just answered a question with a real attempt
+    // (not a WRAP sentinel / session-opener), compute the ground-truth verdict ONCE here so
+    // the tutor always agrees with it — it must never praise a wrong/confused answer.
+    const isQuestionTurn = analysis.hasAskedQuestion
+      && userMessage && userMessage.trim()
+      && userMessage !== '__SESSION_COMPLETE__'
+      && phase !== 'WRAP';
+    let evaluationVerdict = null;
+    if (isQuestionTurn && lastQuestion) {
+      try {
+        const graded = await gradeAnswer({
+          answer: userMessage,
+          question: lastQuestion,
+          topicTitle,
+          topicContent
+        });
+        if (graded) {
+          evaluationVerdict = {
+            is_correct: graded.is_correct,
+            error_type: graded.error_type,
+            score_percent: graded.score_percent,
+            correctness: graded.correctness,
+            completeness: graded.completeness,
+            complete_answer: graded.complete_answer
+          };
+          console.log(`[topic_chat] ⚖️ Ground-truth verdict for tutor: ${graded.is_correct ? 'CORRECT' : 'INCORRECT'} (${graded.error_type}, ${graded.score_percent}%)`);
+        }
+      } catch (gradeErr) {
+        console.warn('[topic_chat] Pre-grade failed (tutor will grade itself):', gradeErr.message);
+      }
+    }
+
     // Build system prompt
     const systemPrompt = buildSystemPrompt({
       topicTitle,
@@ -76,7 +108,8 @@ async function generateTopicChatResponse({
       completedConcepts,
       board,
       classLevel,
-      misconceptions: null
+      misconceptions: null,
+      evaluationVerdict
     });
 
     // Build messages for API
@@ -123,6 +156,7 @@ async function generateTopicChatResponse({
         const responseText = await invokeModel(systemPrompt, messages, {
           temperature: 0.7,
           maxTokens: 2048,
+          jsonFormat: true,
           userId,
           featureArea: 'topic_chat',
           subFeature: 'tutor_turn',
