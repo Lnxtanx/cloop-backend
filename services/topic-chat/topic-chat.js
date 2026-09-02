@@ -12,6 +12,73 @@ const {
 } = require('./topic-chat-helpers');
 
 /**
+ * Coerce a single message item to a well-formed bubble object.
+ */
+function normalizeMessageItem(item) {
+  if (typeof item === 'string') {
+    return item.trim() ? { message: item.trim(), message_type: 'text' } : null;
+  }
+  if (!item || typeof item !== 'object') return null;
+  const text = String(item.message ?? item.content ?? item.text ?? '').trim();
+  if (!text) return null; // drop empty bubbles (the "empty..." artifacts)
+  return {
+    message: text,
+    message_type: String(item.message_type ?? item.type ?? 'text'),
+    options: item.options ?? [],
+    emoji: item.emoji ?? null,
+    diff_html: item.diff_html ?? null,
+    images: item.images ?? [],
+    videos: item.videos ?? [],
+    links: item.links ?? []
+  };
+}
+
+/**
+ * Guarantee the parsed model response exposes a usable `messages[]` array. The model
+ * occasionally emits a stray top-level object/array that has no `messages` key (e.g. a
+ * mermaid value, an options-only object, or an evaluation-only blob). That previously
+ * returned a response with no question bubble. This recovers a sensible message from
+ * any recognizable text, drops empty bubbles, and throws if nothing usable exists so
+ * the retry loop can try again.
+ */
+function normalizeParsedResponse(parsed, userMessage) {
+  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+    throw new Error('Parsed response is not a JSON object');
+  }
+
+  // 1. Normalize the messages array.
+  if (!Array.isArray(parsed.messages)) {
+    parsed.messages = [];
+  }
+  parsed.messages = parsed.messages
+    .map(normalizeMessageItem)
+    .filter(Boolean);
+
+  // 2. Recover a message from scattered top-level content if still empty.
+  if (parsed.messages.length === 0) {
+    const candidates = [parsed.message, parsed.content, parsed.text, parsed.question];
+    for (const c of candidates) {
+      if (typeof c === 'string' && c.trim()) {
+        const m = normalizeMessageItem(c);
+        if (m) { parsed.messages = [m]; break; }
+      }
+    }
+  }
+
+  // 3. If we STILL have no message, the response is unusable — let the retry loop run.
+  if (parsed.messages.length === 0) {
+    throw new Error('No usable message content in parsed response');
+  }
+
+  // 4. Pass through structured blocks as-is (cleaned), drop an empty evaluation.
+  if (parsed.evaluation && typeof parsed.evaluation === 'object' && Object.keys(parsed.evaluation).length === 0) {
+    delete parsed.evaluation;
+  }
+
+  return parsed;
+}
+
+/**
  * Topic Chat Service v2 — Teaching Arc
  * FRAME → HOOK → REVEAL → EXPLORE → LOCK → WRAP
  */
@@ -173,6 +240,22 @@ async function generateTopicChatResponse({
 
         if (!parsed) {
           throw new Error('Failed to extract valid JSON from response');
+        }
+
+        // Robustness: guarantee a usable messages[] before proceeding. The model sometimes
+        // returns a stray top-level object/array (e.g. a mermaid value, an options-only
+        // object, or an evaluation-only blob) that has NO messages key — that previously
+        // silently produced a turn with no question. Validate and recover, else retry.
+        try {
+          parsed = normalizeParsedResponse(parsed, userMessage);
+        } catch (normErr) {
+          lastError = normErr;
+          console.warn(`[topic_chat] Response had no usable messages (attempt ${attempts}): ${normErr.message}`);
+          if (attempts < maxAttempts) {
+            await new Promise(resolve => setTimeout(resolve, 500));
+            continue;
+          }
+          throw lastError;
         }
 
         // WRAP validation: the final turn MUST produce a revision_sheet. If the model

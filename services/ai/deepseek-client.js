@@ -198,62 +198,84 @@ function extractJson(text) {
     let cleanedText = text.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
 
     try {
-        // 2. Find first { or [ and last } or ]
-        const start = cleanedText.search(/\{|\[/);
-        const end = cleanedText.lastIndexOf('}') > cleanedText.lastIndexOf(']') ? cleanedText.lastIndexOf('}') : cleanedText.lastIndexOf(']');
+        // 2. Prefer a JSON OBJECT ({...}) since the chat pipeline returns an object shape.
+        //    Only fall back to arrays/other when there is genuinely no object in the text.
+        const openBrace = cleanedText.search(/\{/);
+        if (openBrace !== -1) {
+            // Find the matching closing brace using a depth count (tolerates nested {} and
+            // string-embedded braces roughly). Then try to parse that slice; back off to the
+            // last brace if trailing junk remains.
+            let depth = 0, inString = false, escaped = false, closeBrace = -1;
+            for (let i = openBrace; i < cleanedText.length; i++) {
+                const ch = cleanedText[i];
+                if (inString) {
+                    if (escaped) escaped = false;
+                    else if (ch === '\\') escaped = true;
+                    else if (ch === '"') inString = false;
+                    continue;
+                }
+                if (ch === '"') { inString = true; continue; }
+                if (ch === '{') depth++;
+                else if (ch === '}') { depth--; if (depth === 0) { closeBrace = i; break; } }
+            }
+            if (closeBrace !== -1) {
+                return parseSlice(cleanedText.substring(openBrace, closeBrace + 1));
+            }
+        }
 
-        if (start === -1 || end === -1) {
+        // 3. No JSON object found. Only accept a bare JSON array if the ENTIRE trimmed
+        //    response parses as one (avoid slicing prose/mermaid that happens to contain
+        //    "[" ... "]"). Otherwise treat the response as plain text.
+        if (cleanedText.startsWith('[')) {
             try {
                 return JSON.parse(cleanedText);
             } catch (e) {
-                if (cleanedText && cleanedText.length > 0) {
-                    console.log('[DeepSeek] 💡 Raw text response received without JSON braces, wrapping as message object');
-                    return {
-                        messages: [
-                            { message: cleanedText, message_type: "text" }
-                        ]
-                    };
-                }
-                return null;
+                // fall through to text wrapper
             }
         }
-
-        const jsonCandidate = cleanedText.substring(start, end + 1);
-
-        // Remove trailing commas before } or ]
-        const sanitized = jsonCandidate.replace(/,\s*([}\]])/g, '$1');
-
-        try {
-            return JSON.parse(sanitized);
-        } catch (parseErr) {
-            // Trailing content after the real JSON object (e.g. model appended prose/number
-            // after the array). Walk backward to the nearest position that parses cleanly.
-            const closeBrace = sanitized.lastIndexOf('}');
-            const closeBracket = sanitized.lastIndexOf(']');
-            const far = Math.max(closeBrace, closeBracket);
-            let cut = far;
-            while (cut > 0) {
-                try {
-                    return JSON.parse(sanitized.substring(0, cut + 1));
-                } catch (inner) {
-                    cut = Math.max(sanitized.lastIndexOf('}', cut - 1), sanitized.lastIndexOf(']', cut - 1));
-                    if (cut === -1) break;
-                }
-            }
-            throw parseErr;
-        }
+        throw new ParseFailure();
     } catch (err) {
         console.error('[DeepSeek] ⚠️ JSON Parse Error:', err.message);
         if (cleanedText && cleanedText.length > 0) {
             console.log('[DeepSeek] 💡 Using raw text fallback wrapper for invalid JSON output');
             return {
                 messages: [
-                    { message: cleanedText, message_type: "text" }
+                    { message: cleanRawText(cleanedText), message_type: "text" }
                 ]
             };
         }
         return null;
     }
+}
+
+class ParseFailure extends Error {}
+
+function parseSlice(slice) {
+    // Remove trailing commas before } or ]
+    const sanitized = slice.replace(/,\s*([}\]])/g, '$1');
+    try {
+        return JSON.parse(sanitized);
+    } catch (parseErr) {
+        // Trailing content after the real JSON object (e.g. model appended prose/number
+        // after the array). Walk backward to the nearest position that parses cleanly.
+        const closeBrace = sanitized.lastIndexOf('}');
+        const closeBracket = sanitized.lastIndexOf(']');
+        const far = Math.max(closeBrace, closeBracket);
+        let cut = far;
+        while (cut > 0) {
+            try {
+                return JSON.parse(sanitized.substring(0, cut + 1));
+            } catch (inner) {
+                cut = Math.max(sanitized.lastIndexOf('}', cut - 1), sanitized.lastIndexOf(']', cut - 1));
+                if (cut === -1) break;
+            }
+        }
+        throw parseErr;
+    }
+}
+
+function cleanRawText(text) {
+    return String(text || '').trim();
 }
 
 module.exports = {
