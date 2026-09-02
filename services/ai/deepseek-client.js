@@ -223,7 +223,25 @@ function extractJson(text) {
         // Remove trailing commas before } or ]
         const sanitized = jsonCandidate.replace(/,\s*([}\]])/g, '$1');
 
-        return JSON.parse(sanitized);
+        try {
+            return JSON.parse(sanitized);
+        } catch (parseErr) {
+            // Trailing content after the real JSON object (e.g. model appended prose/number
+            // after the array). Walk backward to the nearest position that parses cleanly.
+            const closeBrace = sanitized.lastIndexOf('}');
+            const closeBracket = sanitized.lastIndexOf(']');
+            const far = Math.max(closeBrace, closeBracket);
+            let cut = far;
+            while (cut > 0) {
+                try {
+                    return JSON.parse(sanitized.substring(0, cut + 1));
+                } catch (inner) {
+                    cut = Math.max(sanitized.lastIndexOf('}', cut - 1), sanitized.lastIndexOf(']', cut - 1));
+                    if (cut === -1) break;
+                }
+            }
+            throw parseErr;
+        }
     } catch (err) {
         console.error('[DeepSeek] ⚠️ JSON Parse Error:', err.message);
         if (cleanedText && cleanedText.length > 0) {
