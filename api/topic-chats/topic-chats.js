@@ -18,6 +18,53 @@ function normalizeText(s) {
 }
 
 /**
+ * Convert model options (objects or plain strings) into an array of strings for the
+ * admin_chat.options String[] column. Objects are JSON-encoded so the value/text pair
+ * survives the round trip and can be reparsed on read.
+ */
+function optionsToStrings(options) {
+	if (!Array.isArray(options)) return []
+	return options.map(o => {
+		if (typeof o === 'string') return o
+		if (o && (o.value !== undefined || o.text !== undefined)) {
+			return JSON.stringify({ value: String(o.value ?? ''), text: String(o.text ?? o.value ?? '') })
+		}
+		if (o && typeof o === 'object') {
+			const v = o.value ?? o.text
+			return v != null ? String(v) : ''
+		}
+		return String(o ?? '')
+	}).filter(Boolean)
+}
+
+/**
+ * Convert admin_chat.options String[] values back into frontend option objects
+ * [{ value, text }]. Plain strings become { value: s, text: s }.
+ */
+function optionsFromDb(options) {
+	if (!Array.isArray(options)) return []
+	return options.map(o => {
+		if (typeof o !== 'string') {
+			// Already an object (e.g. freshly returned in-memory message)
+			return typeof o?.value !== 'undefined' || typeof o?.text !== 'undefined'
+				? { value: String(o.value ?? ''), text: String(o.text ?? o.value ?? '') }
+				: { value: 'x', text: 'x' }
+		}
+		const trimmed = o.trim()
+		if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
+			try {
+				const parsed = JSON.parse(trimmed)
+				if (Array.isArray(parsed)) return parsed.map(optionsFromDb)
+				if (parsed && (parsed.value !== undefined || parsed.text !== undefined)) {
+					return { value: String(parsed.value ?? ''), text: String(parsed.text ?? parsed.value ?? '') }
+				}
+			} catch (e) { /* fall through */ }
+		}
+		return trimmed ? { value: trimmed, text: trimmed } : null
+	}).flat().filter(Boolean)
+}
+
+/**
  * Helper: Find the appropriate goal for linking a message
  * When currentGoal exists, use it. Otherwise, find the last/active goal
  * This prevents orphaned messages when all goals are completed
@@ -366,6 +413,7 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 				// AI message — unpack session_metrics if it's a summary
 				const enrichedMsg = {
 					...msg,
+					options: optionsFromDb(msg.options),
 					videos,
 					images,
 					links
@@ -497,7 +545,7 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 							message: msg.message,
 							message_type: messageType,
 							emoji: msg.emoji || null,
-							options: msg.options || [],
+							options: optionsToStrings(msg.options),
 							diff_html: diffHtml,
 							users: {
 								connect: { user_id: user_id }
@@ -1220,7 +1268,7 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 					sender: 'ai',
 					message: message,
 					message_type: messageType,
-					options: data.options || [],
+					options: optionsToStrings(data.options),
 					diff_html: data.diff_html || null,
 					emoji: data.emoji || null,
 					images: (data.images || []).map(x => typeof x === 'string' ? x : (x.url || JSON.stringify(x))),
@@ -1274,6 +1322,7 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 				}
 				return item
 			})
+			savedMessage.options = optionsFromDb(savedMessage.options);
 
 			// Link message to goal
 			const linkGoal = await findGoalForLinking(currentGoal, topicGoals, user_id, prisma);
@@ -2377,7 +2426,7 @@ router.post('/:topicId/option', authenticateToken, async (req, res) => {
 					sender: 'ai',
 					message: aiMsg.message ?? aiMsg.content ?? '',
 					message_type: aiMsg.message_type ?? aiMsg.type ?? 'text',
-					options: aiMsg.options || [],
+					options: optionsToStrings(aiMsg.options),
 					images: (aiMsg.images || []).map(x => typeof x === 'string' ? x : (x.url || JSON.stringify(x))),
 					videos: (aiMsg.videos || []).map(x => typeof x === 'string' ? x : (x.url || JSON.stringify(x))),
 					links: (aiMsg.links || []).map(x => typeof x === 'string' ? x : (x.url || JSON.stringify(x)))
@@ -2415,6 +2464,7 @@ router.post('/:topicId/option', authenticateToken, async (req, res) => {
 				}
 				return item
 			})
+			savedAiMessage.options = optionsFromDb(savedAiMessage.options);
 
 			aiMessages.push(savedAiMessage);
 
@@ -2739,7 +2789,7 @@ router.post('/:topicId/learn-more', authenticateToken, async (req, res) => {
 						sender: 'ai',
 						message: (msg.message ?? msg.content) || '',
 					message_type: (msg.message_type ?? msg.type) || 'text',
-						options: msg.options || [],
+						options: optionsToStrings(msg.options),
 						images: [],
 						videos: [],
 						links: []
@@ -2781,7 +2831,7 @@ router.post('/:topicId/learn-more', authenticateToken, async (req, res) => {
 					message: response.user_correction.complete_answer || '',
 					message_type: 'user_correction',
 					diff_html: response.user_correction.diff_html || '',
-					options: response.user_correction.options || [],
+					options: optionsToStrings(response.user_correction.options),
 					emoji: response.user_correction.emoji || '',
 					images: [],
 					videos: [],
