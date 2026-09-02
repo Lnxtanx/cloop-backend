@@ -132,6 +132,7 @@ async function generateTopicChatResponse({
       && userMessage !== '__SESSION_COMPLETE__'
       && phase !== 'WRAP';
     let evaluationVerdict = null;
+    let preGradeResult = null; // Reused to avoid a second grader call in the grounded block.
     if (isQuestionTurn && lastQuestion) {
       try {
         const graded = await gradeAnswer({
@@ -141,6 +142,7 @@ async function generateTopicChatResponse({
           topicContent
         });
         if (graded) {
+          preGradeResult = graded;
           evaluationVerdict = {
             is_correct: graded.is_correct,
             error_type: graded.error_type,
@@ -308,16 +310,23 @@ async function generateTopicChatResponse({
     // Grounded evaluation: if question was asked and there's no user_correction, grade it.
     // Also grade when a model user_correction exists but lacks diff_html (the source of the
     // strikethrough) so we still produce <del>/<ins> markup instead of a plain red bubble.
+    // The objective verdict was already computed in the pre-grade step above, so we reuse it
+    // here instead of calling the grader a second time (saves tokens + latency per turn).
     const hasDiffMarkup = !!(parsed.user_correction?.diff_html && /<del>|<ins>/.test(parsed.user_correction.diff_html));
     if (analysis.hasAskedQuestion && !hasDiffMarkup && userMessage && userMessage.trim() !== '' && phase !== 'WRAP') {
       try {
-        console.log('[topic_chat] Grading answer with grounded answer grader (temp 0)');
-        const graded = await gradeAnswer({
-          answer: userMessage,
-          question: lastQuestion,
-          topicTitle,
-          topicContent
-        });
+        let graded = preGradeResult;
+        if (!graded) {
+          console.log('[topic_chat] Grading answer with grounded answer grader (temp 0)');
+          graded = await gradeAnswer({
+            answer: userMessage,
+            question: lastQuestion,
+            topicTitle,
+            topicContent
+          });
+        } else {
+          console.log('[topic_chat] Reusing objective pre-grade verdict');
+        }
 
         if (graded) {
           if (!parsed.user_correction) {
@@ -363,10 +372,34 @@ async function generateTopicChatResponse({
     return parsed;
   } catch (error) {
     console.error('Error generating topic chat response:', error);
+    // Graceful fallback: try ONE free-form call (no response_format) — DeepSeek sometimes
+    // fails under strict JSON mode but succeeds with plain text. If that yields anything
+    // usable, deliver it rather than a generic error.
+    try {
+      console.log('[topic_chat] Retrying once in free-text mode after JSON failures');
+      const freeText = await invokeModel(systemPrompt, messages, {
+        temperature: 0.6,
+        maxTokens: 2048,
+        jsonFormat: false,
+        userId,
+        featureArea: 'topic_chat',
+        subFeature: 'tutor_turn_fallback'
+      });
+      if (freeText && freeText.trim()) {
+        const wrapper = { messages: [{ message: freeText.trim(), message_type: 'text' }] };
+        const recovered = normalizeParsedResponse(wrapper, userMessage);
+        if (recovered?.messages?.length) {
+          console.log('[topic_chat] Free-text fallback produced a usable message');
+          return recovered;
+        }
+      }
+    } catch (fallbackErr) {
+      console.error('[topic_chat] Free-text fallback also failed:', fallbackErr.message);
+    }
+    // Final resort: re-ask the last question so the turn never dead-ends silently.
     const q = lastQuestion || "Let's keep going — here's the question again.";
     return {
       messages: [
-        { message: "I faced an issue processing your message. Could you resend it?", message_type: "text" },
         { message: q, message_type: "text" }
       ]
     };

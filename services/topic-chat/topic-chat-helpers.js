@@ -100,8 +100,23 @@ function determinePhase(chatHistory, topicGoals, currentGoal, userMessage) {
 
   if (hasExamDef && !hasConceptCard) {
     // REVEAL done, concept card not yet → EXPLORE or LOCK
-    // If we have enough questions and teaching beats, move to LOCK
-    if (questionsForGoal >= 3) {
+    // Mastery-gated LOCK: only move on once the student has actually answered at least
+    // one question correctly in this goal (and asked enough questions). Pure retry loops
+    // on wrong answers stay in EXPLORE so the tutor keeps re-teaching.
+    const answers = chatHistory.filter(m => m.sender === 'user');
+    const correctForGoal = answers.filter(m => {
+      const f = (m.feedback && m.feedback.is_correct) ||
+        (typeof m.is_correct === 'boolean' && m.is_correct);
+      const score = (m.feedback && typeof m.feedback.score_percent === 'number')
+        ? m.feedback.score_percent
+        : (typeof m.score_percent === 'number' ? m.score_percent : 100);
+      return f === true && score >= 50;
+    }).length;
+    // Cap: never force LOCK before the student has shown at least some mastery, but
+    // prevent an infinite EXPLORE loop after a hard floor of questions.
+    const minCorrectToLock = 1;
+    const retryCap = 6; // after 6 questions, move on regardless
+    if (questionsForGoal >= 3 && (correctForGoal >= minCorrectToLock || questionsForGoal >= retryCap)) {
       return { phase: 'LOCK', goalIndex, goalTotal };
     }
     return { phase: 'EXPLORE', goalIndex, goalTotal };

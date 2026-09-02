@@ -1075,18 +1075,39 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 		// the clean topic/goal anchor (searchImages/searchYouTube add their own
 		// "diagram"/"explained" suffixes — we keep the anchor tight so the specific
 		// concept dominates the result).
+		// Media is NOT attached on the first wrong answer — only when the student has
+		// NOW FAILED 2 TIMES IN A ROW (per MEDIA RULES: video/image after a second
+		// failed repair). This stops a video from appearing on every early correction.
 		const _fb = aiResponse?.user_correction?.feedback
-		const _isFailing = _fb && _fb.is_correct === false && (typeof _fb.score_percent !== 'number' || _fb.score_percent < 60)
+		const _thisAnswerWrong = _fb && _fb.is_correct === false && (typeof _fb.score_percent !== 'number' || _fb.score_percent < 60)
+		// Count consecutive wrong attempts from the student's message history.
+		let _consecutiveWrong = _thisAnswerWrong ? 1 : 0
+		if (Array.isArray(chatHistory)) {
+			for (let i = chatHistory.length - 1; i >= 0; i--) {
+				const m = chatHistory[i]
+				if (m.sender !== 'user') continue
+				if (m.is_correct === false || (m.feedback && m.feedback.is_correct === false)) {
+					_consecutiveWrong++
+				} else if (m.message_type === 'user_correction' && !(m.feedback?.is_correct)) {
+					_consecutiveWrong++
+				} else {
+					break // hit a correct answer (or a non-answer) — stop counting
+				}
+			}
+		}
+		// Only auto-fetch when the model hasn't already provided media, AND the student
+		// has just failed twice in a row.
+		const _isFailing = _thisAnswerWrong && _consecutiveWrong >= 2
 		if (_isFailing && _anchor) {
 			try {
 				if (!fetchedImages || fetchedImages.length === 0) {
-					console.log(`🖼️ [remedial] Fetching image/diagram for a struggling student: "${_anchor}"`)
+					console.log(`🖼️ [remedial] Fetching image/diagram for a struggling student (${_consecutiveWrong}x): "${_anchor}"`)
 					fetchedImages = await searchImages(_anchor, 1)
 				}
 			} catch (e) { console.error('❌ [remedial] image fetch failed:', e.message) }
 			try {
 				if (!fetchedVideos || fetchedVideos.length === 0) {
-					console.log(`🎬 [remedial] Fetching video for a struggling student: "${_anchor}"`)
+					console.log(`🎬 [remedial] Fetching video for a struggling student (${_consecutiveWrong}x): "${_anchor}"`)
 					fetchedVideos = await searchYouTube(_anchor, 1)
 				}
 			} catch (e) { console.error('❌ [remedial] video fetch failed:', e.message) }
@@ -1262,6 +1283,14 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 			const message = data.message ?? data.content ?? '';
 			const messageType = data.message_type ?? data.type ?? 'text';
 
+			// Skip persisting an EMPTY plain bubble (the "empty..." artifact). Card/media
+			// message types carry their payload in diff_html/videos/etc., so only guard the
+			// plain "text" bubble.
+			if (!message && messageType === 'text' && !(data.options && data.options.length)) {
+				console.warn('[topic-chats] Skipping empty AI text bubble');
+				return null;
+			}
+
 			const savedMessage = await prisma.admin_chat.create({
 				data: {
 					user_id: user_id,
@@ -1393,7 +1422,7 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 				videos: msg.videos,
 				links: msg.links
 			});
-			aiMessages.push(saved);
+			if (saved) aiMessages.push(saved);
 		}
 
 		// 2. Save diagrams and media
@@ -1502,7 +1531,7 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 				videos: questionMsg.videos,
 				links: questionMsg.links
 			});
-			aiMessages.push(saved);
+			if (saved) aiMessages.push(saved);
 		}
 
 		// ===== TEACHING ARC: Persist phase-specific rich blocks as card messages =====
@@ -1512,6 +1541,20 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 		async function savePhaseBlock(messageType, data, fallbackMessage) {
 			if (!data) return null;
 			try {
+				// Deduplicate: persist each phase-block card at most ONCE per GOAL so the
+				// definition / concept / revision cards don't re-emit on every turn. Session-
+				// level blocks (session_frame, hook_prediction, revision_sheet) dedupe across
+				// the whole session. We scope by the already-topic-filtered chatHistory (the
+				// same message set the frontend load endpoint returns), which is far more
+				// reliable than the chat_goal_progress link (cards aren't linked to goals).
+				const alreadySaved = (chatHistory || []).some(m => m.message_type === messageType);
+				if (alreadySaved) {
+					// Already persisted in this topic's history — do NOT create a duplicate
+					// or append a second card: it's already on screen. (Returning a pseudo-
+					// object in aiMessages would make the frontend double-render the card.)
+					console.log(`🔖 ${messageType} card already exists (skipped duplicate)`);
+					return null;
+				}
 				const saved = await saveAndLinkAiMessage({
 					message: fallbackMessage || '',
 					message_type: messageType,
@@ -2062,7 +2105,9 @@ Write a SHORT 2-3 sentence performance summary for the student.
 				const apiKey = process.env.SARVAM_API_KEY;
 				if (apiKey) {
 					await Promise.all(
-						aiMessages.map(async (msg) => {
+						aiMessages
+							.filter(m => !!m)
+							.map(async (msg) => {
 							if (
 								msg.message_type === 'mermaid_diagram' ||
 								msg.message_type === 'text_diagram' ||
