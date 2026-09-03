@@ -327,12 +327,15 @@ async function handleTopicChatMessageV2(req, res) {
         options: []
       });
 
-      const revisionPayload = {
+      const revisionPayload = turnResult.revisionSheet || {
         topic: topic.title,
-        concepts_covered: topicGoals.map(g => g.title),
+        key_concepts: topicGoals.map(g => `${g.title}: ${g.description || 'Core concept mastered.'}`),
+        definitions: topicGoals.map(g => ({ term: g.title, definition: g.description || `Key concept in ${topic.title}` })),
+        quick_recall_tips: (turnResult.masteryReport?.key_errors || []).map(e => `Common mistake to avoid: ${e.type}`),
+        practice_next_time: `Notice how ${topic.title} applies in everyday technology and science.`,
         key_points: topicGoals.map(g => `${g.title}: ${g.description || 'Core concept mastered.'}`),
-        common_mistakes: (turnResult.masteryReport.key_errors || []).map(e => `${e.type} (${e.count}x)`),
-        your_weak_spots: (turnResult.masteryReport.areas_to_improve || []).map(a => a.goal)
+        common_mistakes: (turnResult.masteryReport?.key_errors || []).map(e => `${e.type} (${e.count}x)`),
+        your_weak_spots: (turnResult.masteryReport?.areas_to_improve || []).map(a => a.goal)
       };
 
       const revisionRecord = await prisma.admin_chat.create({

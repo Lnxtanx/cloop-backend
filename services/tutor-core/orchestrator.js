@@ -4,6 +4,7 @@ const { generateTutorResponse } = require('./tutor-generator');
 const { enforce } = require('./validate');
 const { getCachedDiagram } = require('./diagram-cache');
 const { buildReport, reportBrief } = require('./summary');
+const { generateRevisionSheet } = require('./revision-generator');
 
 /**
  * Extract the last question asked by the tutor from chat history or state
@@ -101,12 +102,23 @@ async function processTutorTurn({
   const questionType = questionTypeFor(nextState.phase);
   const attachments = attachmentsFor(nextState);
 
-  // If wrapping, build mastery report and brief
+  // If wrapping, build mastery report and revision sheet
   let masteryReport = null;
   let masteryBrief = null;
+  let revisionSheet = null;
   if (nextState.phase === 'WRAP' || nextState.phase === 'DONE') {
     masteryReport = buildReport(nextState, goals);
     masteryBrief = reportBrief(masteryReport);
+    try {
+      revisionSheet = await generateRevisionSheet({
+        topicTitle: topic.title,
+        goals,
+        keyErrors: masteryReport.key_errors,
+        classLevel
+      });
+    } catch (revErr) {
+      console.warn('[Orchestrator] Revision sheet generation warning:', revErr.message);
+    }
   }
 
   // ── Step 3: Socratic Dialogue Generator (LLM Call 2, Temp 0.4, ~2.0s) ──────
@@ -185,6 +197,7 @@ async function processTutorTurn({
     questionType,
     attachments,
     masteryReport,
+    revisionSheet,
     messages: validated.messages,
     userCorrection,
     mermaid_diagram: mermaidDiagram,
