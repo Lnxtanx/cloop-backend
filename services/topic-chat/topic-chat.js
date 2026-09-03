@@ -264,12 +264,16 @@ async function generateTopicChatResponse({
         const responseText = await invokeModel(systemPrompt, messages, {
           temperature: 0.7,
           maxTokens: 4096,
-          // Do NOT force DeepSeek's strict json_object mode. It intermittently returns
-          // EMPTY/whitespace content on these large multi-field EXPLORE responses (the
-          // ~50-130 char "empty" outputs seen in logs), even though the same input in
-          // free-text mode succeeds. We rely on the lenient extractJson() instead, which
-          // pulls the JSON object out of plain text and falls back to a raw-text wrapper.
-          jsonFormat: false,
+          // Use DeepSeek's strict json_object mode so the model reliably emits ONE valid
+          // JSON object. Earlier empty/whitespace outputs (~50-130 chars, all-3-attempts
+          // failing) happened at maxTokens: 2048 — the huge required schema
+          // (messages[] + evaluation + user_correction + mermaid/exam_definition) was
+          // truncated to empty BEFORE 2048 tokens. With maxTokens: 4096 the object has
+          // room to fully emit. Free text mode (jsonFormat:false) instead let the model
+          // drift into prose that failed extractJson and cascaded: no exam_definition
+          // card landed → determinePhase's hasExamDef gate never tripped → the session
+          // got STUCK in REVEAL and never advanced to EXPLORE.
+          jsonFormat: true,
           userId,
           featureArea: 'topic_chat',
           subFeature: 'tutor_turn',
