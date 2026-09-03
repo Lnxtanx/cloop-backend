@@ -12,18 +12,54 @@ function snap(n) {
 }
 
 /**
- * Assert whether the student made a genuine academic attempt (vs. off-task chatter,
- * "I don't know", or empty input). Used to decide whether diff_html should be produced.
+ * Classify a short/non-academic student message (RULE THREE). Returns an intent
+ * string so the grader can avoid scoring non-answers as if they were attempts:
+ *   ANSWER       a real academic attempt
+ *   ACK          "ok" "yes" "got it" "continue" "done" "next" — agreement, not an answer
+ *   HELP         "explain" "pls explain" "more detail" — request for teaching
+ *   NO_ATTEMPT   "i dont know" "idk" "skip" "pass" blank
+ *   GIBBERISH    mashed keys / no real words
+ *   OFF_TOPIC_DISRUPTION  a real sentence but unrelated, or abuse
+ */
+function intentOf(answer) {
+  const trimmed = (answer || '').trim();
+  if (!trimmed) return 'NO_ATTEMPT';
+  const lower = trimmed.toLowerCase().replace(/'/g, ''); // "i don't" and "i dont" both count
+  const tl = lower.trim();
+
+  // Pure punctuation / emoji / mashed keys → GIBBERISH
+  if (!/[a-z]/i.test(trimmed)) {
+    return 'GIBBERISH';
+  }
+
+  // Single/very-short agreement or nudge → ACK (never an answer).
+  // The WHOLE message must be just the ack word(s) — "ok i think its friction"
+  // is an ANSWER, not an ACK. Strip punctuation first so "ok!" counts as ACK.
+  const stripped = tl.replace(/[^a-z\s]/g, '').replace(/\s+/g, ' ').trim();
+  if (/^(ok(ay)?|k|kk|yes|ya|yeah|yep|yup|fine|sure|done|got it|gotit|hm+|mm+|next|continue|go on|thank(s)?|thx|ty)$/.test(stripped)) return 'ACK';
+  // HELP — a request for teaching, not an answer. Phrases matched with a relaxed
+  // boundary so "i didnt understand" / "cant understand" / "what do you mean" all hit.
+  if (/^(explain|help|explain please|pls explain|please explain|help me|explain more)$/.test(stripped)
+      || /\b(pls explain|please explain|explain more|explain please)\b/.test(tl)
+      || /(^|[.]\s*)(how|why|what does that mean|what do you mean|whats that|meaning)\b/.test(tl)
+      || /(doesnt|does not|didnt|did not|dont|do not|cant|cannot|could not|couldnt)\s+understand\b/.test(tl)
+      || /(^|[.]\s*)(i am not following|i cant follow|confus(ed|ing)|lost|not clear)\b/.test(tl)) return 'HELP';
+  // Genuine "I don't know" style non-attempts
+  if (/(^|[.]\s*)(i dont know|no idea|idk|i dont understand|i am not sure|im not sure|guess|maybe|dunno)\b/.test(lower)) return 'NO_ATTEMPT';
+  if (/^(dont know|no|nah|skip|pass|hint|help)$/.test(tl)) return 'NO_ATTEMPT';
+
+  // Too short to be a meaningful answer (avoid scoring stray "a", "the", "so")
+  if (trimmed.length < 3) return 'GIBBERISH';
+
+  return 'ANSWER';
+}
+
+/**
+ * Whether the student made a genuine academic attempt (vs. off-task chatter,
+ * "I don't know", empty input, an agreement, a help request, or gibberish).
  */
 function isRealAttempt(answer) {
-  const trimmed = (answer || '').trim();
-  if (!trimmed) return false;
-  const lower = trimmed.toLowerCase().replace(/'/g, ''); // "i don't" and "i dont" both count
-  if (/(^|[.]\s*)(i dont know|no idea|idk|i dont understand|i am not sure|im not sure|guess|maybe|dunno)\b/.test(lower)) return false;
-  if (/^(dont know|no|nah|skip|pass|help|hint|next)$/.test(lower)) return false;
-  if (trimmed.length < 3) return false;
-  if (!/[a-z]/i.test(trimmed)) return false;
-  return true;
+  return intentOf(answer) === 'ANSWER';
 }
 
 function escapeHtml(s) {
@@ -72,7 +108,16 @@ function noAttemptResult() {
 
 async function gradeAnswer({ answer, question, topicTitle, topicContent }) {
   if (!answer || !answer.trim()) {
-    return noAttemptResult();
+    return { ...noAttemptResult(), input_intent: 'NO_ATTEMPT' };
+  }
+
+  // RULE THREE — classify BEFORE grading. A non-ANSWER (agreement, help request,
+  // "I don't know", gibberish, or pure punctuation) must NEVER be scored as a wrong
+  // attempt. It produces no red bubble, no strikethrough, and no real score — the
+  // tutor's re-ask / re-teach bubble carries the turn.
+  const intent = intentOf(answer);
+  if (intent !== 'ANSWER') {
+    return { ...noAttemptResult(), input_intent: intent };
   }
 
   // No genuine academic attempt (e.g. "I don't know", "no idea", "idk", off-task).
@@ -80,7 +125,7 @@ async function gradeAnswer({ answer, question, topicTitle, topicContent }) {
   // or leak the model's reasoning as a "Corrections" annotation. The tutor's re-teach
   // bubble handles the teaching instead.
   if (!isRealAttempt(answer)) {
-    return noAttemptResult();
+    return { ...noAttemptResult(), input_intent: 'NO_ATTEMPT' };
   }
 
   const systemPrompt = `You are an EVALUATION ENGINE (not a chatbot). Grade ONE answer against the question and the reference text.
@@ -147,7 +192,8 @@ diff_html STRICT RULES:
       error_type: isCorrect ? null : (raw.error_type || "Conceptual Error"),
       diff_html: modelDiff || buildFallbackDiffHtml(answer, isCorrect, raw.complete_answer, raw.correct_term),
       complete_answer: raw.complete_answer || answer,
-      correct_term: raw.correct_term || null
+      correct_term: raw.correct_term || null,
+      input_intent: 'ANSWER'
     };
   } catch (err) {
     console.error('[answer-grader] ❌ Error grading answer:', err.message);

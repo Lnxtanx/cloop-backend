@@ -114,9 +114,25 @@ function buildSystemPrompt({
   let promptTemplate = fs.readFileSync(promptPath, 'utf8');
 
   // Objective grading verdict (ground truth) for the current student answer, if available.
-  const evaluationVerdictStr = evaluationVerdict
-    ? `The student's answer to the last question was objectively ${evaluationVerdict.is_correct ? 'CORRECT' : 'INCORRECT'} (${evaluationVerdict.error_type || 'Unknown'}, score ${evaluationVerdict.score_percent}%).`
-    : 'Not yet evaluated (no student answer to grade).';
+  // RULE THREE: if the message was NOT a real academic attempt, the tutor must NOT treat it
+  // as a wrong scored answer — it should re-ask (ACK), re-teach (HELP / NO_ATTEMPT), or ask
+  // for clearer input (GIBBERISH). No red bubble, no strikethrough, no "that's wrong".
+  const intent = evaluationVerdict?.input_intent || 'ANSWER';
+  let evaluationVerdictStr;
+  if (!evaluationVerdict) {
+    evaluationVerdictStr = 'Not yet evaluated (no student answer to grade).';
+  } else if (intent !== 'ANSWER') {
+    evaluationVerdictStr =
+      intent === 'GIBBERISH'
+        ? `The student's message could not be read as an answer (intent: ${intent}). Do NOT score it. Say you could not read it, quote it back, and re-ask the question more simply.`
+        : intent === 'ACK'
+          ? `The student's message was only agreement/a nudge (intent: ACK), NOT an answer. Do NOT score it. Re-ask the SAME question SHORTER, spelling out the answer options — never repeat it verbatim, never add a lead-in bubble.`
+          : intent === 'HELP'
+            ? `The student asked for teaching (intent: HELP), NOT an answer. Do NOT score it. Re-teach in ≤2 bubbles with a DIFFERENT angle and a NEW visual, then re-ask an EASIER version of the question.`
+            : `The student did not attempt the question (intent: NO_ATTEMPT). Do NOT score it. Give ONE hint plus a NEW visual, then an EASIER question. Never a punishing or 'wrong' tone.`;
+  } else {
+    evaluationVerdictStr = `The student's answer to the last question was objectively ${evaluationVerdict.is_correct ? 'CORRECT' : 'INCORRECT'} (${evaluationVerdict.error_type || 'Unknown'}, score ${evaluationVerdict.score_percent}%).`;
+  }
 
   // Build learning goals progress string
   const learningGoals = topicGoals.map((g, i) => {

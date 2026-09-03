@@ -187,7 +187,8 @@ async function generateTopicChatResponse({
             score_percent: graded.score_percent,
             correctness: graded.correctness,
             completeness: graded.completeness,
-            complete_answer: graded.complete_answer
+            complete_answer: graded.complete_answer,
+            input_intent: graded.input_intent || 'ANSWER'
           };
           console.log(`[topic_chat] ⚖️ Ground-truth verdict for tutor: ${graded.is_correct ? 'CORRECT' : 'INCORRECT'} (${graded.error_type}, ${graded.score_percent}%)`);
         }
