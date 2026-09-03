@@ -262,8 +262,13 @@ async function generateTopicChatResponse({
 
         const responseText = await invokeModel(systemPrompt, messages, {
           temperature: 0.7,
-          maxTokens: 2048,
-          jsonFormat: true,
+          maxTokens: 4096,
+          // Do NOT force DeepSeek's strict json_object mode. It intermittently returns
+          // EMPTY/whitespace content on these large multi-field EXPLORE responses (the
+          // ~50-130 char "empty" outputs seen in logs), even though the same input in
+          // free-text mode succeeds. We rely on the lenient extractJson() instead, which
+          // pulls the JSON object out of plain text and falls back to a raw-text wrapper.
+          jsonFormat: false,
           userId,
           featureArea: 'topic_chat',
           subFeature: 'tutor_turn',
