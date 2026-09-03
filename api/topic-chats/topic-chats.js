@@ -400,6 +400,33 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 						console.error('Failed to parse session summary JSON:', e.message)
 					}
 				}
+				if (msg.message_type === 'revision_sheet' && msg.diff_html) {
+					try {
+						if (typeof msg.diff_html === 'string' && msg.diff_html.trim().startsWith('{')) {
+							enrichedMsg.revision_sheet = JSON.parse(msg.diff_html)
+						}
+					} catch (e) {
+						console.error('Failed to parse revision sheet JSON:', e.message)
+					}
+				}
+				if (msg.message_type === 'mermaid_diagram' && msg.diff_html) {
+					try {
+						if (typeof msg.diff_html === 'string' && msg.diff_html.trim().startsWith('{')) {
+							enrichedMsg.mermaid_diagram = JSON.parse(msg.diff_html)
+						}
+					} catch (e) {
+						console.error('Failed to parse mermaid diagram JSON:', e.message)
+					}
+				}
+				if (msg.message_type === 'youtube_video' && msg.diff_html) {
+					try {
+						if (typeof msg.diff_html === 'string' && msg.diff_html.trim().startsWith('{')) {
+							enrichedMsg.youtube_video = JSON.parse(msg.diff_html)
+						}
+					} catch (e) {
+						console.error('Failed to parse youtube video JSON:', e.message)
+					}
+				}
 				chatMessages.push(enrichedMsg)
 			}
 		}

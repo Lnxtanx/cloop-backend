@@ -1,6 +1,7 @@
 const prisma = require('../../lib/prisma');
 const { processTutorTurn } = require('../../services/tutor-core/orchestrator');
 const { searchYouTube } = require('../../services/media-search');
+const { getCachedDiagram } = require('../../services/tutor-core/diagram-cache');
 
 /**
  * Convert model options into an array of strings for admin_chat.options String[] column
@@ -300,6 +301,26 @@ async function handleTopicChatMessageV2(req, res) {
         }
       });
 
+      // Helper to link supplementary records to goal progress so they persist on refresh
+      const linkToGoal = async (chatId) => {
+        if (!currentGoalRecord) return;
+        try {
+          await prisma.chat_goal_progress.create({
+            data: {
+              chat_id: chatId,
+              goal_id: currentGoalRecord.id,
+              user_id,
+              num_questions: 0,
+              num_correct: 0,
+              num_incorrect: 0,
+              is_completed: isSessionWrapping
+            }
+          });
+        } catch (e) {}
+      };
+
+      await linkToGoal(summaryRecord.id);
+
       savedAiMessages.push({
         ...summaryRecord,
         session_summary: summaryPayload,
@@ -335,6 +356,8 @@ async function handleTopicChatMessageV2(req, res) {
           created_at: true
         }
       });
+
+      await linkToGoal(revisionRecord.id);
 
       savedAiMessages.push({
         ...revisionRecord,
@@ -438,6 +461,24 @@ async function handleTopicChatMessageV2(req, res) {
     // 13. Asynchronous / On-Demand Media (YouTube & Diagrams)
     let fetchedVideos = [];
     const isStruggling = turnResult.nextState.consecutiveWrong >= 1 || turnResult.nextState.stuckStreak >= 1;
+    const wantsDiagram = /\b(diagram|drawing|chart|flowchart|mermaid|visual)\b/i.test(message || '');
+
+    const linkMediaToGoal = async (chatId) => {
+      if (!currentGoalRecord) return;
+      try {
+        await prisma.chat_goal_progress.create({
+          data: {
+            chat_id: chatId,
+            goal_id: currentGoalRecord.id,
+            user_id,
+            num_questions: 0,
+            num_correct: 0,
+            num_incorrect: 0,
+            is_completed: isSessionWrapping
+          }
+        });
+      } catch (e) {}
+    };
 
     if (wantsVideo || isStruggling || turnResult.attachments?.includes('video')) {
       try {
@@ -447,10 +488,16 @@ async function handleTopicChatMessageV2(req, res) {
       }
     }
 
+    // Attach Mermaid diagram whenever student is struggling ("I don't know"), asked for a diagram/video, or turn carries it
+    let mermaidDiagram = turnResult.mermaid_diagram;
+    if (!mermaidDiagram && (isStruggling || wantsDiagram || wantsVideo || turnResult.attachments?.includes('diagram'))) {
+      mermaidDiagram = getCachedDiagram(topic.title, currentGoalRecord?.title || topic.title, currentGoalRecord);
+    }
+
     // Persist Mermaid diagram as turn attachment if present
-    if (turnResult.mermaid_diagram && turnResult.mermaid_diagram.code) {
+    if (mermaidDiagram && mermaidDiagram.code) {
       try {
-        const diagram = turnResult.mermaid_diagram;
+        const diagram = mermaidDiagram;
         const diagramRecord = await prisma.admin_chat.create({
           data: {
             user_id,
@@ -472,6 +519,7 @@ async function handleTopicChatMessageV2(req, res) {
             created_at: true
           }
         });
+        await linkMediaToGoal(diagramRecord.id);
         savedAiMessages.push({
           ...diagramRecord,
           mermaid_diagram: diagram,
@@ -521,6 +569,7 @@ async function handleTopicChatMessageV2(req, res) {
               created_at: true
             }
           });
+          await linkMediaToGoal(videoRecord.id);
           savedAiMessages.push({
             ...videoRecord,
             youtube_video: {

@@ -157,18 +157,21 @@ async function processTutorTurn({
   }
 
   // Build user correction object for UI
-  // Any answer attempt evaluated as incorrect receives a correction box with diff_html
-  // so the student visibly sees what to correct.
+  // Any answer attempt evaluated produces userCorrection feedback for the UI.
+  // Correct answers get green feedback (is_correct: true, emoji: '😊').
+  // Incorrect answers get red feedback (is_correct: false, diff_html, emoji: '😅').
   const gradedThisTurn = intent === 'ANSWER' && isScored(answeredPhase);
-  const userCorrection = intent === 'ANSWER' && evaluatorResult.is_correct === false ? {
+  const isAnswer = intent === 'ANSWER';
+  const isCorrect = evaluatorResult.is_correct === true;
+  const userCorrection = isAnswer ? {
     message_type: 'user_correction',
-    diff_html: validated.diff_html,
-    complete_answer: evaluatorResult.complete_answer,
-    emoji: evaluatorResult.score_percent === 0 ? '😓' : (evaluatorResult.score_percent < 50 ? '😅' : '😊'),
+    diff_html: isCorrect ? null : validated.diff_html,
+    complete_answer: evaluatorResult.complete_answer || null,
+    emoji: isCorrect ? '😊' : (evaluatorResult.score_percent === 0 ? '😓' : (evaluatorResult.score_percent < 50 ? '😅' : '😊')),
     feedback: {
-      is_correct: false,
+      is_correct: isCorrect,
       score_percent: evaluatorResult.score_percent,
-      error_type: evaluatorResult.error_type
+      error_type: isCorrect ? null : evaluatorResult.error_type
     }
   } : null;
 
