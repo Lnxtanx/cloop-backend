@@ -333,7 +333,13 @@ async function generateTopicChatResponse({
         }
 
         if (graded) {
-          if (!parsed.user_correction) {
+          // No genuine attempt (e.g. "I don't know"): suppress ANY correction bubble —
+          // no diff_html, no complete_answer, no emoji. The re-teach bubble does the
+          // teaching. We must not leak the model's reasoning as a "Corrections" block.
+          const noRealCorrection = !graded.diff_html && !graded.complete_answer;
+          if (noRealCorrection) {
+            parsed.user_correction = null;
+          } else if (!parsed.user_correction) {
             // No model correction: build a full grounded correction
             parsed.user_correction = {
               message_type: 'user_correction',

@@ -18,8 +18,9 @@ function snap(n) {
 function isRealAttempt(answer) {
   const trimmed = (answer || '').trim();
   if (!trimmed) return false;
-  const lower = trimmed.toLowerCase();
-  if (/(^|[.]\s*)(i don't know|no idea|idk|i don't understand|i am not sure|i'm not sure|guess|maybe)\b/.test(lower)) return false;
+  const lower = trimmed.toLowerCase().replace(/'/g, ''); // "i don't" and "i dont" both count
+  if (/(^|[.]\s*)(i dont know|no idea|idk|i dont understand|i am not sure|im not sure|guess|maybe|dunno)\b/.test(lower)) return false;
+  if (/^(dont know|no|nah|skip|pass|help|hint|next)$/.test(lower)) return false;
   if (trimmed.length < 3) return false;
   if (!/[a-z]/i.test(trimmed)) return false;
   return true;
@@ -52,18 +53,34 @@ function buildFallbackDiffHtml(answer, isCorrect, completeAnswer, correctTerm) {
  * Evaluates student answer against reference topicContent at temperature: 0
  * Derives is_correct from rubric scores (correctness === 1 and completeness >= 0.5)
  */
+
+// Result for a non-attempt ("I don't know", blank, off-task). diff_html and
+// complete_answer are null so the frontend renders NO correction bubble and the
+// tutor's re-teach bubble does the teaching. score_percent === 10 per spec.
+function noAttemptResult() {
+  return {
+    is_correct: false,
+    correctness: 0,
+    completeness: 0,
+    score_percent: 10,
+    error_type: "Knowledge Gap",
+    diff_html: null,
+    complete_answer: null,
+    correct_term: null
+  };
+}
+
 async function gradeAnswer({ answer, question, topicTitle, topicContent }) {
   if (!answer || !answer.trim()) {
-    return {
-      is_correct: false,
-      correctness: 0,
-      completeness: 0,
-      score_percent: 0,
-      error_type: "Knowledge Gap",
-      diff_html: null,
-      complete_answer: "No answer provided.",
-      correct_term: null
-    };
+    return noAttemptResult();
+  }
+
+  // No genuine academic attempt (e.g. "I don't know", "no idea", "idk", off-task).
+  // Do NOT run the model here: a no-attempt must NOT produce any correction bubble
+  // or leak the model's reasoning as a "Corrections" annotation. The tutor's re-teach
+  // bubble handles the teaching instead.
+  if (!isRealAttempt(answer)) {
+    return noAttemptResult();
   }
 
   const systemPrompt = `You are an EVALUATION ENGINE (not a chatbot). Grade ONE answer against the question and the reference text.
