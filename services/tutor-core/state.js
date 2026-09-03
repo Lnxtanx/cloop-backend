@@ -3,7 +3,7 @@
  *
  * Session shape:
  *
- *   PROBE → THEORY → OBJECTIVES → [ DIALOGUE ×2 → CHECK ×1 ] per goal → WRAP → DONE
+ *   PROBE → THEORY → OBJECTIVES → [ DIALOGUE ×1 → CHECK ×1 ] per goal → WRAP → DONE
  *
  *   PROBE       one open question, unscored, to see what they already know
  *   THEORY      the concept explained, with a diagram and key points attached
@@ -12,17 +12,9 @@
  *   CHECK       one multiple-choice question, to assess what the dialogue taught
  *   WRAP        a mastery report computed from what actually happened
  *
- * Two things this file exists to guarantee.
- *
- * Multiple choice is assessment, not teaching. The question TYPE is decided
- * here, per phase, and handed to the generator — it is never left to the model.
- * When the previous version only hinted at it in a JSON schema comment, the
- * model produced multiple choice on nearly every turn and students stopped
- * writing anything at all.
- *
- * And the phase is never read back out of the model's own output. Deriving it
- * from message_type tags the model had written meant a forgotten tag stalled
- * the session and a dropped message silently regressed it.
+ * Pacing:
+ *   1 open question + 1 MCQ check per goal = 2 questions per goal.
+ *   Across a topic, student answers 8 to 10 questions total.
  *
  * Every function here is pure: same input, same output, no I/O, no clock, no
  * randomness. `advance` never mutates the state it is given.
@@ -30,21 +22,6 @@
 
 const PHASES = ["PROBE", "THEORY", "OBJECTIVES", "DIALOGUE", "CHECK", "WRAP", "DONE"];
 
-/**
- * The intents this module understands.
- *
- * The evaluator names some of them differently, and for one live session that
- * difference was the whole bug: the evaluator classified "I don't know" as
- * HELP_REQUEST, nothing here matched it, and the turn fell through to the
- * phase default — so the tutor re-sent the same two bubbles, word for word,
- * every time the student said they were stuck.
- *
- * Every intent now arrives through `normalizeIntent`, and it accepts both
- * vocabularies, so the two modules cannot drift apart again. Anything
- * unrecognised is treated as HELP rather than silently falling through: a
- * student we cannot classify is a student who needs a hand, not one who should
- * be read the same sentence twice.
- */
 const INTENTS = ["ANSWER", "ACK", "HELP", "IDK", "OFF_TOPIC"];
 
 const INTENT_ALIASES = {
@@ -68,10 +45,10 @@ function normalizeIntent(intent) {
   return INTENT_ALIASES[String(intent).trim().toUpperCase()] || "HELP";
 }
 
-/** Written answers per goal. The heart of the session. */
-const OPEN_PER_GOAL = 2;
+/** 1 written answer per goal. Fast, crisp pacing (2 questions per goal). */
+const OPEN_PER_GOAL = 1;
 
-/** Multiple-choice checks per goal. Assessment only, after the teaching. */
+/** 1 multiple-choice check per goal. Assessment only, after dialogue. */
 const MCQ_PER_GOAL = 1;
 
 /** Attempts at one question before moving on rather than trapping the student. */
@@ -82,22 +59,15 @@ const OFF_TOPIC_STRIKES = 3;
 
 /**
  * Consecutive non-answers ("ok", "idk", "explain") before the tutor stops
- * asking, gives the answer, and moves on. Matches MAX_ATTEMPTS so a stuck
- * student and a wrong student get the same three chances.
+ * asking, explains the answer, and moves on.
  */
-const STUCK_LIMIT = 3;
+const STUCK_LIMIT = 2;
 
 /** Deepest the escalation ladder is ever walked in one turn. */
 const LADDER_DEPTH = 3;
 
-/**
- * Hard stop on total turns.
- *
- * Sessions may run long to reach the academic outcome, so there is no tight
- * question budget — but a student who answers "i don't know" indefinitely must
- * still reach a summary rather than looping forever.
- */
-const MAX_TURNS = 60;
+/** Hard stop on total turns across the session. */
+const MAX_TURNS = 40;
 
 /** Mastery bands, applied to a goal's accuracy. */
 const BANDS = [
@@ -126,6 +96,7 @@ function initialState(goalTotal) {
     probeAnswer: null,
     stuckStreak: 0,
     revealPending: false,
+    wantsVideo: false,
     lastInstruction: null,
     instructionRepeats: 0,
     perGoal: Array.from({ length: total }, () => ({ correct: 0, total: 0, errors: [] })),
@@ -133,11 +104,7 @@ function initialState(goalTotal) {
   };
 }
 
-/**
- * The question type this phase asks for. Decided here, never by the model.
- * Only CHECK is multiple choice — everywhere else the student writes.
- * WRAP and DONE ask nothing, so they return null rather than claiming a type.
- */
+/** The question type this phase asks for. Decided here, never by the model. */
 function questionTypeFor(phase) {
   if (phase === "WRAP" || phase === "DONE") return null;
   return phase === "CHECK" ? "mcq" : "open";
@@ -155,9 +122,11 @@ function attachmentsFor(state) {
       return ["diagram", "key_points"];
     case "OBJECTIVES":
       return ["objectives"];
-    case "DIALOGUE":
+    case "DIALOGUE": {
+      if (state.wantsVideo) return ["video"];
       // A video only when a goal opens, and only if the student is struggling.
       return state.openThisGoal === 0 && state.consecutiveWrong > 0 ? ["video"] : [];
+    }
     case "WRAP":
       return ["revision_sheet", "mastery_report"];
     default:
@@ -165,19 +134,7 @@ function attachmentsFor(state) {
   }
 }
 
-/**
- * Advance the session by one turn.
- *
- * @param {object} state
- * @param {object} event
- * @param {string}  event.intent      - ANSWER | ACK | HELP | IDK
- * @param {boolean} [event.correct]   - grader verdict; read only when intent is ANSWER
- * @param {boolean} [event.offTopic]  - unrelated, as opposed to wrong
- * @param {string}  [event.errorType] - grader's error category, recorded for the report
- * @param {string}  [event.answerText]
- * @param {string}  [event.questionText]
- * @param {Array}   [event.questionOptions]
- */
+/** Advance the session by one turn. */
 function advance(state, event = {}) {
   const s = {
     ...state,
@@ -185,6 +142,8 @@ function advance(state, event = {}) {
   };
   const intent = normalizeIntent(event.intent);
   s.totalTurns = state.totalTurns + 1;
+  s.wantsVideo = !!event.wantsVideo;
+
   if (event.questionText) s.lastQuestionText = event.questionText;
   if (event.questionOptions !== undefined) s.lastQuestionOptions = event.questionOptions;
 
@@ -196,19 +155,14 @@ function advance(state, event = {}) {
     return s;
   }
 
-  // Out of turns: still finish properly, with a report.
+  // Out of turns: finish properly, with a report.
   if (s.totalTurns >= MAX_TURNS) {
     s.phase = "WRAP";
     s.endedReason = "turn_limit";
     return s;
   }
 
-  // ── repeated off-topic answers close the session kindly ──────────────────
-  //
-  // This runs BEFORE the non-answer return below. It used to run after, which
-  // made it unreachable: the evaluator reports off-topic as an intent of its
-  // own, so every off-topic turn took the early return and the strike counter
-  // never moved off zero. The polite close was dead code in production.
+  // ── Repeated off-topic answers close the session kindly ──────────────────
   if (intent === "OFF_TOPIC" || event.offTopic) {
     s.offTopicStreak = state.offTopicStreak + 1;
     if (s.offTopicStreak >= OFF_TOPIC_STRIKES) {
@@ -219,20 +173,14 @@ function advance(state, event = {}) {
   }
   s.offTopicStreak = 0;
 
-  // ── non-answers hold the phase, but not forever ──────────────────────────
-  //
-  // Holding the phase is right: an "ok" or an "I don't know" is not an answer
-  // and must not be scored or spend a question. But holding it unconditionally
-  // means a student who never answers never reaches the end of the session. By
-  // the third consecutive non-answer the tutor has given a hint, an easier
-  // question and a sentence starter, so it tells them the answer and moves on.
+  // ── Non-answers hold the phase, but move forward after STUCK_LIMIT ───────
   if (intent !== "ANSWER") {
     s.stuckStreak = (state.stuckStreak || 0) + 1;
     s.reteachPending = intent === "HELP" || intent === "IDK";
     if (s.stuckStreak >= STUCK_LIMIT) {
       s.stuckStreak = 0;
       s.reteachPending = false;
-      s.revealPending = true; // tell them the answer on the way past
+      s.revealPending = true; // explain the concept and reveal the answer
       s.phase = nextPhase(state, s);
       s.lastQuestionType = questionTypeFor(s.phase);
     }
@@ -241,14 +189,12 @@ function advance(state, event = {}) {
   s.stuckStreak = 0;
   s.revealPending = false;
 
-  // ── record mastery evidence before anything moves ────────────────────────
+  // ── Record mastery evidence ──────────────────────────────────────────────
   if (isScored(state.phase)) {
     const g = s.perGoal[state.goalIndex];
     if (g) {
       g.total += 1;
       if (event.correct) g.correct += 1;
-      // Every occurrence is recorded, not one per type: the report counts how
-      // often a mistake was made, and deduping here would understate it.
       else if (event.errorType) g.errors.push(event.errorType);
     }
     s.totalQuestions = state.totalQuestions + 1;
@@ -256,12 +202,12 @@ function advance(state, event = {}) {
 
   if (state.phase === "PROBE") s.probeAnswer = event.answerText || null;
 
-  // ── a wrong answer is re-taught before the session moves on ──────────────
+  // ── A wrong answer in an assessed phase is re-taught before moving on ─────
   if (event.correct === false && isScored(state.phase)) {
     s.consecutiveWrong = state.consecutiveWrong + 1;
     if (s.consecutiveWrong < MAX_ATTEMPTS) {
       s.reteachPending = true;
-      return s; // same question, taught a different way
+      return s;
     }
   }
   s.reteachPending = false;
@@ -272,7 +218,7 @@ function advance(state, event = {}) {
   return s;
 }
 
-/** The transition table, kept separate so it reads at a glance. */
+/** The transition table: PROBE -> THEORY -> OBJECTIVES -> DIALOGUE -> CHECK -> (next goal) -> WRAP */
 function nextPhase(prev, s) {
   switch (prev.phase) {
     case "PROBE":
@@ -304,15 +250,7 @@ function nextPhase(prev, s) {
   }
 }
 
-/**
- * Where to go when the turn would otherwise repeat itself.
- *
- * A directive that was just used cannot be used again: identical directives
- * produce near-identical bubbles, and a student who says "I don't know" twice
- * was being read the same two sentences twice. Each rung teaches the same
- * point a different way, and the last rung stops asking and starts helping —
- * a stuck student is never left staring at a question they cannot begin.
- */
+/** Escalation ladder for pedagogical variety and stuck-student progression */
 const ESCALATION = {
   probe_prior_knowledge: "probe_simpler",
   probe_simpler: "give_starter",
@@ -371,14 +309,7 @@ function baseInstruction(state, intent) {
   }
 }
 
-/**
- * What the generator should be told to do this turn.
- *
- * Never returns the instruction the previous turn used. The closing
- * instructions are exempt: a session that has reached WRAP or DONE says its
- * one closing thing, and escalating away from it would reopen a finished
- * session.
- */
+/** What the generator should be told to do this turn. */
 function instructionFor(state, event = {}) {
   const intent = normalizeIntent(event.intent);
   const base = baseInstruction(state, intent);
@@ -386,15 +317,9 @@ function instructionFor(state, event = {}) {
     return base;
   }
 
-  // How hard the student is stuck decides how far down the ladder we go. It
-  // has to be the streak, not just "is this the same as last time": comparing
-  // against the previous instruction alone made the tutor alternate between
-  // two rungs forever, so a student who kept saying "I don't know" was offered
-  // a hint and a re-explanation in turn and never a way to start writing.
   const pressure = intent === "ANSWER" ? 0 : Math.max(0, (state.stuckStreak || 0) - 1);
   let next = escalate(base, Math.min(pressure, LADDER_DEPTH));
 
-  // Belt and braces: whatever the ladder says, never say the same thing twice.
   if (next === state.lastInstruction) next = escalate(next, 1);
   return next;
 }

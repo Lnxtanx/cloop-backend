@@ -7,6 +7,9 @@ const { invokeModel, extractJson } = require('../ai/deepseek-client');
  * Produces 1 to 2 conversational, encouraging bubbles (max 20 words each).
  * Respects the server-decided questionType ('open' vs 'mcq').
  *
+ * Socratic Rule: On "I don't know" or help requests, ALWAYS explain the concept
+ * first in simple terms before asking the check question.
+ *
  * @param {object} params
  * @param {string} params.topicTitle
  * @param {string} params.currentGoalTitle
@@ -19,6 +22,7 @@ const { invokeModel, extractJson } = require('../ai/deepseek-client');
  * @param {string} params.lastQuestionText
  * @param {Array}  [params.recentHistory] - Last 2-3 turns for conversational flow
  * @param {string} [params.classLevel]
+ * @param {boolean} [params.wantsVideo] - Student explicitly requested a video
  * @returns {Promise<object>} { messages: Array }
  */
 async function generateTutorResponse({
@@ -32,7 +36,8 @@ async function generateTutorResponse({
   reportBrief = null,
   lastQuestionText,
   recentHistory = [],
-  classLevel = 'Class 10'
+  classLevel = 'Class 10',
+  wantsVideo = false
 }) {
   // Build human-readable directive summary
   let directiveGuidance = '';
@@ -41,7 +46,8 @@ async function generateTutorResponse({
       directiveGuidance = 'Ask one open, friendly question to explore what the student already knows about this topic. Spark curiosity! Do not provide options; the student must write.';
       break;
     case 'teach_theory':
-      directiveGuidance = 'Explain the core mechanism in 1 intuitive sentence with an everyday Indian analogy (e.g. food, sports, daily life). Then ask an open prediction question.';
+    case 'teach_theory_and_open':
+      directiveGuidance = 'Acknowledge their probe answer warmly. In 1 sentence, explain the core mechanism with an everyday Indian analogy (e.g. cricket, cooking, building blocks). Then ask the first goal question.';
       break;
     case 'state_objectives':
       directiveGuidance = 'In 1 sentence, state what the student will learn today. Ask an opening question to get started.';
@@ -53,43 +59,43 @@ async function generateTutorResponse({
       directiveGuidance = 'Validate their response in 1 sentence. Then ask the next concept question. The student must write their answer.';
       break;
     case 'assess_with_mcq':
-      directiveGuidance = 'Ask a single multiple-choice question to assess this goal. Provide 2 to 4 clear options with letters (A, B, C, D).';
+      directiveGuidance = 'Assess understanding of this goal with one clean multiple-choice question. Provide 2 to 4 clear options with letters (A, B, C, D).';
       break;
     case 'correct_and_reask':
       directiveGuidance = 'Acknowledge the attempt warmly, clarify the specific misconception in 1 sentence, and re-ask an easier version of the question.';
       break;
     case 'reteach_new_angle':
-      directiveGuidance = 'Switch to an intuitive everyday Indian analogy (e.g. cricket, tea, bicycles). Then ask a simple concept verification question.';
+      directiveGuidance = 'Switch to an intuitive everyday Indian analogy. Explain the mechanism clearly first, then ask a simple concept check question.';
       break;
     case 'reask_shorter':
       directiveGuidance = 'The student acknowledged ("ok"). Re-frame the question concisely in fewer words.';
       break;
     case 'hint_then_easier':
-      directiveGuidance = 'Give 1 helpful hint without giving away the full answer. Prompt them to try again.';
+      directiveGuidance = 'The student is stuck. First, explain the key concept simply in 1 clear sentence with an everyday comparison. Then ask an easier check question.';
       break;
     case 'explain_differently':
-      directiveGuidance = 'Explain the core mechanism in simple terms. Ask if they can see how it applies.';
+      directiveGuidance = 'Directly explain the core mechanism in simple, plain terms in 1-2 sentences. Then ask what happens next.';
       break;
     case 'probe_simpler':
-      directiveGuidance = 'They could not start. Ask a much simpler yes/no or one-word version of the same opening question.';
+      directiveGuidance = 'They could not start. Ask a much simpler yes/no or one-word version of the opening question.';
       break;
     case 'teach_theory_analogy':
-      directiveGuidance = 'The first explanation did not land. Explain the same idea with a completely different everyday Indian analogy, then ask a simple check question.';
+      directiveGuidance = 'Explain the core idea clearly using a completely different everyday analogy (e.g. traffic, train tracks, sports), then ask an intuitive check question.';
       break;
     case 'restate_objectives_simpler':
-      directiveGuidance = 'Restate what they will learn today in plainer, shorter words. Ask one easy opening question they can answer in a few words.';
+      directiveGuidance = 'In plainer words, explain what we are mastering, and ask one easy opening question.';
       break;
     case 'assess_with_mcq_simpler':
-      directiveGuidance = 'Ask an easier multiple-choice question on the same goal, with only 2 clearly different options.';
+      directiveGuidance = 'Ask an easier multiple-choice question on this goal with 2 clearly distinct options (A and B).';
       break;
     case 'give_starter':
-      directiveGuidance = 'They are stuck. Give them the first half of the answer as a sentence starter and ask them to finish it, e.g. "The gas formed is ___". Never leave them with nothing to write.';
+      directiveGuidance = 'Explain the core idea clearly in 1 sentence first. Then provide a sentence starter for them to complete, e.g. "This means that carbon bonds to ___".';
       break;
     case 'reveal_and_move_on':
-      directiveGuidance = 'They are still stuck after several tries. Tell them the answer plainly in 1 sentence, warmly and without blame, then ask the next question.';
+      directiveGuidance = 'The student is stuck. Explain the answer warmly and plainly in 1 sentence so they learn it. Then ask the next question.';
       break;
     case 'redirect_to_topic':
-      directiveGuidance = 'That was off topic. Acknowledge briefly and warmly, then bring them straight back with the study question.';
+      directiveGuidance = 'That was off topic. Acknowledge briefly and warmly, then bring them straight back with the concept question.';
       break;
     case 'close_off_topic':
       directiveGuidance = 'Politely suggest pausing the study session for now, and warmly invite them back when ready to study.';
@@ -154,7 +160,7 @@ async function generateTutorResponse({
 {
   "messages": [
     {
-      "message": "First conversational bubble (under 20 words)",
+      "message": "First conversational/explanation bubble (under 20 words)",
       "message_type": "text"
     },
     {
@@ -175,14 +181,17 @@ SITUATION FOR THIS TURN:
 - Student Message: "${studentMessage || 'None'}"
 - Evaluation: Intent is ${evaluatorResult?.intent || 'ANSWER'}${evaluatorResult?.is_correct !== null ? `, Correct: ${evaluatorResult.is_correct}` : ''}${evaluatorResult?.error_type ? `, Error: ${evaluatorResult.error_type}` : ''}
 - Directive: ${directiveGuidance}
+${wantsVideo ? '- SPECIAL REQUEST: Student asked for a video. In your first bubble, say: "Here is a video explaining this concept! Take a look:"' : ''}
 
 ${recentTurnsText ? `RECENT CHAT CONTEXT:\n${recentTurnsText}\n` : ''}
 STRICT GENERATION RULES:
 1. Produce 1 or 2 conversational message bubbles (ideally 1, maximum 2). Never more than 2 bubbles.
 2. WORD LIMIT: Every single bubble MUST BE strictly under 20 words. No long paragraphs!
 3. TERMINAL QUESTION: ${isWrap ? 'Do NOT ask any question.' : "The final bubble MUST end with an answerable question for the student (ending with '?')."}
-4. Tone: Warm, natural, and encouraging. Never use hollow robotic praise ("Awesome!", "Brilliant!"). Use genuine warmth ("Spot on!", "Nice work.", "Almost!").
-5. Output STRICT JSON only.
+4. PEDAGOGY: When the student says "I don't know" or struggles, DO NOT ask riddles. EXPLAIN THE CONCEPT FIRST simply in bubble 1, then ask in bubble 2!
+5. ANTI-REPETITION: NEVER re-state the chapter overview or lesson objectives ("Today you will learn...") during mid-session turns or hints!
+6. Tone: Warm, natural, and encouraging. Never robotic.
+7. Output STRICT JSON only.
 
 ${schemaInstructions}`;
 
@@ -212,7 +221,6 @@ ${schemaInstructions}`;
   } catch (error) {
     console.error('[Tutor-Core Generator] Dialogue generation failed, using fallback:', error.message);
 
-    // Context-sensitive fallback bubbles
     const fallbackBubbles = [];
 
     if (isWrap) {
@@ -223,6 +231,11 @@ ${schemaInstructions}`;
     } else if (stateInstruction === 'close_off_topic') {
       fallbackBubbles.push({
         message: "Let's pause here for now. You can resume anytime!",
+        message_type: 'text'
+      });
+    } else if (wantsVideo) {
+      fallbackBubbles.push({
+        message: "Here's a video explaining this concept! Check it out below:",
         message_type: 'text'
       });
     } else if (isMcq) {

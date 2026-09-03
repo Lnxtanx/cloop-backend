@@ -30,8 +30,8 @@ function findLastQuestion(chatHistory, state) {
  *
  * Runs Steps 1 -> 2 -> 3 -> 4:
  * 1. Evaluates user input (resolves option letters, semantic intent, grading, diff).
- * 2. Advances server-owned state machine (7-phase arc, question budget, MCQ isolation).
- * 3. Generates Socratic dialogue bubbles (<= 20 words each, respects questionType).
+ * 2. Advances server-owned state machine (crisp 2-turn per goal progression).
+ * 3. Generates Socratic dialogue bubbles (explains first on struggle, respects questionType).
  * 4. Deterministically validates and auto-heals output before persistence.
  *
  * @param {object} params
@@ -41,6 +41,7 @@ function findLastQuestion(chatHistory, state) {
  * @param {Array}  params.chatHistory - Recent admin_chat messages
  * @param {object} [params.currentState] - Session state from DB or memory
  * @param {object} [params.userProfile] - { board, grade_level, name }
+ * @param {boolean} [params.wantsVideo] - Explicit or detected video request
  * @returns {Promise<object>} Orchestrated turn result
  */
 async function processTutorTurn({
@@ -49,7 +50,8 @@ async function processTutorTurn({
   goals = [],
   chatHistory = [],
   currentState = null,
-  userProfile = {}
+  userProfile = {},
+  wantsVideo = false
 }) {
   const goalTotal = Math.max(1, goals.length);
   const state = currentState || initialState(goalTotal);
@@ -65,7 +67,6 @@ async function processTutorTurn({
   const classLevel = userProfile.grade_level ? `Class ${userProfile.grade_level}` : 'Class 10';
 
   // ── Step 1: Evaluator Engine (LLM Call 1, Temp 0.0, ~1.5s) ──────────────────
-  // Resolve option letter (e.g. "A" -> "Salt and water") if previous turn was an MCQ
   const evaluatorResult = await evaluateStudentTurn({
     studentMessage,
     lastQuestionText,
@@ -79,10 +80,6 @@ async function processTutorTurn({
   });
 
   // ── Step 2: State Machine Advance (Pure JS, < 1ms) ──────────────────────────
-  // The evaluator and the state machine name intents differently
-  // (HELP_REQUEST vs HELP, GIBBERISH vs OFF_TOPIC). normalizeIntent is the one
-  // place that translation happens; passing a raw evaluator intent straight
-  // into the state machine is what made the tutor repeat itself verbatim.
   const intent = normalizeIntent(evaluatorResult.intent);
   const answeredPhase = state.phase; // the phase the student was answering IN
 
@@ -91,7 +88,8 @@ async function processTutorTurn({
     correct: evaluatorResult.is_correct,
     offTopic: intent === 'OFF_TOPIC',
     errorType: evaluatorResult.error_type,
-    answerText: evaluatorResult.resolved_answer || studentMessage
+    answerText: evaluatorResult.resolved_answer || studentMessage,
+    wantsVideo
   });
 
   // CRITICAL INVARIANT: instructionFor is called strictly on POST-ADVANCE state
@@ -123,7 +121,8 @@ async function processTutorTurn({
     reportBrief: masteryBrief,
     lastQuestionText,
     recentHistory: chatHistory,
-    classLevel
+    classLevel,
+    wantsVideo
   });
 
   // ── Step 3b: Diagram / Attachments Retrieval ──────────────────────────────
@@ -157,13 +156,8 @@ async function processTutorTurn({
     nextState.lastQuestionOptions = null;
   }
 
-  // Build user correction object for UI.
-  //
-  // Only for turns that were actually assessed. PROBE, THEORY and OBJECTIVES
-  // ask the student to predict and to think aloud — those answers are not
-  // scored and must not come back with a red strikethrough and a crying face.
-  // A live session gave a student 😢 for a prediction during THEORY, a phase
-  // that contributes nothing to mastery.
+  // Build user correction object for UI
+  // Graded in assessed phases (DIALOGUE and CHECK).
   const gradedThisTurn = intent === 'ANSWER' && isScored(answeredPhase);
   const userCorrection = gradedThisTurn && evaluatorResult.is_correct === false ? {
     message_type: 'user_correction',

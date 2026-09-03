@@ -157,6 +157,9 @@ async function handleTopicChatMessageV2(req, res) {
       select: { board: true, grade_level: true, name: true }
     });
 
+    // 6b. Detect video requests with typo tolerance
+    const wantsVideo = /\b(video|vidoe|vedio|vids?|youtube|yt|watch|clip|animation)\b/i.test(message || '');
+
     // 7. Execute Orchestrator Pipeline (Steps 1 -> 2 -> 3 -> 4)
     const turnResult = await processTutorTurn({
       studentMessage: message || '',
@@ -164,7 +167,8 @@ async function handleTopicChatMessageV2(req, res) {
       goals: topicGoals,
       chatHistory,
       currentState: previousState,
-      userProfile: userProfile || {}
+      userProfile: userProfile || {},
+      wantsVideo
     });
 
     const nextGoalIndex = turnResult.nextState.goalIndex;
@@ -433,8 +437,7 @@ async function handleTopicChatMessageV2(req, res) {
 
     // 13. Asynchronous / On-Demand Media (YouTube & Diagrams)
     let fetchedVideos = [];
-    const wantsVideo = /\b(video|watch|youtube|clip)\b/i.test(message || '');
-    const isStruggling = turnResult.nextState.consecutiveWrong >= 2;
+    const isStruggling = turnResult.nextState.consecutiveWrong >= 1 || turnResult.nextState.stuckStreak >= 1;
 
     if (wantsVideo || isStruggling || turnResult.attachments?.includes('video')) {
       try {

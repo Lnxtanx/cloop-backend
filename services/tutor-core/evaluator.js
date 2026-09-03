@@ -133,6 +133,9 @@ GRADING RULES (Only evaluate when intent is "ANSWER"):
   So is "water and salt is formed", "it become gas", "co2", "the metal displace copper".
   Mark an answer wrong ONLY when the underlying science or maths is wrong, missing, or
   contradicts the goal.
+- SCIENTIFIC ACCURACY: If the student gives an incorrect scientific concept, wild guess, or informal slang
+  (e.g. "banna bonds", "random lines", "rubber", or wrong formula), you MUST mark is_correct = false
+  with error_type = "Conceptual" or "Incomplete", and provide a clean <del>/<ins> diff!
 - If the student grasped the core idea in any wording at all: is_correct = true, score_percent >= 80.
 - If the science itself is wrong, or the answer is empty of content: is_correct = false, score_percent < 70.
 - error_type must name a CONTENT fault: "Conceptual", "Factual", "Incomplete" or "Calculation".
