@@ -12,6 +12,13 @@ const DEEPSEEK_BASE_URL = process.env.DEEPSEEK_BASE_URL || 'https://api.deepseek
  * @returns {Promise<string|Object>} - Generated text response (or { text, usage, durationMs } if options.returnUsage)
  */
 async function invokeModel(systemPrompt, messages, options = {}) {
+    // Normalise if invoked as invokeModel(messages, options) with systemInstruction in options
+    if (Array.isArray(systemPrompt)) {
+        options = messages || {};
+        messages = systemPrompt;
+        systemPrompt = options.systemInstruction || options.systemPrompt || '';
+    }
+
     const apiKey = (process.env.DEEPSEEK_API_KEY || process.env.DEEPSEEK_KEY || '').trim();
     if (!apiKey) {
         throw new Error('DEEPSEEK_API_KEY is missing in environment variables (.env)');
@@ -23,7 +30,7 @@ async function invokeModel(systemPrompt, messages, options = {}) {
     // Format messages for OpenAI/DeepSeek API format
     const formattedMessages = [];
     
-    if (systemPrompt && systemPrompt.trim()) {
+    if (typeof systemPrompt === 'string' && systemPrompt.trim()) {
         formattedMessages.push({
             role: 'system',
             content: systemPrompt.trim()

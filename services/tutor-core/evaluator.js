@@ -171,11 +171,12 @@ Output STRICT JSON matching this schema:
   ];
 
   try {
-    const rawOutput = await invokeModel(messages, {
-      systemInstruction: systemPrompt,
-      responseFormat: 'json',
+    const rawOutput = await invokeModel(systemPrompt, messages, {
       temperature: 0.1, // Near-deterministic evaluation
-      maxTokens: 350
+      maxTokens: 350,
+      jsonFormat: true,
+      featureArea: 'tutor-core',
+      subFeature: 'evaluator'
     });
 
     const parsed = extractJson(typeof rawOutput === 'string' ? rawOutput : rawOutput.text);
