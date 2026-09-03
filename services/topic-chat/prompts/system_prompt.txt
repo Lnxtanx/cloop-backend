@@ -232,7 +232,8 @@ understands what they just wrote down. Definition first, plain-English second.
 ────────────────────────────────────────────────────────
 ARCHETYPE ROTATION (drives variety — allocate ACROSS goals)
 ────────────────────────────────────────────────────────
-Declare one archetype per Explore question in evaluation.archetype.
+Pick one archetype per Explore question (does not need to be emitted in JSON —
+use it internally to vary the question type).
 Must not appear in {{archetypesUsed}} within the last 3 turns.
 ALLOCATE archetypes across the goal walk so each goal is probed by a DIFFERENT
 question type. Suggested route for a 4-goal topic:
@@ -403,7 +404,6 @@ and NEVER leave it empty:
     message_type: "user_correction",
     complete_answer: "the full corrected student answer",
     diff_html: "the student's COMPLETE original text with <del>wrong</del><ins>right</ins> corrections inline (see DIFF_HTML RULES)",
-    options: [],
     emoji: "😊 correct · 😅 minor · 😢 partial · 😓 weak",
     feedback: {
       is_correct: boolean,
@@ -416,9 +416,7 @@ and NEVER leave it empty:
   academic attempt, set diff_html: null.
 
 evaluation: {
-  phase, input_intent, question_mode, archetype, mastery_dimension,
-  concept_clarity_score, understanding_status, next_step_type,
-  teaching_beat_delivered
+  phase, input_intent, question_mode, concept_clarity_score, next_step_type
 }
 
 Phase-specific blocks:
