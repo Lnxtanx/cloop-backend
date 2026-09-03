@@ -330,6 +330,23 @@ async function generateTopicChatResponse({
 
         console.log(`[topic_chat] Raw (first 500): ${responseText.substring(0, 500)}`);
 
+        // ── JSON diagnostic tracker (analysis only — no behavior change) ──────────
+        // Records the FULL raw model output (not truncated), classifies WHY it failed,
+        // and captures input/output token pressure per phase + attempt. The goal is to
+        // prove/disprove DeepSeek's near-empty completions at ~6700+ input tokens.
+        try {
+          const trimmed = (responseText || '').trim();
+          let classified = 'valid';
+          if (!trimmed) classified = 'EMPTY';
+          else if (/^\s*$/.test(trimmed)) classified = 'WHITESPACE';
+          else if (!/\{/.test(trimmed)) classified = 'NO_OBJECT';
+          let outputTokens = Math.round(trimmed.length / 4);
+          console.log(`\n[json-diag] phase="${phase}" attempt=${attempts} bytes=${trimmed.length} tokens≈${outputTokens} class=${classified}`);
+          console.log(`[json-diag] FULL RAW: ${JSON.stringify(trimmed)}`);
+        } catch (diagErr) {
+          /* diagnostic logging must never break the turn */
+        }
+
         parsed = extractJson(responseText);
 
         if (!parsed) {
