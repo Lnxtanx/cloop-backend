@@ -95,6 +95,12 @@ async function generateTopicChatResponse({
   user = null
 }) {
   let lastQuestion = "";
+  // Hoisted to function scope so the outer catch (free-text fallback) can reuse them
+  // regardless of the nesting of the inner try blocks. Previously `systemPrompt` /
+  // `messages` were declared inside the inner try and were NOT visible in the catch,
+  // causing "systemPrompt is not defined" which killed the fallback on JSON failures.
+  let systemPrompt = null;
+  let messages = [];
   try {
     const analysis = analyzeChatHistory(chatHistory);
     lastQuestion = analysis.lastQuestion;
@@ -159,7 +165,7 @@ async function generateTopicChatResponse({
     }
 
     // Build system prompt
-    const systemPrompt = buildSystemPrompt({
+    systemPrompt = buildSystemPrompt({
       topicTitle,
       topicContent,
       topicGoals,
@@ -182,7 +188,7 @@ async function generateTopicChatResponse({
     });
 
     // Build messages for API
-    const messages = [];
+    messages = [];
     const recentHistory = chatHistory.slice(-8);
     for (const msg of recentHistory) {
       messages.push({
@@ -377,7 +383,7 @@ async function generateTopicChatResponse({
     // usable, deliver it rather than a generic error.
     try {
       console.log('[topic_chat] Retrying once in free-text mode after JSON failures');
-      const freeText = await invokeModel(systemPrompt, messages, {
+      const freeText = await invokeModel(systemPrompt || '', messages || [], {
         temperature: 0.6,
         maxTokens: 2048,
         jsonFormat: false,

@@ -99,24 +99,33 @@ function determinePhase(chatHistory, topicGoals, currentGoal, userMessage) {
   }
 
   if (hasExamDef && !hasConceptCard) {
-    // REVEAL done, concept card not yet → EXPLORE or LOCK
-    // Mastery-gated LOCK: only move on once the student has actually answered at least
-    // one question correctly in this goal (and asked enough questions). Pure retry loops
-    // on wrong answers stay in EXPLORE so the tutor keeps re-teaching.
-    const answers = chatHistory.filter(m => m.sender === 'user');
-    const correctForGoal = answers.filter(m => {
-      const f = (m.feedback && m.feedback.is_correct) ||
-        (typeof m.is_correct === 'boolean' && m.is_correct);
-      const score = (m.feedback && typeof m.feedback.score_percent === 'number')
-        ? m.feedback.score_percent
-        : (typeof m.score_percent === 'number' ? m.score_percent : 100);
-      return f === true && score >= 50;
-    }).length;
-    // Cap: never force LOCK before the student has shown at least some mastery, but
-    // prevent an infinite EXPLORE loop after a hard floor of questions.
-    const minCorrectToLock = 1;
-    const retryCap = 6; // after 6 questions, move on regardless
-    if (questionsForGoal >= 3 && (correctForGoal >= minCorrectToLock || questionsForGoal >= retryCap)) {
+    // REVEAL done, concept card not yet → EXPLORE or LOCK.
+    // ℹ️ PLAYLENGTH CONTROL: we cap each goal at ~2-3 practice questions so a whole
+    // topic (4-5 goals) finishes in ~12-17 questions, not 20+. The HOOK prediction
+    // answer happens BEFORE the exam_definition, so we only count user answers that
+    // come AFTER the exam_definition — i.e. real EXPLORE practice, excluding HOOK.
+    //   - After 2 EXPLORE answered, if ≥1 correct → LOCK (complete, frame next goal)
+    //   - After 2 EXPLORE wrong                     → EXPLORE once (one re-teach q)
+    //   - After 3 EXPLORE answered (hard cap)       → LOCK regardless
+    let exploreAnswered = 0;
+    let exploreCorrect = 0;
+    let passedDef = false;
+    for (const m of chatHistory) {
+      const mType = m.message_type || m.type || (m.sender === 'ai' ? 'text' : '');
+      if (mType === 'exam_definition' || (m.message && /exam?( definition|def)?/i.test(String(m.message)) && String(m.sender) === 'ai')) {
+        passedDef = true;
+        continue;
+      }
+      if (passedDef && String(m.sender) === 'user') {
+        exploreAnswered++;
+        const f = (m.feedback && m.feedback.is_correct) || (typeof m.is_correct === 'boolean' && m.is_correct);
+        const score = (m.feedback && typeof m.feedback.score_percent === 'number') ? m.feedback.score_percent : (typeof m.score_percent === 'number' ? m.score_percent : 100);
+        if (f === true && score >= 50) exploreCorrect++;
+      }
+    }
+    const mastered = exploreCorrect >= 1;
+    const readyToLock = (exploreAnswered >= 2 && mastered) || exploreAnswered >= 3;
+    if (readyToLock) {
       return { phase: 'LOCK', goalIndex, goalTotal };
     }
     return { phase: 'EXPLORE', goalIndex, goalTotal };

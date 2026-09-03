@@ -892,9 +892,9 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 			}
 		})
 
-		// Backend safeguard: if current goal already has ≥5 questions answered, force predict_score
+		// Backend safeguard: if current goal already has ≥4 questions answered (HOOK + 3 EXPLORE), force predict_score
 		const questionsForCurrentGoal = currentGoal?.chat_goal_progress?.[0]?.num_questions || 0
-		if (currentGoal && questionsForCurrentGoal >= 5) {
+		if (currentGoal && questionsForCurrentGoal >= 4) {
 			const nextGoal = topicGoals.find(g => {
 				const p = g.chat_goal_progress?.[0]
 				return !p || !p.is_completed
@@ -948,6 +948,38 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 		console.log('📝 text_diagram:', aiResponse?.text_diagram ? JSON.stringify(aiResponse.text_diagram) : 'null/undefined')
 		console.log('🎬 youtube_video:', aiResponse?.youtube_video ? JSON.stringify(aiResponse.youtube_video) : 'null/undefined')
 		console.log('🖼️ google_image:', aiResponse?.google_image ? JSON.stringify(aiResponse.google_image) : 'null/undefined')
+
+		// ========== NORMALIZE BARE "visual" KEY → mermaid_diagram ==========
+		// DeepSeek sometimes emits the REVEAL visual under a top-level "visual" key
+		// instead of "mermaid_diagram". The saving/rendering pipeline only understands
+		// mermaid_diagram/text_diagram/google_image/youtube_video, so map "visual" onto
+		// mermaid_diagram when it carries a code block, and also surface any nested
+		// mermaid/text diagram the model put inside it. Without this the diagram JSON
+		// was emitted but silently dropped — the frontend never rendered it.
+		if (aiResponse && aiResponse.visual && !aiResponse.mermaid_diagram) {
+			const v = aiResponse.visual;
+			const diagramSource = (typeof v === 'object')
+				? (v.mermaid_diagram || v.text_diagram || (v.code ? v : null))
+				: null;
+			if (diagramSource && diagramSource.code) {
+				console.log('🌉 Normalizing bare "visual" key → mermaid_diagram');
+				aiResponse.mermaid_diagram = {
+					code: diagramSource.code,
+					title: diagramSource.title || diagramSource.name || (v.title || v.name || 'Diagram'),
+					explainer: diagramSource.explainer || v.explainer || '',
+					trigger: 'teaching'
+				};
+			} else if (v && typeof v === 'object' && v.code && !diagramSource) {
+				console.log('🌉 Mapping "visual" object with code → mermaid_diagram');
+				aiResponse.mermaid_diagram = {
+					code: v.code,
+					title: v.title || 'Diagram',
+					explainer: v.explainer || '',
+					trigger: 'teaching'
+				};
+			}
+		}
+		// ========== END NORMALIZE ==========
 		// ========== SMART INTENT & KEYWORD AUTO-DETECTOR ==========
 		// If user requested a video/image/diagram or said "I don't understand", and AI forgot to include media block, auto-populate it!
 		const userMsgLower = (message || '').toLowerCase();
@@ -1716,12 +1748,11 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 			// This replaces the old hardcoded "2 questions per goal" rule.
 			//
 			// 🔧 DETERMINISTIC BACKSTOP: goals must ALWAYS advance so the conversation can't
-			// stall. The model is unreliable at emitting next_step_type="predict_score" (the
-			// field isn't described in the prompt), so we guarantee forward motion once the
-			// student has answered enough questions for this goal (EXPLORE 3-5 + LOCK's
-			// teach-back + board question ≈ 5-7). After the floor, the goal completes and we
-			// FRAME the next goal automatically.
-			const Q_FLOOR_PER_GOAL = 5
+			// stall. cap EXPLORE at 2 questions (2 = complete; 2-wrong → 1 re-teach question).
+			// num_questions also counts the HOOK prediction answer, so the absolute floor is
+			// HOOK(1) + EXPLORE(3) = 4. After this the goal completes (past the EXPLORE gate)
+			// and we FRAME the next goal automatically.
+			const Q_FLOOR_PER_GOAL = 4
 			aiSignalsGoalComplete = aiResponse.evaluation?.next_step_type === 'predict_score'
 			const aiClosedGoal = !!aiResponse.concept_card // LOCK's final deliverable (optional accelerator)
 			const floorReached = (existingProgress?.num_questions || 0) + (isActualAnswer ? 1 : 0) >= Q_FLOOR_PER_GOAL
@@ -1855,6 +1886,35 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 			// 🔥 SESSION SUMMARY LOGIC: Only generate if ALL goals complete
 			if (completedGoalsCount >= totalGoalsCount && !currentGoal) {
 				console.log('\n🎉 ALL GOALS COMPLETED! Generating session summary...\n')
+
+				// 🎓 TOPIC COMPLETION GREETING: greet the user once, before the revision card.
+				// Persist it as an admin_chat row and surface it in the response so the student
+				// sees a clear "you finished this topic" moment, not just a silent card drop.
+				try {
+					const greetingMsg = `🎉 You've completed ${topic.title}! Here's your revision card — your one-stop summary to revise everything you just learned. Great work!`;
+					const savedGreeting = await prisma.admin_chat.create({
+						data: {
+							user_id: user_id,
+							sender: 'ai',
+							message: greetingMsg,
+							message_type: 'text',
+							emoji: '🎉',
+							images: [],
+							videos: [],
+							links: [],
+							options: []
+						},
+						select: {
+							id: true, sender: true, message: true, message_type: true,
+							options: true, diff_html: true, emoji: true,
+							images: true, videos: true, links: true, created_at: true
+						}
+					})
+					aiMessages.push(savedGreeting)
+					console.log('🎉 Topic completion greeting saved')
+				} catch (greetingErr) {
+					console.error('⚠️ Failed to save topic completion greeting:', greetingErr.message)
+				}
 
 				try {
 					// Generate session summary with updated goals
