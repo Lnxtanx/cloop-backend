@@ -113,8 +113,8 @@ test("HELP_REQUEST reaches the state machine as HELP", async () => {
   assert.strictEqual(r.intent, "HELP");
 });
 
-// ── the 😢 on a prediction that was never assessed ─────────────────────────
-test("no correction is shown for a phase that does not count toward mastery", async () => {
+// ── visual error correction is provided while mastery tallies are protected ─────
+test("error correction box is shown on incorrect answers while mastery tallies are protected", async () => {
   for (const phase of ["PROBE", "THEORY", "OBJECTIVES"]) {
     const state = { ...S.initialState(GOALS.length), phase };
     const r = await turn(state, "It is increase", {
@@ -123,8 +123,8 @@ test("no correction is shown for a phase that does not count toward mastery", as
       error_type: "Conceptual",
       diff_html: "<del>It is increase</del><ins>It will fizz more</ins>",
     });
-    assert.strictEqual(r.userCorrection, null, `${phase} still shows a red correction`);
-    assert.strictEqual(r.gradedThisTurn, false, `${phase} claims to have graded the answer`);
+    assert.ok(r.userCorrection, `${phase} must provide a visual error correction box`);
+    assert.strictEqual(r.gradedThisTurn, false, `${phase} claims to have graded mastery`);
   }
 });
 

@@ -50,16 +50,16 @@ async function generateTutorResponse({
       directiveGuidance = 'Acknowledge their probe answer warmly. In 1 sentence, explain the core mechanism with an everyday Indian analogy (e.g. cricket, cooking, building blocks). Then ask the first goal question.';
       break;
     case 'state_objectives':
-      directiveGuidance = 'In 1 sentence, state what the student will learn today. Ask an opening question to get started.';
+      directiveGuidance = 'Validate their previous answer warmly (e.g. "Spot on! It has fewer electrons."). In 1 sentence, state what we will master today. Then ask an opening question.';
       break;
     case 'open_goal_dialogue':
-      directiveGuidance = 'Connect to the goal in 1 brief sentence. Ask a focused open-ended question that requires the student to write their thought.';
+      directiveGuidance = 'Validate their previous answer warmly. Connect to the goal in 1 brief sentence and ask a focused open concept question.';
       break;
     case 'continue_dialogue':
-      directiveGuidance = 'Validate their response in 1 sentence. Then ask the next concept question. The student must write their answer.';
+      directiveGuidance = 'Validate their response clearly in 1 sentence. Then ask the next concept question. The student must write their answer.';
       break;
     case 'assess_with_mcq':
-      directiveGuidance = 'Assess understanding of this goal with one clean multiple-choice question. Provide 2 to 4 clear options with letters (A, B, C, D).';
+      directiveGuidance = 'Acknowledge their answer warmly (e.g. "Well done!"). Then assess understanding of this goal with one clean multiple-choice question with options (A, B, C).';
       break;
     case 'correct_and_reask':
       directiveGuidance = 'Acknowledge the attempt warmly, clarify the specific misconception in 1 sentence, and re-ask an easier version of the question.';
@@ -187,11 +187,12 @@ ${recentTurnsText ? `RECENT CHAT CONTEXT:\n${recentTurnsText}\n` : ''}
 STRICT GENERATION RULES:
 1. Produce 1 or 2 conversational message bubbles (ideally 1, maximum 2). Never more than 2 bubbles.
 2. WORD LIMIT: Every single bubble MUST BE strictly under 20 words. No long paragraphs!
-3. TERMINAL QUESTION: ${isWrap ? 'Do NOT ask any question.' : "The final bubble MUST end with an answerable question for the student (ending with '?')."}
-4. PEDAGOGY: When the student says "I don't know" or struggles, DO NOT ask riddles. EXPLAIN THE CONCEPT FIRST simply in bubble 1, then ask in bubble 2!
-5. ANTI-REPETITION: NEVER re-state the chapter overview or lesson objectives ("Today you will learn...") during mid-session turns or hints!
-6. Tone: Warm, natural, and encouraging. Never robotic.
-7. Output STRICT JSON only.
+3. VALIDATION MANDATE: When studentMessage answers the previous question, start bubble 1 with a clear, concise validation (e.g. "Spot on, fewer electrons!", "Exactly right!"). Never ignore what the student just answered!
+4. TERMINAL QUESTION: ${isWrap ? 'Do NOT ask any question.' : "The final bubble MUST end with an answerable question for the student (ending with '?')."}
+5. PEDAGOGY: When the student says "I don't know" or struggles, DO NOT ask riddles. EXPLAIN THE CONCEPT FIRST simply in bubble 1, then ask in bubble 2!
+6. ANTI-REPETITION: NEVER re-state the chapter overview or lesson objectives ("Today you will learn...") during mid-session turns or hints!
+7. Tone: Warm, natural, and encouraging. Never robotic.
+8. Output STRICT JSON only.
 
 ${schemaInstructions}`;
 
