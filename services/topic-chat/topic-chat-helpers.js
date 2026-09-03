@@ -333,17 +333,17 @@ async function generateTopicGreeting(topicTitle, topicContent, topicGoals = [], 
 
     const systemPrompt = `You are Cloop — a mastery-driven AI tutor starting a session on "${topicTitle}".
 
-This is a FRAME + HOOK turn. You must do TWO things in order:
+This is a FRAME + HOOK turn. Keep it SHORT — the student should be typing within seconds.
 
-PART 1 — FRAME (2 concise bubbles):
-1. The concept in plain words + why it matters / where students meet it in real life, combined in ONE bubble (2 short sentences).
-2. "By the end you'll be able to: (a)..., (b)..., (c)..." (3 objectives based on the goals below) in ONE bubble.
+PART 1 — FRAME (2 concise bubbles, EACH ≤ 40 words):
+1. The concept in plain words + why it matters, in 1–2 short sentences (ONE bubble).
+2. ONE line naming the destination ("By the end you'll cover what a force is, what it does, and the types you'll meet"). Do NOT list the objectives in prose — the green objectives card (session_frame) already shows them. 1 sentence only.
 
 DO NOT give the definition here. Name the destination, not the answer.
+DO NOT duplicate in prose what the session_frame card will display.
 
-PART 2 — HOOK (1 question after the FRAME):
-Ask ONE everyday scenario question. The student must COMMIT to a prediction.
-End with: "Hold that thought — we'll come back to it."
+PART 2 — HOOK (1 question, ≤ 40 words):
+Ask ONE everyday scenario question in a single sentence. The student must COMMIT to a prediction. End with: "Hold that thought — we'll come back to it."
 
 GOALS TO COVER:
 ${goalsOverview}
@@ -356,9 +356,9 @@ BOARD/CLASS: ${board} Class ${classLevel}
 Return VALID JSON:
 {
   "messages": [
-    { "message": "[FRAME bubble 1: concept in plain words + why it matters]", "message_type": "text" },
-    { "message": "[FRAME bubble 2: by the end you'll be able to...]", "message_type": "text" },
-    { "message": "[HOOK question + Hold that thought]", "message_type": "text" }
+    { "message": "[FRAME bubble 1: concept in plain words + why it matters — 1-2 short sentences]", "message_type": "text" },
+    { "message": "[FRAME bubble 2: one line naming the destination — 1 sentence, no objective list]", "message_type": "text" },
+    { "message": "[HOOK question — one sentence + Hold that thought]", "message_type": "text" }
   ],
   "session_frame": {
     "concept": "${topicTitle}",

@@ -1228,13 +1228,17 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 					console.error('Failed to update chat_process with inferred user correction:', e.message)
 				}
 
-				// Update the admin_chat placeholder to contain the corrected user bubble
+				// Update the admin_chat placeholder to contain the corrected user bubble.
+				// Keep the user's OWN raw words as the displayed `message` so the transcript
+				// always reflects what the student actually typed. The AI's rewritten answer
+				// lives in diff_html, shown as an annotation, never as a replacement for the
+				// user's text.
 				try {
 					await prisma.admin_chat.update({
 						where: { id: userMessage.id },
 						data: {
 							diff_html: inferredUserCorrection.diff_html,
-							message: inferredUserCorrection.complete_answer || userMessage.message,
+							message: message,
 							message_type: 'user_correction',
 							emoji: inferredUserCorrection.emoji || null,
 							options: []
@@ -1262,12 +1266,13 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 				}
 			})
 
-			// Update the admin_chat placeholder to contain the corrected user bubble (what frontend will display)
+			// Update the admin_chat placeholder to contain the corrected user bubble. Keep the
+			// user's OWN words as `message`; the AI's rewritten answer lives in diff_html.
 			await prisma.admin_chat.update({
 				where: { id: userMessage.id },
 				data: {
 					diff_html: userCorrection.diff_html,
-					message: userCorrection.complete_answer || userMessage.message,
+					message: message,
 					message_type: 'user_correction',
 					emoji: userCorrection.emoji || null,
 					options: []
@@ -1276,9 +1281,9 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 
 
 
-			// Refresh the userMessage object to reflect changes
+			// Refresh the userMessage object to reflect changes (message stays the user's raw text)
 			userMessage.diff_html = userCorrection.diff_html;
-			userMessage.message = userCorrection.complete_answer || userMessage.message;
+			userMessage.message = message;
 			userMessage.message_type = 'user_correction';
 			userMessage.options = [];
 			userMessage.emoji = userCorrection.emoji || null;
