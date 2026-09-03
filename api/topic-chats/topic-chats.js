@@ -574,6 +574,38 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 				}
 
 				console.log('✅ Greeting messages stored in database');
+
+				// 🔧 Persist a real `session_frame` CARd row. The greeting bubbles above are
+				// stored as message_type 'text', so determinePhase() never sees a
+				// 'session_frame' marker and `hasFrame` stays false → the phase machine is
+				// locked in FRAME forever (never advances to REVEAL/EXPLORE and never asks
+				// the next question). Emitting a dedicated card row fixes the gate.
+				if (sessionFrameData) {
+					try {
+						const frameCard = await prisma.admin_chat.create({
+							data: {
+								user_id,
+								sender: 'ai',
+								message: greetingData.session_frame?.concept ? `Topic: ${greetingData.session_frame.concept}` : '',
+								message_type: 'session_frame',
+								diff_html: JSON.stringify({ session_frame: sessionFrameData, hook_prediction: hookPredictionData }),
+								options: [],
+								images: [],
+								videos: [],
+								links: []
+							}
+						});
+						await prisma.chat_goal_progress.upsert({
+							where: { chat_id_goal_id_user_id: { chat_id: frameCard.id, goal_id: firstGoal.id, user_id } },
+							update: {},
+							create: { chat_id: frameCard.id, goal_id: firstGoal.id, user_id, is_completed: false, num_questions: 0, num_correct: 0 }
+						});
+						console.log('🔖 session_frame card saved (greeting)');
+					} catch (frameErr) {
+						console.error('❌ Error saving session_frame card:', frameErr.message);
+					}
+				}
+
 				console.log('=========================================\n');
 			} else {
 				console.log('\n⚠️ NOTE: Greeting NOT stored (no goals exist yet).');
