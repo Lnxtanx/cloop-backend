@@ -408,6 +408,23 @@ async function generateTopicChatResponse({
       parsed.evaluation = { phase };
     }
 
+    // Socratic guard: a conversational turn must NEVER end without a question, or the
+    // student is left with no prompt (a "stale" dead-end). Turns that legitimately emit
+    // a revision sheet / score prediction are the only ones exempt. If the AI forgot the
+    // closing question, re-ask the last REAL question it asked (echoing the AI's own
+    // wording — never hardcoded teaching text) so the flow keeps moving.
+    const exemptCard = parsed.revision_sheet || parsed.score_prediction;
+    const conversational = !exemptCard && !isWrapTurn;
+    if (conversational) {
+      const texts = (parsed.messages || []).filter((m) => m && typeof m.message === 'string' && m.message.trim());
+      const lastText = texts[texts.length - 1];
+      const hasQuestion = /[?。？]/.test(lastText?.message || '');
+      if (!hasQuestion && lastQuestion && lastQuestion.trim()) {
+        parsed.messages.push({ message: `Let's keep going. ${lastQuestion.trim()}`, message_type: 'text' });
+        console.log('[topic_chat] Appended re-ask of last question (turn ended without one)');
+      }
+    }
+
     console.log(`✓ Topic chat response | Phase: ${phase} | Topic: ${topicTitle}`);
 
     return parsed;

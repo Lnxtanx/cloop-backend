@@ -104,7 +104,15 @@ Return JSON matching this exact structure:
   "diff_html": string or null,
   "complete_answer": string,
   "correct_term": string or null
-}`;
+}
+
+diff_html STRICT RULES:
+- It is ONLY the student's sentence re-written with in-place <del> and <ins> marks.
+  Example: "<del>the snake will strave</del><ins>the snake will starve</ins>".
+- It MUST NOT contain any grading commentary, explanation, feedback, or sentence
+  about the answer. All explanation belongs in complete_answer, NEVER in diff_html.
+- If the answer has nothing worth striking, set diff_html = null.
+- Strip the original question phrasing; only annotate the student's own words.`;
 
   try {
     const rawText = await invokeModel(
@@ -124,13 +132,20 @@ Return JSON matching this exact structure:
     // Grounded rule: is_correct is derived from rubric, not model claim
     const isCorrect = c === 1 && m >= 0.5;
 
+    // Only trust diff_html that is a REAL strikethrough annotation (<del>/<ins>).
+    // A plain-text string here is grader commentary ("The student's answer does not
+    // address...") that must NEVER surface in the "Corrections" box.
+    const modelDiff = typeof raw.diff_html === 'string' && /<del>|<ins>/.test(raw.diff_html)
+      ? raw.diff_html
+      : null;
+
     return {
       is_correct: isCorrect,
       correctness: c,
       completeness: m,
       score_percent: typeof raw.score_percent === 'number' ? raw.score_percent : (isCorrect ? 100 : Math.round((c * 0.6 + m * 0.4) * 100)),
       error_type: isCorrect ? null : (raw.error_type || "Conceptual Error"),
-      diff_html: raw.diff_html || buildFallbackDiffHtml(answer, isCorrect, raw.complete_answer, raw.correct_term),
+      diff_html: modelDiff || buildFallbackDiffHtml(answer, isCorrect, raw.complete_answer, raw.correct_term),
       complete_answer: raw.complete_answer || answer,
       correct_term: raw.correct_term || null
     };

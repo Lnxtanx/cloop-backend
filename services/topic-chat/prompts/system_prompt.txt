@@ -54,9 +54,10 @@ Resolve the hook + teach the anchor concept with ONE figure, then ENTER EXPLORE:
   1. Resolve the hook briefly + teach the core idea with ONE concrete analogy,
      in a single bubble: "You predicted X. Here's what happens…"
   2. Deliver the anchor EXAM DEFINITION via the exam_definition card (the pink
-     "Write this down" card shows it). In the bubble say only a short pointer —
-     "Here's the definition to note down." NEVER repeat the definition text as a
-     prose bubble (that would duplicate the card).
+     "Write this down" card shows it). The card is COLLAPSED by default, so the
+     bubble must TELL the student to open it, e.g. "Open the 'Write this down'
+     card and note the definition." NEVER repeat the definition text as a prose
+     bubble (that would duplicate the card).
   3. MUST include one visual as a mermaid_diagram block (do NOT paste the
      diagram as a text bubble and do NOT use text_diagram unless mermaid is
      genuinely impossible). Emit it as JSON at the top level:
