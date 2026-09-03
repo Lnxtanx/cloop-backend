@@ -77,6 +77,55 @@ function normalizeParsedResponse(parsed, userMessage) {
 }
 
 /**
+ * True if the given text looks like a genuine forward question (used to decide
+ * whether to trust a free-text fallback instead of the deterministic banker).
+ */
+function isForwardQuestion(text) {
+  if (!text || typeof text !== 'string') return false;
+  const t = text.trim();
+  if (!t) return false;
+  if (t.length < 8) return false;
+  // Must actually ask something.
+  if (!/\?/.test(t)) return false;
+  return true;
+}
+
+/**
+ * Deterministic, phase-appropriate next question. Used only as a last-resort so the
+ * tutor NEVER dead-ends: it always keeps the conversation moving (re-ask, probe the
+ * same goal differently, or advance toward the next goal) instead of handing the
+ * student a blank message.
+ */
+function buildFallbackQuestion({ phase, currentGoal, topicTitle, lastQuestion, goalIndex, goalTotal, topicGoals = [], hookPrediction }) {
+  const goalTitle = currentGoal?.title?.trim() || null;
+  const topic = topicTitle?.trim() || 'this topic';
+
+  // Prefer echoing the last real question — a repeated question is still a question
+  // and keeps the arc alive (the student knows exactly what to answer).
+  if (lastQuestion && lastQuestion.trim() && /[?。？]/.test(lastQuestion)) {
+    return `Let's keep going. ${lastQuestion.trim().replace(/\s+$/g, '')}`;
+  }
+
+  // Phase-appropriate fallbacks so we always ADVANCE, not just stall.
+  switch (phase) {
+    case 'HOOK':
+      return `Before we dive in — think of ${topic} and make a quick prediction. What do you expect will happen in a simple everyday example? Give it your best guess.`;
+    case 'REVEAL':
+      return `Here's the core idea for ${topic}. Tell me in your own words what the most important thing about it is.`;
+    case 'LOCK':
+      return `Quick check — can you explain ${goalTitle || topic} in one line, like you're teaching a younger student?`;
+    case 'WRAP':
+      return `We're at the end of this topic. Can you recap in your own words what we learned and where you'd still like a quick recap?`;
+    case 'EXPLORE':
+    default:
+      if (goalTitle) {
+        return `Let's keep exploring ${goalTitle}. In your own words, what's the key idea here, and can you give one example?`;
+      }
+      return `Nice progress. What's one thing about ${topic} that you now understand better, and one thing you'd still like to clear up?`;
+  }
+}
+
+/**
  * Topic Chat Service v2 — Teaching Arc
  * FRAME → HOOK → REVEAL → EXPLORE → LOCK → WRAP
  */
@@ -383,8 +432,8 @@ async function generateTopicChatResponse({
   } catch (error) {
     console.error('Error generating topic chat response:', error);
     // Graceful fallback: try ONE free-form call (no response_format) — DeepSeek sometimes
-    // fails under strict JSON mode but succeeds with plain text. If that yields anything
-    // usable, deliver it rather than a generic error.
+    // fails under strict JSON mode but succeeds with plain text.
+    let fallbackText = null;
     try {
       console.log('[topic_chat] Retrying once in free-text mode after JSON failures');
       const freeText = await invokeModel(systemPrompt || '', messages || [], {
@@ -396,23 +445,51 @@ async function generateTopicChatResponse({
         subFeature: 'tutor_turn_fallback'
       });
       if (freeText && freeText.trim()) {
-        const wrapper = { messages: [{ message: freeText.trim(), message_type: 'text' }] };
-        const recovered = normalizeParsedResponse(wrapper, userMessage);
-        if (recovered?.messages?.length) {
-          console.log('[topic_chat] Free-text fallback produced a usable message');
-          return recovered;
-        }
+        fallbackText = freeText.trim();
       }
     } catch (fallbackErr) {
       console.error('[topic_chat] Free-text fallback also failed:', fallbackErr.message);
     }
-    // Final resort: re-ask the last question so the turn never dead-ends silently.
-    const q = lastQuestion || "Let's keep going — here's the question again.";
-    return {
-      messages: [
-        { message: q, message_type: "text" }
-      ]
-    };
+
+    // The tutor is a proactive Socratic tutor: every non-WRAP turn MUST end with a
+    // question so the student always knows what to answer — never a dead-ended,
+    // empty, or garbage message. If the free-text fallback didn't produce a real
+    // question, emit a deterministic, forward-moving question for the current phase.
+    const isWrapTurn = phase === 'WRAP';
+    let q = buildFallbackQuestion({
+      phase, currentGoal, topicTitle, lastQuestion,
+      goalIndex, goalTotal, topicGoals, hookPrediction
+    });
+
+    if (fallbackText && !isWrapTurn && isForwardQuestion(fallbackText)) {
+      // Use the model's free-text only if it is a genuine question we can trust.
+      q = fallbackText;
+      const wrapper = { messages: [{ message: fallbackText, message_type: 'text' }] };
+      const recovered = normalizeParsedResponse(wrapper, userMessage);
+      if (recovered?.messages?.length) {
+        console.log('[topic_chat] Free-text fallback produced a usable message');
+        return recovered;
+      }
+    }
+
+    // WRAP always needs the revision artefact (question prohibited). If the free-text
+    // fallback produced nothing for WRAP, hand back a graceful re-ask instead of a blank.
+    if (isWrapTurn && fallbackText && fallbackText.trim()) {
+      const wrapper = { messages: [{ message: fallbackText, message_type: 'text' }] };
+      const recovered = normalizeParsedResponse(wrapper, userMessage);
+      if (recovered?.messages?.length) {
+        console.log('[topic_chat] Free-text fallback produced the WRAP message');
+        return recovered;
+      }
+    }
+
+    // Assemble the deterministic fallback turn. It always carries a question (or, on
+    // WRAP, the "let's wrap up" prompt) so the conversation never dead-ends.
+    const fallbackTurn = isWrapTurn
+      ? { messages: [{ message: "Great — that was the whole topic. Can you recap in your own words what we learned and where you'd still like a quick recap?", message_type: "text" }] }
+      : { messages: [{ message: q, message_type: "text" }] };
+    console.log(`[topic_chat] Using deterministic fallback question: ${q}`);
+    return fallbackTurn;
   }
 }
 
