@@ -8,6 +8,8 @@ const { createLearningTurn, incrementExplainCount, calculateMasteryScore } = req
 const { searchYouTube, searchImages } = require('../../services/media-search')
 
 const prisma = require('../../lib/prisma')
+const { handleTopicChatMessageV2 } = require('./topic-chats-v2')
+
 // Note: Total of 10 questions will be asked across ALL goals (not per goal)
 // The AI will intelligently distribute questions across goals
 
@@ -699,6 +701,11 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 
 	if (!message && !file_url) {
 		return res.status(400).json({ error: 'Message or file is required' })
+	}
+
+	// Feature Flag: Tutor-Core V2 Pipeline (Zero-Downtime Safe Switch)
+	if (process.env.ENABLE_TUTOR_CORE_V2 === 'true') {
+		return handleTopicChatMessageV2(req, res);
 	}
 
 	try {
