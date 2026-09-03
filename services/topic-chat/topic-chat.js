@@ -130,6 +130,8 @@ async function generateTopicChatResponse({
   // causing "systemPrompt is not defined" which killed the fallback on JSON failures.
   let systemPrompt = null;
   let messages = [];
+  let phase = null;
+  let isWrapTurn = false;
   try {
     const analysis = analyzeChatHistory(chatHistory);
     lastQuestion = analysis.lastQuestion;
@@ -142,7 +144,8 @@ async function generateTopicChatResponse({
     const allGoalsCompleted = completedGoalsCount === topicGoals.length;
 
     // Determine current phase
-    const { phase, goalIndex, goalTotal } = determinePhase(chatHistory, topicGoals, currentGoal, userMessage);
+    const { phase: phaseVal, goalIndex, goalTotal } = determinePhase(chatHistory, topicGoals, currentGoal, userMessage);
+    phase = phaseVal;
 
     // Calculate turns since last teaching beat
     let turnsSinceTeaching = analysis.turnsSinceTeaching || 0;
@@ -229,7 +232,7 @@ async function generateTopicChatResponse({
     // WRAP sentinel: the route signals "all goals complete — generate the end-of-session
     // revision artefact". Pass the model an explicit directive (an empty string invites the
     // model to re-teach / ask another question). The model must emit revision_sheet + summary.
-    const isWrapTurn = phase === 'WRAP' && (userMessage === '__SESSION_COMPLETE__' || userMessage === '');
+    isWrapTurn = phase === 'WRAP' && (userMessage === '__SESSION_COMPLETE__' || userMessage === '');
     const userTurn = isWrapTurn
       ? 'SESSION COMPLETE. All learning goals are done. Emit the revision_sheet covering EVERY concept studied in this session, plus session_metrics with the overall score breakdown. Do NOT ask any further new question — this is the final turn. Close with ONE concrete closing choice (name two specific things from this session and ask which to revisit); do not ask permission to continue.'
       : userMessage;
