@@ -333,17 +333,15 @@ async function generateTopicGreeting(topicTitle, topicContent, topicGoals = [], 
 
     const systemPrompt = `You are Cloop — a mastery-driven AI tutor starting a session on "${topicTitle}".
 
-This is a FRAME + HOOK turn. Keep it SHORT — the student should be typing within seconds.
+This is a FRAME + HOOK turn. Return EXACTLY TWO message bubbles — nothing more:
 
-PART 1 — FRAME (2 concise bubbles, EACH ≤ 40 words):
-1. The concept in plain words + why it matters, in 1–2 short sentences (ONE bubble).
-2. ONE line naming the destination ("By the end you'll cover what a force is, what it does, and the types you'll meet"). Do NOT list the objectives in prose — the green objectives card (session_frame) already shows them. 1 sentence only.
+BUBBLE 1 — INTRO (≤ 40 words):
+The concept in plain words + why it matters, in 1–2 short sentences. Name the
+destination, NOT the answer. Do NOT list the learning objectives here.
 
-DO NOT give the definition here. Name the destination, not the answer.
-DO NOT duplicate in prose what the session_frame card will display.
-
-PART 2 — HOOK (1 question, ≤ 40 words):
-Ask ONE everyday scenario question in a single sentence. The student must COMMIT to a prediction. Do NOT append any "hold that thought" remark to the question.
+BUBBLE 2 — HOOK QUESTION (≤ 40 words):
+One everyday scenario question in a single sentence. The student must COMMIT to a
+prediction. Do NOT append any "hold that thought" remark.
 
 GOALS TO COVER:
 ${goalsOverview}
@@ -353,18 +351,12 @@ ${topicSummary}
 
 BOARD/CLASS: ${board} Class ${classLevel}
 
-Return VALID JSON:
+Return VALID JSON with EXACTLY TWO messages:
 {
   "messages": [
-    { "message": "[FRAME bubble 1: concept in plain words + why it matters — 1-2 short sentences]", "message_type": "text" },
-    { "message": "[FRAME bubble 2: one line naming the destination — 1 sentence, no objective list]", "message_type": "text" },
-    { "message": "[HOOK question — one sentence, no 'hold that thought' remark]", "message_type": "text" }
+    { "message": "[INTRO: concept in plain words + why it matters — 1-2 short sentences]", "message_type": "text" },
+    { "message": "[HOOK: one everyday scenario question — one sentence]", "message_type": "text" }
   ],
-  "session_frame": {
-    "concept": "${topicTitle}",
-    "why_it_matters": "[1 sentence]",
-    "objectives": ["(a)...", "(b)...", "(c)..."]
-  },
   "hook_prediction": {
     "scenario": "[the scenario described in the hook question]",
     "student_prediction": null,
@@ -378,7 +370,7 @@ Return VALID JSON:
 
     const parsed = extractJson(responseText);
 
-    if (!parsed || !parsed.messages || parsed.messages.length < 3) {
+    if (!parsed || !parsed.messages || parsed.messages.length < 2) {
       throw new Error('Failed to extract valid JSON greeting');
     }
 
@@ -387,8 +379,7 @@ Return VALID JSON:
     console.error('Error generating greeting:', error);
     return {
       messages: [
-        { message: `Let's start learning about ${topicTitle}: it's how living things are connected and why it matters.`, message_type: "text" },
-        { message: `By the end, you'll be able to understand the key ideas and apply them.`, message_type: "text" },
+        { message: `Let's start learning about ${topicTitle}: how human actions shape the world we live in.`, message_type: "text" },
         { message: `Quick question first — what do you already know about ${topicTitle}?`, message_type: "text" }
       ]
     };

@@ -490,25 +490,12 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 				const firstGoal = topicGoals[0];
 
 				// Store session_frame and hook_prediction data in diff_html as JSON
-				const sessionFrameData = greetingData.session_frame || null;
 				const hookPredictionData = greetingData.hook_prediction || null;
 
 				// Store each greeting message in database
 				for (let i = 0; i < initialGreeting.length; i++) {
 					const msg = initialGreeting[i];
-					// Determine message_type: use the type from the greeting response
-					// For the hook question, attach the session_frame/hook_prediction data
-					const isLastMsg = i === initialGreeting.length - 1;
 					const messageType = msg.message_type || 'text';
-
-					// Store extra data as diff_html JSON for special message types
-					let diffHtml = null;
-					if (isLastMsg && sessionFrameData) {
-						diffHtml = JSON.stringify({
-							session_frame: sessionFrameData,
-							hook_prediction: hookPredictionData
-						});
-					}
 
 					const chatRecord = await prisma.admin_chat.create({
 						data: {
@@ -517,7 +504,7 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 							message_type: messageType,
 							emoji: msg.emoji || null,
 							options: optionsToStrings(msg.options),
-							diff_html: diffHtml,
+							diff_html: null,
 							users: {
 								connect: { user_id: user_id }
 							}
@@ -546,35 +533,34 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 
 				console.log('✅ Greeting messages stored in database');
 
-				// 🔧 Persist a real `session_frame` CARd row. The greeting bubbles above are
-				// stored as message_type 'text', so determinePhase() never sees a
-				// 'session_frame' marker and `hasFrame` stays false → the phase machine is
-				// locked in FRAME forever (never advances to REVEAL/EXPLORE and never asks
-				// the next question). Emitting a dedicated card row fixes the gate.
-				if (sessionFrameData) {
-					try {
-						const frameCard = await prisma.admin_chat.create({
-							data: {
-								user_id,
-								sender: 'ai',
-								message: greetingData.session_frame?.concept ? `Topic: ${greetingData.session_frame.concept}` : '',
-								message_type: 'session_frame',
-								diff_html: JSON.stringify({ session_frame: sessionFrameData, hook_prediction: hookPredictionData }),
-								options: [],
-								images: [],
-								videos: [],
-								links: []
-							}
-						});
-						await prisma.chat_goal_progress.upsert({
-							where: { chat_id_goal_id_user_id: { chat_id: frameCard.id, goal_id: firstGoal.id, user_id } },
-							update: {},
-							create: { chat_id: frameCard.id, goal_id: firstGoal.id, user_id, is_completed: false, num_questions: 0, num_correct: 0 }
-						});
-						console.log('🔖 session_frame card saved (greeting)');
-					} catch (frameErr) {
-						console.error('❌ Error saving session_frame card:', frameErr.message);
-					}
+				// 🔧 Persist a `session_frame` MARKER row. It is NOT rendered as a card by
+				// the frontend — it exists only so determinePhase() sees a 'session_frame'
+				// marker and `hasFrame` becomes true (otherwise the phase machine is locked
+				// in FRAME forever and never advances to REVEAL/EXPLORE). The card body is
+				// intentionally empty; the objectives now live in the Goals bar, and the
+				// opening turn stays 2 clean AI bubbles (intro + question).
+				try {
+					const frameCard = await prisma.admin_chat.create({
+						data: {
+							user_id,
+							sender: 'ai',
+							message: '',
+							message_type: 'session_frame',
+							diff_html: hookPredictionData ? JSON.stringify({ hook_prediction: hookPredictionData }) : null,
+							options: [],
+							images: [],
+							videos: [],
+							links: []
+						}
+					});
+					await prisma.chat_goal_progress.upsert({
+						where: { chat_id_goal_id_user_id: { chat_id: frameCard.id, goal_id: firstGoal.id, user_id } },
+						update: {},
+						create: { chat_id: frameCard.id, goal_id: firstGoal.id, user_id, is_completed: false, num_questions: 0, num_correct: 0 }
+					});
+					console.log('🔖 session_frame marker saved (greeting)');
+				} catch (frameErr) {
+					console.error('❌ Error saving session_frame marker:', frameErr.message);
 				}
 
 				console.log('=========================================\n');
