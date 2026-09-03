@@ -231,7 +231,7 @@ async function generateTopicChatResponse({
     // model to re-teach / ask another question). The model must emit revision_sheet + summary.
     const isWrapTurn = phase === 'WRAP' && (userMessage === '__SESSION_COMPLETE__' || userMessage === '');
     const userTurn = isWrapTurn
-      ? 'SESSION COMPLETE. All learning goals are done. Emit the revision_sheet covering EVERY concept studied in this session, plus session_metrics with the overall score breakdown. Do NOT ask any further question — this is the final turn.'
+      ? 'SESSION COMPLETE. All learning goals are done. Emit the revision_sheet covering EVERY concept studied in this session, plus session_metrics with the overall score breakdown. Do NOT ask any further new question — this is the final turn. Close with ONE concrete closing choice (name two specific things from this session and ask which to revisit); do not ask permission to continue.'
       : userMessage;
     messages.push({ role: 'user', content: userTurn });
 
@@ -406,23 +406,6 @@ async function generateTopicChatResponse({
       parsed.evaluation.phase = phase;
     } else {
       parsed.evaluation = { phase };
-    }
-
-    // Socratic guard: a conversational turn must NEVER end without a question, or the
-    // student is left with no prompt (a "stale" dead-end). Turns that legitimately emit
-    // a revision sheet / score prediction are the only ones exempt. If the AI forgot the
-    // closing question, re-ask the last REAL question it asked (echoing the AI's own
-    // wording — never hardcoded teaching text) so the flow keeps moving.
-    const exemptCard = parsed.revision_sheet || parsed.score_prediction;
-    const conversational = !exemptCard && !isWrapTurn;
-    if (conversational) {
-      const texts = (parsed.messages || []).filter((m) => m && typeof m.message === 'string' && m.message.trim());
-      const lastText = texts[texts.length - 1];
-      const hasQuestion = /[?。？]/.test(lastText?.message || '');
-      if (!hasQuestion && lastQuestion && lastQuestion.trim()) {
-        parsed.messages.push({ message: `Let's keep going. ${lastQuestion.trim()}`, message_type: 'text' });
-        console.log('[topic_chat] Appended re-ask of last question (turn ended without one)');
-      }
     }
 
     console.log(`✓ Topic chat response | Phase: ${phase} | Topic: ${topicTitle}`);
