@@ -137,7 +137,10 @@ function determinePhase(chatHistory, topicGoals, currentGoal, userMessage) {
       }
     }
     const mastered = exploreCorrect >= 1;
-    const readyToLock = (exploreAnswered >= 2 && mastered) || exploreAnswered >= 3;
+    // Lock as soon as the student shows real understanding (1 correct EXPLORE answer),
+    // and hard-cap EXPLORE at 3 practice answers so a wrong streak can't balloon the
+    // topic into 20+ repetitive questions.
+    const readyToLock = mastered || exploreAnswered >= 3;
     if (readyToLock) {
       return { phase: 'LOCK', goalIndex, goalTotal };
     }

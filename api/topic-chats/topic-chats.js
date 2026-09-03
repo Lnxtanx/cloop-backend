@@ -924,9 +924,9 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 			}
 		})
 
-		// Backend safeguard: if current goal already has ≥4 questions answered (HOOK + 3 EXPLORE), force predict_score
+		// Backend safeguard: if current goal already has ≥3 questions answered (HOOK + 2 EXPLORE), force predict_score
 		const questionsForCurrentGoal = currentGoal?.chat_goal_progress?.[0]?.num_questions || 0
-		if (currentGoal && questionsForCurrentGoal >= 4) {
+		if (currentGoal && questionsForCurrentGoal >= 3) {
 			const nextGoal = topicGoals.find(g => {
 				const p = g.chat_goal_progress?.[0]
 				return !p || !p.is_completed
@@ -1780,11 +1780,12 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 			// This replaces the old hardcoded "2 questions per goal" rule.
 			//
 			// 🔧 DETERMINISTIC BACKSTOP: goals must ALWAYS advance so the conversation can't
-			// stall. cap EXPLORE at 2 questions (2 = complete; 2-wrong → 1 re-teach question).
-			// num_questions also counts the HOOK prediction answer, so the absolute floor is
-			// HOOK(1) + EXPLORE(3) = 4. After this the goal completes (past the EXPLORE gate)
-			// and we FRAME the next goal automatically.
-			const Q_FLOOR_PER_GOAL = 4
+			// stall. cap EXPLORE at ~2 practice questions so each goal is ~2-3 questions
+			// total and a whole topic (4-5 goals) finishes in ~10-15 questions, avoiding
+			// repetition. num_questions also counts the HOOK prediction answer, so the
+			// absolute floor is HOOK(1) + EXPLORE(2) = 3. Once past this we FRAME the
+			// next goal automatically and end with the revision sheet.
+			const Q_FLOOR_PER_GOAL = 3
 			aiSignalsGoalComplete = aiResponse.evaluation?.next_step_type === 'predict_score'
 			const aiClosedGoal = !!aiResponse.concept_card // LOCK's final deliverable (optional accelerator)
 			const floorReached = (existingProgress?.num_questions || 0) + (isActualAnswer ? 1 : 0) >= Q_FLOOR_PER_GOAL
