@@ -1697,8 +1697,20 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 			}
 
 			// Phase-based goal completion: goal is complete when AI signals next_step_type = 'predict_score'
-			// This replaces the old hardcoded "2 questions per goal" rule
+			// This replaces the old hardcoded "2 questions per goal" rule.
+			//
+			// 🔧 DETERMINISTIC BACKSTOP: goals must ALWAYS advance so the conversation can't
+			// stall. The model is unreliable at emitting next_step_type="predict_score" (the
+			// field isn't described in the prompt), so we guarantee forward motion once the
+			// student has answered enough questions for this goal (EXPLORE 3-5 + LOCK's
+			// teach-back + board question ≈ 5-7). After the floor, the goal completes and we
+			// FRAME the next goal automatically.
+			const Q_FLOOR_PER_GOAL = 5
 			aiSignalsGoalComplete = aiResponse.evaluation?.next_step_type === 'predict_score'
+			const aiClosedGoal = !!aiResponse.concept_card // LOCK's final deliverable (optional accelerator)
+			const floorReached = (existingProgress?.num_questions || 0) + (isActualAnswer ? 1 : 0) >= Q_FLOOR_PER_GOAL
+			const backstopComplete = aiClosedGoal || floorReached
+			aiSignalsGoalComplete = aiSignalsGoalComplete || backstopComplete
 			if (aiSignalsGoalComplete) justCompletedGoal = currentGoal
 
 			// 🔧 FIX: Update the progress record specifically for THIS user message
@@ -2069,13 +2081,21 @@ Write a SHORT 2-3 sentence performance summary for the student.
 
 					if (followUpResponse && followUpResponse.messages) {
 						for (const fuMsg of followUpResponse.messages) {
+							const fuMsgText = (fuMsg.message ?? '') || '';
+							const fuMsgType = fuMsg.message_type || fuMsg.type || 'text';
+							// Skip empty plain bubbles (same guard as saveAndLinkAiMessage) so a
+							// follow-up turn never inserts an "empty..." artifact.
+							if (!fuMsgText && fuMsgType === 'text' && !(fuMsg.options && fuMsg.options.length)) {
+								console.warn('[topic-chats] Skipping empty follow-up AI bubble');
+								continue;
+							}
 							const savedFuMsg = await prisma.admin_chat.create({
 								data: {
 									user_id: user_id,
 									sender: 'ai',
-									message: fuMsg.message,
-									message_type: fuMsg.message_type || 'text',
-									options: fuMsg.options || [],
+									message: fuMsgText,
+									message_type: fuMsgType,
+									options: optionsToStrings(fuMsg.options || []),
 									diff_html: null,
 									emoji: fuMsg.emoji || null,
 									images: [],
