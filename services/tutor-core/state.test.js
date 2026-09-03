@@ -77,12 +77,29 @@ test("every goal is taught, and the session ends", () => {
   }
 });
 
-test("a long session still terminates and still produces a report", () => {
+test("a student who never answers still reaches a summary", () => {
   let s = S.initialState(5);
-  for (let i = 0; i < 300 && s.phase !== "DONE"; i++) s = S.advance(s, { intent: "IDK" });
+  for (let i = 0; i < 300 && s.phase !== "DONE"; i++) {
+    s = S.advance(s, { intent: "IDK" });
+    s = { ...s, lastInstruction: S.instructionFor(s, { intent: "IDK" }) };
+  }
   assert.strictEqual(s.phase, "DONE");
+  // The stuck-student escape walks the arc to its proper end rather than
+  // letting the turn cap cut the session off, so this now ends "complete".
+  assert.strictEqual(s.endedReason, "complete");
+  const r = buildReport(s, goals(5));
+  assert.strictEqual(r.per_goal.length, 5);
+  assert.strictEqual(r.not_covered.length, 5, "nothing was answered, so nothing was covered");
+});
+
+test("the turn cap still stops a session that would otherwise run forever", () => {
+  // Off-topic strikes close at 3, and answers advance, so the cap is reached
+  // by a student who keeps answering an unbounded topic. Force the condition
+  // directly: the cap must hold regardless of how the session got there.
+  let s = { ...S.initialState(5), totalTurns: S.MAX_TURNS - 1 };
+  s = S.advance(s, { intent: "ANSWER", correct: true });
+  assert.strictEqual(s.phase, "WRAP");
   assert.strictEqual(s.endedReason, "turn_limit");
-  assert.ok(buildReport(s, goals(5)).per_goal.length === 5);
 });
 
 // ── the rules that were breaking sessions ──────────────────────────────────

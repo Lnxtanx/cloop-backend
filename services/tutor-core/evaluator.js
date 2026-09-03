@@ -1,4 +1,5 @@
 const { invokeModel, extractJson } = require('../ai/deepseek-client');
+const { applyGradingGuards, LANGUAGE_ONLY_ERRORS } = require('./evaluator-guards');
 
 /**
  * Escape HTML special characters for safe rendering in diff_html
@@ -120,23 +121,33 @@ ${topicContent ? `TOPIC SUMMARY: ${topicContent.substring(0, 300)}...` : ''}
 INTENT CLASSIFICATION RULES:
 - "ANSWER": ANY attempt to answer the question, including single digits ("2", "3"), option letters ("A", "b"), single words ("covalent", "friction"), formulas, or full sentences. Never classify short answers or numbers as GIBBERISH!
 - "ACK": Student acknowledges without answering (e.g. "ok", "okay", "got it", "continue", "next", "yes", "understood").
-- "HELP_REQUEST": Student expresses confusion or asks for help (e.g. "explain", "i don't understand", "idk", "give me a hint", "what does that mean?").
+- "HELP_REQUEST": Student asks to be taught again (e.g. "explain", "i don't understand", "what does that mean?", "can you say it another way?").
+- "IDK": Student has no answer to offer (e.g. "idk", "i don't know", "no idea", "not sure", "pass", "?"). These deserve a hint and an easier question, not a re-explanation.
 - "OFF_TOPIC": Student says something unrelated to the topic or asks conversational small talk (e.g. "who made you?", "what is your favorite game?").
 - "GIBBERISH": Pure keyboard smash or random noise (e.g. "asdfghjk", "zzz12345!@#").
 
 GRADING RULES (Only evaluate when intent is "ANSWER"):
-- If the student grasped the core intuition even with minor phrasing or spelling issues: is_correct = true, score_percent >= 80.
-- If incorrect, incomplete, or contains conceptual errors: is_correct = false, score_percent < 70.
-- When is_correct is false, ALWAYS provide diff_html using <del>student error</del><ins>correct text</ins>. Keep the correction surgical and under 15 words.
+- YOU ARE GRADING THE CONCEPT, NOT THE ENGLISH. Grammar, spelling, tense, capitalisation,
+  articles and word order are NEVER grounds for is_correct = false. A student who writes
+  "It is increase" has understood that the fizzing increases: that is is_correct = true.
+  So is "water and salt is formed", "it become gas", "co2", "the metal displace copper".
+  Mark an answer wrong ONLY when the underlying science or maths is wrong, missing, or
+  contradicts the goal.
+- If the student grasped the core idea in any wording at all: is_correct = true, score_percent >= 80.
+- If the science itself is wrong, or the answer is empty of content: is_correct = false, score_percent < 70.
+- error_type must name a CONTENT fault: "Conceptual", "Factual", "Incomplete" or "Calculation".
+  Never return "Spelling" as the reason an answer is wrong.
+- When is_correct is false, ALWAYS provide diff_html using <del>student error</del><ins>correct text</ins>.
+  Correct the IDEA, not the phrasing. Keep it surgical and under 15 words.
 - If the student chose an option letter, use the resolved concept text in the diff, NEVER just the letter alone!
 - When is_correct is true, diff_html MUST be null.
 
 Output STRICT JSON matching this schema:
 {
-  "intent": "ANSWER" | "ACK" | "HELP_REQUEST" | "OFF_TOPIC" | "GIBBERISH",
+  "intent": "ANSWER" | "ACK" | "HELP_REQUEST" | "IDK" | "OFF_TOPIC" | "GIBBERISH",
   "is_correct": boolean | null,
   "score_percent": number | null,
-  "error_type": "Conceptual" | "Factual" | "Incomplete" | "Spelling" | "Calculation" | null,
+  "error_type": "Conceptual" | "Factual" | "Incomplete" | "Calculation" | null,
   "diff_html": string | null,
   "complete_answer": string | null,
   "suggested_action": "MOVE_ON" | "RETEACH_NEW_ANGLE" | "GIVE_HINT" | "SIMPLIFY" | "HANDLE_OFF_TOPIC" | "REASK",
@@ -170,7 +181,7 @@ Output STRICT JSON matching this schema:
     }
 
     // Sanitize intent
-    const validIntents = ['ANSWER', 'ACK', 'HELP_REQUEST', 'OFF_TOPIC', 'GIBBERISH'];
+    const validIntents = ['ANSWER', 'ACK', 'HELP_REQUEST', 'IDK', 'OFF_TOPIC', 'GIBBERISH'];
     const intent = validIntents.includes(parsed.intent) ? parsed.intent : 'ANSWER';
 
     const result = {
@@ -185,14 +196,17 @@ Output STRICT JSON matching this schema:
       resolved_answer: resolved.isOption ? resolved.resolvedText : null
     };
 
+    // A verdict that penalised the student's English is not a wrong answer.
+    const guarded = applyGradingGuards(result);
+
     // Strikethrough Fallback Guard: If wrong but diff_html was omitted, guarantee a clean diff
-    if (result.intent === 'ANSWER' && result.is_correct === false && !result.diff_html) {
+    if (guarded.intent === 'ANSWER' && guarded.is_correct === false && !guarded.diff_html) {
       const studentErrText = resolved.isOption ? resolved.resolvedText : trimmed;
-      const safeTarget = result.complete_answer || 'the correct answer';
-      result.diff_html = `<del>${escapeHtml(studentErrText)}</del><ins>${escapeHtml(safeTarget)}</ins>`;
+      const safeTarget = guarded.complete_answer || 'the correct answer';
+      guarded.diff_html = `<del>${escapeHtml(studentErrText)}</del><ins>${escapeHtml(safeTarget)}</ins>`;
     }
 
-    return result;
+    return guarded;
   } catch (error) {
     console.error('[Tutor-Core Evaluator] Evaluation failed, using safe fallback:', error.message);
 
@@ -200,7 +214,8 @@ Output STRICT JSON matching this schema:
     const lower = trimmed.toLowerCase();
     let fallbackIntent = 'ANSWER';
     if (/^(ok(ay)?|k|got it|continue|next|yes)$/.test(lower)) fallbackIntent = 'ACK';
-    else if (/^(help|explain|idk|i don'?t know)$/.test(lower)) fallbackIntent = 'HELP_REQUEST';
+    else if (/^(idk|i don'?t know|no idea|not sure|dunno|pass|\?+)$/.test(lower)) fallbackIntent = 'IDK';
+    else if (/^(help|explain|i don'?t understand|what\?*)$/.test(lower)) fallbackIntent = 'HELP_REQUEST';
 
     return {
       intent: fallbackIntent,
@@ -219,5 +234,7 @@ Output STRICT JSON matching this schema:
 module.exports = {
   evaluateStudentTurn,
   resolveOptionAnswer,
+  applyGradingGuards,
+  LANGUAGE_ONLY_ERRORS,
   escapeHtml
 };

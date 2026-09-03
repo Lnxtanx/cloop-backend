@@ -1,5 +1,5 @@
 const { evaluateStudentTurn, resolveOptionAnswer } = require('./evaluator');
-const { advance, instructionFor, initialState, questionTypeFor, isScored, attachmentsFor } = require('./state');
+const { advance, instructionFor, initialState, questionTypeFor, isScored, attachmentsFor, normalizeIntent } = require('./state');
 const { generateTutorResponse } = require('./tutor-generator');
 const { enforce } = require('./validate');
 const { getCachedDiagram } = require('./diagram-cache');
@@ -79,19 +79,26 @@ async function processTutorTurn({
   });
 
   // ── Step 2: State Machine Advance (Pure JS, < 1ms) ──────────────────────────
-  const isOffTopic = evaluatorResult.intent === 'OFF_TOPIC' || evaluatorResult.intent === 'GIBBERISH';
+  // The evaluator and the state machine name intents differently
+  // (HELP_REQUEST vs HELP, GIBBERISH vs OFF_TOPIC). normalizeIntent is the one
+  // place that translation happens; passing a raw evaluator intent straight
+  // into the state machine is what made the tutor repeat itself verbatim.
+  const intent = normalizeIntent(evaluatorResult.intent);
+  const answeredPhase = state.phase; // the phase the student was answering IN
+
   const nextState = advance(state, {
-    intent: evaluatorResult.intent,
+    intent,
     correct: evaluatorResult.is_correct,
-    offTopic: isOffTopic,
+    offTopic: intent === 'OFF_TOPIC',
     errorType: evaluatorResult.error_type,
     answerText: evaluatorResult.resolved_answer || studentMessage
   });
 
   // CRITICAL INVARIANT: instructionFor is called strictly on POST-ADVANCE state
-  const stateInstruction = instructionFor(nextState, {
-    intent: evaluatorResult.intent
-  });
+  const stateInstruction = instructionFor(nextState, { intent });
+
+  // Remember it, so the next turn cannot issue the same directive again.
+  nextState.lastInstruction = stateInstruction;
 
   const questionType = questionTypeFor(nextState.phase);
   const attachments = attachmentsFor(nextState);
@@ -150,8 +157,15 @@ async function processTutorTurn({
     nextState.lastQuestionOptions = null;
   }
 
-  // Build user correction object for UI
-  const userCorrection = evaluatorResult.intent === 'ANSWER' && evaluatorResult.is_correct === false ? {
+  // Build user correction object for UI.
+  //
+  // Only for turns that were actually assessed. PROBE, THEORY and OBJECTIVES
+  // ask the student to predict and to think aloud — those answers are not
+  // scored and must not come back with a red strikethrough and a crying face.
+  // A live session gave a student 😢 for a prediction during THEORY, a phase
+  // that contributes nothing to mastery.
+  const gradedThisTurn = intent === 'ANSWER' && isScored(answeredPhase);
+  const userCorrection = gradedThisTurn && evaluatorResult.is_correct === false ? {
     message_type: 'user_correction',
     diff_html: validated.diff_html,
     complete_answer: evaluatorResult.complete_answer,
@@ -165,6 +179,9 @@ async function processTutorTurn({
 
   return {
     evaluatorResult,
+    intent,
+    answeredPhase,
+    gradedThisTurn,
     nextState,
     stateInstruction,
     questionType,

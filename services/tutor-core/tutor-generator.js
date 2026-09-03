@@ -70,6 +70,27 @@ async function generateTutorResponse({
     case 'explain_differently':
       directiveGuidance = 'Explain the core mechanism in simple terms. Ask if they can see how it applies.';
       break;
+    case 'probe_simpler':
+      directiveGuidance = 'They could not start. Ask a much simpler yes/no or one-word version of the same opening question.';
+      break;
+    case 'teach_theory_analogy':
+      directiveGuidance = 'The first explanation did not land. Explain the same idea with a completely different everyday Indian analogy, then ask a simple check question.';
+      break;
+    case 'restate_objectives_simpler':
+      directiveGuidance = 'Restate what they will learn today in plainer, shorter words. Ask one easy opening question they can answer in a few words.';
+      break;
+    case 'assess_with_mcq_simpler':
+      directiveGuidance = 'Ask an easier multiple-choice question on the same goal, with only 2 clearly different options.';
+      break;
+    case 'give_starter':
+      directiveGuidance = 'They are stuck. Give them the first half of the answer as a sentence starter and ask them to finish it, e.g. "The gas formed is ___". Never leave them with nothing to write.';
+      break;
+    case 'reveal_and_move_on':
+      directiveGuidance = 'They are still stuck after several tries. Tell them the answer plainly in 1 sentence, warmly and without blame, then ask the next question.';
+      break;
+    case 'redirect_to_topic':
+      directiveGuidance = 'That was off topic. Acknowledge briefly and warmly, then bring them straight back with the study question.';
+      break;
     case 'close_off_topic':
       directiveGuidance = 'Politely suggest pausing the study session for now, and warmly invite them back when ready to study.';
       break;

@@ -27,16 +27,29 @@ const TOPICS = [
 const ERRORS = ["Conceptual Error", "Calculation Error", "Spelling Error", "Incomplete Answer"];
 
 const STUDENTS = [
-  { text: "vinegar reacts with chalk and gives off a gas", intent: "ANSWER", correct: true },
-  { text: "carbon dioxide", intent: "ANSWER", correct: true },
-  { text: "yes salt and water", intent: "ANSWER", correct: true },
-  { text: "hydrogen gas", intent: "ANSWER", correct: false, errorType: "Conceptual Error" },
-  { text: "gas of hydoyeg", intent: "ANSWER", correct: false, errorType: "Spelling Error" },
-  { text: "ok", intent: "ACK" },
-  { text: "pls explain", intent: "HELP" },
-  { text: "i dont know", intent: "IDK" },
-  { text: "my dog is called rex", intent: "ANSWER", correct: false, offTopic: true },
+  { text: "vinegar reacts with chalk and gives off a gas", intent: "ANSWER", kind: "answer", correct: true },
+  { text: "carbon dioxide", intent: "ANSWER", kind: "answer", correct: true },
+  { text: "yes salt and water", intent: "ANSWER", kind: "answer", correct: true },
+  { text: "hydrogen gas", intent: "ANSWER", kind: "answer", correct: false, errorType: "Conceptual Error" },
+  { text: "gas of hydoyeg", intent: "ANSWER", kind: "answer", correct: false, errorType: "Conceptual Error" },
+  { text: "ok", intent: "ACK", kind: "stuck" },
+  { text: "pls explain", intent: "HELP_REQUEST", kind: "stuck" },
+  { text: "i dont know", intent: "IDK", kind: "stuck" },
+  { text: "my dog is called rex", intent: "OFF_TOPIC", kind: "offtopic" },
+  { text: "asdfghjk", intent: "GIBBERISH", kind: "offtopic" },
 ];
+
+/**
+ * Instructions that just carry on with the lesson plan.
+ *
+ * If the student said "I don't know" or "explain it" and the tutor answers
+ * with one of these, it has ignored them — which is exactly what production
+ * did when the two modules disagreed about what an intent is called.
+ */
+const CARRY_ON = new Set([
+  "probe_prior_knowledge", "teach_theory", "state_objectives",
+  "open_goal_dialogue", "continue_dialogue", "assess_with_mcq",
+]);
 
 const violations = [];
 const instructionsSeen = new Set();
@@ -51,6 +64,9 @@ function runSession(seed, topic) {
 
   let state = S.initialState(topic.goals.length);
   let turns = 0;
+  let prevInstruction = null;
+  let longestRepeat = 1;
+  let repeatRun = 1;
   let openAsked = 0;
   let mcqAsked = 0;
   let guard = 0;
@@ -85,7 +101,35 @@ function runSession(seed, topic) {
     instructionsSeen.add(instruction);
     check(Boolean(instruction), "no instruction for a reachable state", `${before.phase}/${student.intent}`);
 
-    state = S.advance(before, {
+    // THE FAILURE THAT SHIPPED. Identical directives produce identical
+    // bubbles, and a live student was sent the same two sentences three turns
+    // running. Closing instructions are exempt: WRAP says its one thing.
+    const closing = instruction === "wrap_with_report" || instruction === "close_off_topic" || instruction === "session_over";
+    if (!closing) {
+      check(instruction !== prevInstruction,
+        "the tutor repeated itself verbatim", `${before.phase}: ${instruction} twice`);
+    }
+    // A student who says they are stuck must be answered, not read the script.
+    //
+    // `kind` is the fixture's own ground truth, deliberately NOT derived from
+    // the code under test. An earlier version of this check asked the state
+    // machine to classify the intent first, which meant a broken classifier
+    // silently skipped the check that would have caught it.
+    if (student.kind === "stuck") {
+      check(!CARRY_ON.has(instruction),
+        "the tutor ignored a stuck student and carried on with the lesson",
+        `${student.intent} in ${before.phase} → ${instruction}`);
+    }
+
+    repeatRun = instruction === prevInstruction ? repeatRun + 1 : 1;
+    if (repeatRun > longestRepeat) longestRepeat = repeatRun;
+    prevInstruction = instruction;
+
+    // Every non-closing turn must leave the student something to write.
+    check(closing || ["open", "mcq"].includes(qType),
+      "a turn left the student with nothing to answer", `${before.phase}/${instruction}`);
+
+    state = S.advance({ ...before, lastInstruction: instruction }, {
       intent: student.intent,
       correct: student.correct,
       offTopic: student.offTopic,
@@ -96,11 +140,18 @@ function runSession(seed, topic) {
     });
     turns++;
 
-    if (student.intent !== "ANSWER") {
-      const closing = before.phase === "WRAP" && state.phase === "DONE";
-      const limit = state.endedReason === "turn_limit";
-      check(state.phase === before.phase || closing || limit,
+    if (student.kind !== "answer") {
+      // A non-answer holds the phase — unless the student has been stuck for
+      // STUCK_LIMIT turns, in which case the tutor gives the answer and moves
+      // on rather than looping on a question they cannot begin.
+      const held = state.phase === before.phase;
+      const closed = before.phase === "WRAP" && state.phase === "DONE";
+      const limit = state.endedReason === "turn_limit" || state.endedReason === "off_topic";
+      const escaped = state.revealPending === true;
+      check(held || closed || limit || escaped,
         `phase advanced on ${student.intent}`, `${before.phase}→${state.phase}`);
+      check(state.perGoal[before.goalIndex].total === before.perGoal[before.goalIndex].total,
+        `a non-answer was scored`, `${student.intent} in ${before.phase}`);
     }
     check(state.goalIndex < state.goalTotal, "goal index ran past the goal count", `${state.goalIndex}/${state.goalTotal}`);
     check(state.perGoal.length === state.goalTotal, "per-goal tallies lost a goal", "");
@@ -133,7 +184,7 @@ function runSession(seed, topic) {
   }
 
   // The student must have written far more than they clicked.
-  return { turns, openAsked, mcqAsked, phasesSeen, report };
+  return { turns, openAsked, mcqAsked, phasesSeen, report, longestRepeat };
 }
 
 function main() {
@@ -141,12 +192,13 @@ function main() {
   const n = Number(a[a.indexOf("--sessions") + 1]) || 300;
   const seed0 = Number(a[a.indexOf("--seed") + 1]) || 1;
 
-  let turns = 0, open = 0, mcq = 0, withReport = 0;
+  let turns = 0, open = 0, mcq = 0, withReport = 0, worstRepeat = 1;
   const allPhases = new Set();
   for (let i = 0; i < n; i++) {
     const r = runSession(seed0 + i, TOPICS[i % TOPICS.length]);
     turns += r.turns; open += r.openAsked; mcq += r.mcqAsked;
     if (r.report.per_goal.length) withReport++;
+    if (r.longestRepeat > worstRepeat) worstRepeat = r.longestRepeat;
     for (const p of r.phasesSeen) allPhases.add(p);
   }
 
@@ -158,6 +210,7 @@ function main() {
   console.log(`  phases seen     ${[...allPhases].join(" → ")}`);
   console.log(`  instructions    ${[...instructionsSeen].sort().join(", ")}`);
   console.log(`  reports built   ${withReport}/${n}`);
+  console.log(`  longest run of the same directive   ${worstRepeat}`);
   console.log("");
   for (const [phase, types] of typesByPhase) {
     console.log(`    ${phase.padEnd(11)} asks ${[...types].join(" + ")}`);

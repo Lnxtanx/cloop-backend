@@ -30,6 +30,44 @@
 
 const PHASES = ["PROBE", "THEORY", "OBJECTIVES", "DIALOGUE", "CHECK", "WRAP", "DONE"];
 
+/**
+ * The intents this module understands.
+ *
+ * The evaluator names some of them differently, and for one live session that
+ * difference was the whole bug: the evaluator classified "I don't know" as
+ * HELP_REQUEST, nothing here matched it, and the turn fell through to the
+ * phase default — so the tutor re-sent the same two bubbles, word for word,
+ * every time the student said they were stuck.
+ *
+ * Every intent now arrives through `normalizeIntent`, and it accepts both
+ * vocabularies, so the two modules cannot drift apart again. Anything
+ * unrecognised is treated as HELP rather than silently falling through: a
+ * student we cannot classify is a student who needs a hand, not one who should
+ * be read the same sentence twice.
+ */
+const INTENTS = ["ANSWER", "ACK", "HELP", "IDK", "OFF_TOPIC"];
+
+const INTENT_ALIASES = {
+  ANSWER: "ANSWER",
+  ACK: "ACK",
+  ACKNOWLEDGE: "ACK",
+  HELP: "HELP",
+  HELP_REQUEST: "HELP",
+  EXPLAIN: "HELP",
+  IDK: "IDK",
+  DONT_KNOW: "IDK",
+  UNSURE: "IDK",
+  OFF_TOPIC: "OFF_TOPIC",
+  OFFTOPIC: "OFF_TOPIC",
+  GIBBERISH: "OFF_TOPIC",
+};
+
+/** Map any spelling of an intent onto the one this module acts on. */
+function normalizeIntent(intent) {
+  if (!intent) return "ANSWER";
+  return INTENT_ALIASES[String(intent).trim().toUpperCase()] || "HELP";
+}
+
 /** Written answers per goal. The heart of the session. */
 const OPEN_PER_GOAL = 2;
 
@@ -41,6 +79,16 @@ const MAX_ATTEMPTS = 3;
 
 /** Consecutive off-topic answers before the session closes politely. */
 const OFF_TOPIC_STRIKES = 3;
+
+/**
+ * Consecutive non-answers ("ok", "idk", "explain") before the tutor stops
+ * asking, gives the answer, and moves on. Matches MAX_ATTEMPTS so a stuck
+ * student and a wrong student get the same three chances.
+ */
+const STUCK_LIMIT = 3;
+
+/** Deepest the escalation ladder is ever walked in one turn. */
+const LADDER_DEPTH = 3;
 
 /**
  * Hard stop on total turns.
@@ -76,6 +124,10 @@ function initialState(goalTotal) {
     lastQuestionType: "open",
     lastQuestionOptions: null,
     probeAnswer: null,
+    stuckStreak: 0,
+    revealPending: false,
+    lastInstruction: null,
+    instructionRepeats: 0,
     perGoal: Array.from({ length: total }, () => ({ correct: 0, total: 0, errors: [] })),
     endedReason: null,
   };
@@ -131,7 +183,7 @@ function advance(state, event = {}) {
     ...state,
     perGoal: state.perGoal.map((g) => ({ ...g, errors: [...g.errors] })),
   };
-  const intent = event.intent || "ANSWER";
+  const intent = normalizeIntent(event.intent);
   s.totalTurns = state.totalTurns + 1;
   if (event.questionText) s.lastQuestionText = event.questionText;
   if (event.questionOptions !== undefined) s.lastQuestionOptions = event.questionOptions;
@@ -151,14 +203,13 @@ function advance(state, event = {}) {
     return s;
   }
 
-  // ── non-answers never advance anything ──────────────────────────────────
-  if (intent !== "ANSWER") {
-    s.reteachPending = intent === "HELP" || intent === "IDK";
-    return s;
-  }
-
   // ── repeated off-topic answers close the session kindly ──────────────────
-  if (event.offTopic) {
+  //
+  // This runs BEFORE the non-answer return below. It used to run after, which
+  // made it unreachable: the evaluator reports off-topic as an intent of its
+  // own, so every off-topic turn took the early return and the strike counter
+  // never moved off zero. The polite close was dead code in production.
+  if (intent === "OFF_TOPIC" || event.offTopic) {
     s.offTopicStreak = state.offTopicStreak + 1;
     if (s.offTopicStreak >= OFF_TOPIC_STRIKES) {
       s.phase = "WRAP";
@@ -167,6 +218,28 @@ function advance(state, event = {}) {
     return s;
   }
   s.offTopicStreak = 0;
+
+  // ── non-answers hold the phase, but not forever ──────────────────────────
+  //
+  // Holding the phase is right: an "ok" or an "I don't know" is not an answer
+  // and must not be scored or spend a question. But holding it unconditionally
+  // means a student who never answers never reaches the end of the session. By
+  // the third consecutive non-answer the tutor has given a hint, an easier
+  // question and a sentence starter, so it tells them the answer and moves on.
+  if (intent !== "ANSWER") {
+    s.stuckStreak = (state.stuckStreak || 0) + 1;
+    s.reteachPending = intent === "HELP" || intent === "IDK";
+    if (s.stuckStreak >= STUCK_LIMIT) {
+      s.stuckStreak = 0;
+      s.reteachPending = false;
+      s.revealPending = true; // tell them the answer on the way past
+      s.phase = nextPhase(state, s);
+      s.lastQuestionType = questionTypeFor(s.phase);
+    }
+    return s;
+  }
+  s.stuckStreak = 0;
+  s.revealPending = false;
 
   // ── record mastery evidence before anything moves ────────────────────────
   if (isScored(state.phase)) {
@@ -231,13 +304,51 @@ function nextPhase(prev, s) {
   }
 }
 
-/** What the generator should be told to do this turn. */
-function instructionFor(state, event = {}) {
-  const intent = event.intent || "ANSWER";
+/**
+ * Where to go when the turn would otherwise repeat itself.
+ *
+ * A directive that was just used cannot be used again: identical directives
+ * produce near-identical bubbles, and a student who says "I don't know" twice
+ * was being read the same two sentences twice. Each rung teaches the same
+ * point a different way, and the last rung stops asking and starts helping —
+ * a stuck student is never left staring at a question they cannot begin.
+ */
+const ESCALATION = {
+  probe_prior_knowledge: "probe_simpler",
+  probe_simpler: "give_starter",
+  teach_theory: "teach_theory_analogy",
+  teach_theory_analogy: "give_starter",
+  state_objectives: "restate_objectives_simpler",
+  restate_objectives_simpler: "give_starter",
+  open_goal_dialogue: "hint_then_easier",
+  continue_dialogue: "hint_then_easier",
+  assess_with_mcq: "assess_with_mcq_simpler",
+  assess_with_mcq_simpler: "give_starter",
+  reask_shorter: "hint_then_easier",
+  hint_then_easier: "give_starter",
+  explain_differently: "teach_theory_analogy",
+  correct_and_reask: "reteach_new_angle",
+  reteach_new_angle: "give_starter",
+  redirect_to_topic: "reask_shorter",
+  give_starter: "reveal_and_move_on",
+  reveal_and_move_on: "give_starter",
+};
+
+/** Walk `steps` rungs down the ladder from `instruction`. */
+function escalate(instruction, steps) {
+  let cur = instruction;
+  for (let i = 0; i < steps; i++) cur = ESCALATION[cur] || "give_starter";
+  return cur;
+}
+
+/** The instruction this phase and intent call for, before any escalation. */
+function baseInstruction(state, intent) {
   if (state.phase === "DONE") return "session_over";
   if (state.phase === "WRAP") {
     return state.endedReason === "off_topic" ? "close_off_topic" : "wrap_with_report";
   }
+  if (state.revealPending) return "reveal_and_move_on";
+  if (intent === "OFF_TOPIC") return "redirect_to_topic";
   if (intent === "ACK") return "reask_shorter";
   if (intent === "IDK") return "hint_then_easier";
   if (intent === "HELP") return "explain_differently";
@@ -260,6 +371,34 @@ function instructionFor(state, event = {}) {
   }
 }
 
+/**
+ * What the generator should be told to do this turn.
+ *
+ * Never returns the instruction the previous turn used. The closing
+ * instructions are exempt: a session that has reached WRAP or DONE says its
+ * one closing thing, and escalating away from it would reopen a finished
+ * session.
+ */
+function instructionFor(state, event = {}) {
+  const intent = normalizeIntent(event.intent);
+  const base = baseInstruction(state, intent);
+  if (base === "wrap_with_report" || base === "close_off_topic" || base === "session_over") {
+    return base;
+  }
+
+  // How hard the student is stuck decides how far down the ladder we go. It
+  // has to be the streak, not just "is this the same as last time": comparing
+  // against the previous instruction alone made the tutor alternate between
+  // two rungs forever, so a student who kept saying "I don't know" was offered
+  // a hint and a re-explanation in turn and never a way to start writing.
+  const pressure = intent === "ANSWER" ? 0 : Math.max(0, (state.stuckStreak || 0) - 1);
+  let next = escalate(base, Math.min(pressure, LADDER_DEPTH));
+
+  // Belt and braces: whatever the ladder says, never say the same thing twice.
+  if (next === state.lastInstruction) next = escalate(next, 1);
+  return next;
+}
+
 /** The band a proportion falls into. */
 function bandFor(accuracy) {
   return (BANDS.find((b) => accuracy >= b.min) || BANDS[BANDS.length - 1]).label;
@@ -267,6 +406,13 @@ function bandFor(accuracy) {
 
 module.exports = {
   PHASES,
+  INTENTS,
+  ESCALATION,
+  STUCK_LIMIT,
+  LADDER_DEPTH,
+  escalate,
+  normalizeIntent,
+  baseInstruction,
   OPEN_PER_GOAL,
   MCQ_PER_GOAL,
   MAX_ATTEMPTS,
