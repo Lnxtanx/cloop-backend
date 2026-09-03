@@ -83,7 +83,8 @@ SITUATION FOR THIS TURN:
 
 ${recentTurnsText ? `RECENT CHAT CONTEXT:\n${recentTurnsText}\n` : ''}
 STRICT GENERATION RULES:
-1. Produce 1 to 3 conversational message bubbles.
+1. Produce 1 or 2 conversational message bubbles (ideally 1, maximum 2). Never more than 2 bubbles.
+
 2. WORD LIMIT: Every single bubble MUST BE strictly under 20 words. No long paragraphs!
 3. TERMINAL QUESTION: The final bubble MUST end with an answerable question or prompt for the student (ending with '?').
 4. Tone: Warm, natural, and encouraging. Never use robotic phrases or exaggerated praise ("Awesome!", "Brilliant!") for basic answers. Use genuine warmth ("Spot on!", "Nice work.", "Almost!").

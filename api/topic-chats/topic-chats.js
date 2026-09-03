@@ -703,10 +703,14 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 		return res.status(400).json({ error: 'Message or file is required' })
 	}
 
-	// Feature Flag: Tutor-Core V2 Pipeline (Zero-Downtime Safe Switch)
-	if (process.env.ENABLE_TUTOR_CORE_V2 === 'true') {
+	// Feature Flag & Kill Switch: Tutor-Core V2 Pipeline
+	// Can be disabled globally via ENABLE_TUTOR_CORE_V2=false in .env,
+	// or bypassed per-request for debugging/fallback with header 'x-tutor-version': 'v1' or '?v=1'
+	const isKillSwitched = process.env.ENABLE_TUTOR_CORE_V2 === 'false' || req.headers['x-tutor-version'] === 'v1' || req.query.v === '1';
+	if (!isKillSwitched && (process.env.ENABLE_TUTOR_CORE_V2 === 'true' || process.env.ENABLE_TUTOR_CORE_V2 === undefined)) {
 		return handleTopicChatMessageV2(req, res);
 	}
+
 
 	try {
 		console.log('\n========== NEW MESSAGE RECEIVED ==========');

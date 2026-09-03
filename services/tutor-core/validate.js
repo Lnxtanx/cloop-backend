@@ -13,8 +13,8 @@
  */
 
 const MAX_WORDS_PER_BUBBLE = 20;
-const MAX_BUBBLES_DEFAULT = 3;
-const MAX_BUBBLES_RETEACH = 4;
+const MAX_BUBBLES = 2; // Strict hard cap: at most 2 bubbles (ideally 1)
+
 
 /**
  * Phrases that send the student off to a card instead of answering.
@@ -169,7 +169,7 @@ function enforce(rawOutput, context = {}) {
   } = context;
 
   const rawMessages = Array.isArray(rawOutput?.messages) ? rawOutput.messages : [];
-  const maxAllowedBubbles = isCorrect === false ? MAX_BUBBLES_RETEACH : MAX_BUBBLES_DEFAULT;
+  const maxAllowedBubbles = MAX_BUBBLES;
 
   // 1. Purge empty / whitespace bubbles
   const validBubbles = rawMessages.filter(m => {
@@ -210,8 +210,16 @@ function enforce(rawOutput, context = {}) {
     }
   }
 
-  // 3. Cap bubble count
-  let cappedBubbles = expandedBubbles.slice(0, maxAllowedBubbles);
+  // 3. Hard Cap at MAX_BUBBLES (max 2 bubbles: concept + question)
+  let cappedBubbles = [];
+  if (expandedBubbles.length <= maxAllowedBubbles) {
+    cappedBubbles = [...expandedBubbles];
+  } else {
+    // If more than 2 bubbles, retain the first thought and the final question/prompt
+    const firstBubble = expandedBubbles[0];
+    const lastBubble = expandedBubbles[expandedBubbles.length - 1];
+    cappedBubbles = [firstBubble, lastBubble];
+  }
 
   // If we ended with 0 bubbles, provide a safe fallback
   if (cappedBubbles.length === 0) {
@@ -224,24 +232,24 @@ function enforce(rawOutput, context = {}) {
   // 4. Ensure terminal question (unless session is WRAP or DONE)
   if (phase !== 'WRAP' && phase !== 'DONE') {
     const lastBubble = cappedBubbles[cappedBubbles.length - 1];
-    if (!endsWithQuestion(lastBubble.message)) {
-      // Append a question
+    const hasOptions = Array.isArray(lastBubble.options) && lastBubble.options.length > 0;
+    if (!endsWithQuestion(lastBubble.message) && !hasOptions) {
+      // Append a question if under word count
       if (wordCount(`${lastBubble.message} ${fallbackQuestion}`) <= MAX_WORDS_PER_BUBBLE) {
         lastBubble.message = `${lastBubble.message.replace(/[.]+$/, '')}. ${fallbackQuestion}`;
+      } else if (cappedBubbles.length < maxAllowedBubbles) {
+        // Add as a separate question bubble if currently at 1 bubble
+        cappedBubbles.push({
+          message: fallbackQuestion,
+          message_type: 'text'
+        });
       } else {
-        // Add as a separate question bubble if under bubble cap
-        if (cappedBubbles.length < maxAllowedBubbles) {
-          cappedBubbles.push({
-            message: fallbackQuestion,
-            message_type: 'text'
-          });
-        } else {
-          // Replace last bubble with fallback question to guarantee terminal prompt
-          lastBubble.message = fallbackQuestion;
-        }
+        // Replace last bubble with question to ensure prompt
+        lastBubble.message = fallbackQuestion;
       }
     }
   }
+
 
   // 5. Sanitize diff_html
   const sanitizedDiff = sanitizeDiffHtml(diffHtml, studentMessage);

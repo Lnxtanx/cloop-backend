@@ -64,8 +64,9 @@ test('caps bubble count to maxAllowedBubbles', () => {
     ]
   };
   const res = V.enforce(raw, { isCorrect: true, phase: 'TEACH' });
-  assert.ok(res.messages.length <= 3, `Expected <= 3 bubbles for normal turn, got ${res.messages.length}`);
+  assert.ok(res.messages.length <= 2, `Expected <= 2 bubbles for turn, got ${res.messages.length}`);
 });
+
 
 test('sanitizes bloated diff_html', () => {
   const giantIns = '<del>wrong</del><ins>This is a super ridiculously long explanation that the model wrote instead of a clean short diff tag.</ins>';

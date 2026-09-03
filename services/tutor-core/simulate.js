@@ -66,7 +66,7 @@ function check(cond, label, detail) {
   if (!cond) violations.push({ label, detail });
 }
 
-const MAX_BUBBLES_ALLOWED = 4; // their MAX_BUBBLES_RETEACH
+const MAX_BUBBLES_ALLOWED = 2; // hard cap: max 2 bubbles (ideally 1)
 
 function runSession(seed, topic) {
   const rand = rng(seed);
