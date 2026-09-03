@@ -1068,6 +1068,22 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 			}
 		}
 
+		// REVEAL is the concept-introduction turn (emits exam_definition). MEDIA RULES call
+		// for a real-world visual here, so attach a topic-grounded image if the model didn't
+		// explicitly request one above AND we don't already have images. This is how images
+		// (via the Wikimedia fallback) reach the student instead of never appearing.
+		if ((aiResponse.exam_definition || aiResponse?.evaluation?.phase === 'REVEAL')
+			&& (!fetchedImages || fetchedImages.length === 0)
+			&& _anchor) {
+			try {
+				console.log(`🖼️ [REVEAL] Attaching a topic image for concept intro: "${_anchor}"`)
+				fetchedImages = await searchImages(_anchor, 2)
+				console.log(`✅ REVEAL image fetch complete: ${fetchedImages?.length || 0} images`)
+			} catch (mediaErr) {
+				console.error('❌ REVEAL image search failed:', mediaErr.message)
+			}
+		}
+
 		// ========== SHARE MEDIA WHEN THE STUDENT IS FAILING ==========
 		// On a genuine failure (wrong + score < 60), if the model didn't already
 		// supply media, fetch a topic-grounded image/diagram + short explainer video
