@@ -31,9 +31,7 @@ function determinePhase(chatHistory, topicGoals, currentGoal, userMessage) {
   const goalIndex = topicGoals.findIndex(g => g.id === currentGoal?.id);
   const goalTotal = topicGoals.length;
 
-  // Count AI messages and user messages for the current goal context
   const aiMessages = chatHistory.filter(m => m.sender === 'ai');
-  const userMessages = chatHistory.filter(m => m.sender === 'user');
 
   // Check if all goals are completed
   const allCompleted = topicGoals.every(g => {
@@ -48,119 +46,57 @@ function determinePhase(chatHistory, topicGoals, currentGoal, userMessage) {
     return { phase: 'WRAP', goalIndex: goalTotal, goalTotal };
   }
 
-  // Find the first AI message for this goal's context
-  // We detect phase by looking at what has been sent so far
-  const recentAiTypes = aiMessages.slice(-20).map(m => m.message_type || 'text');
-
-  // Check for session_frame (FRAME phase marker)
-  const hasFrame = recentAiTypes.includes('session_frame');
-
-  // Count questions asked for this goal
-  const questionsForGoal = chatHistory.filter(m =>
-    m.sender === 'ai' && m.message && m.message.includes('?')
-  ).length;
-
-  // ── Per-goal scoping of the teaching markers ──────────────────────────────
-  // exam_definition / concept_card cards are persisted once per GOAL but
-  // deduped across the whole session, so a naive session-wide scan is wrong
-  // (e.g. goal 1's definition makes `hasExamDef` true forever, which would skip
-  // REVEAL for every later goal). Each completed goal consumes exactly one
-  // concept_card, so the CURRENT goal has its own definition / concept card
-  // only when the total count exceeds the number of already-completed goals.
-  const defCount = aiMessages.filter(m => m.message_type === 'exam_definition').length;
-  const cardCount = aiMessages.filter(m => m.message_type === 'concept_card').length;
-  const completedGoals = topicGoals.filter(g => g.chat_goal_progress?.[0]?.is_completed).length;
-  const hasExamDef = defCount > completedGoals;      // this goal's REVEAL delivered
-  const hasConceptCard = cardCount > completedGoals; // this goal's LOCK delivered
-
-  // Check for revision_sheet (WRAP happened)
+  // ── ONE teaching arc per TOPIC (not per goal) ─────────────────────────────
+  // Goals are the CONTENT of EXPLORE, not separate arc units. So the phase
+  // machine cycles exactly once per topic: FRAME→HOOK→REVEAL→EXPLORE→LOCK→WRAP.
+  // Because each marker card appears at most ONCE per topic under this design,
+  // simple session-wide booleans are correct (no per-goal ambiguity).
+  //
+  //   FRAME  — greeting: name topic + list goals as the itinerary
+  //   HOOK   — one topic-level prediction question
+  //   REVEAL — one anchor definition + one figure (fires once student answers hook)
+  //   EXPLORE— walk the goals: 1-2 questions each; inline each goal's exam
+  //            definition when its key term arrives; teaching beat on goal change
+  //   LOCK   — once: teach-back + board question + concept card
+  //   WRAP   — once: revision_sheet covering every goal
+  //
+  // `goalIndex` is no longer a phase-reset trigger — it is just the current
+  // (first-incomplete) goal pointer used inside EXPLORE / for the prompt.
   const hasRevisionSheet = aiMessages.some(m => m.message_type === 'revision_sheet');
-
   if (hasRevisionSheet) {
     return { phase: 'WRAP', goalIndex, goalTotal };
   }
 
-  // Phase detection logic
-  if (!hasFrame && !hasConceptCard && !hasExamDef) {
-    // Only force FRAME at the true session/greeting start — i.e. before ANY
-    // teaching content exists. Once REVEAL/EXPLORE content has been produced the
-    // machine must be allowed to advance, even if the session_frame card is
-    // missing (e.g. topics created before the greeting-card fix).
-    return { phase: 'FRAME', goalIndex, goalTotal };
-  }
-
-  // HOOK vs REVEAL: if this goal hasn't had its definition yet, decide whether
-  // we're waiting for the hook prediction (no student answer on current topic yet)
-  // or resolving it into REVEAL (student just answered).
-  const studentResponded = !!(userMessage && userMessage.trim() && userMessage !== '__SESSION_COMPLETE__');
-
-  if (!hasExamDef) {
-    if (hasConceptCard) {
-      // Just finished a goal (concept card) and moved to the next → FRAME it.
-      return { phase: 'FRAME', goalIndex, goalTotal };
-    }
-    if (hasFrame && studentResponded) {
-      // The greeting/FRAME asked the hook question and the student answered →
-      // resolve the hook now (REVEAL: teach definition + visual, then first EXPLORE q).
-      return { phase: 'REVEAL', goalIndex, goalTotal };
-    }
-    if (hasFrame) {
-      // Greeting/FRAME delivered but student hasn't answered the hook yet.
-      return { phase: 'HOOK', goalIndex, goalTotal };
-    }
-    return { phase: 'FRAME', goalIndex, goalTotal };
-  }
-
-  if (!hasConceptCard) {
-    // REVEAL done, concept card not yet → EXPLORE or LOCK.
-    // ℹ️ PLAYLENGTH CONTROL: we cap each goal at ~2-3 practice questions so a whole
-    // topic (4-5 goals) finishes in ~12-17 questions, not 20+. The HOOK prediction
-    // answer happens BEFORE the exam_definition, so we only count user answers that
-    // come AFTER the exam_definition — i.e. real EXPLORE practice, excluding HOOK.
-    //   - After 2 EXPLORE answered, if ≥1 correct → LOCK (complete, frame next goal)
-    //   - After 2 EXPLORE wrong                     → EXPLORE once (one re-teach q)
-    //   - After 3 EXPLORE answered (hard cap)       → LOCK regardless
-    let exploreAnswered = 0;
-    let exploreCorrect = 0;
-    let passedDef = false;
-    for (const m of chatHistory) {
-      const mType = m.message_type || m.type || (m.sender === 'ai' ? 'text' : '');
-      if (mType === 'exam_definition' || (m.message && /exam?( definition|def)?/i.test(String(m.message)) && String(m.sender) === 'ai')) {
-        passedDef = true;
-        continue;
-      }
-      if (passedDef && String(m.sender) === 'user') {
-        exploreAnswered++;
-        const f = (m.feedback && m.feedback.is_correct) || (typeof m.is_correct === 'boolean' && m.is_correct);
-        const score = (m.feedback && typeof m.feedback.score_percent === 'number') ? m.feedback.score_percent : (typeof m.score_percent === 'number' ? m.score_percent : 100);
-        if (f === true && score >= 50) exploreCorrect++;
-      }
-    }
-    const mastered = exploreCorrect >= 1;
-    // Lock as soon as the student shows real understanding (1 correct EXPLORE answer),
-    // and hard-cap EXPLORE at 3 practice answers so a wrong streak can't balloon the
-    // topic into 20+ repetitive questions.
-    const readyToLock = mastered || exploreAnswered >= 3;
-    if (readyToLock) {
-      return { phase: 'LOCK', goalIndex, goalTotal };
-    }
-    return { phase: 'EXPLORE', goalIndex, goalTotal };
-  }
+  const hasFrame = aiMessages.some(m => m.message_type === 'session_frame');
+  const hasExamDef = aiMessages.some(m => m.message_type === 'exam_definition');
+  // concept_card is LOCK's final deliverable — once present the topic is done.
+  const hasConceptCard = aiMessages.some(m => m.message_type === 'concept_card');
 
   if (hasConceptCard) {
-    // Concept card emitted → next goal's FRAME or WRAP
-    const nextGoal = topicGoals[goalIndex + 1];
-    if (nextGoal) {
-      const nextProgress = nextGoal.chat_goal_progress?.[0];
-      if (!nextProgress || !nextProgress.is_completed) {
-        return { phase: 'FRAME', goalIndex: goalIndex + 1, goalTotal };
-      }
-    }
+    // LOCK's concept card already emitted → only WRAP remains.
     return { phase: 'WRAP', goalIndex, goalTotal };
   }
 
-  // Default to EXPLORE
-  return { phase: 'EXPLORE', goalIndex, goalTotal };
+  if (hasExamDef) {
+    // REVEAL done → EXPLORE, i.e. the whole goal walk until the model signals LOCK.
+    return { phase: 'EXPLORE', goalIndex, goalTotal };
+  }
+
+  const studentResponded = !!(userMessage && userMessage.trim() && userMessage !== '__SESSION_COMPLETE__');
+
+  if (hasFrame && studentResponded) {
+    // Greeting/FRAME asked the one hook question and the student answered →
+    // resolve it now in REVEAL (teach the anchor definition + figure).
+    return { phase: 'REVEAL', goalIndex, goalTotal };
+  }
+
+  if (hasFrame) {
+    // Greeting/FRAME delivered but the student hasn't answered the hook yet.
+    return { phase: 'HOOK', goalIndex, goalTotal };
+  }
+
+  // True session start — nothing persisted yet.
+  return { phase: 'FRAME', goalIndex, goalTotal };
 }
 
 // ─── Build system prompt (v2) ────────────────────────────────────────

@@ -924,20 +924,21 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 			}
 		})
 
-		// Backend safeguard: if current goal already has ≥3 questions answered (HOOK + 2 EXPLORE), force predict_score
-		const questionsForCurrentGoal = currentGoal?.chat_goal_progress?.[0]?.num_questions || 0
-		if (currentGoal && questionsForCurrentGoal >= 3) {
+		// Backend safeguard: if the WHOLE topic has exceeded its ~12-question budget,
+		// force predict_score so the session can't grind past the agreed length.
+		const topicQuestionsTotal = chatHistory.filter(m => m.sender === 'user').length
+		if (topicQuestionsTotal >= 12 && !currentGoal?.chat_goal_progress?.[0]?.is_completed) {
 			const nextGoal = topicGoals.find(g => {
 				const p = g.chat_goal_progress?.[0]
 				return !p || !p.is_completed
 			})
-			const nextGoalHint = (nextGoal && nextGoal.id !== currentGoal.id) ? ` Then immediately ask the first concept question for the next goal: "${nextGoal.title}".` : ''
+			const nextGoalHint = (nextGoal && nextGoal.id !== currentGoal?.id) ? ` Then immediately move to the next goal: "${nextGoal.title}".` : ''
 			chatHistory.push({
 				sender: 'system',
-				message: `OVERRIDE: The student has already answered ${questionsForCurrentGoal} questions for "${currentGoal.title}". This goal is COMPLETE. You MUST return evaluation.next_step_type="predict_score" with a valid score_prediction block.${nextGoalHint} Do NOT ask another question for the current goal.`,
+				message: `OVERRIDE: The topic has already used ${topicQuestionsTotal} questions (budget ${12}). Close the current goal now: return evaluation.next_step_type="predict_score" with a valid score_prediction block.${nextGoalHint} Do NOT ask another question for the current goal.`,
 				message_type: 'system'
 			})
-			console.log(`⚡ FORCE PREDICT_SCORE injected: goal "${currentGoal.title}" has ${questionsForCurrentGoal} questions answered`)
+			console.log(`⚡ FORCE PREDICT_SCORE injected: topic has ${topicQuestionsTotal} questions answered (budget ${12})`)
 		}
 
 		// Generate AI response using agentic tutor
@@ -1621,12 +1622,11 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 		async function savePhaseBlock(messageType, data, fallbackMessage) {
 			if (!data) return null;
 			try {
-				// Deduplicate: persist each phase-block card at most ONCE per GOAL so the
-				// definition / concept / revision cards don't re-emit on every turn. Session-
-				// level blocks (session_frame, hook_prediction, revision_sheet) dedupe across
-				// the whole session. We scope by the already-topic-filtered chatHistory (the
-				// same message set the frontend load endpoint returns), which is far more
-				// reliable than the chat_goal_progress link (cards aren't linked to goals).
+				// One teaching arc per TOPIC: each phase-block card (session_frame,
+				// exam_definition, concept_card, revision_sheet) appears AT MOST ONCE per
+				// topic, so session-wide dedup is correct and prevents on-screen duplicates.
+				// Per-goal exam definitions arrive INLINE as text bubbles during EXPLORE and
+				// are intentionally never re-emitted as a card (i.e. no second exam_definition).
 				const alreadySaved = (chatHistory || []).some(m => m.message_type === messageType);
 				if (alreadySaved) {
 					// Already persisted in this topic's history — do NOT create a duplicate
@@ -1780,18 +1780,43 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 			// This replaces the old hardcoded "2 questions per goal" rule.
 			//
 			// 🔧 DETERMINISTIC BACKSTOP: goals must ALWAYS advance so the conversation can't
-			// stall. cap EXPLORE at ~2 practice questions so each goal is ~2-3 questions
-			// total and a whole topic (4-5 goals) finishes in ~10-15 questions, avoiding
-			// repetition. num_questions also counts the HOOK prediction answer, so the
-			// absolute floor is HOOK(1) + EXPLORE(2) = 3. Once past this we FRAME the
-			// next goal automatically and end with the revision sheet.
-			const Q_FLOOR_PER_GOAL = 3
+			// stall. One teaching arc per TOPIC — EXPLORE walks the goals and the whole topic
+			// is capped at a HARD budget (~12 questions) regardless of goal count. Each goal
+			// completes when the AI signals predict_score OR emits the concept_card; as a
+			// safety net, if the topic-wide budget is spent we force-complete the remaining
+			// goals rather than let a session grind on.
+			const TOPIC_QUESTION_BUDGET = 12
 			aiSignalsGoalComplete = aiResponse.evaluation?.next_step_type === 'predict_score'
 			const aiClosedGoal = !!aiResponse.concept_card // LOCK's final deliverable (optional accelerator)
-			const floorReached = (existingProgress?.num_questions || 0) + (isActualAnswer ? 1 : 0) >= Q_FLOOR_PER_GOAL
-			const backstopComplete = aiClosedGoal || floorReached
+			// Topic-wide budget (whole topic, all goals combined): count user messages as
+			// questions answered this session. This is in scope and avoids relying on any
+			// fresh goal fetch / temporal-dead-zone ordering.
+			const topicQuestionsAnswered = chatHistory.filter(m => m.sender === 'user').length
+			const budgetExhausted = topicQuestionsAnswered >= TOPIC_QUESTION_BUDGET
+			const backstopComplete = aiClosedGoal || budgetExhausted
 			aiSignalsGoalComplete = aiSignalsGoalComplete || backstopComplete
-			if (aiSignalsGoalComplete) justCompletedGoal = currentGoal
+			if (aiSignalsGoalComplete) {
+				// close the current goal the student just answered
+				justCompletedGoal = currentGoal
+				// Under ONE-arc-per-topic, LOCK's concept_card OR the hard budget means the
+				// whole topic is done → close EVERY remaining goal so the session reliably
+				// reaches WRAP instead of grinding/stalling on later goals.
+				if (backstopComplete) {
+					try {
+						await prisma.chat_goal_progress.updateMany({
+							where: {
+								user_id,
+								goal_id: { in: (topicGoals || []).map(g => g.id) },
+								is_completed: false
+							},
+							data: { is_completed: true, updated_at: new Date() }
+						})
+						console.log(`🔒 Backstop: completed ALL remaining goals for topic (budget/concept_card)`)
+					} catch (bulkErr) {
+						console.error('⚠️ Backstop bulk-complete failed:', bulkErr.message)
+					}
+				}
+			}
 
 			// 🔧 FIX: Update the progress record specifically for THIS user message
 			// We already created it above in the message receiving block, now we update it with the feedback results
