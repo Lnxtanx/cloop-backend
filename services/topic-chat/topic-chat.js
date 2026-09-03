@@ -91,38 +91,20 @@ function isForwardQuestion(text) {
 }
 
 /**
- * Deterministic, phase-appropriate next question. Used only as a last-resort so the
- * tutor NEVER dead-ends: it always keeps the conversation moving (re-ask, probe the
- * same goal differently, or advance toward the next goal) instead of handing the
- * student a blank message.
+ * Minimal, natural last-resort question so the tutor NEVER dead-ends. This is NOT
+ * meant to teach a lesson — it simply re-asks the last question (or a short generic
+ * prompt) so the Socratic flow keeps moving. The AI's own answer is preferred; this
+ * is only a safety net when the model returns unusable/non-question output.
  */
-function buildFallbackQuestion({ phase, currentGoal, topicTitle, lastQuestion, goalIndex, goalTotal, topicGoals = [], hookPrediction }) {
-  const goalTitle = currentGoal?.title?.trim() || null;
-  const topic = topicTitle?.trim() || 'this topic';
-
-  // Prefer echoing the last real question — a repeated question is still a question
-  // and keeps the arc alive (the student knows exactly what to answer).
+function buildFallbackQuestion({ lastQuestion, currentGoal, topicTitle }) {
   if (lastQuestion && lastQuestion.trim() && /[?。？]/.test(lastQuestion)) {
-    return `Let's keep going. ${lastQuestion.trim().replace(/\s+$/g, '')}`;
+    return `Let's keep going. ${lastQuestion.trim()}`;
   }
-
-  // Phase-appropriate fallbacks so we always ADVANCE, not just stall.
-  switch (phase) {
-    case 'HOOK':
-      return `Before we dive in — think of ${topic} and make a quick prediction. What do you expect will happen in a simple everyday example? Give it your best guess.`;
-    case 'REVEAL':
-      return `Here's the core idea for ${topic}. Tell me in your own words what the most important thing about it is.`;
-    case 'LOCK':
-      return `Quick check — can you explain ${goalTitle || topic} in one line, like you're teaching a younger student?`;
-    case 'WRAP':
-      return `We're at the end of this topic. Can you recap in your own words what we learned and where you'd still like a quick recap?`;
-    case 'EXPLORE':
-    default:
-      if (goalTitle) {
-        return `Let's keep exploring ${goalTitle}. In your own words, what's the key idea here, and can you give one example?`;
-      }
-      return `Nice progress. What's one thing about ${topic} that you now understand better, and one thing you'd still like to clear up?`;
+  const goal = currentGoal?.title?.trim();
+  if (goal) {
+    return `Let's keep going with ${goal}. What do you want to try first?`;
   }
+  return `Let's keep going. What do you think happens next?`;
 }
 
 /**
@@ -457,8 +439,7 @@ async function generateTopicChatResponse({
     // question, emit a deterministic, forward-moving question for the current phase.
     const isWrapTurn = phase === 'WRAP';
     let q = buildFallbackQuestion({
-      phase, currentGoal, topicTitle, lastQuestion,
-      goalIndex, goalTotal, topicGoals, hookPrediction
+      lastQuestion, currentGoal, topicTitle
     });
 
     if (fallbackText && !isWrapTurn && isForwardQuestion(fallbackText)) {
@@ -483,12 +464,12 @@ async function generateTopicChatResponse({
       }
     }
 
-    // Assemble the deterministic fallback turn. It always carries a question (or, on
-    // WRAP, the "let's wrap up" prompt) so the conversation never dead-ends.
+    // Assemble the minimal fallback turn. It always carries a question (or, on WRAP,
+    // a short recap prompt) so the conversation never dead-ends or stalls.
     const fallbackTurn = isWrapTurn
-      ? { messages: [{ message: "Great — that was the whole topic. Can you recap in your own words what we learned and where you'd still like a quick recap?", message_type: "text" }] }
+      ? { messages: [{ message: "We covered a lot. Where would you like a quick recap before we wrap up?", message_type: "text" }] }
       : { messages: [{ message: q, message_type: "text" }] };
-    console.log(`[topic_chat] Using deterministic fallback question: ${q}`);
+    console.log(`[topic_chat] Using fallback turn: ${q}`);
     return fallbackTurn;
   }
 }
