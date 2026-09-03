@@ -143,7 +143,9 @@ GRADING RULES (Only evaluate when intent is "ANSWER"):
 - When is_correct is false, ALWAYS provide diff_html using <del>student error</del><ins>correct text</ins>.
   Correct the IDEA, not the phrasing. Keep it surgical and under 15 words.
 - If the student chose an option letter, use the resolved concept text in the diff, NEVER just the letter alone!
-- When is_correct is true, diff_html MUST be null.
+- SPELLING / TERMINOLOGY CORRECTIONS:
+  - If is_correct is true, but the student misspelled a scientific term or key word (e.g. "photosinthesis" instead of "photosynthesis", "respration" instead of "respiration"), you SHOULD provide diff_html correcting ONLY the misspelled word: <del>photosinthesis</del><ins>photosynthesis</ins>.
+  - If is_correct is true and there are NO spelling mistakes, diff_html MUST be null.
 
 Output STRICT JSON matching this schema:
 {
@@ -169,15 +171,14 @@ Output STRICT JSON matching this schema:
   ];
 
   try {
-    const rawResponse = await invokeModel(systemPrompt, messages, {
-      temperature: 0.0,
-      maxTokens: 800,
-      jsonFormat: true,
-      featureArea: 'tutor-core',
-      subFeature: 'evaluator'
+    const rawOutput = await invokeModel(messages, {
+      systemInstruction: systemPrompt,
+      responseFormat: 'json',
+      temperature: 0.1, // Near-deterministic evaluation
+      maxTokens: 350
     });
 
-    const parsed = extractJson(typeof rawResponse === 'string' ? rawResponse : rawResponse.text);
+    const parsed = extractJson(typeof rawOutput === 'string' ? rawOutput : rawOutput.text);
 
     if (!parsed || !parsed.intent) {
       throw new Error('Invalid or missing evaluator JSON response');
@@ -192,7 +193,7 @@ Output STRICT JSON matching this schema:
       is_correct: intent === 'ANSWER' ? Boolean(parsed.is_correct) : null,
       score_percent: intent === 'ANSWER' && typeof parsed.score_percent === 'number' ? Math.max(0, Math.min(100, parsed.score_percent)) : null,
       error_type: intent === 'ANSWER' && !parsed.is_correct ? (parsed.error_type || 'Conceptual') : null,
-      diff_html: intent === 'ANSWER' && !parsed.is_correct ? (parsed.diff_html || null) : null,
+      diff_html: intent === 'ANSWER' ? (parsed.diff_html || null) : null,
       complete_answer: parsed.complete_answer || null,
       suggested_action: parsed.suggested_action || (intent === 'ANSWER' ? (parsed.is_correct ? 'MOVE_ON' : 'RETEACH_NEW_ANGLE') : 'REASK'),
       reasoning: parsed.reasoning || '',

@@ -165,13 +165,13 @@ async function processTutorTurn({
   const isCorrect = evaluatorResult.is_correct === true;
   const userCorrection = isAnswer ? {
     message_type: 'user_correction',
-    diff_html: isCorrect ? null : validated.diff_html,
+    diff_html: validated.diff_html || null,
     complete_answer: evaluatorResult.complete_answer || null,
     emoji: isCorrect ? '😊' : (evaluatorResult.score_percent === 0 ? '😓' : (evaluatorResult.score_percent < 50 ? '😅' : '😊')),
     feedback: {
       is_correct: isCorrect,
       score_percent: evaluatorResult.score_percent,
-      error_type: isCorrect ? null : evaluatorResult.error_type
+      error_type: isCorrect ? (validated.diff_html ? 'Spelling' : null) : evaluatorResult.error_type
     }
   } : null;
 
