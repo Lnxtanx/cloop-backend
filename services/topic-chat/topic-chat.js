@@ -6,9 +6,7 @@ const {
   normalizeUserCorrectionOptions,
   generateTopicGreeting,
   generateTopicGoals,
-  determinePhase,
-  calculateSessionMetrics,
-  generateSessionSummaryMessage
+  determinePhase
 } = require('./topic-chat-helpers');
 
 /**

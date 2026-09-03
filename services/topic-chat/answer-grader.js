@@ -134,8 +134,5 @@ Return JSON matching this exact structure:
 }
 
 module.exports = {
-  gradeAnswer,
-  snap,
-  isRealAttempt,
-  buildFallbackDiffHtml
+  gradeAnswer
 };

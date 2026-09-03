@@ -7,20 +7,9 @@ const path = require('path');
  * Phase detection, system prompt generation, greeting, goals
  */
 
-const { calculateSessionMetrics, generateSessionSummaryMessage } = require('./topic_chat_metrics');
 
-// ─── Archetype definitions ───────────────────────────────────────────
-const ARCHETYPES = {
-  Predict:          'Application',
-  Contrast:         'Explanation',
-  Representation:   'Representation',
-  ErrorSpotting:    'Error Diagnosis',
-  Transfer:         'Transfer',
-  Numerical:        'Application',
-  ExplainLikeIm5:   'Explanation',
-  MisconceptionChk: 'Explanation',
-  Recall:           'Identification'
-};
+
+
 
 // ─── Phase detection ─────────────────────────────────────────────────
 /**
@@ -446,8 +435,5 @@ module.exports = {
   normalizeUserCorrectionOptions,
   generateTopicGreeting,
   generateTopicGoals,
-  determinePhase,
-  calculateSessionMetrics,
-  generateSessionSummaryMessage,
-  ARCHETYPES
+  determinePhase
 };
