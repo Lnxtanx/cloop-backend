@@ -10,6 +10,50 @@ const {
 } = require('./topic-chat-helpers');
 
 /**
+ * Reconcile the graded verdict with what the tutor actually taught.
+ *
+ * The objective pre-grader (temp-0) sometimes scores a "gotcha" trap question the wrong
+ * way up: for a "which is NOT a solid / which is wrong" exclusion question, a student who
+ * picks ONE item is graded CORRECT even though the true answer is "all / none of them".
+ * The tutor then teaches "all three are solids" — outright contradicting the 100% verdict.
+ * Reconcile here so the recorded is_correct reflects the tutor's teaching, not the stale
+ * positive verdict. Conservative: only downgrades a graded-correct answer, only when the
+ * tutor asserts the WHOLE set shares the property (markers below), and only on a
+ * negative/exclusion-style question. Never touches anything scored incorrect, and never
+ * upgrades anything.
+ */
+function reconcileTeachingVsGrading({ lastQuestion, feedback, tutorBubbles }) {
+  if (!feedback || !feedback.is_correct) {
+    return feedback;
+  }
+  if (!lastQuestion || !/not\b|NOT a|isn'?t|aren'?t|except|which is wrong|exclude/i.test(lastQuestion)) {
+    return feedback;
+  }
+  const text = tutorBubbles
+    .filter(b => b && typeof b.message === 'string')
+    .map(b => b.message)
+    .join(' ')
+    .toLowerCase();
+  const wholeSetMarkers = [
+    'all three are', 'all of them are', 'they\'re all', 'they are all',
+    'both are', 'every one of them is', 'none of them is', 'none of them are',
+    'all are', 'both of them are', 'every single one is'
+  ];
+  const contradicts = wholeSetMarkers.some(m => text.includes(m));
+  if (!contradicts) {
+    return feedback;
+  }
+  console.log('[topic_chat] Reconciled: tutor taught the whole set shares the property, overriding graded-correct verdict');
+  return {
+    ...feedback,
+    is_correct: false,
+    bubble_color: 'red',
+    error_type: 'Knowledge Gap',
+    score_percent: Math.min(feedback.score_percent || 0, 30)
+  };
+}
+
+/**
  * Coerce a single message item to a well-formed bubble object.
  */
 function normalizeMessageItem(item) {
@@ -411,6 +455,24 @@ async function generateTopicChatResponse({
         }
       } catch (retryErr) {
         console.error('[topic_chat] Grounded grader failed:', retryErr.message);
+      }
+    }
+
+    // Reconcile teaching vs grading: if the objective pre-grader called a gotcha answer
+    // correct but the tutor's own bubble now teaches the whole set shares the property
+    // (e.g. "all three are solids" after "which is NOT a solid?"), override to wrong so
+    // the recorded is_correct and the correction bubble agree with the teaching.
+    if (parsed.user_correction?.feedback && parsed.messages?.length) {
+      const reconciled = reconcileTeachingVsGrading({
+        lastQuestion,
+        feedback: parsed.user_correction.feedback,
+        tutorBubbles: parsed.messages
+      });
+      if (reconciled && reconciled !== parsed.user_correction.feedback) {
+        parsed.user_correction.feedback = reconciled;
+        if (reconciled.bubble_color === 'red' && !parsed.user_correction.diff_html) {
+          parsed.user_correction.diff_html = `<ins>${userMessage || ''}</ins>`;
+        }
       }
     }
 
