@@ -343,7 +343,7 @@ DO NOT give the definition here. Name the destination, not the answer.
 DO NOT duplicate in prose what the session_frame card will display.
 
 PART 2 — HOOK (1 question, ≤ 40 words):
-Ask ONE everyday scenario question in a single sentence. The student must COMMIT to a prediction. End with: "Hold that thought — we'll come back to it."
+Ask ONE everyday scenario question in a single sentence. The student must COMMIT to a prediction. Do NOT append any "hold that thought" remark to the question.
 
 GOALS TO COVER:
 ${goalsOverview}
@@ -358,7 +358,7 @@ Return VALID JSON:
   "messages": [
     { "message": "[FRAME bubble 1: concept in plain words + why it matters — 1-2 short sentences]", "message_type": "text" },
     { "message": "[FRAME bubble 2: one line naming the destination — 1 sentence, no objective list]", "message_type": "text" },
-    { "message": "[HOOK question — one sentence + Hold that thought]", "message_type": "text" }
+    { "message": "[HOOK question — one sentence, no 'hold that thought' remark]", "message_type": "text" }
   ],
   "session_frame": {
     "concept": "${topicTitle}",
