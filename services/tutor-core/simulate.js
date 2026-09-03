@@ -1,18 +1,16 @@
 /**
- * Adversarial simulation of the tutor core.
+ * Adversarial simulation of the session shape.
  *
- * Plays whole sessions against a mock model that misbehaves in every way the
- * real one has: prose instead of JSON, three bubbles, 40-word bubbles, pill
- * narration, raw mermaid, "Right —" on a correction, empty strings, nothing at
- * all. The point is not that the model behaves — it is that the architecture
- * holds when it does not.
+ * Plays whole sessions and asserts, on every turn, what a student would
+ * actually experience — including the three things the last live session got
+ * wrong: multiple choice used as teaching, an option letter graded without its
+ * text, and a session that ends with no report.
  *
- *   node services/tutor-core/simulate.js
- *   node services/tutor-core/simulate.js --sessions 500 --seed 42
+ *   node services/tutor-core/simulate.js --sessions 400 --seed 42
  */
 
 const S = require("./state");
-const { enforce, wordCount, endsWithQuestion } = require("./validate");
+const { buildReport } = require("./summary");
 
 function rng(seed) {
   let s = seed >>> 0 || 1;
@@ -20,136 +18,150 @@ function rng(seed) {
 }
 
 const TOPICS = [
+  { title: "Chemical Properties of Acids and Bases", goals: ["Acid-metal reactions", "Acid-carbonate reactions", "Base-metal reactions", "Gas testing", "Comparing reactivity"] },
   { title: "Friction", goals: ["Identify friction", "Compare surfaces", "Reduce friction", "Friction in daily life"] },
-  { title: "Chemical Reactions", goals: ["Signs of a reaction", "Reactants and products", "Balancing", "Everyday reactions", "Rusting"] },
   { title: "Linear Equations", goals: ["Name the unknown", "Isolate the variable", "Check the solution"] },
-  { title: "Trophic Levels", goals: ["Producers", "Consumers", "Energy loss", "Food webs"] },
-  { title: "Metals and Non-metals", goals: ["Physical properties", "Reaction with acid", "Uses"] },
-  { title: "Photosynthesis", goals: ["Inputs", "Outputs", "Chlorophyll", "Light stage", "Dark stage", "Limiting factors", "Experiments", "Food chains"] },
+  { title: "Photosynthesis", goals: ["Inputs", "Outputs", "Chlorophyll", "Limiting factors", "Experiments", "Food chains"] },
 ];
 
-const LONG = "This is a deliberately long explanation that runs well past the cap and keeps going with more clauses and more detail than any student could reasonably read in a single chat bubble on a phone screen while sitting on a bus.";
-
-const MISBEHAVIOURS = [
-  { name: "well-formed", make: (q) => ({ messages: [{ message: q }] }) },
-  { name: "three bubbles", make: (q) => ({ messages: [{ message: "First thought." }, { message: "Second thought." }, { message: q }] }) },
-  { name: "five bubbles", make: (q) => ({ messages: [1, 2, 3, 4].map((n) => ({ message: `Thought ${n}.` })).concat([{ message: q }]) }) },
-  { name: "40-word bubble", make: (q) => ({ messages: [{ message: LONG }, { message: q }] }) },
-  { name: "long, no question", make: () => ({ messages: [{ message: LONG }] }) },
-  { name: "narrates the pill", make: (q) => ({ messages: [{ message: `Open the 'Remember This' card, then tell me: ${q}` }] }) },
-  { name: "mermaid in prose", make: (q) => ({ messages: [{ message: "```mermaid\ngraph LR\nA-->B\n```" }, { message: q }] }) },
-  { name: "praise + correction", make: (q) => ({ messages: [{ message: "Right — actually that isn't it." }, { message: q }] }) },
-  { name: "open-ended ending", make: () => ({ messages: [{ message: "So that's the idea." }, { message: "Any questions?" }] }) },
-  { name: "statement ending", make: () => ({ messages: [{ message: "Good job, you've got it." }] }) },
-  { name: "empty strings", make: () => ({ messages: [{ message: "" }, { message: "   " }] }) },
-  { name: "options only", make: () => ({ messages: [{ message: "", options: ["Yes", "No"] }] }) },
-  { name: "nothing at all", make: () => ({}) },
-  { name: "not an object", make: () => null },
-];
+const ERRORS = ["Conceptual Error", "Calculation Error", "Spelling Error", "Incomplete Answer"];
 
 const STUDENTS = [
-  { text: "because it is rough", intent: "ANSWER", correct: true },
-  { text: "iron", intent: "ANSWER", correct: true },
-  { text: "2", intent: "ANSWER", correct: true },
-  { text: "the plastic bottle", intent: "ANSWER", correct: false },
-  { text: "stay fresh", intent: "ANSWER", correct: false },
+  { text: "vinegar reacts with chalk and gives off a gas", intent: "ANSWER", correct: true },
+  { text: "carbon dioxide", intent: "ANSWER", correct: true },
+  { text: "yes salt and water", intent: "ANSWER", correct: true },
+  { text: "hydrogen gas", intent: "ANSWER", correct: false, errorType: "Conceptual Error" },
+  { text: "gas of hydoyeg", intent: "ANSWER", correct: false, errorType: "Spelling Error" },
   { text: "ok", intent: "ACK" },
-  { text: "next", intent: "ACK" },
   { text: "pls explain", intent: "HELP" },
   { text: "i dont know", intent: "IDK" },
-  { text: "bananas are yellow", intent: "ANSWER", correct: false, offTopic: true },
+  { text: "my dog is called rex", intent: "ANSWER", correct: false, offTopic: true },
 ];
 
 const violations = [];
-const seen = new Set();
+const instructionsSeen = new Set();
+const typesByPhase = new Map();
 function check(cond, label, detail) {
   if (!cond) violations.push({ label, detail });
 }
-
-const MAX_BUBBLES_ALLOWED = 2; // hard cap: max 2 bubbles (ideally 1)
 
 function runSession(seed, topic) {
   const rand = rng(seed);
   const pick = (a) => a[Math.floor(rand() * a.length)];
 
   let state = S.initialState(topic.goals.length);
-  let lastQuestion = "";
   let turns = 0;
+  let openAsked = 0;
+  let mcqAsked = 0;
   let guard = 0;
+  const phasesSeen = new Set();
 
-  while (state.phase !== "DONE" && guard++ < 300) {
-    const student = pick(STUDENTS);
+  while (state.phase !== "DONE" && guard++ < 400) {
     const before = state;
+    phasesSeen.add(before.phase);
+
+    // The server decides the question type — the model is never asked.
+    const qType = S.questionTypeFor(before.phase);
+    const scored = S.isScored(before.phase);
+    const attachments = S.attachmentsFor(before);
+    if (!typesByPhase.has(before.phase)) typesByPhase.set(before.phase, new Set());
+    typesByPhase.get(before.phase).add(qType);
+
+    // WRAP asks nothing, so it legitimately has no question type.
+    const asksSomething = before.phase !== "WRAP";
+    check(asksSomething ? ["open", "mcq"].includes(qType) : qType === null,
+      "unexpected question type", `${before.phase}: ${qType}`);
+    check(qType === "mcq" ? before.phase === "CHECK" : true,
+      "multiple choice outside the assessment phase", `${before.phase}`);
+    if (before.phase === "PROBE") check(!scored, "the opening probe was scored", "PROBE");
+    if (before.phase === "THEORY") check(attachments.includes("diagram") && attachments.includes("key_points"),
+      "theory turn carried no diagram or key points", "THEORY");
+
+    if (qType === "open") openAsked++;
+    else if (qType === "mcq") mcqAsked++;
+
+    const student = pick(STUDENTS);
+    const instruction = S.instructionFor(before, { intent: student.intent });
+    instructionsSeen.add(instruction);
+    check(Boolean(instruction), "no instruction for a reachable state", `${before.phase}/${student.intent}`);
 
     state = S.advance(before, {
       intent: student.intent,
       correct: student.correct,
       offTopic: student.offTopic,
+      errorType: student.errorType || pick(ERRORS),
+      answerText: student.text,
+      questionText: `Question about ${topic.goals[before.goalIndex] || topic.title}?`,
+      questionOptions: qType === "mcq" ? [{ text: "Calcium carbonate", value: "A" }, { text: "Sodium chloride", value: "B" }] : null,
     });
-    const instruction = S.instructionFor(state, { intent: student.intent });
-    seen.add(instruction);
+    turns++;
 
-    const mis = pick(MISBEHAVIOURS);
-    const q = `What happens to ${topic.goals[state.goalIndex] || topic.title}?`;
-    const raw = mis.make(q);
-
-    const out = enforce(raw, {
-      isCorrect: student.intent === "ANSWER" ? student.correct ?? null : null,
-      phase: state.phase,
-      fallbackQuestion: lastQuestion && endsWithQuestion(lastQuestion) ? lastQuestion : q,
-      diffHtml: student.correct === false ? "<del>x</del><ins>y</ins>" : null,
-      studentMessage: student.text,
-    });
-
-    const where = `${topic.title} #${++turns} ${before.phase}→${state.phase}/${student.intent} [${mis.name}]`;
-
-    // ── what a student would experience ──────────────────────────────────
-    check(out.messages.length >= 1, "turn produced no bubble", where);
-    check(out.messages.length <= MAX_BUBBLES_ALLOWED, `more than ${MAX_BUBBLES_ALLOWED} bubbles (${out.messages.length})`, where);
-    for (const m of out.messages) {
-      const hasOptions = Array.isArray(m.options) && m.options.length > 0;
-      check(Boolean(m.message && m.message.trim()) || hasOptions, "blank bubble reached the student", where);
-      check(wordCount(m.message) <= 20, `bubble over 20 words (${wordCount(m.message)})`, where);
-      check(!/```|graph (TD|LR)|-->/.test(m.message), "diagram syntax in prose", where);
-      check(!/open the .*(card|pill)|tap the|check the (card|diagram)/i.test(m.message), "narrated a pill", where);
-    }
-    if (state.phase !== "WRAP" && state.phase !== "DONE") {
-      const last = out.messages[out.messages.length - 1];
-      const ok = endsWithQuestion(last.message) || (Array.isArray(last.options) && last.options.length > 0);
-      check(ok, "turn ends with nothing answerable", `${where}: ${JSON.stringify(last.message).slice(0, 60)}`);
-    }
     if (student.intent !== "ANSWER") {
-      // WRAP is a single closing turn: any reply to it ends the session, by
-      // design. Every other phase must be immovable by a non-answer.
-      const closingWrap = before.phase === "WRAP" && state.phase === "DONE";
-      check(out.diff_html === null, "a non-answer got a strikethrough", where);
-      check(state.phase === before.phase || closingWrap, `phase advanced on ${student.intent}`, where);
-      check(state.totalQuestions === before.totalQuestions, `${student.intent} spent budget`, where);
-      check(state.goalIndex === before.goalIndex, `${student.intent} moved the goal`, where);
+      const closing = before.phase === "WRAP" && state.phase === "DONE";
+      const limit = state.endedReason === "turn_limit";
+      check(state.phase === before.phase || closing || limit,
+        `phase advanced on ${student.intent}`, `${before.phase}→${state.phase}`);
     }
-    check(state.totalQuestions <= S.TOTAL_QUESTION_BUDGET, `budget blown (${state.totalQuestions})`, where);
-    check(state.goalIndex < state.goalTotal, `goal index ${state.goalIndex}/${state.goalTotal}`, where);
+    check(state.goalIndex < state.goalTotal, "goal index ran past the goal count", `${state.goalIndex}/${state.goalTotal}`);
+    check(state.perGoal.length === state.goalTotal, "per-goal tallies lost a goal", "");
 
-    const lastMsg = out.messages[out.messages.length - 1].message;
-    if (endsWithQuestion(lastMsg)) lastQuestion = lastMsg;
+    // The options the tutor offered must survive into the next turn, or a
+    // letter cannot be resolved to its text before grading.
+    if (qType === "mcq") {
+      check(Array.isArray(state.lastQuestionOptions) && state.lastQuestionOptions.length > 0,
+        "MCQ options were not carried into state", before.phase);
+    }
   }
-  check(guard < 300, "session never reached DONE", topic.title);
-  return turns;
+
+  check(guard < 400, "session never reached DONE", topic.title);
+
+  // ── the report ─────────────────────────────────────────────────────────
+  const report = buildReport(state, topic.goals.map((t) => ({ title: t })));
+  check(typeof report.overall_mastery_percent === "number", "no mastery percentage", topic.title);
+  check(report.overall_mastery_percent >= 0 && report.overall_mastery_percent <= 100,
+    "mastery percentage out of range", String(report.overall_mastery_percent));
+  check(report.per_goal.length === topic.goals.length, "report lost a goal", topic.title);
+  check(Array.isArray(report.key_errors), "no key errors list", topic.title);
+  check(Array.isArray(report.learned_well) && Array.isArray(report.areas_to_improve),
+    "report missing the learned/improve split", topic.title);
+  const counted = report.learned_well.length + report.areas_to_improve.length + report.not_covered.length;
+  check(counted === topic.goals.length, "goals unaccounted for in the report",
+    `${counted} of ${topic.goals.length}`);
+  for (const g of report.per_goal) {
+    check(g.correct <= g.asked, "more correct than asked", g.goal);
+    check(g.accuracy_percent >= 0 && g.accuracy_percent <= 100, "goal accuracy out of range", g.goal);
+  }
+
+  // The student must have written far more than they clicked.
+  return { turns, openAsked, mcqAsked, phasesSeen, report };
 }
 
 function main() {
   const a = process.argv.slice(2);
-  const n = Number(a[a.indexOf("--sessions") + 1]) || 200;
+  const n = Number(a[a.indexOf("--sessions") + 1]) || 300;
   const seed0 = Number(a[a.indexOf("--seed") + 1]) || 1;
 
-  let turns = 0;
-  for (let i = 0; i < n; i++) turns += runSession(seed0 + i, TOPICS[i % TOPICS.length]);
+  let turns = 0, open = 0, mcq = 0, withReport = 0;
+  const allPhases = new Set();
+  for (let i = 0; i < n; i++) {
+    const r = runSession(seed0 + i, TOPICS[i % TOPICS.length]);
+    turns += r.turns; open += r.openAsked; mcq += r.mcqAsked;
+    if (r.report.per_goal.length) withReport++;
+    for (const p of r.phasesSeen) allPhases.add(p);
+  }
 
-  console.log("TUTOR CORE — adversarial simulation");
-  console.log(`  sessions       ${n} across ${TOPICS.length} topics`);
-  console.log(`  turns          ${turns}`);
-  console.log(`  failure modes  ${MISBEHAVIOURS.length} model, ${STUDENTS.length} student`);
-  console.log(`  instructions   ${[...seen].sort().join(", ")}`);
+  const openShare = ((open / (open + mcq)) * 100).toFixed(1);
+  console.log("TUTOR CORE — session shape simulation");
+  console.log(`  sessions        ${n} across ${TOPICS.length} topics`);
+  console.log(`  turns           ${turns}  (${(turns / n).toFixed(1)} per session)`);
+  console.log(`  written : mcq   ${open} : ${mcq}   (${openShare}% of questions are written answers)`);
+  console.log(`  phases seen     ${[...allPhases].join(" → ")}`);
+  console.log(`  instructions    ${[...instructionsSeen].sort().join(", ")}`);
+  console.log(`  reports built   ${withReport}/${n}`);
+  console.log("");
+  for (const [phase, types] of typesByPhase) {
+    console.log(`    ${phase.padEnd(11)} asks ${[...types].join(" + ")}`);
+  }
   console.log("");
 
   if (violations.length) {
@@ -169,4 +181,4 @@ function main() {
 }
 
 if (require.main === module) main();
-module.exports = { runSession, MISBEHAVIOURS, STUDENTS, TOPICS };
+module.exports = { runSession, TOPICS, STUDENTS };

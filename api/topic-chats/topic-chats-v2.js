@@ -151,17 +151,6 @@ async function handleTopicChatMessageV2(req, res) {
       }
     });
 
-    // Link user message to active goal
-    if (activeGoal) {
-      await prisma.chat_goal_progress.create({
-        data: {
-          chat_id: userMessageRecord.id,
-          goal_id: activeGoal.id,
-          user_id
-        }
-      });
-    }
-
     // 6. Fetch user profile
     const userProfile = await prisma.users.findUnique({
       where: { user_id },
@@ -177,6 +166,9 @@ async function handleTopicChatMessageV2(req, res) {
       currentState: previousState,
       userProfile: userProfile || {}
     });
+
+    const nextGoalIndex = turnResult.nextState.goalIndex;
+    const isSessionWrapping = turnResult.nextState.phase === 'WRAP' || turnResult.nextState.phase === 'DONE';
 
     // 8. Update user message record in admin_chat
     const updatedUserMsg = await prisma.admin_chat.update({
@@ -199,9 +191,26 @@ async function handleTopicChatMessageV2(req, res) {
       }
     });
 
+    // Link user message to goal progress
+    if (activeGoal) {
+      const isGoalDone = activeGoalIndex < nextGoalIndex || isSessionWrapping;
+      const stats = turnResult.nextState.perGoal?.[activeGoalIndex] || { total: 0, correct: 0 };
+      await prisma.chat_goal_progress.create({
+        data: {
+          chat_id: userMessageRecord.id,
+          goal_id: activeGoal.id,
+          user_id,
+          num_questions: stats.total,
+          num_correct: stats.correct,
+          num_incorrect: Math.max(0, stats.total - stats.correct),
+          is_completed: isGoalDone
+        }
+      });
+    }
+
     // 9. Persist AI message bubbles
     const savedAiMessages = [];
-    const currentGoalRecord = topicGoals[Math.min(turnResult.nextState.goalIndex, topicGoals.length - 1)] || activeGoal;
+    const currentGoalRecord = topicGoals[Math.min(nextGoalIndex, topicGoals.length - 1)] || activeGoal;
 
     for (const bubble of turnResult.messages) {
       if (!bubble || (!bubble.message?.trim() && !bubble.options?.length)) continue;
@@ -228,12 +237,17 @@ async function handleTopicChatMessageV2(req, res) {
       });
 
       if (currentGoalRecord) {
+        const isGoalDone = nextGoalIndex < nextGoalIndex || isSessionWrapping;
+        const stats = turnResult.nextState.perGoal?.[nextGoalIndex] || { total: 0, correct: 0 };
         await prisma.chat_goal_progress.create({
           data: {
             chat_id: aiRecord.id,
             goal_id: currentGoalRecord.id,
             user_id,
-            is_completed: turnResult.nextState.questionsThisGoal >= turnResult.nextState.questionsPerGoal
+            num_questions: stats.total,
+            num_correct: stats.correct,
+            num_incorrect: Math.max(0, stats.total - stats.correct),
+            is_completed: isGoalDone
           }
         });
       }
@@ -244,7 +258,143 @@ async function handleTopicChatMessageV2(req, res) {
       });
     }
 
-    // 10. Record chat_process with session state in feedback
+    // 9b. If Session is wrapping or done, persist Session Summary & Revision Sheet cards
+    if (isSessionWrapping && turnResult.masteryReport) {
+      const summaryPayload = {
+        score_percent: turnResult.masteryReport.score_percent,
+        overall_score_percent: turnResult.masteryReport.overall_score_percent,
+        star_rating: turnResult.masteryReport.star_rating,
+        performance_level: turnResult.masteryReport.performance_level,
+        total_questions: turnResult.masteryReport.total_questions,
+        correct_answers: turnResult.masteryReport.correct_answers,
+        incorrect_answers: turnResult.masteryReport.incorrect_answers,
+        top_error_types: turnResult.masteryReport.top_error_types,
+        weak_goals: turnResult.masteryReport.weak_goals,
+        has_weak_areas: turnResult.masteryReport.has_weak_areas,
+        goal_performance: turnResult.masteryReport.goal_performance
+      };
+
+      const summaryRecord = await prisma.admin_chat.create({
+        data: {
+          user_id,
+          sender: 'ai',
+          message: 'Session Summary',
+          message_type: 'session_summary',
+          diff_html: JSON.stringify(summaryPayload),
+          options: [],
+          created_at: new Date()
+        },
+        select: {
+          id: true,
+          sender: true,
+          message: true,
+          message_type: true,
+          options: true,
+          diff_html: true,
+          emoji: true,
+          created_at: true
+        }
+      });
+
+      savedAiMessages.push({
+        ...summaryRecord,
+        session_summary: summaryPayload,
+        options: []
+      });
+
+      const revisionPayload = {
+        topic: topic.title,
+        concepts_covered: topicGoals.map(g => g.title),
+        key_points: topicGoals.map(g => `${g.title}: ${g.description || 'Core concept mastered.'}`),
+        common_mistakes: (turnResult.masteryReport.key_errors || []).map(e => `${e.type} (${e.count}x)`),
+        your_weak_spots: (turnResult.masteryReport.areas_to_improve || []).map(a => a.goal)
+      };
+
+      const revisionRecord = await prisma.admin_chat.create({
+        data: {
+          user_id,
+          sender: 'ai',
+          message: 'Revision Sheet',
+          message_type: 'revision_sheet',
+          diff_html: JSON.stringify(revisionPayload),
+          options: [],
+          created_at: new Date()
+        },
+        select: {
+          id: true,
+          sender: true,
+          message: true,
+          message_type: true,
+          options: true,
+          diff_html: true,
+          emoji: true,
+          created_at: true
+        }
+      });
+
+      savedAiMessages.push({
+        ...revisionRecord,
+        revision_sheet: revisionPayload,
+        options: []
+      });
+
+      // Save user topic report record
+      try {
+        await prisma.user_topic_reports.upsert({
+          where: {
+            user_id_topic_id: {
+              user_id,
+              topic_id: parseInt(topicId)
+            }
+          },
+          create: {
+            user_id,
+            topic_id: parseInt(topicId),
+            total_questions: turnResult.masteryReport.total_questions,
+            correct_answers: turnResult.masteryReport.correct_answers,
+            incorrect_answers: turnResult.masteryReport.incorrect_answers,
+            score_percent: turnResult.masteryReport.score_percent,
+            star_rating: turnResult.masteryReport.star_rating,
+            performance_level: turnResult.masteryReport.performance_level,
+            metrics_json: summaryPayload
+          },
+          update: {
+            total_questions: turnResult.masteryReport.total_questions,
+            correct_answers: turnResult.masteryReport.correct_answers,
+            incorrect_answers: turnResult.masteryReport.incorrect_answers,
+            score_percent: turnResult.masteryReport.score_percent,
+            star_rating: turnResult.masteryReport.star_rating,
+            performance_level: turnResult.masteryReport.performance_level,
+            metrics_json: summaryPayload,
+            updated_at: new Date()
+          }
+        });
+      } catch (utrErr) {
+        console.warn('[Tutor-Core V2] Could not upsert user_topic_reports:', utrErr.message);
+      }
+    }
+
+    // 10. Sync goal progress in database for all completed goals
+    for (let i = 0; i < topicGoals.length; i++) {
+      const g = topicGoals[i];
+      const isGoalDone = i < nextGoalIndex || isSessionWrapping;
+      const stats = turnResult.nextState.perGoal?.[i] || { total: 0, correct: 0 };
+
+      if (isGoalDone) {
+        await prisma.chat_goal_progress.updateMany({
+          where: { user_id, goal_id: g.id },
+          data: {
+            is_completed: true,
+            num_questions: stats.total,
+            num_correct: stats.correct,
+            num_incorrect: Math.max(0, stats.total - stats.correct),
+            updated_at: new Date()
+          }
+        });
+      }
+    }
+
+    // 11. Record chat_process with session state in feedback
     await prisma.chat_process.create({
       data: {
         chat_id: userMessageRecord.id,
@@ -255,12 +405,13 @@ async function handleTopicChatMessageV2(req, res) {
         feedback: {
           session_state: turnResult.nextState,
           evaluator_result: turnResult.evaluatorResult,
-          state_instruction: turnResult.stateInstruction
+          state_instruction: turnResult.stateInstruction,
+          mastery_report: turnResult.masteryReport || null
         }
       }
     });
 
-    // 11. Record learning_turns analytics for Mastery Engine
+    // 12. Record learning_turns analytics for Mastery Engine
     if (turnResult.evaluatorResult.intent === 'ANSWER') {
       try {
         await prisma.learning_turns.create({
@@ -280,12 +431,12 @@ async function handleTopicChatMessageV2(req, res) {
       }
     }
 
-    // 12. Asynchronous / On-Demand Media (YouTube)
+    // 13. Asynchronous / On-Demand Media (YouTube & Diagrams)
     let fetchedVideos = [];
     const wantsVideo = /\b(video|watch|youtube|clip)\b/i.test(message || '');
     const isStruggling = turnResult.nextState.consecutiveWrong >= 2;
 
-    if (wantsVideo || isStruggling) {
+    if (wantsVideo || isStruggling || turnResult.attachments?.includes('video')) {
       try {
         fetchedVideos = await searchYouTube(`${topic.title} ${currentGoalRecord?.title || ''}`);
       } catch (ytErr) {
@@ -293,14 +444,117 @@ async function handleTopicChatMessageV2(req, res) {
       }
     }
 
-    // 13. Update user's chat count
+    // Persist Mermaid diagram as turn attachment if present
+    if (turnResult.mermaid_diagram && turnResult.mermaid_diagram.code) {
+      try {
+        const diagram = turnResult.mermaid_diagram;
+        const diagramRecord = await prisma.admin_chat.create({
+          data: {
+            user_id,
+            sender: 'ai',
+            message: diagram.title || 'Concept Diagram',
+            message_type: 'mermaid_diagram',
+            diff_html: JSON.stringify({ code: diagram.code, title: diagram.title, trigger: diagram.trigger || 'teaching' }),
+            options: [],
+            created_at: new Date()
+          },
+          select: {
+            id: true,
+            sender: true,
+            message: true,
+            message_type: true,
+            options: true,
+            diff_html: true,
+            emoji: true,
+            created_at: true
+          }
+        });
+        savedAiMessages.push({
+          ...diagramRecord,
+          mermaid_diagram: diagram,
+          options: []
+        });
+        if (savedAiMessages[0]) {
+          savedAiMessages[0].mermaid_diagram = diagram;
+        }
+      } catch (diagramErr) {
+        console.error('[Tutor-Core V2] Error saving mermaid diagram:', diagramErr.message);
+      }
+    }
+
+    // Persist YouTube video as turn attachment if present
+    if (fetchedVideos && fetchedVideos.length > 0) {
+      try {
+        for (const video of fetchedVideos.slice(0, 1)) {
+          const videoRecord = await prisma.admin_chat.create({
+            data: {
+              user_id,
+              sender: 'ai',
+              message: video.title || 'YouTube Video',
+              message_type: 'youtube_video',
+              diff_html: JSON.stringify({
+                video_id: video.id,
+                thumbnail: video.thumbnail,
+                url: video.url,
+                embedUrl: video.embedUrl,
+                channel: video.channel,
+                duration: video.duration,
+                viewCount: video.viewCount,
+                trigger: 'teaching',
+                search_query: `${topic.title} ${currentGoalRecord?.title || ''}`
+              }),
+              videos: [video.url],
+              options: [],
+              created_at: new Date()
+            },
+            select: {
+              id: true,
+              sender: true,
+              message: true,
+              message_type: true,
+              options: true,
+              diff_html: true,
+              emoji: true,
+              created_at: true
+            }
+          });
+          savedAiMessages.push({
+            ...videoRecord,
+            youtube_video: {
+              title: video.title,
+              url: video.url,
+              embedUrl: video.embedUrl,
+              thumbnail: video.thumbnail,
+              channel: video.channel,
+              duration: video.duration
+            },
+            videos: [video],
+            options: []
+          });
+          if (savedAiMessages[0]) {
+            savedAiMessages[0].youtube_video = {
+              title: video.title,
+              url: video.url,
+              embedUrl: video.embedUrl,
+              thumbnail: video.thumbnail,
+              channel: video.channel,
+              duration: video.duration
+            };
+          }
+        }
+      } catch (videoErr) {
+        console.error('[Tutor-Core V2] Error saving youtube video:', videoErr.message);
+      }
+    }
+
+    // 14. Update user's chat count
     await prisma.users.update({
       where: { user_id },
       data: { num_chats: { increment: 1 } }
     });
 
-    // Fetch updated goals for UI
-    const updatedGoals = await prisma.global_topic_goals.findMany({
+    // 15. Fetch updated goals for UI with synchronized progress
+    const rawUpdatedGoals = await prisma.global_topic_goals.findMany({
       where: { topic_id: parseInt(topicId) },
       orderBy: { order: 'asc' },
       include: {
@@ -312,9 +566,34 @@ async function handleTopicChatMessageV2(req, res) {
       }
     });
 
-    console.log(`[Tutor-Core V2] ✅ Turn complete. Sent ${savedAiMessages.length} AI bubbles. Phase: ${turnResult.nextState.phase}`);
+    const updatedGoals = rawUpdatedGoals.map((g, idx) => {
+      const isDone = idx < nextGoalIndex || isSessionWrapping;
+      const existingProgress = g.chat_goal_progress?.[0];
+      const goalStats = turnResult.nextState.perGoal?.[idx] || { total: 0, correct: 0 };
+      return {
+        ...g,
+        is_completed: isDone || existingProgress?.is_completed || false,
+        chat_goal_progress: [
+          {
+            id: existingProgress?.id || 0,
+            goal_id: g.id,
+            user_id,
+            is_completed: isDone || existingProgress?.is_completed || false,
+            num_questions: existingProgress?.num_questions ?? goalStats.total,
+            num_correct: existingProgress?.num_correct ?? goalStats.correct,
+            num_incorrect: existingProgress?.num_incorrect ?? Math.max(0, goalStats.total - goalStats.correct),
+            score_percent: goalStats.total > 0
+              ? Math.round((goalStats.correct / goalStats.total) * 100)
+              : (existingProgress?.score_percent || 0),
+            updated_at: new Date()
+          }
+        ]
+      };
+    });
 
-    // 14. Deliver SendMessageResponse to frontend
+    console.log(`[Tutor-Core V2] ✅ Turn complete. Sent ${savedAiMessages.length} AI items. Phase: ${turnResult.nextState.phase}, Goal: ${nextGoalIndex + 1}/${topicGoals.length}`);
+
+    // 16. Deliver SendMessageResponse to frontend
     return res.status(201).json({
       userMessage: updatedUserMsg,
       aiMessages: savedAiMessages,

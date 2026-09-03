@@ -1,8 +1,9 @@
-const { evaluateStudentTurn } = require('./evaluator');
-const { advance, instructionFor, initialState } = require('./state');
+const { evaluateStudentTurn, resolveOptionAnswer } = require('./evaluator');
+const { advance, instructionFor, initialState, questionTypeFor, isScored, attachmentsFor } = require('./state');
 const { generateTutorResponse } = require('./tutor-generator');
 const { enforce } = require('./validate');
 const { getCachedDiagram } = require('./diagram-cache');
+const { buildReport, reportBrief } = require('./summary');
 
 /**
  * Extract the last question asked by the tutor from chat history or state
@@ -28,9 +29,9 @@ function findLastQuestion(chatHistory, state) {
  * The Central Orchestrator Pipeline
  *
  * Runs Steps 1 -> 2 -> 3 -> 4:
- * 1. Evaluates user input (semantic intent, grading, diff).
- * 2. Advances server-owned state machine (budget, goal transitions, off-topic streaks).
- * 3. Generates Socratic dialogue bubbles (<= 20 words each).
+ * 1. Evaluates user input (resolves option letters, semantic intent, grading, diff).
+ * 2. Advances server-owned state machine (7-phase arc, question budget, MCQ isolation).
+ * 3. Generates Socratic dialogue bubbles (<= 20 words each, respects questionType).
  * 4. Deterministically validates and auto-heals output before persistence.
  *
  * @param {object} params
@@ -64,9 +65,11 @@ async function processTutorTurn({
   const classLevel = userProfile.grade_level ? `Class ${userProfile.grade_level}` : 'Class 10';
 
   // ── Step 1: Evaluator Engine (LLM Call 1, Temp 0.0, ~1.5s) ──────────────────
+  // Resolve option letter (e.g. "A" -> "Salt and water") if previous turn was an MCQ
   const evaluatorResult = await evaluateStudentTurn({
     studentMessage,
     lastQuestionText,
+    lastQuestionOptions: state.lastQuestionOptions,
     topicTitle: topic.title,
     topicContent: topic.content || '',
     currentGoal,
@@ -80,13 +83,26 @@ async function processTutorTurn({
   const nextState = advance(state, {
     intent: evaluatorResult.intent,
     correct: evaluatorResult.is_correct,
-    offTopic: isOffTopic
+    offTopic: isOffTopic,
+    errorType: evaluatorResult.error_type,
+    answerText: evaluatorResult.resolved_answer || studentMessage
   });
 
   // CRITICAL INVARIANT: instructionFor is called strictly on POST-ADVANCE state
   const stateInstruction = instructionFor(nextState, {
     intent: evaluatorResult.intent
   });
+
+  const questionType = questionTypeFor(nextState.phase);
+  const attachments = attachmentsFor(nextState);
+
+  // If wrapping, build mastery report and brief
+  let masteryReport = null;
+  let masteryBrief = null;
+  if (nextState.phase === 'WRAP' || nextState.phase === 'DONE') {
+    masteryReport = buildReport(nextState, goals);
+    masteryBrief = reportBrief(masteryReport);
+  }
 
   // ── Step 3: Socratic Dialogue Generator (LLM Call 2, Temp 0.4, ~2.0s) ──────
   const rawTutorOutput = await generateTutorResponse({
@@ -95,31 +111,43 @@ async function processTutorTurn({
     studentMessage,
     evaluatorResult,
     stateInstruction,
+    questionType,
+    phase: nextState.phase,
+    reportBrief: masteryBrief,
     lastQuestionText,
     recentHistory: chatHistory,
     classLevel
   });
 
-  // ── Step 3b: Diagram Retrieval Off Critical Path (0ms) ──────────────────────
+  // ── Step 3b: Diagram / Attachments Retrieval ──────────────────────────────
   let mermaidDiagram = null;
-  if (nextState.questionsThisGoal === 0 && nextState.phase === 'TEACH') {
+  if (attachments.includes('diagram')) {
     mermaidDiagram = getCachedDiagram(topic.title, currentGoal.title, currentGoal);
   }
 
   // ── Step 4: Quality & Structural Validator (Pure JS, < 1ms) ────────────────
-  const fallbackQuestion = `What do you think is the next key step in ${currentGoal.title}?`;
+  const fallbackQuestion = questionType === 'mcq'
+    ? `Which of these best explains ${currentGoal.title}?`
+    : `What do you think is the next key step in ${currentGoal.title}?`;
+
   const validated = enforce(rawTutorOutput, {
     isCorrect: evaluatorResult.is_correct,
     phase: nextState.phase,
+    questionType,
     fallbackQuestion,
     diffHtml: evaluatorResult.diff_html,
-    studentMessage
+    studentMessage: evaluatorResult.resolved_answer || studentMessage
   });
 
-  // Remember the new question in state for next turn's lastQuestionText
+  // Remember the new question & options in state for next turn
   const finalBubble = validated.messages[validated.messages.length - 1];
   if (finalBubble && finalBubble.message) {
     nextState.lastQuestionText = finalBubble.message;
+    nextState.lastQuestionOptions = Array.isArray(finalBubble.options) && finalBubble.options.length > 0
+      ? finalBubble.options
+      : null;
+  } else {
+    nextState.lastQuestionOptions = null;
   }
 
   // Build user correction object for UI
@@ -139,6 +167,9 @@ async function processTutorTurn({
     evaluatorResult,
     nextState,
     stateInstruction,
+    questionType,
+    attachments,
+    masteryReport,
     messages: validated.messages,
     userCorrection,
     mermaid_diagram: mermaidDiagram,

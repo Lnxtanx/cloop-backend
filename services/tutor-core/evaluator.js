@@ -14,6 +14,48 @@ function escapeHtml(text) {
 }
 
 /**
+ * Resolve an option letter (e.g. "A", "b", "1") to its full text from lastQuestionOptions
+ */
+function resolveOptionAnswer(studentMessage, options) {
+  if (!studentMessage || !Array.isArray(options) || options.length === 0) {
+    return { isOption: false, resolvedText: studentMessage || '', raw: studentMessage || '' };
+  }
+  const trimmed = String(studentMessage).trim();
+
+  // Pattern: "A", "a", "A.", "A)", "Option A", "option B"
+  const letterMatch = trimmed.match(/^(?:option\s+)?([A-Z])(?:\.|\))?$/i);
+  const digitMatch = trimmed.match(/^(?:option\s+)?([1-9])(?:\.|\))?$/i);
+
+  if (letterMatch) {
+    const idx = letterMatch[1].toUpperCase().charCodeAt(0) - 65; // A -> 0
+    if (idx >= 0 && idx < options.length) {
+      const opt = options[idx];
+      const text = typeof opt === 'string' ? opt : (opt.text || opt.value || '');
+      return { isOption: true, resolvedText: text, raw: trimmed, optionIndex: idx };
+    }
+  } else if (digitMatch) {
+    const idx = parseInt(digitMatch[1], 10) - 1;
+    if (idx >= 0 && idx < options.length) {
+      const opt = options[idx];
+      const text = typeof opt === 'string' ? opt : (opt.text || opt.value || '');
+      return { isOption: true, resolvedText: text, raw: trimmed, optionIndex: idx };
+    }
+  }
+
+  // Check direct value match e.g. opt.value === trimmed
+  for (let i = 0; i < options.length; i++) {
+    const opt = options[i];
+    if (typeof opt === 'object' && opt !== null) {
+      if (opt.value && String(opt.value).trim().toLowerCase() === trimmed.toLowerCase()) {
+        return { isOption: true, resolvedText: opt.text || opt.value, raw: trimmed, optionIndex: i };
+      }
+    }
+  }
+
+  return { isOption: false, resolvedText: trimmed, raw: trimmed };
+}
+
+/**
  * Step 1: Evaluator Engine (Intent Classification & Semantic Grading)
  *
  * Runs a single, fast DeepSeek V3 call at temperature 0.0.
@@ -24,6 +66,7 @@ function escapeHtml(text) {
  * @param {object} params
  * @param {string} params.studentMessage - Raw text from student
  * @param {string} params.lastQuestionText - Question the tutor previously asked
+ * @param {Array}  [params.lastQuestionOptions] - Options if the previous question was an MCQ
  * @param {string} params.topicTitle - Topic title (e.g., "Chemical Reactions")
  * @param {string} [params.topicContent] - Optional background content of the topic
  * @param {object} params.currentGoal - { id, title, description }
@@ -35,6 +78,7 @@ function escapeHtml(text) {
 async function evaluateStudentTurn({
   studentMessage,
   lastQuestionText,
+  lastQuestionOptions = null,
   topicTitle,
   topicContent = '',
   currentGoal,
@@ -58,12 +102,18 @@ async function evaluateStudentTurn({
     };
   }
 
+  const resolved = resolveOptionAnswer(trimmed, lastQuestionOptions);
+
+  const optionsPromptSection = Array.isArray(lastQuestionOptions) && lastQuestionOptions.length > 0
+    ? `\nAVAILABLE OPTIONS FOR THIS QUESTION:\n${lastQuestionOptions.map((o, idx) => `${String.fromCharCode(65 + idx)}: ${typeof o === 'string' ? o : o.text || o.value}`).join('\n')}\n`
+    : '';
+
   const systemPrompt = `You are Cloop's Academic Evaluator Engine for ${classLevel}.
 Analyze the student's message with high accuracy, classify their intent, grade their answer against the target concept, and output clean, structured JSON.
 
 TOPIC: ${topicTitle}
 CURRENT GOAL: ${currentGoal?.title || 'Core Concept'} (Goal ${goalIndex + 1} of ${totalGoals})
-LAST QUESTION ASKED BY TUTOR: "${lastQuestionText || 'Initial introduction'}"
+LAST QUESTION ASKED BY TUTOR: "${lastQuestionText || 'Initial introduction'}"${optionsPromptSection}
 ${currentGoal?.description ? `GOAL DESCRIPTION: ${currentGoal.description}` : ''}
 ${topicContent ? `TOPIC SUMMARY: ${topicContent.substring(0, 300)}...` : ''}
 
@@ -78,6 +128,7 @@ GRADING RULES (Only evaluate when intent is "ANSWER"):
 - If the student grasped the core intuition even with minor phrasing or spelling issues: is_correct = true, score_percent >= 80.
 - If incorrect, incomplete, or contains conceptual errors: is_correct = false, score_percent < 70.
 - When is_correct is false, ALWAYS provide diff_html using <del>student error</del><ins>correct text</ins>. Keep the correction surgical and under 15 words.
+- If the student chose an option letter, use the resolved concept text in the diff, NEVER just the letter alone!
 - When is_correct is true, diff_html MUST be null.
 
 Output STRICT JSON matching this schema:
@@ -92,10 +143,14 @@ Output STRICT JSON matching this schema:
   "reasoning": string
 }`;
 
+  const messageContent = resolved.isOption
+    ? `STUDENT MESSAGE: "${resolved.resolvedText}" (Student selected: ${resolved.raw})`
+    : `STUDENT MESSAGE: "${trimmed}"`;
+
   const messages = [
     {
       role: 'user',
-      content: `STUDENT MESSAGE: "${trimmed}"`
+      content: messageContent
     }
   ];
 
@@ -126,13 +181,15 @@ Output STRICT JSON matching this schema:
       diff_html: intent === 'ANSWER' && !parsed.is_correct ? (parsed.diff_html || null) : null,
       complete_answer: parsed.complete_answer || null,
       suggested_action: parsed.suggested_action || (intent === 'ANSWER' ? (parsed.is_correct ? 'MOVE_ON' : 'RETEACH_NEW_ANGLE') : 'REASK'),
-      reasoning: parsed.reasoning || ''
+      reasoning: parsed.reasoning || '',
+      resolved_answer: resolved.isOption ? resolved.resolvedText : null
     };
 
     // Strikethrough Fallback Guard: If wrong but diff_html was omitted, guarantee a clean diff
     if (result.intent === 'ANSWER' && result.is_correct === false && !result.diff_html) {
+      const studentErrText = resolved.isOption ? resolved.resolvedText : trimmed;
       const safeTarget = result.complete_answer || 'the correct answer';
-      result.diff_html = `<del>${escapeHtml(trimmed)}</del><ins>${escapeHtml(safeTarget)}</ins>`;
+      result.diff_html = `<del>${escapeHtml(studentErrText)}</del><ins>${escapeHtml(safeTarget)}</ins>`;
     }
 
     return result;
@@ -147,18 +204,20 @@ Output STRICT JSON matching this schema:
 
     return {
       intent: fallbackIntent,
-      is_correct: fallbackIntent === 'ANSWER' ? true : null, // Default to encouraging on network error
+      is_correct: fallbackIntent === 'ANSWER' ? true : null,
       score_percent: fallbackIntent === 'ANSWER' ? 75 : null,
       error_type: null,
       diff_html: null,
       complete_answer: null,
       suggested_action: fallbackIntent === 'ANSWER' ? 'MOVE_ON' : 'REASK',
-      reasoning: 'Fallback generated due to evaluator error: ' + error.message
+      reasoning: 'Fallback generated due to evaluator error: ' + error.message,
+      resolved_answer: resolved.isOption ? resolved.resolvedText : null
     };
   }
 }
 
 module.exports = {
   evaluateStudentTurn,
+  resolveOptionAnswer,
   escapeHtml
 };

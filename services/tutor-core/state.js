@@ -1,72 +1,116 @@
 /**
  * Tutor session state — owned by the server, never inferred from model output.
  *
- * Three phases: GREET → TEACH → WRAP → DONE.
+ * Session shape:
  *
- * The previous design re-derived the phase on every request by scanning chat
- * history for message_type tags the model itself had written:
+ *   PROBE → THEORY → OBJECTIVES → [ DIALOGUE ×2 → CHECK ×1 ] per goal → WRAP → DONE
  *
- *     const hasExamDef = aiMessages.some(m => m.message_type === 'exam_definition')
+ *   PROBE       one open question, unscored, to see what they already know
+ *   THEORY      the concept explained, with a diagram and key points attached
+ *   OBJECTIVES  what this session will get them to, in one line
+ *   DIALOGUE    the core loop — the student WRITES answers and gets corrected
+ *   CHECK       one multiple-choice question, to assess what the dialogue taught
+ *   WRAP        a mastery report computed from what actually happened
  *
- * That makes the state machine's inputs the model's outputs. Forget a tag and
- * the session sticks in a phase forever; emit one early and it skips ahead;
- * drop a message and the phase silently regresses. It is also why the prompt
- * had to grow so large — it was the only thing holding the contract together.
+ * Two things this file exists to guarantee.
+ *
+ * Multiple choice is assessment, not teaching. The question TYPE is decided
+ * here, per phase, and handed to the generator — it is never left to the model.
+ * When the previous version only hinted at it in a JSON schema comment, the
+ * model produced multiple choice on nearly every turn and students stopped
+ * writing anything at all.
+ *
+ * And the phase is never read back out of the model's own output. Deriving it
+ * from message_type tags the model had written meant a forgotten tag stalled
+ * the session and a dropped message silently regressed it.
  *
  * Every function here is pure: same input, same output, no I/O, no clock, no
  * randomness. `advance` never mutates the state it is given.
  */
 
-const PHASES = ["GREET", "TEACH", "WRAP", "DONE"];
+const PHASES = ["PROBE", "THEORY", "OBJECTIVES", "DIALOGUE", "CHECK", "WRAP", "DONE"];
 
-/** Session-wide question budget. The arc is ~12 questions. */
-const TOTAL_QUESTION_BUDGET = 12;
+/** Written answers per goal. The heart of the session. */
+const OPEN_PER_GOAL = 2;
 
-/** Questions per goal, before the budget is shared out. */
-const MAX_QUESTIONS_PER_GOAL = 2;
+/** Multiple-choice checks per goal. Assessment only, after the teaching. */
+const MCQ_PER_GOAL = 1;
 
-/**
- * Wrong answers on the same question before we move on anyway.
- *
- * Three, not two, so both teaching tiers are reachable: the first wrong answer
- * gets a correction and an easier re-ask, the second gets the concept taught a
- * different way, and the third moves on rather than trapping the student. At
- * two, the second tier fires on the same turn the goal advances and the first
- * tier is dead code.
- */
+/** Attempts at one question before moving on rather than trapping the student. */
 const MAX_ATTEMPTS = 3;
 
-/** Consecutive off-topic answers before the session is closed politely. */
+/** Consecutive off-topic answers before the session closes politely. */
 const OFF_TOPIC_STRIKES = 3;
 
 /**
- * How many questions this goal gets.
+ * Hard stop on total turns.
  *
- * A fixed 2 per goal silently drops goals on a large topic: 8 goals × 2 = 16
- * against a budget of 12, so the last four are never taught. Sharing the budget
- * out means every goal gets at least one question.
+ * Sessions may run long to reach the academic outcome, so there is no tight
+ * question budget — but a student who answers "i don't know" indefinitely must
+ * still reach a summary rather than looping forever.
  */
-function questionsPerGoal(goalTotal) {
-  const total = Math.max(1, goalTotal | 0);
-  if (total * MAX_QUESTIONS_PER_GOAL <= TOTAL_QUESTION_BUDGET) return MAX_QUESTIONS_PER_GOAL;
-  return Math.max(1, Math.floor(TOTAL_QUESTION_BUDGET / total));
-}
+const MAX_TURNS = 60;
+
+/** Mastery bands, applied to a goal's accuracy. */
+const BANDS = [
+  { min: 0.8, label: "Mastered" },
+  { min: 0.6, label: "Proficient" },
+  { min: 0.4, label: "Developing" },
+  { min: 0.0, label: "Emerging" },
+];
 
 function initialState(goalTotal) {
   const total = Math.max(1, goalTotal | 0);
   return {
-    phase: "GREET",
+    phase: "PROBE",
     goalIndex: 0,
     goalTotal: total,
-    questionsPerGoal: questionsPerGoal(total),
-    questionsThisGoal: 0,
+    openThisGoal: 0,
+    mcqThisGoal: 0,
     totalQuestions: 0,
+    totalTurns: 0,
     consecutiveWrong: 0,
     offTopicStreak: 0,
     reteachPending: false,
     lastQuestionText: "",
+    lastQuestionType: "open",
+    lastQuestionOptions: null,
+    probeAnswer: null,
+    perGoal: Array.from({ length: total }, () => ({ correct: 0, total: 0, errors: [] })),
     endedReason: null,
   };
+}
+
+/**
+ * The question type this phase asks for. Decided here, never by the model.
+ * Only CHECK is multiple choice — everywhere else the student writes.
+ * WRAP and DONE ask nothing, so they return null rather than claiming a type.
+ */
+function questionTypeFor(phase) {
+  if (phase === "WRAP" || phase === "DONE") return null;
+  return phase === "CHECK" ? "mcq" : "open";
+}
+
+/** Whether an answer in this phase counts toward mastery. */
+function isScored(phase) {
+  return phase === "DIALOGUE" || phase === "CHECK";
+}
+
+/** Which attachments this turn should carry. The server decides, not the model. */
+function attachmentsFor(state) {
+  switch (state.phase) {
+    case "THEORY":
+      return ["diagram", "key_points"];
+    case "OBJECTIVES":
+      return ["objectives"];
+    case "DIALOGUE":
+      // A video only when a goal opens, and only if the student is struggling.
+      return state.openThisGoal === 0 && state.consecutiveWrong > 0 ? ["video"] : [];
+    case "WRAP":
+      return ["revision_sheet", "mastery_report"];
+    default:
+      return [];
+  }
 }
 
 /**
@@ -75,38 +119,45 @@ function initialState(goalTotal) {
  * @param {object} state
  * @param {object} event
  * @param {string}  event.intent      - ANSWER | ACK | HELP | IDK
- * @param {boolean} [event.correct]   - grader verdict; only read when intent is ANSWER
- * @param {boolean} [event.offTopic]  - grader saw an unrelated answer, not a wrong one
- * @param {string}  [event.questionText] - the question this turn asked
- * @returns {object} a new state
+ * @param {boolean} [event.correct]   - grader verdict; read only when intent is ANSWER
+ * @param {boolean} [event.offTopic]  - unrelated, as opposed to wrong
+ * @param {string}  [event.errorType] - grader's error category, recorded for the report
+ * @param {string}  [event.answerText]
+ * @param {string}  [event.questionText]
+ * @param {Array}   [event.questionOptions]
  */
 function advance(state, event = {}) {
-  const s = { ...state };
+  const s = {
+    ...state,
+    perGoal: state.perGoal.map((g) => ({ ...g, errors: [...g.errors] })),
+  };
   const intent = event.intent || "ANSWER";
+  s.totalTurns = state.totalTurns + 1;
   if (event.questionText) s.lastQuestionText = event.questionText;
+  if (event.questionOptions !== undefined) s.lastQuestionOptions = event.questionOptions;
 
-  // ── the session is over ──────────────────────────────────────────────────
   if (state.phase === "DONE") return s;
 
-  // WRAP is a single turn: it delivers the revision sheet and closes.
   if (state.phase === "WRAP") {
     s.phase = "DONE";
     s.endedReason = s.endedReason || "complete";
     return s;
   }
 
+  // Out of turns: still finish properly, with a report.
+  if (s.totalTurns >= MAX_TURNS) {
+    s.phase = "WRAP";
+    s.endedReason = "turn_limit";
+    return s;
+  }
+
   // ── non-answers never advance anything ──────────────────────────────────
-  // "ok", "explain", "idk" must not move the phase, the goal, or the budget.
-  // A question stays open until it gets a real attempt.
   if (intent !== "ANSWER") {
     s.reteachPending = intent === "HELP" || intent === "IDK";
     return s;
   }
 
-  // ── politely close on repeated off-topic answers ─────────────────────────
-  // Driven by the grader, not by the shape of the characters: a student
-  // struggling scores low but stays on topic, and telling them their real
-  // answer is nonsense is far worse than grading nonsense.
+  // ── repeated off-topic answers close the session kindly ──────────────────
   if (event.offTopic) {
     s.offTopicStreak = state.offTopicStreak + 1;
     if (s.offTopicStreak >= OFF_TOPIC_STRIKES) {
@@ -117,85 +168,117 @@ function advance(state, event = {}) {
   }
   s.offTopicStreak = 0;
 
-  // ── a wrong answer re-teaches before it advances ─────────────────────────
-  // The guard is on the attempt count, not on "is this the first one". Testing
-  // `consecutiveWrong === 0` means the SECOND wrong answer skips the re-teach
-  // and advances the goal as if it were correct, and the counter never reaches
-  // 2, so a second-attempt instruction can never fire.
-  if (event.correct === false) {
+  // ── record mastery evidence before anything moves ────────────────────────
+  if (isScored(state.phase)) {
+    const g = s.perGoal[state.goalIndex];
+    if (g) {
+      g.total += 1;
+      if (event.correct) g.correct += 1;
+      // Every occurrence is recorded, not one per type: the report counts how
+      // often a mistake was made, and deduping here would understate it.
+      else if (event.errorType) g.errors.push(event.errorType);
+    }
+    s.totalQuestions = state.totalQuestions + 1;
+  }
+
+  if (state.phase === "PROBE") s.probeAnswer = event.answerText || null;
+
+  // ── a wrong answer is re-taught before the session moves on ──────────────
+  if (event.correct === false && isScored(state.phase)) {
     s.consecutiveWrong = state.consecutiveWrong + 1;
     if (s.consecutiveWrong < MAX_ATTEMPTS) {
       s.reteachPending = true;
-      return s; // same question, taught differently — costs no budget
+      return s; // same question, taught a different way
     }
-    // Attempts exhausted. Count it and move on rather than trap them.
   }
-
   s.reteachPending = false;
   s.consecutiveWrong = 0;
-  s.questionsThisGoal = state.questionsThisGoal + 1;
-  s.totalQuestions = state.totalQuestions + 1;
 
-  // GREET asks the first question; answering it begins TEACH.
-  if (state.phase === "GREET") s.phase = "TEACH";
-
-  if (s.totalQuestions >= TOTAL_QUESTION_BUDGET) {
-    s.phase = "WRAP";
-    return s;
-  }
-
-  if (s.questionsThisGoal >= state.questionsPerGoal) {
-    const nextGoal = state.goalIndex + 1;
-    if (nextGoal >= state.goalTotal) {
-      s.phase = "WRAP";
-      return s;
-    }
-    s.goalIndex = nextGoal;
-    s.questionsThisGoal = 0;
-  }
-
+  s.phase = nextPhase(state, s);
+  s.lastQuestionType = questionTypeFor(s.phase);
   return s;
 }
 
-/**
- * What the orchestrator should tell the model to do this turn.
- *
- * CALL ORDER MATTERS. Pass the state returned by `advance`, never the state
- * that went into it:
- *
- *     const next = advance(state, { intent, correct, offTopic });
- *     const instruction = instructionFor(next, { intent });   // correct
- *
- * Reading the pre-advance state carries `reteachPending` over from the previous
- * turn, so a student who asks "explain" and then answers correctly is told they
- * made a mistake.
- */
+/** The transition table, kept separate so it reads at a glance. */
+function nextPhase(prev, s) {
+  switch (prev.phase) {
+    case "PROBE":
+      return "THEORY";
+    case "THEORY":
+      return "OBJECTIVES";
+    case "OBJECTIVES":
+      return "DIALOGUE";
+
+    case "DIALOGUE":
+      s.openThisGoal = prev.openThisGoal + 1;
+      return s.openThisGoal >= OPEN_PER_GOAL ? "CHECK" : "DIALOGUE";
+
+    case "CHECK": {
+      s.mcqThisGoal = prev.mcqThisGoal + 1;
+      if (s.mcqThisGoal < MCQ_PER_GOAL) return "CHECK";
+      const next = prev.goalIndex + 1;
+      if (next >= prev.goalTotal) return "WRAP";
+      s.goalIndex = next;
+      s.openThisGoal = 0;
+      s.mcqThisGoal = 0;
+      return "DIALOGUE";
+    }
+
+    case "WRAP":
+      return "DONE";
+    default:
+      return "DONE";
+  }
+}
+
+/** What the generator should be told to do this turn. */
 function instructionFor(state, event = {}) {
   const intent = event.intent || "ANSWER";
   if (state.phase === "DONE") return "session_over";
   if (state.phase === "WRAP") {
-    return state.endedReason === "off_topic" ? "close_off_topic" : "wrap";
+    return state.endedReason === "off_topic" ? "close_off_topic" : "wrap_with_report";
   }
   if (intent === "ACK") return "reask_shorter";
   if (intent === "IDK") return "hint_then_easier";
   if (intent === "HELP") return "explain_differently";
   if (state.reteachPending) {
-    // 1st wrong: correct it and re-ask easier. 2nd+: teach it a different way.
     return state.consecutiveWrong >= 2 ? "reteach_new_angle" : "correct_and_reask";
   }
-  if (state.questionsThisGoal === 0 && state.totalQuestions > 0) return "introduce_next_goal";
-  if (state.phase === "GREET") return "greet_and_ask";
-  return "acknowledge_and_ask_next";
+  switch (state.phase) {
+    case "PROBE":
+      return "probe_prior_knowledge";
+    case "THEORY":
+      return "teach_theory";
+    case "OBJECTIVES":
+      return "state_objectives";
+    case "CHECK":
+      return "assess_with_mcq";
+    case "DIALOGUE":
+      return state.openThisGoal === 0 ? "open_goal_dialogue" : "continue_dialogue";
+    default:
+      return "continue_dialogue";
+  }
+}
+
+/** The band a proportion falls into. */
+function bandFor(accuracy) {
+  return (BANDS.find((b) => accuracy >= b.min) || BANDS[BANDS.length - 1]).label;
 }
 
 module.exports = {
   PHASES,
-  TOTAL_QUESTION_BUDGET,
-  MAX_QUESTIONS_PER_GOAL,
+  OPEN_PER_GOAL,
+  MCQ_PER_GOAL,
   MAX_ATTEMPTS,
   OFF_TOPIC_STRIKES,
-  questionsPerGoal,
+  MAX_TURNS,
+  BANDS,
   initialState,
   advance,
+  nextPhase,
   instructionFor,
+  questionTypeFor,
+  isScored,
+  attachmentsFor,
+  bandFor,
 };

@@ -5,16 +5,16 @@
  * Enforces structural invariants before messages are saved to the database
  * or sent to the frontend:
  * 1. Purges empty or whitespace-only bubbles.
- * 2. Enforces max bubble count (up to 3, max 4 on deep reteach).
+ * 2. Enforces max bubble count (up to 2 bubbles: concept + question).
  * 3. Enforces strict <= 20 words per bubble (splits or trims long bubbles).
- * 4. Ensures the final bubble ends with an answerable question (never dead-ends).
+ * 4. Ensures the final bubble ends with an answerable question (never dead-ends), except in WRAP/DONE.
  * 5. Reconciles tone (strips unearned praise on incorrect attempts).
- * 6. Sanitizes strikethrough diff HTML.
+ * 6. Enforces MCQ isolation: strips options when questionType is 'open'.
+ * 7. Sanitizes strikethrough diff HTML.
  */
 
 const MAX_WORDS_PER_BUBBLE = 20;
 const MAX_BUBBLES = 2; // Strict hard cap: at most 2 bubbles (ideally 1)
-
 
 /**
  * Phrases that send the student off to a card instead of answering.
@@ -50,7 +50,6 @@ function cleanProse(text) {
     .replace(/\s+([,.?!])/g, '$1')
     .trim();
 }
-
 
 /**
  * Count words in a string
@@ -153,7 +152,8 @@ function reconcileTone(messageText, isCorrect) {
  * @param {object} rawOutput - { messages: Array }
  * @param {object} context
  * @param {boolean|null} context.isCorrect - Verdict from Step 1
- * @param {string} context.phase - Current session phase ('GREET'|'TEACH'|'WRAP'|'DONE')
+ * @param {string} context.phase - Current session phase
+ * @param {string} [context.questionType] - 'open' | 'mcq' | null
  * @param {string} [context.fallbackQuestion] - Topic-level fallback question
  * @param {string} [context.diffHtml] - Raw diff from Evaluator
  * @param {string} [context.studentMessage] - Raw student message
@@ -162,7 +162,8 @@ function reconcileTone(messageText, isCorrect) {
 function enforce(rawOutput, context = {}) {
   const {
     isCorrect = null,
-    phase = 'TEACH',
+    phase = 'DIALOGUE',
+    questionType = 'open',
     fallbackQuestion = 'What do you think is the next step?',
     diffHtml = null,
     studentMessage = ''
@@ -229,7 +230,14 @@ function enforce(rawOutput, context = {}) {
     });
   }
 
-  // 4. Ensure terminal question (unless session is WRAP or DONE)
+  // 4. MCQ Isolation Guard: On 'open' turns, defensively purge any accidental options
+  if (questionType === 'open' || phase === 'PROBE' || phase === 'THEORY' || phase === 'OBJECTIVES' || phase === 'DIALOGUE') {
+    for (const bubble of cappedBubbles) {
+      if (bubble.options) delete bubble.options;
+    }
+  }
+
+  // 5. Ensure terminal question (unless session is WRAP or DONE)
   if (phase !== 'WRAP' && phase !== 'DONE') {
     const lastBubble = cappedBubbles[cappedBubbles.length - 1];
     const hasOptions = Array.isArray(lastBubble.options) && lastBubble.options.length > 0;
@@ -250,8 +258,7 @@ function enforce(rawOutput, context = {}) {
     }
   }
 
-
-  // 5. Sanitize diff_html
+  // 6. Sanitize diff_html
   const sanitizedDiff = sanitizeDiffHtml(diffHtml, studentMessage);
 
   return {

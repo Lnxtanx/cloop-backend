@@ -4,8 +4,8 @@ const { invokeModel, extractJson } = require('../ai/deepseek-client');
  * Step 3: Focused Pedagogical Dialogue Generator (The Socratic Tutor)
  *
  * Runs the second LLM call at temperature 0.4.
- * Produces 1 to 3 conversational, encouraging bubbles (max 20 words each).
- * The final bubble must always end with an answerable question or prompt.
+ * Produces 1 to 2 conversational, encouraging bubbles (max 20 words each).
+ * Respects the server-decided questionType ('open' vs 'mcq').
  *
  * @param {object} params
  * @param {string} params.topicTitle
@@ -13,6 +13,9 @@ const { invokeModel, extractJson } = require('../ai/deepseek-client');
  * @param {string} params.studentMessage
  * @param {object} params.evaluatorResult - From Step 1
  * @param {string} params.stateInstruction - From Step 2 (instructionFor)
+ * @param {string} [params.questionType] - 'open' | 'mcq' | null (from questionTypeFor)
+ * @param {string} [params.phase] - Current session phase
+ * @param {object} [params.reportBrief] - Brief mastery metrics if in WRAP
  * @param {string} params.lastQuestionText
  * @param {Array}  [params.recentHistory] - Last 2-3 turns for conversational flow
  * @param {string} [params.classLevel]
@@ -24,6 +27,9 @@ async function generateTutorResponse({
   studentMessage,
   evaluatorResult,
   stateInstruction,
+  questionType = 'open',
+  phase = 'DIALOGUE',
+  reportBrief = null,
   lastQuestionText,
   recentHistory = [],
   classLevel = 'Class 10'
@@ -31,20 +37,32 @@ async function generateTutorResponse({
   // Build human-readable directive summary
   let directiveGuidance = '';
   switch (stateInstruction) {
-    case 'acknowledge_and_ask_next':
-      directiveGuidance = 'Validate their correct answer in 1 sentence. Then ask the next concept question.';
+    case 'probe_prior_knowledge':
+      directiveGuidance = 'Ask one open, friendly question to explore what the student already knows about this topic. Spark curiosity! Do not provide options; the student must write.';
+      break;
+    case 'teach_theory':
+      directiveGuidance = 'Explain the core mechanism in 1 intuitive sentence with an everyday Indian analogy (e.g. food, sports, daily life). Then ask an open prediction question.';
+      break;
+    case 'state_objectives':
+      directiveGuidance = 'In 1 sentence, state what the student will learn today. Ask an opening question to get started.';
+      break;
+    case 'open_goal_dialogue':
+      directiveGuidance = 'Connect to the goal in 1 brief sentence. Ask a focused open-ended question that requires the student to write their thought.';
+      break;
+    case 'continue_dialogue':
+      directiveGuidance = 'Validate their response in 1 sentence. Then ask the next concept question. The student must write their answer.';
+      break;
+    case 'assess_with_mcq':
+      directiveGuidance = 'Ask a single multiple-choice question to assess this goal. Provide 2 to 4 clear options with letters (A, B, C, D).';
       break;
     case 'correct_and_reask':
-      directiveGuidance = 'Acknowledge the attempt, clarify the specific misconception in 1 sentence, and re-ask an easier version of the question.';
+      directiveGuidance = 'Acknowledge the attempt warmly, clarify the specific misconception in 1 sentence, and re-ask an easier version of the question.';
       break;
     case 'reteach_new_angle':
-      directiveGuidance = 'Switch to an intuitive everyday Indian analogy (e.g. cricket, sharing food, bicycles). Then ask a simple concept verification question.';
-      break;
-    case 'introduce_next_goal':
-      directiveGuidance = 'Briefly connect previous learning to the new goal in 1 sentence. Ask the first question for this new goal. DO NOT GREET OR SAY HELLO!';
+      directiveGuidance = 'Switch to an intuitive everyday Indian analogy (e.g. cricket, tea, bicycles). Then ask a simple concept verification question.';
       break;
     case 'reask_shorter':
-      directiveGuidance = 'The student acknowledged ("ok"). Re-frame the question concisely or provide 2-3 options.';
+      directiveGuidance = 'The student acknowledged ("ok"). Re-frame the question concisely in fewer words.';
       break;
     case 'hint_then_easier':
       directiveGuidance = 'Give 1 helpful hint without giving away the full answer. Prompt them to try again.';
@@ -55,11 +73,13 @@ async function generateTutorResponse({
     case 'close_off_topic':
       directiveGuidance = 'Politely suggest pausing the study session for now, and warmly invite them back when ready to study.';
       break;
-    case 'wrap':
-      directiveGuidance = 'Warmly celebrate their completion of this topic in 1-2 encouraging sentences!';
+    case 'wrap_with_report':
+      directiveGuidance = reportBrief
+        ? `Warmly celebrate completing the session! Mention their overall mastery is ${reportBrief.overall_mastery_percent}%${reportBrief.strongest ? `, strongest in ${reportBrief.strongest}` : ''}. Keep it under 2 encouraging sentences!`
+        : 'Warmly celebrate completing this topic in 1-2 encouraging sentences!';
       break;
-    case 'greet_and_ask':
-      directiveGuidance = 'Welcome the student briefly to the topic in 1 sentence, and ask the opening question.';
+    case 'session_over':
+      directiveGuidance = 'The session is complete. Wish the student well in their studies!';
       break;
     default:
       directiveGuidance = 'Encourage the student and ask the next progressive question.';
@@ -71,9 +91,63 @@ async function generateTutorResponse({
     .map(m => `${m.sender === 'user' ? 'Student' : 'Tutor'}: "${m.message}"`)
     .join('\n');
 
+  // Dynamic schema & instruction depending strictly on questionType
+  const isMcq = questionType === 'mcq';
+  const isWrap = phase === 'WRAP' || phase === 'DONE';
+
+  let schemaInstructions = '';
+  if (isMcq) {
+    schemaInstructions = `QUESTION FORMAT: MULTIPLE CHOICE (MCQ)
+- The final bubble MUST contain a question ending with '?' AND 2 to 4 clear options.
+- Schema:
+{
+  "messages": [
+    {
+      "message": "Question bubble text ending with '?' (under 20 words)",
+      "message_type": "text",
+      "options": [
+        { "text": "Option text 1", "value": "A" },
+        { "text": "Option text 2", "value": "B" },
+        { "text": "Option text 3", "value": "C" }
+      ]
+    }
+  ]
+}`;
+  } else if (isWrap) {
+    schemaInstructions = `SESSION ENDING:
+- Produce 1 encouraging closing bubble.
+- Do NOT ask any questions!
+- Schema:
+{
+  "messages": [
+    {
+      "message": "Closing celebratory message (under 20 words)",
+      "message_type": "text"
+    }
+  ]
+}`;
+  } else {
+    schemaInstructions = `QUESTION FORMAT: WRITTEN OPEN ANSWER
+- The student MUST write their answer. Do NOT provide options or multiple choice buttons!
+- Schema:
+{
+  "messages": [
+    {
+      "message": "First conversational bubble (under 20 words)",
+      "message_type": "text"
+    },
+    {
+      "message": "Question bubble ending with '?' (under 20 words)",
+      "message_type": "text"
+    }
+  ]
+}`;
+  }
+
   const systemPrompt = `You are Cloop, a friendly, encouraging Socratic tutor for ${classLevel} students.
 Topic: "${topicTitle}"
 Current Goal: "${currentGoalTitle}"
+Phase: ${phase} (${questionType ? `Question Type: ${questionType}` : 'Concluding'})
 
 SITUATION FOR THIS TURN:
 - Last Question: "${lastQuestionText || 'Initial introduction'}"
@@ -84,34 +158,17 @@ SITUATION FOR THIS TURN:
 ${recentTurnsText ? `RECENT CHAT CONTEXT:\n${recentTurnsText}\n` : ''}
 STRICT GENERATION RULES:
 1. Produce 1 or 2 conversational message bubbles (ideally 1, maximum 2). Never more than 2 bubbles.
-
 2. WORD LIMIT: Every single bubble MUST BE strictly under 20 words. No long paragraphs!
-3. TERMINAL QUESTION: The final bubble MUST end with an answerable question or prompt for the student (ending with '?').
-4. Tone: Warm, natural, and encouraging. Never use robotic phrases or exaggerated praise ("Awesome!", "Brilliant!") for basic answers. Use genuine warmth ("Spot on!", "Nice work.", "Almost!").
+3. TERMINAL QUESTION: ${isWrap ? 'Do NOT ask any question.' : "The final bubble MUST end with an answerable question for the student (ending with '?')."}
+4. Tone: Warm, natural, and encouraging. Never use hollow robotic praise ("Awesome!", "Brilliant!"). Use genuine warmth ("Spot on!", "Nice work.", "Almost!").
 5. Output STRICT JSON only.
 
-Output Schema:
-{
-  "messages": [
-    {
-      "message": "First message bubble text (under 20 words)...",
-      "message_type": "text"
-    },
-    {
-      "message": "Question bubble ending with '?' (under 20 words)",
-      "message_type": "text",
-      "options": [
-        { "text": "Option A", "value": "A" },
-        { "text": "Option B", "value": "B" }
-      ] // Include options only when helpful for multiple-choice scaffolding
-    }
-  ]
-}`;
+${schemaInstructions}`;
 
   const messages = [
     {
       role: 'user',
-      content: `Respond to the student following the directive: "${directiveGuidance}"`
+      content: `Respond following the directive: "${directiveGuidance}"`
     }
   ];
 
@@ -137,36 +194,28 @@ Output Schema:
     // Context-sensitive fallback bubbles
     const fallbackBubbles = [];
 
-    if (stateInstruction === 'wrap') {
+    if (isWrap) {
       fallbackBubbles.push({
         message: 'Great job completing this topic!',
         message_type: 'text'
       });
     } else if (stateInstruction === 'close_off_topic') {
       fallbackBubbles.push({
-        message: "Let's pause here for now.",
+        message: "Let's pause here for now. You can resume anytime!",
         message_type: 'text'
       });
+    } else if (isMcq) {
       fallbackBubbles.push({
-        message: 'Come back whenever you are ready to study!',
-        message_type: 'text'
-      });
-    } else if (evaluatorResult?.is_correct === false) {
-      fallbackBubbles.push({
-        message: "Nice attempt, but let's look closer.",
-        message_type: 'text'
-      });
-      fallbackBubbles.push({
-        message: `How would you explain ${currentGoalTitle.toLowerCase()} in your own words?`,
-        message_type: 'text'
+        message: `Which of these best describes ${currentGoalTitle}?`,
+        message_type: 'text',
+        options: [
+          { text: 'Correct concept principle', value: 'A' },
+          { text: 'Opposite effect occurs', value: 'B' }
+        ]
       });
     } else {
       fallbackBubbles.push({
-        message: 'Good progress!',
-        message_type: 'text'
-      });
-      fallbackBubbles.push({
-        message: `What happens next in ${topicTitle}?`,
+        message: `What do you think happens in ${currentGoalTitle}?`,
         message_type: 'text'
       });
     }

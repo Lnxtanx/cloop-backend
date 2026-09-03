@@ -98,3 +98,32 @@ test('leaves an ordinary question untouched', () => {
   assert.strictEqual(out.messages[0].message, q);
 });
 
+test('strips options when questionType is open', () => {
+  const raw = {
+    messages: [
+      {
+        message: 'What is water made of?',
+        message_type: 'text',
+        options: [{ text: 'Hydrogen and oxygen', value: 'A' }]
+      }
+    ]
+  };
+  const out = V.enforce(raw, { phase: 'DIALOGUE', questionType: 'open' });
+  assert.strictEqual(out.messages[0].options, undefined, 'Options should be stripped on open turns');
+});
+
+test('preserves options when questionType is mcq', () => {
+  const opts = [{ text: 'Hydrogen and oxygen', value: 'A' }, { text: 'Helium and neon', value: 'B' }];
+  const raw = {
+    messages: [
+      {
+        message: 'What is water made of?',
+        message_type: 'text',
+        options: opts
+      }
+    ]
+  };
+  const out = V.enforce(raw, { phase: 'CHECK', questionType: 'mcq' });
+  assert.deepStrictEqual(out.messages[0].options, opts, 'Options should be preserved on MCQ turns');
+});
+
