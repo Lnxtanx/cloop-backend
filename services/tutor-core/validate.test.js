@@ -74,3 +74,26 @@ test('sanitizes bloated diff_html', () => {
   const insWords = V.wordCount(res.match(/<ins>(.*?)<\/ins>/)[1]);
   assert.ok(insWords <= 15, `insWords exceeded 15 words: ${insWords}`);
 });
+
+test('strips pill narration so the question stands alone', () => {
+  // A real production failure: the tutor spent the student's only bubble
+  // sending them to a card instead of asking something they could answer.
+  const cases = [
+    ["Open the 'Remember This' card, then tell me: why does it rust?", 'why does it rust?'],
+    ['Check the diagram below and then answer this. Which one?', 'Which one?'],
+    ['Tap the card to see more. What happens next?', 'What happens next?'],
+    ['Copy it down. Is iron or copper more reactive?', 'Is iron or copper more reactive?'],
+  ];
+  for (const [input, expected] of cases) {
+    const out = V.enforce({ messages: [{ message: input }] }, { phase: 'TEACH', fallbackQuestion: 'Why?' });
+    const joined = out.messages.map(m => m.message).join(' ');
+    assert.strictEqual(joined, expected, `not stripped: ${input}`);
+  }
+});
+
+test('leaves an ordinary question untouched', () => {
+  const q = 'Why does iron rust faster in the monsoon?';
+  const out = V.enforce({ messages: [{ message: q }] }, { phase: 'TEACH', fallbackQuestion: 'Why?' });
+  assert.strictEqual(out.messages[0].message, q);
+});
+

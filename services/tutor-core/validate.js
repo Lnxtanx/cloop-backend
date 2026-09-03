@@ -17,16 +17,40 @@ const MAX_BUBBLES_DEFAULT = 3;
 const MAX_BUBBLES_RETEACH = 4;
 
 /**
- * Clean and strip leaked markdown code blocks, raw mermaid syntax, or JSON artifacts
+ * Phrases that send the student off to a card instead of answering.
+ *
+ * A card renders as its own element; it needs no introduction, and a bubble
+ * spent pointing at it is a bubble the student cannot answer. This was a real
+ * production failure — "Open the 'Write this down' card, then tell me: ..." —
+ * so it is stripped here rather than merely discouraged in the prompt.
  */
+const PILL_NARRATION = [
+  /\bopen the\s+['"\u2018\u2019\u201c\u201d]?[\w\s'-]{0,30}['"\u2018\u2019\u201c\u201d]?\s*(card|pill|link|note)\b[,:]?\s*/gi,
+  /\b(tap|click|press)\s+(the|on)\b[^.?!]*[.?!]?\s*/gi,
+  /\bcheck\s+(the|out)\s+(card|diagram|link|note|sheet)\b[^.?!]*[.?!]?\s*/gi,
+  /\b(card|diagram|sheet|note)s?\s+below\b[^.?!]*[.?!]?\s*/gi,
+  /\bsee below\b[^.?!]*[.?!]?\s*/gi,
+  /\bcopy (it|this) down\b[,:]?\s*/gi,
+  /\bi'?(ve| have) added\b[^.?!]*[.?!]?\s*/gi,
+  /\bhave a look\b[^.?!]*[.?!]?\s*/gi,
+  /\bthen tell me\b[,:]?\s*/gi,
+];
+
 function cleanProse(text) {
   if (!text) return '';
-  return String(text)
+  let out = String(text)
     .replace(/```(?:mermaid|json)?[\s\S]*?```/gi, '') // Remove code fences
-    .replace(/<think>[\s\S]*?<\/think>/gi, '')         // Remove reasoning tags
-    .replace(/\s+/g, ' ')                              // Collapse whitespace
+    .replace(/<think>[\s\S]*?<\/think>/gi, '');        // Remove reasoning tags
+
+  for (const re of PILL_NARRATION) out = out.replace(re, ' ');
+
+  return out
+    .replace(/\s+/g, ' ')            // Collapse whitespace
+    .replace(/^[\s,;:.\u2014-]+/, '') // Tidy a leading fragment left behind
+    .replace(/\s+([,.?!])/g, '$1')
     .trim();
 }
+
 
 /**
  * Count words in a string
@@ -229,6 +253,7 @@ function enforce(rawOutput, context = {}) {
 }
 
 module.exports = {
+  PILL_NARRATION,
   enforce,
   cleanProse,
   wordCount,
