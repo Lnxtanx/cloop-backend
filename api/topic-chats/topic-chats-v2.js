@@ -1,5 +1,6 @@
 const prisma = require('../../lib/prisma');
 const { processTutorTurn } = require('../../services/tutor-core/orchestrator');
+const { resolveOptionAnswer } = require('../../services/tutor-core/evaluator');
 const { searchYouTube } = require('../../services/media-search');
 const { getCachedDiagram } = require('../../services/tutor-core/diagram-cache');
 
@@ -19,6 +20,30 @@ function optionsToStrings(options) {
     }
     return String(o ?? '');
   }).filter(Boolean);
+}
+
+/**
+ * Convert database admin_chat.options strings back into option objects
+ */
+function optionsFromDb(options) {
+  if (!Array.isArray(options)) return [];
+  return options.map(o => {
+    if (typeof o !== 'string') {
+      return typeof o?.value !== 'undefined' || typeof o?.text !== 'undefined'
+        ? { value: String(o.value ?? ''), text: String(o.text ?? o.value ?? '') }
+        : { value: 'x', text: 'x' };
+    }
+    const trimmed = o.trim();
+    if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        if (parsed && (parsed.value !== undefined || parsed.text !== undefined)) {
+          return { value: String(parsed.value ?? ''), text: String(parsed.text ?? parsed.value ?? '') };
+        }
+      } catch {}
+    }
+    return { value: o, text: o };
+  });
 }
 
 /**
@@ -95,11 +120,27 @@ async function handleTopicChatMessageV2(req, res) {
         id: true,
         sender: true,
         message: true,
-        message_type: true
+        message_type: true,
+        options: true
       }
     });
 
-    const chatHistory = recentMessages.reverse();
+    const parsedRecentMessages = recentMessages.map(m => ({
+      ...m,
+      options: optionsFromDb(m.options)
+    }));
+
+    // Resolve letter/number option (e.g. "A", "B", "1") to the full answer text if recent AI message had options
+    const prevAiMsg = parsedRecentMessages.find(m => m.sender === 'ai' && Array.isArray(m.options) && m.options.length > 0);
+    let effectiveMessage = (message || '').trim();
+    if (prevAiMsg && effectiveMessage) {
+      const resolved = resolveOptionAnswer(effectiveMessage, prevAiMsg.options);
+      if (resolved.isOption && resolved.resolvedText) {
+        effectiveMessage = resolved.resolvedText;
+      }
+    }
+
+    const chatHistory = [...parsedRecentMessages].reverse();
 
     // 4. Load previous session state from latest chat_process feedback
     let previousState = null;
@@ -132,7 +173,7 @@ async function handleTopicChatMessageV2(req, res) {
       data: {
         user_id,
         sender: 'user',
-        message: message || '',
+        message: effectiveMessage || '',
         message_type: 'raw',
         diff_html: null,
         options: [],
@@ -159,11 +200,11 @@ async function handleTopicChatMessageV2(req, res) {
     });
 
     // 6b. Detect video requests with typo tolerance
-    const wantsVideo = /\b(video|vidoe|vedio|vids?|youtube|yt|watch|clip|animation)\b/i.test(message || '');
+    const wantsVideo = /\b(video|vidoe|vedio|vids?|youtube|yt|watch|clip|animation)\b/i.test(effectiveMessage || '');
 
     // 7. Execute Orchestrator Pipeline (Steps 1 -> 2 -> 3 -> 4)
     const turnResult = await processTutorTurn({
-      studentMessage: message || '',
+      studentMessage: effectiveMessage || '',
       topic,
       goals: topicGoals,
       chatHistory,
@@ -179,7 +220,7 @@ async function handleTopicChatMessageV2(req, res) {
     const updatedUserMsg = await prisma.admin_chat.update({
       where: { id: userMessageRecord.id },
       data: {
-        message: message || '',
+        message: effectiveMessage || '',
         message_type: turnResult.userCorrection ? 'user_correction' : 'text',
         diff_html: turnResult.userCorrection?.diff_html || null,
         emoji: turnResult.userCorrection?.emoji || (turnResult.evaluatorResult.is_correct ? '😊' : '😅')
@@ -421,6 +462,51 @@ async function handleTopicChatMessageV2(req, res) {
             updated_at: new Date()
           }
         });
+      }
+    }
+
+    // Sync user_topic_progress for the overall topic
+    const isTopicCompleted = isSessionWrapping || turnResult.all_goals_completed || nextGoalIndex >= topicGoals.length;
+    const completedGoalsCount = isTopicCompleted ? topicGoals.length : Math.min(nextGoalIndex, topicGoals.length);
+    const completionPercent = topicGoals.length > 0
+      ? (isTopicCompleted ? 100 : Math.round((completedGoalsCount / topicGoals.length) * 100))
+      : 100;
+
+    await prisma.user_topic_progress.upsert({
+      where: {
+        user_id_topic_id: {
+          user_id,
+          topic_id: parseInt(topicId)
+        }
+      },
+      update: {
+        is_completed: isTopicCompleted,
+        completion_percent: completionPercent,
+        last_accessed_at: new Date()
+      },
+      create: {
+        user_id,
+        topic_id: parseInt(topicId),
+        is_completed: isTopicCompleted,
+        completion_percent: completionPercent,
+        last_accessed_at: new Date()
+      }
+    });
+
+    if (isTopicCompleted) {
+      try {
+        await prisma.study_sessions.updateMany({
+          where: {
+            user_id,
+            topic_id: parseInt(topicId),
+            end_time: null
+          },
+          data: {
+            end_time: new Date()
+          }
+        });
+      } catch (sessErr) {
+        console.warn('[Tutor-Core V2] Could not close study_sessions:', sessErr.message);
       }
     }
 

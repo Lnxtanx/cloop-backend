@@ -12,6 +12,7 @@ services/topic-chat/
   answer-grader.js            <- Grounded answer grader (fallback when AI omits user_correction)
   learn-more.js               <- "Learn More" post-session remediation flow
   topic_chat_metrics.js       <- Session metrics + summary message generation
+  PROMPTS.md                  <- Complete catalog of all prompts used across topic-chat
   prompts/
     system_prompt.txt         <- THE 6-phase teaching arc prompt (FRAME→HOOK→REVEAL→EXPLORE→LOCK→WRAP)
     goals_prompt.txt          <- Goal generation template

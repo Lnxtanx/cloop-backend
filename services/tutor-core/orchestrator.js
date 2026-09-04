@@ -27,6 +27,24 @@ function findLastQuestion(chatHistory, state) {
 }
 
 /**
+ * Extract the last question options asked by the tutor from state or chat history
+ */
+function findLastQuestionOptions(chatHistory, state) {
+  if (Array.isArray(state?.lastQuestionOptions) && state.lastQuestionOptions.length > 0) {
+    return state.lastQuestionOptions;
+  }
+  if (Array.isArray(chatHistory)) {
+    for (let i = chatHistory.length - 1; i >= 0; i--) {
+      const msg = chatHistory[i];
+      if (msg.sender === 'ai' && Array.isArray(msg.options) && msg.options.length > 0) {
+        return msg.options;
+      }
+    }
+  }
+  return null;
+}
+
+/**
  * The Central Orchestrator Pipeline
  *
  * Runs Steps 1 -> 2 -> 3 -> 4:
@@ -65,13 +83,14 @@ async function processTutorTurn({
   };
 
   const lastQuestionText = findLastQuestion(chatHistory, state);
+  const lastQuestionOptions = findLastQuestionOptions(chatHistory, state);
   const classLevel = userProfile.grade_level ? `Class ${userProfile.grade_level}` : 'Class 10';
 
   // ── Step 1: Evaluator Engine (LLM Call 1, Temp 0.0, ~1.5s) ──────────────────
   const evaluatorResult = await evaluateStudentTurn({
     studentMessage,
     lastQuestionText,
-    lastQuestionOptions: state.lastQuestionOptions,
+    lastQuestionOptions,
     topicTitle: topic.title,
     topicContent: topic.content || '',
     currentGoal,
@@ -158,15 +177,14 @@ async function processTutorTurn({
   });
 
   // Remember the new question & options in state for next turn
+  const bubbleWithOptions = validated.messages.find(m => Array.isArray(m.options) && m.options.length > 0);
   const finalBubble = validated.messages[validated.messages.length - 1];
   if (finalBubble && finalBubble.message) {
     nextState.lastQuestionText = finalBubble.message;
-    nextState.lastQuestionOptions = Array.isArray(finalBubble.options) && finalBubble.options.length > 0
-      ? finalBubble.options
-      : null;
-  } else {
-    nextState.lastQuestionOptions = null;
   }
+  nextState.lastQuestionOptions = Array.isArray(bubbleWithOptions?.options) && bubbleWithOptions.options.length > 0
+    ? bubbleWithOptions.options
+    : (Array.isArray(finalBubble?.options) && finalBubble.options.length > 0 ? finalBubble.options : null);
 
   // Build user correction object for UI
   // Any answer attempt evaluated produces userCorrection feedback for the UI.
@@ -207,5 +225,6 @@ async function processTutorTurn({
 
 module.exports = {
   processTutorTurn,
-  findLastQuestion
+  findLastQuestion,
+  findLastQuestionOptions
 };

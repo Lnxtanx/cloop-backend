@@ -687,14 +687,26 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 		});
 		console.log('==========================================\n');
 
-		const topicProgress = topic.user_progress?.[0] || {}
+		const allGoalsDone = updatedGoals.length > 0 && updatedGoals.every(g => g.is_completed || g.chat_goal_progress?.[0]?.is_completed);
+		const topicProgress = topic.user_progress?.[0] || {};
+		const isCompleted = Boolean(topicProgress.is_completed || allGoalsDone);
+		const completionPercent = isCompleted ? 100 : Number(topicProgress.completion_percent || 0);
+
+		if (allGoalsDone && !topicProgress.is_completed) {
+			prisma.user_topic_progress.upsert({
+				where: { user_id_topic_id: { user_id, topic_id: topic.id } },
+				update: { is_completed: true, completion_percent: 100, last_accessed_at: new Date() },
+				create: { user_id, topic_id: topic.id, is_completed: true, completion_percent: 100, last_accessed_at: new Date() }
+			}).catch(() => {});
+		}
+
 		return res.status(200).json({
 			topic: {
 				id: topic.id,
 				title: topic.title,
 				content: topic.content,
-				is_completed: topicProgress.is_completed || false,
-				completion_percent: topicProgress.completion_percent || 0,
+				is_completed: isCompleted,
+				completion_percent: completionPercent,
 				time_spent_seconds: topicProgress.time_spent_seconds || 0,
 				chapter: topic.chapter,
 				subject: topic.chapter?.subject
@@ -2820,8 +2832,31 @@ router.post('/:topicId/update-time', authenticateToken, async (req, res) => {
 			});
 		}
 
-		// Update aggregated time on topic in user_topic_progress
-		if (safeDelta > 0) {
+		// Update user_topic_progress (and mark completed if action is 'complete')
+		if (requestedAction === 'complete') {
+			await prisma.user_topic_progress.upsert({
+				where: {
+					user_id_topic_id: {
+						user_id: user_id,
+						topic_id: parseInt(topicId)
+					}
+				},
+				update: {
+					is_completed: true,
+					completion_percent: 100,
+					time_spent_seconds: safeDelta > 0 ? { increment: safeDelta } : undefined,
+					last_accessed_at: new Date()
+				},
+				create: {
+					user_id: user_id,
+					topic_id: parseInt(topicId),
+					is_completed: true,
+					completion_percent: 100,
+					time_spent_seconds: safeDelta,
+					last_accessed_at: new Date()
+				}
+			});
+		} else if (safeDelta > 0) {
 			await prisma.user_topic_progress.upsert({
 				where: {
 					user_id_topic_id: {

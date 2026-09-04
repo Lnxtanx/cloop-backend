@@ -43,13 +43,17 @@ function resolveOptionAnswer(studentMessage, options) {
     }
   }
 
-  // Check direct value match e.g. opt.value === trimmed
+  // Check direct value or text match e.g. opt.value === trimmed or opt.text === trimmed
   for (let i = 0; i < options.length; i++) {
     const opt = options[i];
     if (typeof opt === 'object' && opt !== null) {
-      if (opt.value && String(opt.value).trim().toLowerCase() === trimmed.toLowerCase()) {
+      const val = opt.value != null ? String(opt.value).trim().toLowerCase() : '';
+      const txt = opt.text != null ? String(opt.text).trim().toLowerCase() : '';
+      if ((val && val === trimmed.toLowerCase()) || (txt && txt === trimmed.toLowerCase())) {
         return { isOption: true, resolvedText: opt.text || opt.value, raw: trimmed, optionIndex: i };
       }
+    } else if (typeof opt === 'string' && opt.trim().toLowerCase() === trimmed.toLowerCase()) {
+      return { isOption: true, resolvedText: opt, raw: trimmed, optionIndex: i };
     }
   }
 
@@ -160,7 +164,7 @@ Output STRICT JSON matching this schema:
 }`;
 
   const messageContent = resolved.isOption
-    ? `STUDENT MESSAGE: "${resolved.resolvedText}" (Student selected: ${resolved.raw})`
+    ? `STUDENT MESSAGE: "${resolved.resolvedText}"`
     : `STUDENT MESSAGE: "${trimmed}"`;
 
   const messages = [

@@ -126,6 +126,7 @@ async function generateTutorResponse({
   if (isMcq) {
     schemaInstructions = `QUESTION FORMAT: MULTIPLE CHOICE (MCQ)
 - The final bubble MUST contain a question ending with '?' AND 2 to 4 clear options.
+- In each option, both "text" and "value" MUST be the actual answer text (e.g. "Fatter", "Thinner"), NEVER letters like A, B, C!
 - Schema:
 {
   "messages": [
@@ -133,9 +134,8 @@ async function generateTutorResponse({
       "message": "Question bubble text ending with '?' (under 20 words)",
       "message_type": "text",
       "options": [
-        { "text": "Option text 1", "value": "A" },
-        { "text": "Option text 2", "value": "B" },
-        { "text": "Option text 3", "value": "C" }
+        { "text": "First answer choice", "value": "First answer choice" },
+        { "text": "Second answer choice", "value": "Second answer choice" }
       ]
     }
   ]
@@ -244,8 +244,8 @@ ${schemaInstructions}`;
         message: `Which of these best describes ${currentGoalTitle}?`,
         message_type: 'text',
         options: [
-          { text: 'Correct concept principle', value: 'A' },
-          { text: 'Opposite effect occurs', value: 'B' }
+          { text: 'Correct concept principle', value: 'Correct concept principle' },
+          { text: 'Opposite effect occurs', value: 'Opposite effect occurs' }
         ]
       });
     } else {
