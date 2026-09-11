@@ -66,6 +66,14 @@ model users {
   // --- Voice Practice Sessions ---
   voice_sessions            voice_sessions[]
   learner_profile           learner_profiles?
+  // --- User Analytics ---
+  activity_sessions         user_activity_sessions[]
+  daily_stats               user_daily_stats[]
+  streak                    user_streaks?
+  curriculum_summaries      user_curriculum_summary[]
+  topic_chat_errors         topic_chat_errors[]
+  topic_chat_sessions_rel   topic_chat_sessions[]
+  tutor_turn_logs           tutor_turn_logs[]
   // --- Deprecated (old per-user curriculum) ---
   chapters_deprecated       chapters[]
   topics_deprecated         topics[]
@@ -222,6 +230,7 @@ model global_subjects {
 
   chapters    global_chapters[]
   enrollments user_subject_enrollment[]
+  curriculum_summaries user_curriculum_summary[]
 
   @@unique([board, grade, name])
 }
@@ -238,6 +247,7 @@ model global_chapters {
   subject     global_subjects  @relation(fields: [subject_id], references: [id], onDelete: Cascade)
   topics      global_topics[]
   user_progress user_chapter_progress[]
+  topic_chat_errors topic_chat_errors[]
 
   @@index([subject_id])
 }
@@ -258,6 +268,9 @@ model global_topics {
   saved_topics       saved_topics[]
   study_sessions     study_sessions[]
   user_topic_reports user_topic_reports[]
+  topic_chat_errors  topic_chat_errors[]
+  topic_chat_sessions_rel topic_chat_sessions[]
+  tutor_turn_logs    tutor_turn_logs[]
 
   @@index([chapter_id])
   @@index([subject_id])
@@ -909,4 +922,249 @@ model learner_profiles {
   created_at        DateTime? @default(now()) @db.Timestamp(6)
 
   user              users     @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+}
+
+// ============================================================
+// USER ANALYTICS TABLES
+// ============================================================
+
+/// Real-time presence tracking — one row per app session
+model user_activity_sessions {
+  id               Int       @id @default(autoincrement())
+  user_id          Int
+  session_token    String?   @db.VarChar(100)
+  started_at       DateTime  @default(now()) @db.Timestamp(6)
+  last_heartbeat   DateTime  @default(now()) @db.Timestamp(6)
+  ended_at         DateTime? @db.Timestamp(6)
+  duration_seconds Int?      @default(0)
+  device_type      String?   @db.VarChar(30)
+  app_version      String?   @db.VarChar(20)
+  is_active        Boolean   @default(true)
+
+  user             users     @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+
+  @@index([user_id, is_active])
+  @@index([user_id, started_at])
+  @@index([is_active])
+}
+
+/// Daily aggregated user stats — one row per user per day
+model user_daily_stats {
+  id                       Int       @id @default(autoincrement())
+  user_id                  Int
+  date                     DateTime  @db.Date
+  total_wall_time_seconds  Int       @default(0)
+  total_study_time_seconds Int       @default(0)
+  topics_studied           Int       @default(0)
+  topics_completed         Int       @default(0)
+  questions_answered       Int       @default(0)
+  questions_correct        Int       @default(0)
+  sessions_count           Int       @default(0)
+  messages_sent            Int       @default(0)
+  created_at               DateTime? @default(now()) @db.Timestamp(6)
+  updated_at               DateTime? @default(now()) @db.Timestamp(6)
+
+  user                     users     @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+
+  @@unique([user_id, date])
+  @@index([user_id, date])
+  @@index([date])
+}
+
+/// Consecutive-day streak tracking — one row per user
+model user_streaks {
+  id                Int       @id @default(autoincrement())
+  user_id           Int       @unique
+  current_streak    Int       @default(0)
+  longest_streak    Int       @default(0)
+  last_active_date  DateTime? @db.Date
+  streak_start_date DateTime? @db.Date
+  updated_at        DateTime? @default(now()) @db.Timestamp(6)
+
+  user              users     @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+}
+
+// ============================================================
+// USER CURRICULUM SUMMARY (Board+Grade completion aggregation)
+// ============================================================
+
+/// Board+Grade+Subject completion overview — one row per user per subject
+model user_curriculum_summary {
+  id                       Int             @id @default(autoincrement())
+  user_id                  Int
+  board                    String          @db.VarChar(100)
+  grade                    String          @db.VarChar(50)
+  subject_id               Int
+  subject_name             String          @db.VarChar(100)
+  total_chapters           Int             @default(0)
+  completed_chapters       Int             @default(0)
+  total_topics             Int             @default(0)
+  completed_topics         Int             @default(0)
+  completion_percent       Decimal         @default(0.00) @db.Decimal(5, 2)
+  avg_score_percent        Decimal?        @default(0.00) @db.Decimal(5, 2)
+  total_time_spent_seconds Int             @default(0)
+  last_activity_at         DateTime?       @db.Timestamp(6)
+  created_at               DateTime?       @default(now()) @db.Timestamp(6)
+  updated_at               DateTime?       @default(now()) @db.Timestamp(6)
+
+  user                     users           @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  subject                  global_subjects @relation(fields: [subject_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, subject_id])
+  @@index([user_id, board, grade])
+  @@index([board, grade])
+}
+
+// ============================================================
+// TUTOR PIPELINE DATA CAPTURE & ERROR DETECTION
+// ============================================================
+
+/// Full orchestrator pipeline data per turn — captures ALL evaluator,
+/// state machine, and pipeline values for every single turn
+model tutor_turn_logs {
+  id                    Int       @id @default(autoincrement())
+  user_id               Int
+  topic_id              Int
+  chapter_id            Int?
+  subject_id            Int?
+  goal_id               Int?
+  chat_id               Int?
+
+  // === Evaluator Output ===
+  intent                String    @db.VarChar(30)
+  is_correct            Boolean?
+  score_percent         Float?
+  error_type            String?   @db.VarChar(50)
+  diff_html             String?   @db.Text
+  complete_answer       String?   @db.Text
+  suggested_action      String?   @db.VarChar(50)
+  evaluator_reasoning   String?   @db.Text
+
+  // === State Machine ===
+  phase                 String    @db.VarChar(30)
+  answered_in_phase     String?   @db.VarChar(30)
+  state_instruction     String?   @db.VarChar(50)
+  question_type         String?   @db.VarChar(20)
+  goal_index            Int?      @default(0)
+  goal_total            Int?      @default(0)
+
+  // === Per-Goal Stats at this turn ===
+  goal_correct          Int?      @default(0)
+  goal_total_questions  Int?      @default(0)
+  goal_errors           String[]  @default([])
+
+  // === Session Pacing ===
+  total_turns           Int?      @default(0)
+  total_questions       Int?      @default(0)
+  consecutive_wrong     Int?      @default(0)
+  off_topic_streak      Int?      @default(0)
+  stuck_streak          Int?      @default(0)
+  reteach_pending       Boolean?  @default(false)
+  reveal_pending        Boolean?  @default(false)
+
+  // === User Message & AI Response ===
+  user_message          String?   @db.Text
+  ai_response_preview   String?   @db.VarChar(500)
+  ai_bubble_count       Int?      @default(0)
+
+  // === Mastery (populated on WRAP/DONE) ===
+  mastery_score_percent Float?
+  performance_level     String?   @db.VarChar(30)
+  star_rating           Int?
+  end_reason            String?   @db.VarChar(30)
+
+  // === Graded Turn Flag ===
+  was_graded            Boolean   @default(false)
+
+  created_at            DateTime? @default(now()) @db.Timestamp(6)
+
+  user                  users         @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  topic                 global_topics @relation(fields: [topic_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id, topic_id])
+  @@index([user_id, created_at])
+  @@index([topic_id, phase])
+  @@index([phase])
+  @@index([intent])
+  @@index([error_type])
+  @@index([created_at])
+}
+
+/// Dedicated wrong-answer error table — linked to curriculum hierarchy
+/// for concept mastery analysis
+model topic_chat_errors {
+  id                  Int             @id @default(autoincrement())
+  user_id             Int
+  topic_id            Int
+  chapter_id          Int
+  subject_id          Int
+  goal_id             Int?
+  chat_id             Int?
+  turn_log_id         Int?
+
+  error_type          String          @db.VarChar(50)
+  error_subtype       String?         @db.VarChar(50)
+  severity            String          @default("medium") @db.VarChar(20)
+
+  question_text       String?         @db.Text
+  user_answer         String          @db.Text
+  correct_answer      String?         @db.Text
+  diff_html           String?         @db.Text
+  score_percent       Float?          @default(0)
+
+  phase               String?         @db.VarChar(30)
+  attempt_number      Int?            @default(1)
+  was_retaught        Boolean         @default(false)
+  mastery_before      Float?          @default(0)
+  mastery_after       Float?          @default(0)
+
+  created_at          DateTime?       @default(now()) @db.Timestamp(6)
+
+  user                users           @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  topic               global_topics   @relation(fields: [topic_id], references: [id], onDelete: Cascade)
+  chapter             global_chapters @relation(fields: [chapter_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id, topic_id])
+  @@index([user_id, chapter_id])
+  @@index([user_id, subject_id])
+  @@index([error_type])
+  @@index([topic_id, error_type])
+  @@index([chapter_id, error_type])
+  @@index([created_at])
+}
+
+/// Per-session topic chat metadata with aggregated metrics
+model topic_chat_sessions {
+  id                  Int           @id @default(autoincrement())
+  user_id             Int
+  topic_id            Int
+  subject_id          Int?
+  chapter_id          Int?
+
+  started_at          DateTime      @default(now()) @db.Timestamp(6)
+  ended_at            DateTime?     @db.Timestamp(6)
+  duration_seconds    Int?          @default(0)
+
+  total_turns         Int           @default(0)
+  total_questions     Int           @default(0)
+  correct_answers     Int           @default(0)
+  incorrect_answers   Int           @default(0)
+  score_percent       Float?        @default(0)
+  goals_completed     Int           @default(0)
+  goals_total         Int           @default(0)
+
+  end_reason          String?       @db.VarChar(30)
+  performance_level   String?       @db.VarChar(30)
+  star_rating         Int?          @default(0)
+
+  final_state_json    Json?
+
+  created_at          DateTime?     @default(now()) @db.Timestamp(6)
+
+  user                users         @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  topic               global_topics @relation(fields: [topic_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id, topic_id])
+  @@index([user_id, started_at])
+  @@index([topic_id])
 }

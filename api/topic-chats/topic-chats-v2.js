@@ -3,6 +3,7 @@ const { processTutorTurn } = require('../../services/tutor-core/orchestrator');
 const { resolveOptionAnswer } = require('../../services/tutor-core/evaluator');
 const { searchYouTube } = require('../../services/media-search');
 const { getCachedDiagram } = require('../../services/tutor-core/diagram-cache');
+const { recordTurnLog, recordErrorIfWrong, updateDailyStudyStats, endChatSession, updateCurriculumSummary } = require('../../services/analytics/topic-data-collector');
 
 /**
  * Convert model options into an array of strings for admin_chat.options String[] column
@@ -508,6 +509,17 @@ async function handleTopicChatMessageV2(req, res) {
       } catch (sessErr) {
         console.warn('[Tutor-Core V2] Could not close study_sessions:', sessErr.message);
       }
+
+      // End topic chat session and update curriculum summary
+      try {
+        await endChatSession(user_id, parseInt(topicId), turnResult);
+        const subjectId = topic.chapter?.subject_id || topic.subject_id || null;
+        if (subjectId) {
+          await updateCurriculumSummary(user_id, subjectId);
+        }
+      } catch (csErr) {
+        console.warn('[Tutor-Core V2] topic-data-collector session/curriculum non-fatal:', csErr.message);
+      }
     }
 
     // 11. Record chat_process with session state in feedback
@@ -545,6 +557,33 @@ async function handleTopicChatMessageV2(req, res) {
       } catch (ltErr) {
         console.error('[Tutor-Core V2] Failed to record learning_turns:', ltErr.message);
       }
+    }
+
+    // 12b. Record full pipeline data to tutor_turn_logs + error detection + daily stats
+    try {
+      const turnLogContext = {
+        userId: user_id,
+        topicId: parseInt(topicId),
+        chapterId: topic.chapter?.id || null,
+        subjectId: topic.chapter?.subject_id || topic.subject_id || null,
+        goalId: activeGoal?.id || null,
+        chatId: userMessageRecord.id,
+        userMessage: effectiveMessage
+      };
+
+      const turnLogId = await recordTurnLog(turnResult, turnLogContext);
+
+      // Find the last question from chat history for error context
+      const lastQ = chatHistory.find(m => m.sender === 'ai' && m.message && /[?？]/.test(m.message));
+
+      await recordErrorIfWrong(turnResult, {
+        ...turnLogContext,
+        lastQuestionText: lastQ?.message || null
+      }, turnLogId);
+
+      await updateDailyStudyStats(user_id, turnResult, parseInt(topicId));
+    } catch (collectorErr) {
+      console.warn('[Tutor-Core V2] topic-data-collector non-fatal:', collectorErr.message);
     }
 
     // 13. Asynchronous / On-Demand Media (YouTube & Diagrams)

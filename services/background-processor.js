@@ -1,7 +1,9 @@
 const prisma = require('../lib/prisma');
 const { processEngagementNotifications } = require('./engagement-notifications');
+const { cleanupStaleSessions } = require('./analytics/activity-tracker');
 
 let processingInterval = null;
+let staleSessionInterval = null;
 
 /**
  * Background Processor for Notifications & Scheduled Jobs
@@ -24,12 +26,18 @@ async function startContinuousProcessing() {
     processEngagementNotifications();
   }, ENGAGEMENT_INTERVAL);
 
+  // Stale Activity Session Cleanup (every 2 minutes)
+  const STALE_SESSION_INTERVAL = 2 * 60 * 1000; // 2 minutes
+  staleSessionInterval = setInterval(() => {
+    cleanupStaleSessions();
+  }, STALE_SESSION_INTERVAL);
+
   // Run on start for demo/scheduling purposes
   setTimeout(() => {
     processEngagementNotifications();
   }, 10000); // Wait 10s after startup
 
-  console.log('✓ Background Service Worker running (Notifications & Engagement)\n');
+  console.log('✓ Background Service Worker running (Notifications, Engagement & Session Cleanup)\n');
 }
 
 /**
@@ -39,8 +47,12 @@ async function stopContinuousProcessing() {
   if (processingInterval) {
     clearInterval(processingInterval);
     processingInterval = null;
-    console.log('\n⏹️  Background worker stopped');
   }
+  if (staleSessionInterval) {
+    clearInterval(staleSessionInterval);
+    staleSessionInterval = null;
+  }
+  console.log('\n⏹️  Background worker stopped');
 
   if (prisma) {
     try {

@@ -9,6 +9,7 @@ const { searchYouTube, searchImages } = require('../../services/media-search')
 
 const prisma = require('../../lib/prisma')
 const { handleTopicChatMessageV2 } = require('./topic-chats-v2')
+const { startChatSession } = require('../../services/analytics/topic-data-collector')
 
 // Note: Total of 10 questions will be asked across ALL goals (not per goal)
 // The AI will intelligently distribute questions across goals
@@ -495,6 +496,13 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 			console.log('🎯 Goals Count:', topicGoals.length);
 			console.log('💬 Existing Messages:', chatMessages.length);
 			console.log('\n🎬 Generating initial greeting...');
+
+			// Start topic chat session tracking
+			try {
+				await startChatSession(user_id, parseInt(topicId), topic, topicGoals.length);
+			} catch (csErr) {
+				console.warn('[topic-chats] startChatSession non-fatal:', csErr.message);
+			}
 
 			// Fetch user profile for board/classLevel context
 			const userProfile = await prisma.users.findUnique({

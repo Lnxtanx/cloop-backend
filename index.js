@@ -89,6 +89,8 @@ app.use('/api/voice-chat', require('./api/voice-chat/voice-chat'))
 app.use('/api/internal/tools', require('./api/internal/tools'))
 // AI Token Analytics routes
 app.use('/api/analytics/tokens', require('./api/analytics/tokens'))
+// User Analytics routes (presence, heartbeat, streaks, completion)
+app.use('/api/analytics', require('./api/analytics/user-analytics'))
 
 // Global English Learning routes
 app.use('/api/english', require('./api/english/english-routes'))
