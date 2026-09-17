@@ -200,7 +200,7 @@ router.get('/dashboard/summary', async (req, res) => {
     const summaryParagraph = latestCompletedSession?.summary_text || (
       totalSessions > 0
         ? `You have completed ${totalSessions} speaking sessions totaling ${totalMinutes} minutes. Your consistency is building strong conversational fluency. Keep practicing daily!`
-        : "Welcome to Cloop English! Start your first speaking practice session with Ravi to see your fluency insights, 4 core areas, and error tracking."
+        : "Welcome to Cloop English! Start your first speaking practice session with Cloop to see your fluency insights, 4 core areas, and error tracking."
     )
     const learnerDidWell = latestCompletedSession?.learner_did_well || (totalSessions > 0 ? "You are speaking regularly and engaging with the tutor." : null)
     const oneThingToFix = latestCompletedSession?.one_thing_to_fix || null

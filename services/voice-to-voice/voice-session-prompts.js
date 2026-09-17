@@ -2,7 +2,7 @@
  * Voice Session System Prompt Builder
  * 
  * Assembles the Gemini Live system instruction from 4 layers:
- *   Layer 1 — Tutor persona (Ravi, warm Indian-English voice)
+ *   Layer 1 — Tutor persona (Cloop, warm Indian-English voice)
  *   Layer 2 — Session shape (interview / conversation / drill / free-talk)
  *   Layer 3 — Topic content (chapter questions, vocabulary, pronunciation targets)
  *   Layer 4 — Learner profile (level, open errors, history)

@@ -5,7 +5,7 @@
  *   Browser Mic (16kHz PCM16) → WS → Backend Proxy → Gemini Live API → Audio response (24kHz PCM) → WS → Browser Speaker
  * 
  * Supports:
- * 1. v2 Voice Practice Sessions (Track-aware, Ravi tutor, log_error real-time tool, AI-initiated completion)
+ * 1. v2 Voice Practice Sessions (Track-aware, Cloop tutor, log_error real-time tool, AI-initiated completion)
  * 2. Legacy Speaking Assessment (Eva examiner, 5-question flow, submit_speaking_evaluation tool)
  */
 
