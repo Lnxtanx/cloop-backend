@@ -5,7 +5,8 @@
 const express = require('express')
 const router = express.Router()
 const prisma = require('../../lib/prisma')
-const { consolidateSessionErrors } = require('../../services/error-consolidator')
+const { consolidateSessionErrors } = require('../../services/voice-to-voice/error-consolidator')
+const { getFluencyDashboardData } = require('../../services/voice-to-voice/dashboard-service')
 
 /**
  * Middleware: Verify user auth from Bearer token
@@ -110,7 +111,21 @@ router.get('/:id/result', async (req, res) => {
 })
 
 /**
- * GET /api/voice-sessions/dashboard
+ * GET /api/voice-sessions/dashboard/fluency
+ * Returns parameterized FluencyDashboardModel directly matching the frontend FluencyDashboard UI
+ */
+router.get('/dashboard/fluency', async (req, res) => {
+  try {
+    const data = await getFluencyDashboardData(req.userId)
+    return res.json(data)
+  } catch (error) {
+    console.error('[Voice API] Error fetching fluency dashboard data:', error)
+    return res.status(500).json({ error: 'Failed to fetch fluency dashboard data' })
+  }
+})
+
+/**
+ * GET /api/voice-sessions/dashboard/summary
  * Single aggregation endpoint powering the Home Dashboard (design doc Part 2 + 5)
  */
 router.get('/dashboard/summary', async (req, res) => {

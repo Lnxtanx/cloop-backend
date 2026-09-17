@@ -159,7 +159,7 @@ router.post('/sessions/:id/complete', async (req, res) => {
 		})
 
 		// Flush in-memory turns to database
-		const { flushSessionTurns } = require('../../services/gemini-live-proxy')
+		const { flushSessionTurns } = require('../../services/voice-to-voice/gemini-live-proxy')
 		if (flushSessionTurns) {
 			await flushSessionTurns(sessionId).catch((err) => {
 				console.error(`[Assessment] Error flushing turns for session ${sessionId}:`, err)
@@ -179,7 +179,7 @@ router.post('/sessions/:id/complete', async (req, res) => {
 		console.log(`[Assessment] Session ${sessionId} triggering fallback evaluation engine`)
 
 		// Trigger async assessment processing (fallback)
-		const { processAssessment } = require('../../services/assessment-engine')
+		const { processAssessment } = require('../../services/voice-to-voice/assessment-engine')
 		setImmediate(() => {
 			processAssessment(sessionId).catch((err) => {
 				console.error(`[Assessment] Background processing failed for session ${sessionId}:`, err)

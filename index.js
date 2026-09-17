@@ -125,7 +125,7 @@ const prisma = require('./lib/prisma')
 // wss.handleUpgrade and wss.on('connection') logic removed.
 
 // English Speaking Assessment — Gemini Live WebSocket proxy
-const { handleAssessmentWsUpgrade } = require('./services/gemini-live-proxy')
+const { handleAssessmentWsUpgrade } = require('./services/voice-to-voice/gemini-live-proxy')
 handleAssessmentWsUpgrade(server)
 
 server.listen(PORT, HOST, async () => {
