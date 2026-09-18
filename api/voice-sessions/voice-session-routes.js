@@ -7,6 +7,7 @@ const router = express.Router()
 const prisma = require('../../lib/prisma')
 const { consolidateSessionErrors } = require('../../services/voice-to-voice/error-consolidator')
 const { getFluencyDashboardData } = require('../../services/voice-to-voice/dashboard-service')
+const s3Storage = require('../../services/s3-storage')
 
 /**
  * Middleware: Verify user auth from Bearer token
@@ -103,7 +104,11 @@ router.get('/:id/result', async (req, res) => {
     }
 
     const consolidated = await consolidateSessionErrors(sessionId)
-    return res.json({ result: consolidated, session })
+    let sessionData = { ...session }
+    if (session.audio_url) {
+      sessionData.audio_url = await s3Storage.getPresignedAudioUrl(session.audio_url, 3600 * 24)
+    }
+    return res.json({ result: consolidated, session: sessionData })
   } catch (error) {
     console.error('[Voice API] Error fetching session result:', error)
     return res.status(500).json({ error: 'Failed to get session result' })
