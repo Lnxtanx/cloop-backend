@@ -111,6 +111,66 @@ router.get('/:id/result', async (req, res) => {
 })
 
 /**
+ * POST /api/voice-sessions/:id/complete
+ * Mark session as COMPLETED, compute duration, run consolidation, and return report
+ */
+router.post('/:id/complete', async (req, res) => {
+  try {
+    const sessionId = parseInt(req.params.id)
+    const session = await prisma.voice_sessions.findFirst({
+      where: { id: sessionId, user_id: req.userId },
+      include: { turns: true },
+    })
+
+    if (!session) {
+      return res.status(404).json({ error: 'Voice session not found' })
+    }
+
+    const durationSec = session.started_at 
+      ? Math.max(1, Math.round((new Date() - new Date(session.started_at)) / 1000))
+      : (session.duration_seconds || 60)
+
+    const userWords = (session.turns || [])
+      .filter(t => t.speaker === 'user' && t.content)
+      .reduce((acc, t) => acc + t.content.trim().split(/\s+/).filter(Boolean).length, 0)
+
+    const updatedSession = await prisma.voice_sessions.update({
+      where: { id: sessionId },
+      data: {
+        status: 'COMPLETED',
+        completed_at: new Date(),
+        duration_seconds: durationSec,
+        words_spoken: userWords,
+      },
+    })
+
+    // Update profile
+    const durationMinutes = Math.max(1, Math.round(durationSec / 60))
+    await prisma.learner_profiles.upsert({
+      where: { user_id: req.userId },
+      update: {
+        total_sessions: { increment: 1 },
+        total_minutes: { increment: durationMinutes },
+        updated_at: new Date(),
+      },
+      create: {
+        user_id: req.userId,
+        native_language: 'Hindi',
+        english_level: 'Beginner',
+        total_sessions: 1,
+        total_minutes: durationMinutes,
+      },
+    }).catch(() => {})
+
+    const consolidated = await consolidateSessionErrors(sessionId)
+    return res.json({ result: consolidated, session: updatedSession })
+  } catch (error) {
+    console.error('[Voice API] Error completing session:', error)
+    return res.status(500).json({ error: 'Failed to complete session' })
+  }
+})
+
+/**
  * GET /api/voice-sessions/dashboard/fluency
  * Returns parameterized FluencyDashboardModel directly matching the frontend FluencyDashboard UI
  */

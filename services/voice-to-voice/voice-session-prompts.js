@@ -27,7 +27,7 @@ const ERROR_TYPES = [
 ]
 
 // ============================================================
-// log_error tool declaration for Gemini Live
+// log_error and end_session tool declarations for Gemini Live
 // ============================================================
 const LOG_ERROR_TOOL = {
   functionDeclarations: [
@@ -63,17 +63,40 @@ const LOG_ERROR_TOOL = {
       },
     },
     {
-      name: 'session_complete',
-      description: 'Call this ONLY when the practice session has lasted for 5 to 6 minutes of continuous conversation and you have thoroughly explored the chapter topics with multiple follow-up questions and role-play exchanges. NEVER call this in the first 4 minutes.',
+      name: 'end_session',
+      description: 'Call this tool to end the voice session and generate the post-session report. You MUST call this tool when: 1) The user asks to stop, leave, end the chat, or says goodbye (e.g., "I\'m done", "let\'s stop", "bye", "end chat", "I have to go"); 2) The lesson/practice goals are completed; OR 3) The session reaches around 5 to 6 minutes of practice.',
       parameters: {
         type: 'OBJECT',
         properties: {
-          summary: { type: 'STRING', description: 'A brief 60-90 word spoken paragraph: start with something they did well, name one thing to work on with their own example, end with the next step. Use simple English, short sentences, second person. Never use: elaboration, proficiency, articulation, coherence, demonstrate, utilize.' },
+          reason: {
+            type: 'STRING',
+            enum: ['user_requested', 'practice_completed', 'time_limit_reached'],
+            description: 'The reason why the session is ending',
+          },
+          summary: {
+            type: 'STRING',
+            description: 'A brief 40-70 word spoken closing paragraph: start with something they did well, name one thing to work on with their own example, and end with an encouraging next step. Use simple English, short sentences, second person.',
+          },
           questions_asked: { type: 'INTEGER', description: 'How many questions/prompts you asked' },
           learner_did_well: { type: 'STRING', description: 'One specific thing the learner did well' },
           one_thing_to_fix: { type: 'STRING', description: 'One specific thing to work on, with their own example' },
         },
-        required: ['summary', 'questions_asked', 'learner_did_well', 'one_thing_to_fix'],
+        required: ['summary', 'learner_did_well', 'one_thing_to_fix'],
+      },
+    },
+    {
+      name: 'session_complete',
+      description: 'Alias for end_session. Concludes the practice session and compiles the post-session evaluation report.',
+      parameters: {
+        type: 'OBJECT',
+        properties: {
+          reason: { type: 'STRING', description: 'Why the session is ending' },
+          summary: { type: 'STRING', description: 'A brief spoken closing paragraph' },
+          questions_asked: { type: 'INTEGER', description: 'How many questions/prompts you asked' },
+          learner_did_well: { type: 'STRING', description: 'One specific thing the learner did well' },
+          one_thing_to_fix: { type: 'STRING', description: 'One specific thing to work on, with their own example' },
+        },
+        required: ['summary', 'learner_did_well', 'one_thing_to_fix'],
       },
     },
   ],
@@ -392,7 +415,13 @@ YOUR CONVERSATIONAL STYLE & RULES:
 4. Encourage interactive learning: after answering a doubt or explaining a concept, ask a quick, friendly question to check their understanding.
 5. If the student speaks in English, Hindi, or mixed Hinglish, understand them effortlessly and respond in clear, accessible English (or explain key terms in simple Hindi if they ask for it).
 6. When the session starts, greet ${learnerName} warmly in 1-2 short sentences and ask what they would like to learn or ask today.
-7. This is a real-time live voice conversation. Listen carefully, be supportive, and make learning exciting!`
+7. This is a real-time live voice conversation. Listen carefully, be supportive, and make learning exciting!
+
+ENDING THE SESSION & CALLING end_session:
+If at ANY point ${learnerName} says they want to stop, leave, or end the session (e.g. "I'm done", "let's stop", "bye", "thank you that's all", "khatam karo", "I have to go", "end chat"):
+- Say ONE warm, encouraging closing sentence (e.g. "You asked great questions today, ${learnerName}! Keep learning and have a wonderful day!").
+- In that SAME turn, CALL the \`end_session\` tool with reason='user_requested'.
+- Do NOT ignore their request or force another question.`
   }
 
   const track = COURSE_CATALOG[trackKey]
@@ -499,14 +528,21 @@ HOW TO SUSTAIN A 5-6 MINUTE CONVERSATION:
 3. Stage 3: Interactive Role-Play & Situational Drill (Minutes 3.5 to 4.5):
    - Role-play realistically (e.g. interviewer digging into a detail, colleague at work, friendly shopkeeper).
    - Give the learner a chance to ask YOU a question related to the topic, then answer warmly and prompt them back.
-4. Stage 4: Gentle Review & Warm Wrap-up (Minutes 4.5 to 5.5):
-   - Only after you have had at least 14 to 18 exchanges and spoken for around 5 minutes, begin your warm wrap-up.
-   - Say something warm like: "That was wonderful practice today! You did really well on [specific phrase or topic]."
-   - Then call the session_complete function with a concise summary.
-   - Speak your closing lines naturally and calmly.
+4. Stage 4: Warm Review & Wrap-up:
+   - When the session ends, say a warm closing line like: "That was wonderful practice today, ${learnerName}! You did really well."
+   - In that same turn, call the \`end_session\` tool with a concise spoken summary, strengths, and one thing to work on.
 
-CRITICAL RULE ON ENDING:
-- NEVER call session_complete early (under 5 minutes or under 14 exchanges). If you run through the listed prompts, create natural follow-up situations or role-plays related to the chapter theme until the full 5-6 minutes of practice time is reached.
+WHEN TO END THE SESSION & CALL end_session:
+1. USER-REQUESTED EXIT (HIGHEST PRIORITY):
+   If at ANY time during the session the learner says they want to stop, leave, or end (e.g. "I want to stop", "let's end here", "I am done", "finish the chat", "bye", "I have to go", "stop practice", "bas", "khatam karo"):
+   - You MUST respect their request immediately.
+   - Reply with ONE short warm sentence (e.g., "You did wonderful practice today, ${learnerName}! Have a great day ahead!").
+   - In that SAME turn, CALL the \`end_session\` tool with reason='user_requested'.
+   - NEVER ignore an exit request or force another practice prompt.
+2. TOPIC COMPLETED:
+   If you have thoroughly covered the chapter's prompts and exercises, say a warm closing line and CALL \`end_session\` with reason='practice_completed'.
+3. 5-6 MINUTE TIME TARGET:
+   If the conversation has naturally continued for around 5-6 minutes, wrap up with praise and CALL \`end_session\` with reason='time_limit_reached'.
 ${topicInstructions}
 ${profileInstructions}`
 }

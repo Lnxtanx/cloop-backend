@@ -181,6 +181,8 @@ async function consolidateSessionErrors(sessionId) {
       await prisma.voice_sessions.update({
         where: { id: sid },
         data: {
+          status: 'COMPLETED',
+          completed_at: session.completed_at || new Date(),
           summary_text: summary,
           learner_did_well: learnerDidWell,
           one_thing_to_fix: oneThingToFix,

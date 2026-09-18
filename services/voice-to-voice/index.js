@@ -11,6 +11,7 @@ const voiceSessionPrompts = require('./voice-session-prompts')
 const errorConsolidator = require('./error-consolidator')
 const assessmentEngine = require('./assessment-engine')
 const dashboardService = require('./dashboard-service')
+const s3Storage = require('../s3-storage')
 
 module.exports = {
   // Gemini Live Realtime Proxy & Audio Handlers
@@ -32,4 +33,8 @@ module.exports = {
   // Fluency Dashboard Aggregator
   ...dashboardService,
   dashboardService,
+
+  // AWS S3 Audio Recording Storage
+  ...s3Storage,
+  s3Storage,
 }

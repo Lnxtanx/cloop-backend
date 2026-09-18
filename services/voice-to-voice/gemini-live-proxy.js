@@ -16,6 +16,7 @@ const prisma = require('../../lib/prisma')
 const { buildSessionPrompt, LOG_ERROR_TOOL } = require('./voice-session-prompts')
 const { consolidateSessionErrors } = require('./error-consolidator')
 const { logTokenUsage } = require('../token-tracker')
+const s3Storage = require('../s3-storage')
 
 const GEMINI_API_KEY = () => process.env.GEMINI_API_KEY
 const GEMINI_MODEL = process.env.GEMINI_LIVE_MODEL || 'gemini-3.1-flash-live-preview'
@@ -162,6 +163,8 @@ function handleAssessmentWsUpgrade(server) {
 			questionCount: 0,
 			userAudioChunksCount: 0,
 			aiAudioChunksCount: 0,
+			userAudioBuffers: [],
+			audioUploaded: false,
 			startedAt: new Date(),
 			sessionCompleted: false,
 			userRequestedEnd: false,
@@ -473,6 +476,9 @@ function handleAssessmentWsUpgrade(server) {
 					// Audio chunk from browser microphone
 					if (parsed.type === 'audio_chunk') {
 						sessionState.userAudioChunksCount++
+						if (parsed.data) {
+							sessionState.userAudioBuffers.push(Buffer.from(parsed.data, 'base64'))
+						}
 						if (geminiWs && geminiWs.readyState === WebSocket.OPEN) {
 							const realtimeMsg = {
 								realtimeInput: {
@@ -493,7 +499,7 @@ function handleAssessmentWsUpgrade(server) {
 									turns: [
 										{
 											role: 'user',
-											parts: [{ text: 'We have finished practising for today! Please say a warm closing line and call the session_complete function now.' }],
+											parts: [{ text: 'We have finished practising for today! Please say a warm closing line and call the end_session function now.' }],
 										},
 									],
 									turnComplete: true,
@@ -530,6 +536,26 @@ function handleAssessmentWsUpgrade(server) {
 						words_spoken: userWords,
 					}
 				}).catch(() => {})
+
+				// Fallback audio upload to S3 if not yet uploaded
+				if (!sessionState.audioUploaded && sessionState.userAudioBuffers.length > 0) {
+					sessionState.audioUploaded = true
+					const fullPcmBuffer = Buffer.concat(sessionState.userAudioBuffers)
+					s3Storage.uploadSessionAudio({
+						sessionId: sessionState.sessionId,
+						userId: sessionState.userId,
+						pcmBuffer: fullPcmBuffer,
+						trackKey: sessionState.trackKey,
+						chapterKey: sessionState.chapterKey,
+					}).then((s3Url) => {
+						if (s3Url) {
+							prisma.voice_sessions.update({
+								where: { id: sessionState.sessionId },
+								data: { audio_url: s3Url },
+							}).catch(() => {})
+						}
+					}).catch(() => {})
+				}
 
 				const durationMinutes = Math.max(1, Math.round(durationSec / 60))
 				prisma.learner_profiles.upsert({
@@ -624,35 +650,12 @@ async function handleToolCalls(toolCall, sessionState, clientWs, geminiWs) {
 				name: 'log_error',
 				response: { output: { status: 'logged', count: sessionState.loggedErrors.length } },
 			})
-		} else if (name === 'session_complete') {
+		} else if (name === 'end_session' || name === 'session_complete') {
 			const durationSec = Math.max(1, Math.round((new Date() - sessionState.startedAt) / 1000))
 			const totalExchanges = sessionState.turns.length
 
-			// 5-6 minute guardrail: Reject early AI-initiated completion if < 4.5 minutes (270s) and < 14 turns,
-			// unless user explicitly clicked wrap up in UI.
-			if (durationSec < 270 && totalExchanges < 14 && !sessionState.userRequestedEnd) {
-				console.log(`⏱️ [Voice WS] AI called session_complete prematurely (${durationSec}s, ${totalExchanges} turns). Instructing AI to continue practicing...`)
-				responses.push({
-					id: id || 'call_session_complete',
-					name: 'session_complete',
-					response: {
-						output: {
-							status: 'continue',
-							message: `The session has only run for ${Math.max(1, Math.round(durationSec / 60))} minute(s). The practice session target is 5 to 6 minutes. Please continue the conversation: ask an interesting follow-up question or scenario roleplay based on what the learner just said, and encourage them to speak in complete sentences.`
-						}
-					}
-				})
-				// Send tool response immediately and return so session continues
-				if (geminiWs && geminiWs.readyState === WebSocket.OPEN && responses.length > 0) {
-					geminiWs.send(JSON.stringify({
-						toolResponse: { functionResponses: responses }
-					}))
-				}
-				return
-			}
-
 			sessionState.sessionCompleted = true
-			console.log(`🏁 [Voice WS] session_complete accepted! Duration: ${durationSec}s, Questions: ${args.questions_asked}`)
+			console.log(`🏁 [Voice WS] ${name} accepted! Reason: ${args.reason || (sessionState.userRequestedEnd ? 'user_requested' : 'completed')}, Duration: ${durationSec}s, Exchanges: ${totalExchanges}, Questions: ${args.questions_asked || sessionState.questionCount}`)
 
 			// Flush any pending user speech to turns
 			if (sessionState.currentUserText && sessionState.currentUserText.trim().length > 1) {
@@ -683,6 +686,23 @@ async function handleToolCalls(toolCall, sessionState, clientWs, geminiWs) {
 				.reduce((acc, t) => acc + t.content.trim().split(/\s+/).filter(Boolean).length, 0)
 
 			try {
+				// Upload session audio to S3 if audio buffers exist
+				let uploadedAudioUrl = null
+				if (!sessionState.audioUploaded && sessionState.userAudioBuffers.length > 0) {
+					sessionState.audioUploaded = true
+					const fullPcmBuffer = Buffer.concat(sessionState.userAudioBuffers)
+					uploadedAudioUrl = await s3Storage.uploadSessionAudio({
+						sessionId: sessionState.sessionId,
+						userId: sessionState.userId,
+						pcmBuffer: fullPcmBuffer,
+						trackKey: sessionState.trackKey,
+						chapterKey: sessionState.chapterKey,
+					}).catch((err) => {
+						console.error('[Voice WS] Error uploading audio to S3:', err)
+						return null
+					})
+				}
+
 				await prisma.voice_sessions.update({
 					where: { id: sessionState.sessionId },
 					data: {
@@ -694,6 +714,7 @@ async function handleToolCalls(toolCall, sessionState, clientWs, geminiWs) {
 						summary_text: args.summary || '',
 						learner_did_well: args.learner_did_well || '',
 						one_thing_to_fix: args.one_thing_to_fix || '',
+						...(uploadedAudioUrl ? { audio_url: uploadedAudioUrl } : {}),
 					},
 				})
 
@@ -746,6 +767,7 @@ async function handleToolCalls(toolCall, sessionState, clientWs, geminiWs) {
 							durationSeconds: durationSec,
 							questionsAsked: args.questions_asked || sessionState.questionCount,
 							wordsSpoken: userWords,
+							audioUrl: uploadedAudioUrl,
 						}
 					})
 				}
@@ -755,7 +777,7 @@ async function handleToolCalls(toolCall, sessionState, clientWs, geminiWs) {
 					console.error('[Voice WS] Error in error consolidation:', err)
 				})
 
-				// Inform client with waitForAudioDrain flag
+				// Inform client with waitForAudioDrain flag and audioUrl
 				clientWs.send(JSON.stringify({
 					type: 'session_complete',
 					sessionId: sessionState.sessionId,
@@ -764,6 +786,7 @@ async function handleToolCalls(toolCall, sessionState, clientWs, geminiWs) {
 					summary: args.summary || '',
 					learnerDidWell: args.learner_did_well || '',
 					oneThingToFix: args.one_thing_to_fix || '',
+					audioUrl: uploadedAudioUrl || null,
 					waitForAudioDrain: true,
 				}))
 			} catch (err) {
@@ -771,8 +794,8 @@ async function handleToolCalls(toolCall, sessionState, clientWs, geminiWs) {
 			}
 
 			responses.push({
-				id: id || 'call_session_complete',
-				name: 'session_complete',
+				id: id || `call_${name}`,
+				name: name,
 				response: { output: { status: 'completed' } },
 			})
 		} else if (name === 'submit_speaking_evaluation') {
