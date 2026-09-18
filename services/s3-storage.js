@@ -34,7 +34,7 @@ function getS3Client() {
 
   if (s3ClientInstance) return s3ClientInstance
 
-  const region = process.env.AWS_REGION || 'ap-south-1'
+  const region = (process.env.AWS_REGION || 'us-east-1').trim()
   const accessKeyId = process.env.AWS_ACCESS_KEY_ID
   const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY
 
@@ -142,7 +142,7 @@ async function uploadSessionAudio({ sessionId, userId, pcmBuffer, wavBuffer, tra
     }
 
     const bucketName = process.env.AWS_S3_BUCKET_NAME.trim()
-    const region = process.env.AWS_REGION || 'ap-south-1'
+    const region = (process.env.AWS_REGION || 'us-east-1').trim()
     const timestamp = Date.now()
     const s3Key = `voice-sessions/${userId || 'guest'}/session-${sessionId}-${timestamp}.wav`
 
@@ -181,9 +181,50 @@ async function uploadSessionAudio({ sessionId, userId, pcmBuffer, wavBuffer, tra
   }
 }
 
+/**
+ * Generates a presigned GET URL for secure playback of private S3 audio recordings.
+ * 
+ * @param {string} s3KeyOrUrl - S3 key or full S3 URL
+ * @param {number} [expiresIn=86400] - URL validity in seconds (default: 24 hours)
+ * @returns {Promise<string>} Presigned URL (or original if unconfigured)
+ */
+async function getPresignedAudioUrl(s3KeyOrUrl, expiresIn = 86400) {
+  if (!s3KeyOrUrl) return null
+  try {
+    const client = getS3Client()
+    if (!client || !GetObjectCommand) return s3KeyOrUrl
+
+    let getSignedUrl = null
+    try {
+      getSignedUrl = require('@aws-sdk/s3-request-presigner').getSignedUrl
+    } catch {
+      return s3KeyOrUrl
+    }
+
+    const bucketName = (process.env.AWS_S3_BUCKET_NAME || 'cloop-english').trim()
+    let key = s3KeyOrUrl
+    if (s3KeyOrUrl.startsWith('http://') || s3KeyOrUrl.startsWith('https://')) {
+      const parsedUrl = new URL(s3KeyOrUrl)
+      key = parsedUrl.pathname.replace(/^\//, '')
+    }
+
+    const command = new GetObjectCommand({
+      Bucket: bucketName,
+      Key: key,
+    })
+
+    const signedUrl = await getSignedUrl(client, command, { expiresIn })
+    return signedUrl
+  } catch (err) {
+    console.error('[S3 Storage] Error generating presigned URL:', err.message)
+    return s3KeyOrUrl
+  }
+}
+
 module.exports = {
   isConfigured,
   pcmToWavBuffer,
   uploadSessionAudio,
+  getPresignedAudioUrl,
   getS3Client,
 }
