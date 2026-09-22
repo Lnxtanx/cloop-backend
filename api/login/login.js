@@ -29,10 +29,25 @@ router.post('/', async (req, res) => {
 	try {
 		console.log(`Searching for user with cleanInput="${cleanInput}" (raw="${rawInput}")`);
 
-		// Extract potential numeric user_id if input is formatted like "GUEST-1234" or "1234"
-		const numericIdMatch = cleanInput.match(/\d+/);
-		const parsedUserId = numericIdMatch ? parseInt(numericIdMatch[0], 10) : null;
+		// Extract potential numeric user_id if input is formatted like "GUEST-1234" or small numeric ID
+		// Note: PostgreSQL user_id is INT4 (signed 32-bit integer, max 2,147,483,647).
+		// Phone numbers (like 8390174500) or larger numbers must NOT be queried as user_id.
+		const guestMatch = cleanInput.match(/^guest-(\d+)$/i);
 		const digitsOnlyPhone = cleanInput.replace(/\D/g, '');
+
+		let parsedUserId = null;
+		if (guestMatch) {
+			const id = parseInt(guestMatch[1], 10);
+			if (!isNaN(id) && id > 0 && id <= 2147483647) {
+				parsedUserId = id;
+			}
+		} else if (/^\d{1,7}$/.test(cleanInput)) {
+			// Pure numeric user ID under 8 digits (not a 10-digit mobile phone number)
+			const id = parseInt(cleanInput, 10);
+			if (!isNaN(id) && id > 0 && id <= 2147483647) {
+				parsedUserId = id;
+			}
+		}
 
 		// Build flexible lookup criteria
 		const orConditions = [
@@ -41,7 +56,7 @@ router.post('/', async (req, res) => {
 			{ name: { equals: cleanInput, mode: 'insensitive' } },
 		];
 
-		if (parsedUserId && !isNaN(parsedUserId)) {
+		if (parsedUserId !== null) {
 			orConditions.push({ user_id: parsedUserId });
 		}
 		if (digitsOnlyPhone && digitsOnlyPhone.length >= 4) {
