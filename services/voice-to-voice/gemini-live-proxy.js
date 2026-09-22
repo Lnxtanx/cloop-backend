@@ -653,6 +653,24 @@ async function handleToolCalls(toolCall, sessionState, clientWs, geminiWs) {
 		} else if (name === 'end_session' || name === 'session_complete') {
 			const durationSec = Math.max(1, Math.round((new Date() - sessionState.startedAt) / 1000))
 			const totalExchanges = sessionState.turns.length
+			const isUserRequested = sessionState.userRequestedEnd || args.reason === 'user_requested'
+
+			// Enforce mandatory 5-minute minimum duration (300 seconds) for spoken English practice
+			// Allow wrap-up only if learner explicitly requested it OR if at least 270 seconds (4.5m) have elapsed
+			if (!isUserRequested && durationSec < 270) {
+				console.log(`⏳ [Voice WS] Premature ${name} call blocked! Duration: ${durationSec}s (< 270s / 4.5m). Instructing Gemini Live to continue practice...`)
+				responses.push({
+					id: id || `call_${name}`,
+					name: name,
+					response: {
+						output: {
+							status: 'continue_practice',
+							instruction: `CRITICAL RULE: The session has only run for ${durationSec} seconds. Every spoken English practice session MUST last at least 5 minutes (300 seconds). Do NOT end the session yet! Continue the conversation by asking a natural follow-up question or roleplaying another realistic scenario for this topic right now.`
+						}
+					}
+				})
+				continue
+			}
 
 			sessionState.sessionCompleted = true
 			console.log(`🏁 [Voice WS] ${name} accepted! Reason: ${args.reason || (sessionState.userRequestedEnd ? 'user_requested' : 'completed')}, Duration: ${durationSec}s, Exchanges: ${totalExchanges}, Questions: ${args.questions_asked || sessionState.questionCount}`)

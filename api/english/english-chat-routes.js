@@ -3,6 +3,7 @@ const router = express.Router();
 const prisma = require('../../lib/prisma');
 const jwt = require('jsonwebtoken');
 const { generateEnglishTopicChatResponse, generateEnglishTopicGreeting } = require('../../services/ai/english-topic-chat');
+const { COURSE_CATALOG } = require('../../services/voice-to-voice/voice-session-prompts');
 
 // Middleware to extract user from JWT token
 function authMiddleware(req, res, next) {
@@ -24,70 +25,190 @@ router.use(authMiddleware);
 const MAX_TURNS = 10; // AI will wrap up after ~10 user turns
 
 /**
- * GET /api/english/chat/messages
- * Fetches messages, goals, and session progress for an English scenario topic
+ * Universal English Topic Resolver:
+ * Supports:
+ * 1. String slugs (e.g. "interview_prep_getting_ready", "everyday_english_saying_hello")
+ * 2. Explicit trackKey & chapterKey (from query or body params)
+ * 3. Numeric IDs (checking DB table english_topics)
+ * 4. Graceful default fallback to ensure ZERO 404s for users
  */
-router.get('/messages', async (req, res) => {
-  const { topicId } = req.query;
-  const userId = req.userId || 1;
+async function resolveEnglishTopic({ topicId, trackKey, chapterKey }) {
+  let track = trackKey || null;
+  let chapter = chapterKey || null;
+  const topicIdStr = topicId !== undefined && topicId !== null ? String(topicId).trim() : '';
 
-  if (!topicId) {
-    return res.status(400).json({ error: 'topicId query parameter is required' });
+  // Parse composite slug (e.g. "interview_prep_getting_ready")
+  if ((!track || !chapter) && topicIdStr) {
+    for (const catTrack of Object.keys(COURSE_CATALOG || {})) {
+      if (topicIdStr === catTrack) {
+        track = catTrack;
+        chapter = Object.keys(COURSE_CATALOG[catTrack].chapters || {})[0];
+        break;
+      }
+      if (topicIdStr.startsWith(catTrack + '_')) {
+        track = catTrack;
+        chapter = topicIdStr.slice(catTrack.length + 1);
+        break;
+      }
+    }
   }
 
-  try {
-    const numericTopicId = Number(topicId);
+  // 1. Resolve from COURSE_CATALOG
+  if (track && chapter && COURSE_CATALOG?.[track]?.chapters?.[chapter]) {
+    const catalogTrack = COURSE_CATALOG[track];
+    const catalogChapter = catalogTrack.chapters[chapter];
 
-    // 1. Fetch topic from english_topics
-    let topic = null;
-    if (!isNaN(numericTopicId)) {
-      topic = await prisma.english_topics.findUnique({
+    const goals = (catalogChapter.prompts && catalogChapter.prompts.length > 0)
+      ? catalogChapter.prompts.map((p, idx) => ({
+          id: idx + 1,
+          title: p,
+          description: `Practice: ${p}`,
+          order: idx + 1,
+          is_completed: false
+        }))
+      : [
+          { id: 1, title: 'Opening & Setting the Scene', description: 'Introduce the context clearly', order: 1, is_completed: false },
+          { id: 2, title: 'Key Vocabulary & Expressions', description: 'Use topic-appropriate phrasing', order: 2, is_completed: false },
+          { id: 3, title: 'Fluent Exchange & Closing', description: 'Maintain natural conversation flow', order: 3, is_completed: false }
+        ];
+
+    return {
+      id: `${track}_${chapter}`,
+      numericId: null,
+      trackKey: track,
+      chapterKey: chapter,
+      title: catalogChapter.title,
+      trackTitle: catalogTrack.name,
+      description: `${catalogTrack.name} — ${catalogChapter.title}. Key targets: ${(catalogChapter.targetWords || []).slice(0, 4).join(', ')}`,
+      goals,
+      isDbEntity: false
+    };
+  }
+
+  // 2. Check if topicId is a numeric ID from database (english_topics table)
+  const numericTopicId = Number(topicIdStr);
+  if (!isNaN(numericTopicId) && numericTopicId > 0) {
+    try {
+      const dbTopic = await prisma.english_topics.findUnique({
         where: { id: numericTopicId },
         include: {
           chapter: { include: { subject: true } },
           goals: { orderBy: { order: 'asc' } }
         }
       }).catch(() => null);
-    }
 
-    if (!topic) {
-      return res.status(404).json({ error: 'English topic not found' });
-    }
+      if (dbTopic) {
+        const goals = (dbTopic.goals || []).map(g => ({
+          id: g.id,
+          title: g.title,
+          description: g.description,
+          order: g.order,
+          is_completed: false
+        }));
 
-    // 2. Check completion status from user_english_progress
-    const progress = await prisma.user_english_progress.findUnique({
-      where: {
-        user_id_topic_id: { user_id: userId, topic_id: numericTopicId }
+        if (goals.length === 0) {
+          goals.push(
+            { id: 1, title: `${dbTopic.title} Opening`, description: 'Start the conversation', order: 1, is_completed: false },
+            { id: 2, title: 'Expressing Ideas Clearly', description: 'Accurate vocabulary', order: 2, is_completed: false },
+            { id: 3, title: 'Fluent Discussion', description: 'Natural dialogue', order: 3, is_completed: false }
+          );
+        }
+
+        return {
+          id: dbTopic.id,
+          numericId: dbTopic.id,
+          trackKey: null,
+          chapterKey: null,
+          title: dbTopic.title,
+          trackTitle: dbTopic.chapter?.title || 'English Practice',
+          description: dbTopic.description || `Practical conversation on ${dbTopic.title}`,
+          goals,
+          isDbEntity: true
+        };
       }
-    }).catch(() => null);
+    } catch (err) {
+      console.warn('[EnglishChat] Database lookup failed for english_topics:', err.message);
+    }
+  }
 
-    const isCompleted = progress?.is_completed || false;
-    const timeSpent = progress?.time_spent_seconds || 0;
+  // 3. Fallback: match any chapter title by partial match from catalog
+  if (topicIdStr) {
+    for (const [tKey, tVal] of Object.entries(COURSE_CATALOG || {})) {
+      for (const [cKey, cVal] of Object.entries(tVal.chapters || {})) {
+        if (topicIdStr.toLowerCase().includes(cKey.toLowerCase()) || topicIdStr.toLowerCase().includes(cVal.title.toLowerCase())) {
+          return resolveEnglishTopic({ trackKey: tKey, chapterKey: cKey });
+        }
+      }
+    }
+  }
 
-    // 3. Fetch user profile
+  // 4. Guaranteed default topic fallback (Job Interview Prep -> Getting Ready)
+  const fallbackTrack = COURSE_CATALOG?.interview_prep || Object.values(COURSE_CATALOG || {})[0];
+  const fallbackChapter = fallbackTrack?.chapters?.getting_ready || Object.values(fallbackTrack?.chapters || {})[0];
+
+  return {
+    id: 'interview_prep_getting_ready',
+    numericId: null,
+    trackKey: 'interview_prep',
+    chapterKey: 'getting_ready',
+    title: fallbackChapter?.title || 'Getting Ready',
+    trackTitle: fallbackTrack?.name || 'Practice for a Job Interview',
+    description: 'Job Interview Practice — Getting Ready for your role and company',
+    goals: [
+      { id: 1, title: "Tell about the job and company you're applying for", order: 1, is_completed: false },
+      { id: 2, title: "Say the company name and role clearly and confidently", order: 2, is_completed: false },
+      { id: 3, title: "Express enthusiasm and ask a thoughtful question", order: 3, is_completed: false }
+    ],
+    isDbEntity: false
+  };
+}
+
+/**
+ * GET /api/english/chat/messages
+ * Fetches messages, goals, and session progress for an English scenario topic
+ */
+router.get('/messages', async (req, res) => {
+  const { topicId, track, trackKey, chapter, chapterKey } = req.query;
+  const userId = req.userId || 1;
+
+  try {
+    // 1. Universal Topic Resolution
+    const topic = await resolveEnglishTopic({
+      topicId,
+      trackKey: trackKey || track,
+      chapterKey: chapterKey || chapter
+    });
+
+    // 2. Check completion status from user_english_progress (only if valid numeric DB entity)
+    let isCompleted = false;
+    let timeSpent = 0;
+
+    if (topic.isDbEntity && topic.numericId) {
+      const progress = await prisma.user_english_progress.findUnique({
+        where: {
+          user_id_topic_id: { user_id: userId, topic_id: topic.numericId }
+        }
+      }).catch(() => null);
+
+      isCompleted = progress?.is_completed || false;
+      timeSpent = progress?.time_spent_seconds || 0;
+    }
+
+    // 3. Fetch user profile defensively
     const userProfile = await prisma.users.findUnique({
       where: { user_id: userId }
     }).catch(() => null);
 
-    // 4. Format goals from DB
-    const topicGoals = (topic.goals || []).map(g => ({
-      id: g.id,
+    // 4. Format goals
+    const topicGoals = topic.goals.map((g, idx) => ({
+      id: g.id || idx + 1,
       title: g.title,
-      description: g.description,
-      order: g.order,
-      is_completed: false // Will be updated based on chat analysis
+      description: g.description || g.title,
+      order: g.order || idx + 1,
+      is_completed: false
     }));
 
-    // Fallback dynamic goals if DB has none
-    if (topicGoals.length === 0) {
-      topicGoals.push(
-        { id: 1, title: `Scenario Context & Professional Opening`, description: `Open the conversation for ${topic.title}`, order: 1, is_completed: false },
-        { id: 2, title: `Target Vocabulary & Key Expressions`, description: `Use relevant topic phrasing`, order: 2, is_completed: false },
-        { id: 3, title: `Fluent Exchange & Closing`, description: `Maintain natural flow`, order: 3, is_completed: false }
-      );
-    }
-
-    // 5. Fetch existing chat history STRICTLY for this English topic
+    // 5. Fetch existing chat history for this English topic by title and user
     const learningTurns = await prisma.learning_turns.findMany({
       where: {
         user_id: userId,
@@ -102,12 +223,9 @@ router.get('/messages', async (req, res) => {
     let userTurnCount = 0;
 
     if (learningTurns.length > 0) {
-      // Reconstruct message timeline properly
       for (const turn of learningTurns) {
-        // AI message (question_text) — only add if it has content and no user_answer_raw
-        // OR if it's a greeting (no user answer in same row)
         if (turn.question_text && !turn.user_answer_raw) {
-          // Pure AI message row (greeting or AI-only turn)
+          // Greeting or AI-only turn
           messages.push({
             id: `ai_${turn.id}`,
             sender: 'ai',
@@ -116,10 +234,9 @@ router.get('/messages', async (req, res) => {
             created_at: turn.created_at
           });
         } else if (turn.user_answer_raw) {
-          // User turn row — contains user answer and potentially the AI follow-up
           userTurnCount++;
 
-          // Add user message
+          // User turn
           messages.push({
             id: `user_${turn.id}`,
             sender: 'user',
@@ -131,7 +248,7 @@ router.get('/messages', async (req, res) => {
             created_at: turn.created_at
           });
 
-          // Add AI follow-up response (stored in question_text of the same row)
+          // AI response to user turn
           if (turn.question_text) {
             messages.push({
               id: `ai_resp_${turn.id}`,
@@ -160,38 +277,39 @@ router.get('/messages', async (req, res) => {
       ];
 
       for (const aiMsg of initMsgs) {
-        // Create admin_chat to get valid chat_id
-        const adminChat = await prisma.admin_chat.create({
-          data: {
-            user_id: userId,
-            sender: 'ai',
-            message: aiMsg.message,
-            message_type: aiMsg.message_type || 'text'
-          }
-        }).catch((err) => {
-          console.error("Error creating admin_chat for greeting:", err.message);
-          return null;
-        });
+        let chatIdToUse = Date.now();
 
-        const chatIdToUse = adminChat?.id || Date.now();
+        // Safely record in admin_chat if DB is available
+        try {
+          const adminChat = await prisma.admin_chat.create({
+            data: {
+              user_id: userId,
+              sender: 'ai',
+              message: aiMsg.message,
+              message_type: aiMsg.message_type || 'text'
+            }
+          }).catch(() => null);
 
-        // Save as AI-only learning_turn (no user_answer_raw)
-        await prisma.learning_turns.create({
-          data: {
-            user_id: userId,
-            chat_id: chatIdToUse,
-            topic_id: topic.id,
-            topic_title: topic.title,
-            subject_name: 'English',
-            question_text: aiMsg.message,
-            user_name: userProfile?.name || 'Learner'
-          }
-        }).catch((err) => {
-          console.error("Error creating learning_turns for greeting:", err.message);
-        });
+          if (adminChat?.id) chatIdToUse = adminChat.id;
+
+          // Save AI greeting learning_turn
+          await prisma.learning_turns.create({
+            data: {
+              user_id: userId,
+              chat_id: chatIdToUse,
+              topic_id: topic.numericId, // Null for catalog slugs
+              topic_title: topic.title,
+              subject_name: 'English',
+              question_text: aiMsg.message,
+              user_name: userProfile?.name || 'Learner'
+            }
+          }).catch(() => null);
+        } catch (dbErr) {
+          console.warn('[EnglishChat] Non-blocking DB write skip for greeting:', dbErr.message);
+        }
 
         messages.push({
-          id: adminChat?.id || Date.now() + Math.random(),
+          id: chatIdToUse,
           sender: 'ai',
           message: aiMsg.message,
           message_type: aiMsg.message_type || 'text',
@@ -199,18 +317,20 @@ router.get('/messages', async (req, res) => {
         });
       }
 
-      // Create initial progress entry
-      await prisma.user_english_progress.upsert({
-        where: { user_id_topic_id: { user_id: userId, topic_id: topic.id } },
-        create: {
-          user_id: userId,
-          topic_id: topic.id,
-          is_completed: false,
-          completion_percent: 0,
-          time_spent_seconds: 0
-        },
-        update: {}
-      }).catch(() => null);
+      // Initial progress entry for DB-backed topics
+      if (topic.isDbEntity && topic.numericId) {
+        await prisma.user_english_progress.upsert({
+          where: { user_id_topic_id: { user_id: userId, topic_id: topic.numericId } },
+          create: {
+            user_id: userId,
+            topic_id: topic.numericId,
+            is_completed: false,
+            completion_percent: 0,
+            time_spent_seconds: 0
+          },
+          update: {}
+        }).catch(() => null);
+      }
     }
 
     return res.json({
@@ -238,49 +358,33 @@ router.get('/messages', async (req, res) => {
  * Handles user response turn: evaluates grammar/vocabulary and returns AI tutor response
  */
 router.post('/message', async (req, res) => {
-  const { topicId, message: userMessage, session_time_seconds } = req.body;
+  const { topicId, trackKey, chapterKey, message: userMessage, session_time_seconds } = req.body;
   const userId = req.userId || 1;
 
-  if (!topicId || !userMessage || !userMessage.trim()) {
-    return res.status(400).json({ error: 'topicId and non-empty message are required' });
+  if (!userMessage || !userMessage.trim()) {
+    return res.status(400).json({ error: 'Non-empty message is required' });
   }
 
   try {
-    const numericTopicId = Number(topicId);
-
-    let topic = await prisma.english_topics.findUnique({
-      where: { id: numericTopicId },
-      include: {
-        chapter: { include: { subject: true } },
-        goals: { orderBy: { order: 'asc' } }
-      }
-    }).catch(() => null);
-
-    if (!topic) {
-      return res.status(404).json({ error: 'English topic not found' });
-    }
+    // 1. Universal Topic Resolution
+    const topic = await resolveEnglishTopic({
+      topicId,
+      trackKey,
+      chapterKey
+    });
 
     const userProfile = await prisma.users.findUnique({
       where: { user_id: userId }
     }).catch(() => null);
 
-    // Get topic goals from DB
-    const topicGoals = (topic.goals || []).map(g => ({
-      id: g.id,
+    const topicGoals = topic.goals.map((g, idx) => ({
+      id: g.id || idx + 1,
       title: g.title,
-      description: g.description,
+      description: g.description || g.title,
       is_completed: false
     }));
 
-    if (topicGoals.length === 0) {
-      topicGoals.push(
-        { id: 1, title: `Scenario Context & Opening`, is_completed: false },
-        { id: 2, title: `Vocabulary & Expressions`, is_completed: false },
-        { id: 3, title: `Fluent Exchange & Closing`, is_completed: false }
-      );
-    }
-
-    // Count existing user turns to determine turnNumber
+    // 2. Count existing user turns to determine turnNumber
     const existingUserTurns = await prisma.learning_turns.count({
       where: {
         user_id: userId,
@@ -292,7 +396,7 @@ router.post('/message', async (req, res) => {
 
     const turnNumber = existingUserTurns + 1;
 
-    // Fetch recent chat history for context
+    // 3. Fetch recent chat history for context
     const recentTurns = await prisma.learning_turns.findMany({
       where: {
         user_id: userId,
@@ -315,7 +419,7 @@ router.post('/message', async (req, res) => {
       }
     }
 
-    // Call AI Tutor Engine
+    // 4. Call AI Tutor Engine (DeepSeek)
     const aiResponse = await generateEnglishTopicChatResponse({
       userMessage,
       topicTitle: topic.title,
@@ -330,64 +434,67 @@ router.post('/message', async (req, res) => {
     });
 
     const corr = aiResponse.user_correction || {};
-    const feedback = corr.feedback || { is_correct: true, score_percent: 100 };
-    const firstAiMsg = aiResponse.messages?.[0]?.message || "";
-    const sessionEnded = aiResponse.session_ended || false;
+    const feedback = corr.feedback || { is_correct: true, score_percent: 100, error_type: 'None', explanation: 'Good job!' };
+    const firstAiMsg = aiResponse.messages?.[0]?.message || "That's great! Let's continue.";
+    let sessionEnded = aiResponse.session_ended || (turnNumber >= MAX_TURNS);
 
-    // Save user message + AI response as a single learning_turn row
-    const userAdminChat = await prisma.admin_chat.create({
-      data: {
-        user_id: userId,
-        sender: 'user',
-        message: userMessage,
-        message_type: 'text'
-      }
-    }).catch((err) => {
-      console.error("Error creating user admin_chat:", err.message);
-      return null;
-    });
+    // 5. Safely persist user message + AI response in DB
+    let chatIdToUse = Date.now();
+    try {
+      const userAdminChat = await prisma.admin_chat.create({
+        data: {
+          user_id: userId,
+          sender: 'user',
+          message: userMessage,
+          message_type: 'text'
+        }
+      }).catch(() => null);
 
-    const chatIdToUse = userAdminChat?.id || Date.now();
+      if (userAdminChat?.id) chatIdToUse = userAdminChat.id;
 
-    // Save user turn + AI follow-up in one row
-    await prisma.learning_turns.create({
-      data: {
-        user_id: userId,
-        chat_id: chatIdToUse,
-        topic_id: topic.id,
-        topic_title: topic.title,
-        subject_name: 'English',
-        question_text: firstAiMsg, // AI follow-up response
-        user_answer_raw: userMessage,
-        corrected_answer: corr.complete_answer || userMessage,
-        diff_html: corr.diff_html || userMessage,
-        feedback_text: feedback.explanation || '',
-        feedback_json: feedback,
-        error_type: feedback.error_type || 'None',
-        is_correct: feedback.is_correct,
-        score_percent: Number(feedback.score_percent) || 0,
-        mastery_score: Number(feedback.score_percent) || 0,
-        user_name: userProfile?.name || 'Learner'
-      }
-    }).catch((err) => {
-      console.error("Error creating learning_turns turn:", err.message);
-    });
+      await prisma.learning_turns.create({
+        data: {
+          user_id: userId,
+          chat_id: chatIdToUse,
+          topic_id: topic.numericId, // Null for catalog slugs to prevent schema type crashes
+          topic_title: topic.title,
+          subject_name: 'English',
+          question_text: firstAiMsg,
+          user_answer_raw: userMessage,
+          corrected_answer: corr.complete_answer || userMessage,
+          diff_html: corr.diff_html || userMessage,
+          feedback_text: feedback.explanation || '',
+          feedback_json: feedback,
+          error_type: feedback.error_type || 'None',
+          is_correct: feedback.is_correct,
+          score_percent: Number(feedback.score_percent) || 0,
+          mastery_score: Number(feedback.score_percent) || 0,
+          user_name: userProfile?.name || 'Learner'
+        }
+      }).catch(() => null);
+    } catch (dbErr) {
+      console.warn('[EnglishChat] Non-blocking DB write skip for turn:', dbErr.message);
+    }
 
-    // Save AI response to admin_chat
+    // 6. Save AI responses to admin_chat and prepare return array
     const aiMessagesToReturn = [];
     if (aiResponse.messages && Array.isArray(aiResponse.messages)) {
       for (const aiMsg of aiResponse.messages) {
-        const createdAiChat = await prisma.admin_chat.create({
-          data: {
-            user_id: userId,
-            sender: 'ai',
-            message: aiMsg.message,
-            message_type: aiMsg.message_type || 'text'
-          }
-        }).catch(() => null);
+        let aiChatId = Date.now() + Math.random();
+        try {
+          const createdAiChat = await prisma.admin_chat.create({
+            data: {
+              user_id: userId,
+              sender: 'ai',
+              message: aiMsg.message,
+              message_type: aiMsg.message_type || 'text'
+            }
+          }).catch(() => null);
+          if (createdAiChat?.id) aiChatId = createdAiChat.id;
+        } catch (_) {}
 
         aiMessagesToReturn.push({
-          id: createdAiChat?.id || Date.now() + Math.random(),
+          id: aiChatId,
           sender: 'ai',
           message: aiMsg.message,
           message_type: aiMsg.message_type || 'text',
@@ -396,42 +503,50 @@ router.post('/message', async (req, res) => {
       }
     }
 
-    // Update user_english_progress
+    // 7. Update progress if DB topic
     const completionPercent = Math.min(100, Math.round((turnNumber / MAX_TURNS) * 100));
-    await prisma.user_english_progress.upsert({
-      where: { user_id_topic_id: { user_id: userId, topic_id: topic.id } },
-      create: {
-        user_id: userId,
-        topic_id: topic.id,
-        is_completed: sessionEnded,
-        completion_percent: sessionEnded ? 100 : completionPercent,
-        time_spent_seconds: session_time_seconds || 0
-      },
-      update: {
-        is_completed: sessionEnded ? true : undefined,
-        completion_percent: sessionEnded ? 100 : completionPercent,
-        time_spent_seconds: session_time_seconds || 0,
-        last_practiced_at: new Date()
-      }
-    }).catch((err) => {
-      console.error("Error updating user_english_progress:", err.message);
-    });
+    if (topic.isDbEntity && topic.numericId) {
+      await prisma.user_english_progress.upsert({
+        where: { user_id_topic_id: { user_id: userId, topic_id: topic.numericId } },
+        create: {
+          user_id: userId,
+          topic_id: topic.numericId,
+          is_completed: sessionEnded,
+          completion_percent: sessionEnded ? 100 : completionPercent,
+          time_spent_seconds: session_time_seconds || 0
+        },
+        update: {
+          is_completed: sessionEnded ? true : undefined,
+          completion_percent: sessionEnded ? 100 : completionPercent,
+          time_spent_seconds: session_time_seconds || 0,
+          last_practiced_at: new Date()
+        }
+      }).catch(() => null);
+    }
 
-    // Update goal completion status based on AI response
+    // 8. Goal completion matching (by ID or title substring)
+    const completedGoalIds = aiResponse.goal_status?.completed_goal_ids || [];
     const completedGoalTitles = aiResponse.goal_status?.goals_completed || [];
-    for (const goalTitle of completedGoalTitles) {
-      const matchedGoal = topicGoals.find(g =>
-        g.title.toLowerCase().includes(goalTitle.toLowerCase()) ||
-        goalTitle.toLowerCase().includes(g.title.toLowerCase())
-      );
-      if (matchedGoal) {
-        matchedGoal.is_completed = true;
+
+    for (const goal of topicGoals) {
+      if (completedGoalIds.includes(goal.id) || completedGoalIds.includes(goal.order)) {
+        goal.is_completed = true;
+      } else if (completedGoalTitles.some(t =>
+        typeof t === 'string' && (
+          goal.title.toLowerCase().includes(t.toLowerCase()) ||
+          t.toLowerCase().includes(goal.title.toLowerCase())
+        )
+      )) {
+        goal.is_completed = true;
       }
     }
 
+    const allGoalsDone = topicGoals.every(g => g.is_completed);
+    if (allGoalsDone) sessionEnded = true;
+
     return res.json({
       userMessage: {
-        id: userAdminChat?.id || Date.now(),
+        id: chatIdToUse,
         sender: 'user',
         message: userMessage
       },
@@ -442,7 +557,7 @@ router.post('/message', async (req, res) => {
         feedback: feedback
       },
       goals: topicGoals,
-      all_goals_completed: sessionEnded,
+      all_goals_completed: allGoalsDone,
       session_ended: sessionEnded,
       turnNumber: turnNumber,
       totalTurns: MAX_TURNS,
@@ -457,7 +572,7 @@ router.post('/message', async (req, res) => {
 
 /**
  * POST /api/english/chat/general
- * Non-blocking general freeform AI tutor endpoint
+ * Freeform English AI tutor powered by DeepSeek
  */
 router.post('/general', async (req, res) => {
   const { message: userMessage } = req.body;
@@ -484,6 +599,7 @@ Help ${userProfile?.name || 'the user'} improve English speaking, grammar, writi
       systemPrompt,
       [{ role: 'user', content: userMessage }],
       {
+        modelId: 'deepseek-chat',
         temperature: 0.7,
         userId,
         featureArea: 'general_english_tutor'
@@ -504,3 +620,4 @@ Help ${userProfile?.name || 'the user'} improve English speaking, grammar, writi
 });
 
 module.exports = router;
+

@@ -113,8 +113,11 @@ const COURSE_CATALOG = {
       getting_ready: {
         title: 'Getting Ready',
         prompts: [
-          'What job are you applying for? Tell me the company name and the role.',
-          'Say the company name and your role clearly and confidently.',
+          'What job position and company are you preparing to interview for? Tell me why this specific role interests you.',
+          'Practice stating your professional job title and your core area of expertise with crisp confidence.',
+          'How have you prepared for today\'s interview? Mention two key things you researched about the company.',
+          'Tell me about the professional environment or team culture you thrive in.',
+          'Give a concise 30-second elevator pitch summarizing what unique value you bring to an employer.',
         ],
         targetErrors: ['hesitation', 'unclear', 'too_short'],
         targetWords: ['interview', 'position', 'company', 'application', 'opportunity'],
@@ -163,8 +166,11 @@ const COURSE_CATALOG = {
       finishing_well: {
         title: 'Finishing Well',
         prompts: [
-          'The interview is ending. Do you have any questions for me?',
-          'How would you end this interview on a good note?',
+          'The interviewer says: "That concludes our questions. Do you have any questions for us?" Ask two thoughtful, intelligent questions about the role or company culture.',
+          'The interviewer answers your questions. Respond professionally showing enthusiasm for the opportunity.',
+          'Reiterate your top strength and explain why you are eager to contribute to the team.',
+          'Ask about the next steps and timeline in the hiring process politely.',
+          'Conclude the interview with a polished, memorable closing statement thanking the interviewer.',
         ],
         targetErrors: ['too_short', 'hesitation', 'word_choice'],
         targetWords: ['appreciate', 'looking forward', 'thank you', 'opportunity', 'follow up'],
@@ -179,12 +185,15 @@ const COURSE_CATALOG = {
       saying_hello: {
         title: 'Saying Hello',
         prompts: [
-          'Imagine I am your new neighbour. Say hello and introduce yourself.',
-          'Ask me how I am doing today.',
-          'Now end this short chat politely.',
+          'Scenario 1 (New Neighbour): Imagine I am moving into the flat next door. Say hello, introduce yourself warmly, and ask if I need any help settling in.',
+          'Scenario 1 Follow-up: Ask me where I moved from, and recommend a good local grocery shop, cafe, or park in this neighbourhood.',
+          'Scenario 2 (Office Colleague): It is Monday morning by the office coffee machine. Greet me, ask how my weekend was, and tell me one thing you did over the weekend.',
+          'Scenario 3 (Old Friend Reunion): You unexpectedly bump into an old school friend at a shopping mall. Greet me with genuine surprise, ask what I am working on these days, and share what you have been up to.',
+          'Scenario 4 (Networking Meetup): You are at an industry meetup. Introduce yourself, state your background, and ask me what brought me to the event.',
+          'Wrap-up: Conclude our conversation politely by exchanging contact info or pleasantries and saying goodbye warmly.',
         ],
         targetErrors: ['hesitation', 'too_short', 'grammar'],
-        targetWords: ['hello', 'nice to meet you', 'how are you', 'take care', 'goodbye'],
+        targetWords: ['hello', 'nice to meet you', 'how are you', 'take care', 'goodbye', 'settling in', 'weekend'],
       },
       talking_with_friends: {
         title: 'Talking with Friends',
@@ -510,8 +519,9 @@ CORRECTION LOOP:
 - Small errors → let them pass (but log them).
 - Errors that stop people understanding → correct out loud.
 
-CONVERSATION PACING & 5-6 MINUTE SESSION STRUCTURE:
-This session is designed to last 5 to 6 minutes. You MUST sustain an engaging back-and-forth conversation for at least 14 to 18 exchanges.
+CONVERSATION PACING & MANDATORY 5-MINUTE SESSION STRUCTURE:
+This session MUST last for AT LEAST 5 FULL MINUTES. You MUST sustain an engaging back-and-forth conversation for at least 14 to 18 exchanges.
+Under NO CIRCUMSTANCES should you wrap up or call \`end_session\` before 5 full minutes have passed, unless the learner explicitly asks to stop.
 DO NOT rush through the prompts or end after only asking each prompt once!
 
 HOW TO SUSTAIN A 5-6 MINUTE CONVERSATION:
@@ -525,24 +535,23 @@ HOW TO SUSTAIN A 5-6 MINUTE CONVERSATION:
      * "Could you give me a specific real-life example of that?"
      * "How did you handle that situation?"
    - If their answer was too short (1-3 words), gently encourage them: "That is a good start! Tell me that again in two complete sentences."
-3. Stage 3: Interactive Role-Play & Situational Drill (Minutes 3.5 to 4.5):
-   - Role-play realistically (e.g. interviewer digging into a detail, colleague at work, friendly shopkeeper).
+3. Stage 3: Interactive Role-Play & Situational Variations (Minutes 3.5 to 4.5):
+   - Introduce realistic conversational situations for this topic (e.g. speaking to a neighbour, bumping into an old friend, office watercooler chat).
    - Give the learner a chance to ask YOU a question related to the topic, then answer warmly and prompt them back.
-4. Stage 4: Warm Review & Wrap-up:
-   - When the session ends, say a warm closing line like: "That was wonderful practice today, ${learnerName}! You did really well."
+4. Stage 4: Warm Review & Wrap-up (AFTER Minute 5):
+   - Only when at least 5 minutes of active conversation have elapsed, say a warm closing line like: "That was wonderful practice today, ${learnerName}! You did really well."
    - In that same turn, call the \`end_session\` tool with a concise spoken summary, strengths, and one thing to work on.
 
 WHEN TO END THE SESSION & CALL end_session:
-1. USER-REQUESTED EXIT (HIGHEST PRIORITY):
+1. USER-REQUESTED EXIT (HIGHEST PRIORITY - ALLOWED AT ANY TIME):
    If at ANY time during the session the learner says they want to stop, leave, or end (e.g. "I want to stop", "let's end here", "I am done", "finish the chat", "bye", "I have to go", "stop practice", "bas", "khatam karo"):
    - You MUST respect their request immediately.
    - Reply with ONE short warm sentence (e.g., "You did wonderful practice today, ${learnerName}! Have a great day ahead!").
    - In that SAME turn, CALL the \`end_session\` tool with reason='user_requested'.
    - NEVER ignore an exit request or force another practice prompt.
-2. TOPIC COMPLETED:
-   If you have thoroughly covered the chapter's prompts and exercises, say a warm closing line and CALL \`end_session\` with reason='practice_completed'.
-3. 5-6 MINUTE TIME TARGET:
-   If the conversation has naturally continued for around 5-6 minutes, wrap up with praise and CALL \`end_session\` with reason='time_limit_reached'.
+2. 5-MINUTE TIME TARGET REACHED:
+   Only after the conversation has naturally continued for at least 5 minutes (300 seconds) and at least 14 exchanges, wrap up with praise and CALL \`end_session\` with reason='time_limit_reached'.
+   DO NOT call \`end_session\` before 5 minutes under any other circumstance!
 ${topicInstructions}
 ${profileInstructions}`
 }
