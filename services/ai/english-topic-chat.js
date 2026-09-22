@@ -145,20 +145,32 @@ async function generateEnglishTopicChatResponse({
     userProfile
   });
 
-  const messages = [];
-  // Include recent chat history for context (last 8 messages)
+  // Format recent chat history as contextual dialogue transcript to prevent DeepSeek JSON-mode logits conflict
+  let historyTranscript = '';
   const recentHistory = chatHistory.slice(-8);
-  for (const msg of recentHistory) {
-    messages.push({
-      role: msg.sender === 'user' ? 'user' : 'assistant',
-      content: msg.message || ''
-    });
+  if (recentHistory.length > 0) {
+    const learnerName = userProfile?.name ? userProfile.name.split(' ')[0] : 'Learner';
+    historyTranscript = recentHistory.map(m => {
+      const speaker = m.sender === 'user' ? learnerName : 'Tutor';
+      return `${speaker}: "${m.message}"`;
+    }).join('\n');
   }
 
-  messages.push({
-    role: 'user',
-    content: userMessage
-  });
+  const userContent = historyTranscript
+    ? `RECENT CONVERSATION TRANSCRIPT:
+${historyTranscript}
+
+CURRENT LEARNER RESPONSE TO EVALUATE:
+"${userMessage}"`
+    : `CURRENT LEARNER RESPONSE TO EVALUATE:
+"${userMessage}"`;
+
+  const messages = [
+    {
+      role: 'user',
+      content: userContent
+    }
+  ];
 
   let parsed = null;
 

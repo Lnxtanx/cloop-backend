@@ -619,5 +619,48 @@ Help ${userProfile?.name || 'the user'} improve English speaking, grammar, writi
   }
 });
 
+/**
+ * POST /api/english/chat/translate
+ * Translates an English tutor message into the learner's preferred language (e.g. Hindi, Spanish)
+ */
+router.post('/translate', async (req, res) => {
+  const { text, targetLanguage = 'Hindi' } = req.body || {};
+
+  if (!text || !text.trim()) {
+    return res.status(400).json({ error: 'Text to translate is required' });
+  }
+
+  try {
+    const { invokeModel } = require('../../services/ai/deepseek-client');
+
+    const prompt = `You are an expert translator. Translate the following English conversational tutor message into natural, warm, and accurate ${targetLanguage}.
+Provide ONLY the direct translation in ${targetLanguage}.
+Do NOT output any intro, explanations, pronunciation keys, or surrounding quotes.
+
+English message:
+${text}`;
+
+    const translated = await invokeModel(
+      prompt,
+      [{ role: 'user', content: 'Translate now.' }],
+      {
+        modelId: 'deepseek-chat',
+        temperature: 0.3,
+        featureArea: 'chat_translation'
+      }
+    );
+
+    const cleanTranslation = String(translated || '').trim().replace(/^["']|["']$/g, '');
+
+    return res.json({
+      translatedText: cleanTranslation,
+      targetLanguage
+    });
+  } catch (err) {
+    console.error('Translation error in /translate:', err);
+    return res.status(500).json({ error: 'Translation failed' });
+  }
+});
+
 module.exports = router;
 

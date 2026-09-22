@@ -203,6 +203,7 @@ function extractJson(text) {
 
     // 1. Strip reasoning/thinking blocks (common in DeepSeek R1 models)
     let cleanedText = text.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+    if (!cleanedText) return null;
 
     try {
         // 2. Prefer a JSON OBJECT ({...}) since the chat pipeline returns an object shape.
