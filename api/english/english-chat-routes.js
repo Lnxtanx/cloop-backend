@@ -377,12 +377,16 @@ router.post('/message', async (req, res) => {
       where: { user_id: userId }
     }).catch(() => null);
 
-    const topicGoals = topic.goals.map((g, idx) => ({
-      id: g.id || idx + 1,
-      title: g.title,
-      description: g.description || g.title,
-      is_completed: false
-    }));
+    const clientCompletedIds = Array.isArray(req.body.completed_goal_ids) ? req.body.completed_goal_ids : [];
+    const topicGoals = topic.goals.map((g, idx) => {
+      const gId = g.id || idx + 1;
+      return {
+        id: gId,
+        title: g.title,
+        description: g.description || g.title,
+        is_completed: clientCompletedIds.includes(gId)
+      };
+    });
 
     // 2. Count existing user turns to determine turnNumber
     const existingUserTurns = await prisma.learning_turns.count({
