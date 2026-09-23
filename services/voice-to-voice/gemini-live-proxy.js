@@ -265,6 +265,15 @@ function handleAssessmentWsUpgrade(server) {
 							},
 						},
 					},
+					// Enable live transcription for both AI output and user input
+					outputTranscription: { languageCode: 'en-IN' },
+					inputTranscription: { languageCode: 'en-IN' },
+					// Realtime input config for better turn-taking
+					realtimeInputConfig: {
+						automaticActivityDetection: {
+							disabled: false,
+						},
+					},
 					systemInstruction: {
 						parts: [{ text: systemInstructionText }],
 					},
