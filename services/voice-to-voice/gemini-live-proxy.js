@@ -77,6 +77,96 @@ const LEGACY_EVALUATION_TOOL = {
 /**
  * Handle WebSocket upgrade for /ws/assessment and /ws/voice
  */
+
+const TARGET_RECORD_RATE = 16000
+
+function parsePcmRate(mimeType, fallback = TARGET_RECORD_RATE) {
+	const match = /rate=(\d+)/i.exec(String(mimeType || ''))
+	return match ? parseInt(match[1], 10) : fallback
+}
+
+function resamplePcm16(pcmBuffer, fromRate, toRate) {
+	if (!pcmBuffer || pcmBuffer.length < 2 || fromRate === toRate) return pcmBuffer
+	const inSamples = Math.floor(pcmBuffer.length / 2)
+	const ratio = fromRate / toRate
+	const outSamples = Math.max(1, Math.floor(inSamples / ratio))
+	const out = Buffer.alloc(outSamples * 2)
+	for (let i = 0; i < outSamples; i++) {
+		const srcPos = i * ratio
+		const i0 = Math.floor(srcPos)
+		const i1 = Math.min(i0 + 1, inSamples - 1)
+		const frac = srcPos - i0
+		const s0 = pcmBuffer.readInt16LE(i0 * 2)
+		const s1 = pcmBuffer.readInt16LE(i1 * 2)
+		let s = Math.round(s0 + (s1 - s0) * frac)
+		if (s > 32767) s = 32767
+		else if (s < -32768) s = -32768
+		out.writeInt16LE(s, i * 2)
+	}
+	return out
+}
+
+function buildConversationPcm(audioChunks, targetRate = TARGET_RECORD_RATE) {
+	if (!audioChunks || audioChunks.length === 0) return Buffer.alloc(0)
+
+	const sorted = audioChunks.slice().sort((a, b) => a.ts - b.ts)
+	const startTs = sorted[0].ts
+	let endMs = 0
+	const prepared = []
+
+	for (const chunk of sorted) {
+		if (!chunk.data || chunk.data.length < 2) continue
+		const pcm = resamplePcm16(chunk.data, chunk.rate || targetRate, targetRate)
+		const offsetMs = Math.max(0, chunk.ts - startTs)
+		const durMs = (pcm.length / 2 / targetRate) * 1000
+		if (offsetMs + durMs > endMs) endMs = offsetMs + durMs
+		prepared.push({ pcm, offsetMs })
+	}
+
+	if (prepared.length === 0) return Buffer.alloc(0)
+
+	const totalSamples = Math.ceil((endMs / 1000) * targetRate) + targetRate
+	const out = Buffer.alloc(totalSamples * 2)
+
+	for (const { pcm, offsetMs } of prepared) {
+		const startSample = Math.round((offsetMs / 1000) * targetRate)
+		const samples = Math.floor(pcm.length / 2)
+		for (let i = 0; i < samples; i++) {
+			const idx = startSample + i
+			if (idx < 0 || idx >= totalSamples) continue
+			const existing = out.readInt16LE(idx * 2)
+			const incoming = pcm.readInt16LE(i * 2)
+			let mixed = existing + incoming
+			if (mixed > 32767) mixed = 32767
+			else if (mixed < -32768) mixed = -32768
+			out.writeInt16LE(mixed, idx * 2)
+		}
+	}
+
+	return out
+}
+
+async function uploadConversationAudio(sessionState) {
+	if (sessionState.audioUploaded) return null
+	if (!sessionState.audioChunks || sessionState.audioChunks.length === 0) return null
+
+	sessionState.audioUploaded = true
+	const userCount = sessionState.audioChunks.filter((c) => c.source === 'user').length
+	const aiCount = sessionState.audioChunks.filter((c) => c.source === 'ai').length
+	const fullPcmBuffer = buildConversationPcm(sessionState.audioChunks, TARGET_RECORD_RATE)
+	if (fullPcmBuffer.length === 0) return null
+
+	console.log(`📼 [Voice WS] Building full conversation recording for session ${sessionState.sessionId}: ${userCount} user + ${aiCount} AI chunks, ${(fullPcmBuffer.length / 1024).toFixed(1)} KB`)
+
+	return s3Storage.uploadSessionAudio({
+		sessionId: sessionState.sessionId,
+		userId: sessionState.userId,
+		pcmBuffer: fullPcmBuffer,
+		trackKey: sessionState.trackKey,
+		chapterKey: sessionState.chapterKey,
+	})
+}
+
 function handleAssessmentWsUpgrade(server) {
 	const wss = new WebSocket.Server({ noServer: true })
 
@@ -163,7 +253,7 @@ function handleAssessmentWsUpgrade(server) {
 			questionCount: 0,
 			userAudioChunksCount: 0,
 			aiAudioChunksCount: 0,
-			userAudioBuffers: [],
+			audioChunks: [],
 			audioUploaded: false,
 			startedAt: new Date(),
 			sessionCompleted: false,
@@ -345,6 +435,14 @@ function handleAssessmentWsUpgrade(server) {
 						for (const part of content.modelTurn.parts) {
 							if (part.inlineData) {
 								sessionState.aiAudioChunksCount++
+								if (part.inlineData.data) {
+									sessionState.audioChunks.push({
+										source: 'ai',
+										data: Buffer.from(part.inlineData.data, 'base64'),
+										rate: parsePcmRate(part.inlineData.mimeType, 24000),
+										ts: Date.now(),
+									})
+								}
 								clientWs.send(JSON.stringify({
 									type: 'audio',
 									data: part.inlineData.data,
@@ -486,7 +584,12 @@ function handleAssessmentWsUpgrade(server) {
 					if (parsed.type === 'audio_chunk') {
 						sessionState.userAudioChunksCount++
 						if (parsed.data) {
-							sessionState.userAudioBuffers.push(Buffer.from(parsed.data, 'base64'))
+							sessionState.audioChunks.push({
+								source: 'user',
+								data: Buffer.from(parsed.data, 'base64'),
+								rate: parsePcmRate(parsed.mimeType, 16000),
+								ts: Date.now(),
+							})
 						}
 						if (geminiWs && geminiWs.readyState === WebSocket.OPEN) {
 							const realtimeMsg = {
@@ -546,17 +649,9 @@ function handleAssessmentWsUpgrade(server) {
 					}
 				}).catch(() => {})
 
-				// Fallback audio upload to S3 if not yet uploaded
-				if (!sessionState.audioUploaded && sessionState.userAudioBuffers.length > 0) {
-					sessionState.audioUploaded = true
-					const fullPcmBuffer = Buffer.concat(sessionState.userAudioBuffers)
-					s3Storage.uploadSessionAudio({
-						sessionId: sessionState.sessionId,
-						userId: sessionState.userId,
-						pcmBuffer: fullPcmBuffer,
-						trackKey: sessionState.trackKey,
-						chapterKey: sessionState.chapterKey,
-					}).then((s3Url) => {
+				// Fallback full-conversation upload to S3 if not yet uploaded
+				if (!sessionState.audioUploaded && sessionState.audioChunks.length > 0) {
+					uploadConversationAudio(sessionState).then((s3Url) => {
 						if (s3Url) {
 							prisma.voice_sessions.update({
 								where: { id: sessionState.sessionId },
@@ -713,18 +808,10 @@ async function handleToolCalls(toolCall, sessionState, clientWs, geminiWs) {
 				.reduce((acc, t) => acc + t.content.trim().split(/\s+/).filter(Boolean).length, 0)
 
 			try {
-				// Upload session audio to S3 if audio buffers exist
+				// Upload full conversation (user + AI) audio to S3 if chunks exist
 				let uploadedAudioUrl = null
-				if (!sessionState.audioUploaded && sessionState.userAudioBuffers.length > 0) {
-					sessionState.audioUploaded = true
-					const fullPcmBuffer = Buffer.concat(sessionState.userAudioBuffers)
-					uploadedAudioUrl = await s3Storage.uploadSessionAudio({
-						sessionId: sessionState.sessionId,
-						userId: sessionState.userId,
-						pcmBuffer: fullPcmBuffer,
-						trackKey: sessionState.trackKey,
-						chapterKey: sessionState.chapterKey,
-					}).catch((err) => {
+				if (!sessionState.audioUploaded && sessionState.audioChunks.length > 0) {
+					uploadedAudioUrl = await uploadConversationAudio(sessionState).catch((err) => {
 						console.error('[Voice WS] Error uploading audio to S3:', err)
 						return null
 					})
@@ -909,4 +996,7 @@ async function handleToolCalls(toolCall, sessionState, clientWs, geminiWs) {
 
 module.exports = {
 	handleAssessmentWsUpgrade,
+	buildConversationPcm,
+	parsePcmRate,
+	resamplePcm16,
 }
