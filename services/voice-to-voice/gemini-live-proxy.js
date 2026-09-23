@@ -106,21 +106,58 @@ function resamplePcm16(pcmBuffer, fromRate, toRate) {
 	return out
 }
 
+const AI_BURST_GAP_MS = 250
+
 function buildConversationPcm(audioChunks, targetRate = TARGET_RECORD_RATE) {
 	if (!audioChunks || audioChunks.length === 0) return Buffer.alloc(0)
 
-	const sorted = audioChunks.slice().sort((a, b) => a.ts - b.ts)
-	const startTs = sorted[0].ts
-	let endMs = 0
-	const prepared = []
+	let startTs = Infinity
+	for (const chunk of audioChunks) {
+		if (chunk.ts < startTs) startTs = chunk.ts
+	}
 
-	for (const chunk of sorted) {
+	const bySource = { user: [], ai: [] }
+	for (const chunk of audioChunks) {
 		if (!chunk.data || chunk.data.length < 2) continue
-		const pcm = resamplePcm16(chunk.data, chunk.rate || targetRate, targetRate)
-		const offsetMs = Math.max(0, chunk.ts - startTs)
-		const durMs = (pcm.length / 2 / targetRate) * 1000
-		if (offsetMs + durMs > endMs) endMs = offsetMs + durMs
-		prepared.push({ pcm, offsetMs })
+		const source = chunk.source === 'ai' ? 'ai' : 'user'
+		bySource[source].push(chunk)
+	}
+
+	const prepared = []
+	let endMs = 0
+
+	// Place each source on its own playhead:
+	// - Gemini often delivers AI audio in faster-than-realtime bursts with nearly
+	//   identical Date.now() values. Chaining by duration keeps those words sequential.
+	// - A wall-clock gap > AI_BURST_GAP_MS is a real pause between turns and is kept.
+	// - User mic is real-time, so this is a no-op for normal mic capture.
+	for (const source of ['user', 'ai']) {
+		const list = bySource[source]
+		if (!list.length) continue
+
+		list.sort((a, b) => (a.ts - b.ts) || ((a.seq || 0) - (b.seq || 0)))
+
+		let playheadMs = null
+		for (const chunk of list) {
+			const pcm = resamplePcm16(chunk.data, chunk.rate || targetRate, targetRate)
+			const samples = Math.floor(pcm.length / 2)
+			if (samples <= 0) continue
+			const durMs = (samples / targetRate) * 1000
+			const wallMs = Math.max(0, chunk.ts - startTs)
+
+			let offsetMs
+			if (playheadMs === null) {
+				offsetMs = wallMs
+			} else if (wallMs > playheadMs + AI_BURST_GAP_MS) {
+				offsetMs = wallMs
+			} else {
+				offsetMs = playheadMs
+			}
+
+			playheadMs = offsetMs + durMs
+			if (playheadMs > endMs) endMs = playheadMs
+			prepared.push({ pcm, offsetMs, samples })
+		}
 	}
 
 	if (prepared.length === 0) return Buffer.alloc(0)
@@ -128,9 +165,8 @@ function buildConversationPcm(audioChunks, targetRate = TARGET_RECORD_RATE) {
 	const totalSamples = Math.ceil((endMs / 1000) * targetRate) + targetRate
 	const out = Buffer.alloc(totalSamples * 2)
 
-	for (const { pcm, offsetMs } of prepared) {
+	for (const { pcm, offsetMs, samples } of prepared) {
 		const startSample = Math.round((offsetMs / 1000) * targetRate)
-		const samples = Math.floor(pcm.length / 2)
 		for (let i = 0; i < samples; i++) {
 			const idx = startSample + i
 			if (idx < 0 || idx >= totalSamples) continue
@@ -441,6 +477,7 @@ function handleAssessmentWsUpgrade(server) {
 										data: Buffer.from(part.inlineData.data, 'base64'),
 										rate: parsePcmRate(part.inlineData.mimeType, 24000),
 										ts: Date.now(),
+										seq: sessionState.audioChunks.length,
 									})
 								}
 								clientWs.send(JSON.stringify({
@@ -589,6 +626,7 @@ function handleAssessmentWsUpgrade(server) {
 								data: Buffer.from(parsed.data, 'base64'),
 								rate: parsePcmRate(parsed.mimeType, 16000),
 								ts: Date.now(),
+								seq: sessionState.audioChunks.length,
 							})
 						}
 						if (geminiWs && geminiWs.readyState === WebSocket.OPEN) {
