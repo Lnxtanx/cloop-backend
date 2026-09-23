@@ -251,7 +251,8 @@ function handleAssessmentWsUpgrade(server) {
 				toolsDeclaration = [LEGACY_EVALUATION_TOOL]
 			}
 
-			// Send setup message
+			// Send setup message (only BidiGenerateContentSetup-accepted fields;
+			// unknown fields cause Gemini to close with code 1007)
 			const setupMsg = {
 				setup: {
 					model: `models/${GEMINI_MODEL}`,
@@ -260,15 +261,13 @@ function handleAssessmentWsUpgrade(server) {
 						speechConfig: {
 							voiceConfig: {
 								prebuiltVoiceConfig: {
-									voiceName: 'Aoede', // Natural conversational voice
+									voiceName: 'Aoede',
 								},
 							},
 						},
 					},
-					// Enable live transcription for both AI output and user input
-					outputTranscription: { languageCode: 'en-IN' },
-					inputTranscription: { languageCode: 'en-IN' },
-					// Realtime input config for better turn-taking
+					inputAudioTranscription: {},
+					outputAudioTranscription: {},
 					realtimeInputConfig: {
 						automaticActivityDetection: {
 							disabled: false,
@@ -467,8 +466,9 @@ function handleAssessmentWsUpgrade(server) {
 		})
 
 		geminiWs.on('close', (code, reason) => {
-			console.log(`🔌 [Voice WS] Gemini Live disconnected for session ${sid}: code=${code}`)
-			clientWs.send(JSON.stringify({ type: 'gemini_disconnected', code, reason: reason?.toString() }))
+			const reasonText = reason?.toString() || ''
+			console.log(`🔌 [Voice WS] Gemini Live disconnected for session ${sid}: code=${code}${reasonText ? ` reason=${reasonText}` : ''}`)
+			clientWs.send(JSON.stringify({ type: 'gemini_disconnected', code, reason: reasonText }))
 		})
 
 		// Handle client messages (audio chunks, end_session trigger)
