@@ -581,6 +581,52 @@ function buildSessionPrompt(trackKey, chapterKey, mode, learnerProfile = {}) {
       targetErrorsStr
   }
 
+  // Layer 3.5 — Candidate Resume & Customized Interview Context (if available)
+  let resumeInstructions = ''
+  if (trackKey === 'interview_prep' && learnerProfile.resumeData) {
+    const resumeInfo = learnerProfile.resumeData
+    const rd = resumeInfo.data || {}
+    const targetRole = resumeInfo.targetRole || rd.target_role || rd.primary_role || 'Job Candidate'
+    const targetCompany = resumeInfo.targetCompany || rd.target_company || ''
+    const skillsStr = Array.isArray(rd.top_skills) && rd.top_skills.length > 0 ? rd.top_skills.join(', ') : ''
+
+    let projectsStr = ''
+    if (Array.isArray(rd.key_projects_or_experience) && rd.key_projects_or_experience.length > 0) {
+      projectsStr = rd.key_projects_or_experience.map(function(p, idx) {
+        const parts = [
+          p.title || `Role / Project ${idx + 1}`,
+          p.company_or_context ? `at ${p.company_or_context}` : '',
+          p.highlights ? `(${p.highlights})` : '',
+          p.tech_or_tools ? `[Tools/Tech: ${p.tech_or_tools}]` : ''
+        ].filter(Boolean).join(' ')
+        return '  • ' + parts
+      }).join('\n')
+    }
+
+    const companyContext = targetCompany ? ' for a position at ' + targetCompany : ''
+
+    resumeInstructions = [
+      '',
+      '============================================================',
+      'CANDIDATE DOSSIER (FROM UPLOADED RESUME):',
+      '============================================================',
+      '- Candidate Name: ' + (rd.candidate_name || learnerName),
+      '- Professional Background: ' + (rd.primary_role || 'Professional') + ' (' + (rd.years_of_experience || 'Experienced') + ')',
+      '- Practicing Interview For: ' + targetRole + companyContext,
+      skillsStr ? '- Key Skills & Technologies: ' + skillsStr : '',
+      projectsStr ? '- Notable Projects & Work Experience:\n' + projectsStr : '',
+      rd.education ? '- Education: ' + rd.education : '',
+      '',
+      'HOW TO CONDUCT THIS RESUME-BASED INTERVIEW:',
+      '1. Greet ' + learnerName + ' warmly as the interviewer for the ' + targetRole + ' role' + companyContext + '. Open the conversation acknowledging their background.',
+      '2. Ask realistic interview questions tailored to their ACTUAL experience, projects, and skills listed above. Instead of generic questions, ask specifically how they applied their skills in their listed projects.',
+      '3. When the candidate speaks about their past work, listen closely to their English fluency, clarity, and sentence structure.',
+      '4. If they make a mistake or struggle to explain technical or behavioral concepts in English, pause briefly, model the professional phrasing, have them repeat it once, and then resume the interview seamlessly.',
+      '============================================================',
+      '',
+    ].filter(Boolean).join('\n')
+  }
+
   // Layer 4 — Learner profile: repeated errors + returning-visit variation
   let profileInstructions = ''
   if (learnerProfile.openErrors && learnerProfile.openErrors.length > 0) {
@@ -603,6 +649,8 @@ function buildSessionPrompt(trackKey, chapterKey, mode, learnerProfile = {}) {
     persona,
     '',
     'The learner\'s name is ' + learnerName + '. Their English level is ' + level + '.',
+    resumeInstructions,
+
     '',
     shapeInstructions,
     '',

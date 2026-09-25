@@ -261,11 +261,16 @@ function handleAssessmentWsUpgrade(server) {
 				where: { user_id: userId },
 			})
 			if (profile) {
+				const resumeData = profile.track_preferences?.interview_prep?.resume || null
 				learnerProfile = {
 					name: userName,
 					englishLevel: profile.english_level || 'Beginner',
 					nativeLanguage: profile.native_language || 'Hindi',
 					openErrors: Array.isArray(profile.open_errors) ? profile.open_errors : [],
+					resumeData: resumeData,
+				}
+				if (resumeData) {
+					console.log(`💼 [Voice WS] Resume context attached for user ${userId}: ${resumeData.targetRole || resumeData.data?.primary_role || resumeData.fileName}`)
 				}
 			}
 		} catch (err) {
