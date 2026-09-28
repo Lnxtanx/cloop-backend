@@ -6,7 +6,54 @@
  */
 
 /**
- * Extracts plain text from a file buffer based on mimetype or file extension.
+ * Extract plain text from a PDF buffer.
+ *
+ * Supports both pdf-parse module shapes:
+ *   v1.x — module.exports is the function itself:  await pdfParse(buffer)
+ *   v2.x — module.exports is an object exposing PDFParse:
+ *          new PDFParse({ data }).getText() -> { text }
+ *
+ * @param {Buffer} buffer
+ * @returns {Promise<string>}
+ */
+async function extractPdfText(buffer) {
+  const mod = require('pdf-parse')
+
+  if (typeof mod === 'function') {
+    const data = await mod(buffer)
+    return (data && data.text) || ''
+  }
+
+  if (mod && typeof mod.PDFParse === 'function') {
+    const parser = new mod.PDFParse({ data: buffer })
+    try {
+      const result = await parser.getText()
+      return (result && result.text) || ''
+    } finally {
+      try {
+        await parser.destroy()
+      } catch {
+        // best-effort cleanup of the internal worker
+      }
+    }
+  }
+
+  throw new Error('Unrecognised pdf-parse module shape')
+}
+
+/**
+ * True only for a genuinely password-protected PDF, so we do not blame the
+ * user's file when the real problem is something else entirely.
+ */
+function isPasswordError(err) {
+  if (!err) return false
+  const name = err.name || (err.cause && err.cause.name)
+  if (name === 'PasswordException') return true
+  return /password|encrypted/i.test(String(err.message || ''))
+}
+
+/**
+ * Extract plain text from a file buffer based on mimetype or file extension.
  * 
  * @param {Buffer} buffer - File buffer from multer memory storage
  * @param {string} mimetype - File mimetype (e.g. 'application/pdf')
@@ -26,12 +73,13 @@ async function extractResumeText(buffer, mimetype = '', originalName = '') {
   // 1. PDF Documents
   if (mimeLower.includes('pdf') || nameLower.endsWith('.pdf')) {
     try {
-      const pdfParse = require('pdf-parse');
-      const data = await pdfParse(buffer);
-      rawText = data.text || '';
+      rawText = await extractPdfText(buffer);
     } catch (err) {
-      console.error('[ResumeParser] Error extracting PDF text:', err.message);
-      throw new Error('Failed to parse PDF document. Please ensure it is not password protected.');
+      console.error('[ResumeParser] Error extracting PDF text:', err && err.message);
+      if (isPasswordError(err)) {
+        throw new Error('This PDF is password protected. Please remove the password and upload it again.');
+      }
+      throw new Error('Could not read this PDF. It may be corrupted or contain no selectable text — try re-saving it, or upload a DOCX/TXT version.');
     }
   }
   // 2. DOCX Documents (Word)
@@ -64,9 +112,7 @@ async function extractResumeText(buffer, mimetype = '', originalName = '') {
   } else {
     // Attempt PDF first as common fallback if unknown mimetype, else string
     try {
-      const pdfParse = require('pdf-parse');
-      const data = await pdfParse(buffer);
-      rawText = data.text || '';
+      rawText = await extractPdfText(buffer);
     } catch {
       rawText = buffer.toString('utf-8');
     }
