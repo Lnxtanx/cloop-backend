@@ -92,6 +92,9 @@ app.use('/api/analytics/tokens', require('./api/analytics/tokens'))
 // User Analytics routes (presence, heartbeat, streaks, completion)
 app.use('/api/analytics', require('./api/analytics/user-analytics'))
 
+// AI Avatar routes (live Tavus PAL, voice only)
+app.use('/api/avatar', require('./api/avatar/avatar'))
+
 // Global English Learning routes
 app.use('/api/english', require('./api/english/english-routes'))
 app.use('/api/english/chat', require('./api/english/english-chat-routes'))
