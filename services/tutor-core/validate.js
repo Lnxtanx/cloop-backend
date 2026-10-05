@@ -231,7 +231,7 @@ function enforce(rawOutput, context = {}) {
   }
 
   // 4. MCQ Isolation Guard: On 'open' turns, defensively purge any accidental options
-  if (questionType === 'open' || phase === 'PROBE' || phase === 'THEORY' || phase === 'OBJECTIVES' || phase === 'DIALOGUE') {
+  if (questionType === 'open' || phase === 'PROBE' || phase === 'THEORY' || phase === 'OBJECTIVES' || phase === 'DIALOGUE' || phase === 'ROUNDUP') {
     for (const bubble of cappedBubbles) {
       if (bubble.options) delete bubble.options;
     }

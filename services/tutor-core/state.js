@@ -3,24 +3,29 @@
  *
  * Session shape:
  *
- *   PROBE → THEORY → OBJECTIVES → [ DIALOGUE ×1 → CHECK ×1 ] per goal → WRAP → DONE
+ *   PROBE → THEORY → OBJECTIVES → [ DIALOGUE ×1 → CHECK ×1 ] per goal → ROUNDUP → WRAP → DONE
  *
  *   PROBE       one open question, unscored, to see what they already know
  *   THEORY      the concept explained, with a diagram and key points attached
  *   OBJECTIVES  what this session will get them to, in one line
  *   DIALOGUE    the core loop — the student WRITES answers and gets corrected
  *   CHECK       one multiple-choice question, to assess what the dialogue taught
+ *   ROUNDUP     the exam-readiness round — one written recall question per goal,
+ *               asking the student to state that goal's key definition or formula
+ *               in their own words. Scored. Confirms mastery BEFORE any score is
+ *               given, so the final figure rests on recall, not recognition alone.
  *   WRAP        a mastery report computed from what actually happened
  *
  * Pacing:
- *   1 open question + 1 MCQ check per goal = 2 questions per goal.
- *   Across a topic, student answers 8 to 10 questions total.
+ *   1 open question + 1 MCQ check per goal, then 1 recall question per goal in
+ *   the round-up = 3 scored questions per goal. The round-up touches every goal,
+ *   so a normal session assesses the whole syllabus before scoring.
  *
  * Every function here is pure: same input, same output, no I/O, no clock, no
  * randomness. `advance` never mutates the state it is given.
  */
 
-const PHASES = ["PROBE", "THEORY", "OBJECTIVES", "DIALOGUE", "CHECK", "WRAP", "DONE"];
+const PHASES = ["PROBE", "THEORY", "OBJECTIVES", "DIALOGUE", "CHECK", "ROUNDUP", "WRAP", "DONE"];
 
 const INTENTS = ["ANSWER", "ACK", "HELP", "IDK", "OFF_TOPIC"];
 
@@ -50,6 +55,13 @@ const OPEN_PER_GOAL = 1;
 
 /** 1 multiple-choice check per goal. Assessment only, after dialogue. */
 const MCQ_PER_GOAL = 1;
+
+/**
+ * 1 written recall question per goal in the closing round-up. The student must
+ * state that goal's key definition or formula in their own words — the exam-
+ * readiness gate that every goal passes through before a score is given.
+ */
+const RECALL_PER_GOAL = 1;
 
 /** Attempts at one question before moving on rather than trapping the student. */
 const MAX_ATTEMPTS = 3;
@@ -85,6 +97,8 @@ function initialState(goalTotal) {
     goalTotal: total,
     openThisGoal: 0,
     mcqThisGoal: 0,
+    roundupIndex: 0,
+    recallThisGoal: 0,
     totalQuestions: 0,
     totalTurns: 0,
     consecutiveWrong: 0,
@@ -107,12 +121,23 @@ function initialState(goalTotal) {
 /** The question type this phase asks for. Decided here, never by the model. */
 function questionTypeFor(phase) {
   if (phase === "WRAP" || phase === "DONE") return null;
+  // ROUNDUP is written recall: the student must produce the definition/formula,
+  // not pick it from options. Only CHECK is multiple choice.
   return phase === "CHECK" ? "mcq" : "open";
 }
 
 /** Whether an answer in this phase counts toward mastery. */
 function isScored(phase) {
-  return phase === "DIALOGUE" || phase === "CHECK";
+  return phase === "DIALOGUE" || phase === "CHECK" || phase === "ROUNDUP";
+}
+
+/**
+ * The goal index a scored answer belongs to. In the per-goal teaching loop that
+ * is `goalIndex`; in the closing round-up the tutor walks the goals again, so
+ * it is `roundupIndex`. Everything else has no goal, so it falls back safely.
+ */
+function scoredGoalIndex(state) {
+  return state.phase === "ROUNDUP" ? (state.roundupIndex || 0) : state.goalIndex;
 }
 
 /** Which attachments this turn should carry. The server decides, not the model. */
@@ -127,6 +152,9 @@ function attachmentsFor(state) {
       // A video only when a goal opens, and only if the student is struggling.
       return state.openThisGoal === 0 && state.consecutiveWrong > 0 ? ["video"] : [];
     }
+    case "ROUNDUP":
+      // The round-up is pure assessment: no diagram, no video, just recall.
+      return [];
     case "WRAP":
       return ["revision_sheet", "mastery_report"];
     default:
@@ -191,7 +219,7 @@ function advance(state, event = {}) {
 
   // ── Record mastery evidence ──────────────────────────────────────────────
   if (isScored(state.phase)) {
-    const g = s.perGoal[state.goalIndex];
+    const g = s.perGoal[scoredGoalIndex(state)];
     if (g) {
       g.total += 1;
       if (event.correct) g.correct += 1;
@@ -236,11 +264,27 @@ function nextPhase(prev, s) {
       s.mcqThisGoal = prev.mcqThisGoal + 1;
       if (s.mcqThisGoal < MCQ_PER_GOAL) return "CHECK";
       const next = prev.goalIndex + 1;
-      if (next >= prev.goalTotal) return "WRAP";
+      if (next >= prev.goalTotal) {
+        // Every goal has been taught and checked. Before scoring, run the
+        // exam-readiness round-up over all goals, starting from the first.
+        s.roundupIndex = 0;
+        s.recallThisGoal = 0;
+        return "ROUNDUP";
+      }
       s.goalIndex = next;
       s.openThisGoal = 0;
       s.mcqThisGoal = 0;
       return "DIALOGUE";
+    }
+
+    case "ROUNDUP": {
+      s.recallThisGoal = prev.recallThisGoal + 1;
+      if (s.recallThisGoal < RECALL_PER_GOAL) return "ROUNDUP";
+      const nextRecall = (prev.roundupIndex || 0) + 1;
+      if (nextRecall >= prev.goalTotal) return "WRAP";
+      s.roundupIndex = nextRecall;
+      s.recallThisGoal = 0;
+      return "ROUNDUP";
     }
 
     case "WRAP":
@@ -262,6 +306,7 @@ const ESCALATION = {
   continue_dialogue: "hint_then_easier",
   assess_with_mcq: "assess_with_mcq_simpler",
   assess_with_mcq_simpler: "give_starter",
+  roundup_recall: "hint_then_easier",
   reask_shorter: "hint_then_easier",
   hint_then_easier: "give_starter",
   explain_differently: "teach_theory_analogy",
@@ -302,6 +347,8 @@ function baseInstruction(state, intent) {
       return "state_objectives";
     case "CHECK":
       return "assess_with_mcq";
+    case "ROUNDUP":
+      return "roundup_recall";
     case "DIALOGUE":
       return state.openThisGoal === 0 ? "open_goal_dialogue" : "continue_dialogue";
     default:
@@ -340,6 +387,7 @@ module.exports = {
   baseInstruction,
   OPEN_PER_GOAL,
   MCQ_PER_GOAL,
+  RECALL_PER_GOAL,
   MAX_ATTEMPTS,
   OFF_TOPIC_STRIKES,
   MAX_TURNS,
@@ -350,6 +398,7 @@ module.exports = {
   instructionFor,
   questionTypeFor,
   isScored,
+  scoredGoalIndex,
   attachmentsFor,
   bandFor,
 };

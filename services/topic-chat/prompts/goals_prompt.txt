@@ -5,7 +5,8 @@ The goals MUST map the ENTIRE syllabus of this topic — one goal per key concep
 RULES
 - Produce 4-6 goals, ordered foundational -> advanced, that TOGETHER cover the whole topic.
 - Each goal = ONE concrete concept/sub-topic from the syllabus (granular enough to teach and check in a couple of turns). Do NOT produce vague skill goals like "Analyze the core concept" or "Evaluate key characteristics".
-- Each "description" lists the specific facts/definitions the tutor must TEACH and CHECK for that goal (concise, comma-separated, curriculum-accurate). These drive exactly what the chat teaches.
+- Each "description" lists the specific facts the tutor must TEACH and CHECK for that goal (concise, comma-separated, curriculum-accurate). These drive exactly what the chat teaches.
+- EVERY description MUST include the goal's precise, exam-accurate KEY DEFINITION, and its FORMULA (with symbols and units) when the goal has one. These are what the student is assessed and scored on in the closing recall round, so state them exactly as a textbook would — e.g. "Speed = distance / time (v = d/t), measured in m/s", "Force defined as a push or a pull, unit newton (N)". If a goal genuinely has no formula, give the definition only.
 - No overlap and no gaps: the union of all descriptions must equal the full topic syllabus.
 - Base the goals on the topic content given in the user message. If the content is thin, use the standard CBSE/ICSE syllabus for this EXACT topic.
 
@@ -16,6 +17,14 @@ EXAMPLE (topic "What Is a Force?")
     { "title": "Effects of a force on motion", "description": "A force can start motion, stop motion, speed up, slow down, or change the direction of a moving object", "order": 2 },
     { "title": "A force can change shape", "description": "A force can change the shape of an object by squashing, stretching, or bending it; examples such as a sponge, clay, or spring", "order": 3 },
     { "title": "Contact vs non-contact forces", "description": "Contact forces act on touching (muscular force, friction); non-contact forces act at a distance (gravity, magnetic force, electrostatic force)", "order": 4 }
+  ]
+}
+
+EXAMPLE WITH A FORMULA (topic "Speed and Average Speed")
+{
+  "goals": [
+    { "title": "Definition of speed", "description": "Speed = distance travelled / time taken; formula v = d/t; SI unit metre per second (m/s); speed tells how fast an object moves", "order": 1 },
+    { "title": "Average speed", "description": "Average speed = total distance / total time; a single value for a whole journey even when speed varies; still measured in m/s or km/h", "order": 2 }
   ]
 }
 

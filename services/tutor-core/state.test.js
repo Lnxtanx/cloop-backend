@@ -31,6 +31,42 @@ test("the session runs probe, theory, objectives, then teaching", () => {
   );
 });
 
+test("a written recall round-up runs over every goal before the session wraps", () => {
+  const { trace } = playThrough(3);
+  const phases = trace.map((t) => t.phase);
+
+  // The round-up appears, after every goal's check and before the wrap.
+  const firstRoundup = phases.indexOf("ROUNDUP");
+  const lastCheck = phases.lastIndexOf("CHECK");
+  assert.ok(firstRoundup > -1, "no round-up happened");
+  assert.ok(firstRoundup > lastCheck, "round-up ran before the last check");
+
+  // Exactly one recall question per goal, and every one is written, not clicked.
+  const roundup = trace.filter((t) => t.phase === "ROUNDUP");
+  assert.strictEqual(roundup.length, 3, "round-up did not cover every goal once");
+  assert.ok(roundup.every((t) => t.type === "open"), "a recall question was multiple choice");
+  assert.ok(roundup.every((t) => t.scored), "recall answers were not scored");
+});
+
+test("every goal is assessed three times: dialogue, check, and recall", () => {
+  const { state } = playThrough(4);
+  for (const g of state.perGoal) {
+    assert.strictEqual(g.total, 3, "a goal was not assessed in all three phases");
+  }
+});
+
+test("the score is only reachable after the round-up, never before", () => {
+  // WRAP (where the report is built) can only follow ROUNDUP in a normal run.
+  let s = S.initialState(2);
+  let sawRoundup = false;
+  for (let i = 0; i < 100 && s.phase !== "WRAP"; i++) {
+    if (s.phase === "ROUNDUP") sawRoundup = true;
+    s = S.advance(s, { intent: "ANSWER", correct: true });
+  }
+  assert.strictEqual(s.phase, "WRAP");
+  assert.ok(sawRoundup, "the session scored without ever running the round-up");
+});
+
 test("the opening probe is never scored", () => {
   assert.strictEqual(S.isScored("PROBE"), false);
   const s = S.advance(S.initialState(3), { intent: "ANSWER", correct: false, errorType: "X" });

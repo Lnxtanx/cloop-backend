@@ -29,6 +29,7 @@ function buildFallbackRevisionSheet({ topicTitle, goals, keyErrors }) {
       const def = typeof g === 'object' && g.description ? g.description : `Core definition and role in ${cleanTitle}.`;
       return { term, definition: def };
     }),
+    formulas: [],
     quick_recall_tips: [
       `Recall the fundamental relationship between reactants/inputs and products/outputs in ${cleanTitle}.`,
       keyErrors && keyErrors.length > 0
@@ -72,8 +73,12 @@ When a session reaches the WRAP phase and is about to close, generate a concise 
 
 **Definitions**
 - Extract 4-6 key terms the student encountered
-- Provide clear, beginner-friendly definitions (1 sentence each)
+- Provide clear, exam-accurate definitions (1 sentence each)
 - Use examples if the term is abstract
+
+**Formulas**
+- List any formulas from this topic exactly, with symbols and units (e.g. "Speed: v = d/t, in m/s")
+- If the topic has no formulas, return an empty list
 
 **Quick Recall Tips**
 - Provide 2-3 memory aids or mnemonics
@@ -95,8 +100,11 @@ OUTPUT STRICT JSON ONLY:
     "Essential idea 3"
   ],
   "definitions": [
-    { "term": "Key Term 1", "definition": "1-sentence beginner-friendly definition" },
+    { "term": "Key Term 1", "definition": "1-sentence exam-accurate definition" },
     { "term": "Key Term 2", "definition": "..." }
+  ],
+  "formulas": [
+    "Formula name: expression with symbols and units"
   ],
   "quick_recall_tips": [
     "Mnemonic or memory aid",
@@ -129,6 +137,7 @@ OUTPUT STRICT JSON ONLY:
         topic: parsed.topic || topicTitle,
         key_concepts: Array.isArray(parsed.key_concepts) ? parsed.key_concepts : [],
         definitions: Array.isArray(parsed.definitions) ? parsed.definitions : [],
+        formulas: Array.isArray(parsed.formulas) ? parsed.formulas : [],
         quick_recall_tips: Array.isArray(parsed.quick_recall_tips) ? parsed.quick_recall_tips : (Array.isArray(parsed.memory_aids) ? parsed.memory_aids : []),
         practice_next_time: typeof parsed.practice_next_time === 'string' ? parsed.practice_next_time : (Array.isArray(parsed.practice_next_time) ? parsed.practice_next_time.join(' ') : ''),
         // Backward-compatibility aliases for existing UI consumers:

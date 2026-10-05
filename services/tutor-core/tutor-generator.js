@@ -63,6 +63,9 @@ async function generateTutorResponse({
     case 'assess_with_mcq':
       directiveGuidance = 'Acknowledge their answer warmly (e.g. "Well done!"). Then assess understanding of this goal with one clean multiple-choice question with options (A, B, C).';
       break;
+    case 'roundup_recall':
+      directiveGuidance = 'FINAL RECALL ROUND (exam readiness). Briefly validate the previous answer, then ask the student to state THIS goal\'s key definition or formula in their own words. One short, specific recall question. The student must WRITE it — no options. This confirms mastery before scoring.';
+      break;
     case 'correct_and_reask':
       directiveGuidance = 'Acknowledge the attempt warmly, clarify the specific misconception in 1 sentence, and re-ask an easier version of the question.';
       break;
@@ -196,8 +199,9 @@ STRICT GENERATION RULES:
 5. PEDAGOGY: When the student says "I don't know" or struggles, DO NOT ask riddles. EXPLAIN THE CONCEPT FIRST simply in bubble 1, then ask in bubble 2!
 6. ANTI-REPETITION: NEVER re-state the chapter overview or lesson objectives ("Today you will learn...") during mid-session turns or hints!
 7. CURRICULUM FOCUS: Teach and question the SPECIFIC concept of the current goal ("${currentGoalTitle}"${currentGoalDescription ? `: ${currentGoalDescription}` : ''}). Keep any analogy in service of that exact concept — never replace the concept with a generic analogy, and never wander to a concept that is not part of this goal.
-8. Tone: Warm, natural, and encouraging. Never robotic.
-9. Output STRICT JSON only.
+8. DEFINITIONS & FORMULAS: When you teach or state the concept, give the precise, exam-accurate definition (and the formula with its symbols and units, if this goal has one) exactly as a textbook would — not a vague paraphrase. These are what the student is assessed on.
+9. Tone: Warm, natural, and encouraging. Never robotic.
+10. Output STRICT JSON only.
 
 ${schemaInstructions}`;
 

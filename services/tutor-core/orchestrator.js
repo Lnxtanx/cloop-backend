@@ -75,12 +75,22 @@ async function processTutorTurn({
   const goalTotal = Math.max(1, goals.length);
   const state = currentState || initialState(goalTotal);
 
-  const currentGoalIndex = Math.min(state.goalIndex, goalTotal - 1);
-  const currentGoal = goals[currentGoalIndex] || {
-    id: 0,
-    title: topic.title,
-    description: ''
+  const fallbackGoal = { id: 0, title: topic.title, description: '' };
+
+  // Which goal is "live" for a given state. During the per-goal teaching loop
+  // that is goalIndex; during the closing round-up the tutor walks the goals
+  // again by roundupIndex. The evaluator grades against the goal that was just
+  // asked (pre-advance state); the generator asks about the goal the new state
+  // has moved to (post-advance state).
+  const goalForState = (st) => {
+    const idx = st.phase === 'ROUNDUP'
+      ? Math.min(st.roundupIndex || 0, goalTotal - 1)
+      : Math.min(st.goalIndex, goalTotal - 1);
+    return goals[idx] || fallbackGoal;
   };
+
+  const currentGoalIndex = Math.min(state.goalIndex, goalTotal - 1);
+  const currentGoal = goalForState(state);
 
   const lastQuestionText = findLastQuestion(chatHistory, state);
   const lastQuestionOptions = findLastQuestionOptions(chatHistory, state);
@@ -140,11 +150,15 @@ async function processTutorTurn({
     }
   }
 
+  // The goal the NEXT question is about. In ROUNDUP this walks the goals again
+  // by roundupIndex, so the recall question targets the right definition/formula.
+  const generatorGoal = goalForState(nextState);
+
   // ── Step 3: Socratic Dialogue Generator (LLM Call 2, Temp 0.4, ~2.0s) ──────
   const rawTutorOutput = await generateTutorResponse({
     topicTitle: topic.title,
-    currentGoalTitle: currentGoal.title,
-    currentGoalDescription: currentGoal.description || '',
+    currentGoalTitle: generatorGoal.title,
+    currentGoalDescription: generatorGoal.description || '',
     topicContent: topic.content || '',
     studentMessage,
     evaluatorResult,
@@ -166,8 +180,10 @@ async function processTutorTurn({
 
   // ── Step 4: Quality & Structural Validator (Pure JS, < 1ms) ────────────────
   const fallbackQuestion = questionType === 'mcq'
-    ? `Which of these best explains ${currentGoal.title}?`
-    : `What do you think is the next key step in ${currentGoal.title}?`;
+    ? `Which of these best explains ${generatorGoal.title}?`
+    : (nextState.phase === 'ROUNDUP'
+        ? `In your own words, what is the key idea of ${generatorGoal.title}?`
+        : `What do you think is the next key step in ${generatorGoal.title}?`);
 
   const validated = enforce(rawTutorOutput, {
     isCorrect: evaluatorResult.is_correct,
