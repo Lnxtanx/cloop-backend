@@ -404,8 +404,8 @@ Return VALID JSON with EXACTLY TWO messages:
 
 // ─── Generate topic goals ────────────────────────────────────────────
 async function generateTopicGoals(topicTitle, topicContent) {
-  const topicSummary = topicContent && topicContent.length > 150
-    ? topicContent.substring(0, 150) + '...'
+  const topicSummary = topicContent && topicContent.length > 1800
+    ? topicContent.substring(0, 1800) + '...'
     : topicContent || 'General introduction to the topic';
 
   try {

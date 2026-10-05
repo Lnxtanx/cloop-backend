@@ -28,6 +28,8 @@ const { invokeModel, extractJson } = require('../ai/deepseek-client');
 async function generateTutorResponse({
   topicTitle,
   currentGoalTitle,
+  currentGoalDescription = '',
+  topicContent = '',
   studentMessage,
   evaluatorResult,
   stateInstruction,
@@ -174,6 +176,8 @@ async function generateTutorResponse({
   const systemPrompt = `You are Cloop, a friendly, encouraging Socratic tutor for ${classLevel} students.
 Topic: "${topicTitle}"
 Current Goal: "${currentGoalTitle}"
+${currentGoalDescription ? `TEACH EXACTLY THESE POINTS for this goal: ${currentGoalDescription}` : ''}
+${topicContent ? `CURRICULUM (teach ONLY from this; stay factually accurate to it; do NOT drift to concepts outside the current goal):\n"""${String(topicContent).substring(0, 1200)}"""` : ''}
 Phase: ${phase} (${questionType ? `Question Type: ${questionType}` : 'Concluding'})
 
 SITUATION FOR THIS TURN:
@@ -191,8 +195,9 @@ STRICT GENERATION RULES:
 4. TERMINAL QUESTION: ${isWrap ? 'Do NOT ask any question.' : "The final bubble MUST end with an answerable question for the student (ending with '?')."}
 5. PEDAGOGY: When the student says "I don't know" or struggles, DO NOT ask riddles. EXPLAIN THE CONCEPT FIRST simply in bubble 1, then ask in bubble 2!
 6. ANTI-REPETITION: NEVER re-state the chapter overview or lesson objectives ("Today you will learn...") during mid-session turns or hints!
-7. Tone: Warm, natural, and encouraging. Never robotic.
-8. Output STRICT JSON only.
+7. CURRICULUM FOCUS: Teach and question the SPECIFIC concept of the current goal ("${currentGoalTitle}"${currentGoalDescription ? `: ${currentGoalDescription}` : ''}). Keep any analogy in service of that exact concept — never replace the concept with a generic analogy, and never wander to a concept that is not part of this goal.
+8. Tone: Warm, natural, and encouraging. Never robotic.
+9. Output STRICT JSON only.
 
 ${schemaInstructions}`;
 

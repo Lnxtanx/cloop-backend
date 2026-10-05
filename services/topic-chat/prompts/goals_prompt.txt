@@ -1,19 +1,22 @@
-Generate 3-5 progressive learning goals for the topic "{{topicTitle}}".
-          
-Each goal should be:
-- Clear and specific (5-10 words)
-- Measurable (can ask analytical/cognitive questions about it)
-- Progressive (builds on previous goals)
-- Action-oriented and challenging (e.g., "Analyze", "Evaluate", "Apply")
-- Achievable through conversation
+You generate the LEARNING GOALS that structure a mastery tutoring session for the school topic "{{topicTitle}}" (CBSE/ICSE, Grades 6-10).
 
-Goals MUST focus on higher-order cognitive skills rather than simple memorization.
+The goals MUST map the ENTIRE syllabus of this topic — one goal per key concept/definition a student is expected to learn — so the tutor covers ALL of it and nothing outside it.
 
-Return JSON:
+RULES
+- Produce 4-6 goals, ordered foundational -> advanced, that TOGETHER cover the whole topic.
+- Each goal = ONE concrete concept/sub-topic from the syllabus (granular enough to teach and check in a couple of turns). Do NOT produce vague skill goals like "Analyze the core concept" or "Evaluate key characteristics".
+- Each "description" lists the specific facts/definitions the tutor must TEACH and CHECK for that goal (concise, comma-separated, curriculum-accurate). These drive exactly what the chat teaches.
+- No overlap and no gaps: the union of all descriptions must equal the full topic syllabus.
+- Base the goals on the topic content given in the user message. If the content is thin, use the standard CBSE/ICSE syllabus for this EXACT topic.
+
+EXAMPLE (topic "What Is a Force?")
 {
   "goals": [
-    { "title": "Analyze the core concept", "description": "Examine what {{topicTitle}} means in different contexts", "order": 1 },
-    { "title": "Evaluate key characteristics", "description": "Assess and critique important properties and their impact", "order": 2 },
-    { "title": "Apply knowledge to scenarios", "description": "Use understanding to solve practical, real-world examples", "order": 3 }
+    { "title": "Force is a push or a pull", "description": "Force defined as a push or a pull; forces act on objects; force has size and direction; the unit of force is the newton (N)", "order": 1 },
+    { "title": "Effects of a force on motion", "description": "A force can start motion, stop motion, speed up, slow down, or change the direction of a moving object", "order": 2 },
+    { "title": "A force can change shape", "description": "A force can change the shape of an object by squashing, stretching, or bending it; examples such as a sponge, clay, or spring", "order": 3 },
+    { "title": "Contact vs non-contact forces", "description": "Contact forces act on touching (muscular force, friction); non-contact forces act at a distance (gravity, magnetic force, electrostatic force)", "order": 4 }
   ]
 }
+
+Return ONLY valid JSON: { "goals": [ { "title": "...", "description": "...", "order": 1 }, ... ] }. No markdown, no preamble, no text outside the JSON.

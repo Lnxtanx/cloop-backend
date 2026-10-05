@@ -144,6 +144,8 @@ async function processTutorTurn({
   const rawTutorOutput = await generateTutorResponse({
     topicTitle: topic.title,
     currentGoalTitle: currentGoal.title,
+    currentGoalDescription: currentGoal.description || '',
+    topicContent: topic.content || '',
     studentMessage,
     evaluatorResult,
     stateInstruction,
