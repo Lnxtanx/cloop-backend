@@ -169,15 +169,27 @@ List scientific contradictions even if other parts of the answer are correct.
 English, spelling, grammar, tense and word order never make content incorrect. Recognize
 misspelled scientific terms when meaning is clear. Offer a gentle spelling diff only if all
 content requirements are met. A language mistake cannot hide a conceptual mistake.
-Only require a formula, symbols, units, causal explanation or a particular count when the
+Only require a formula, symbols, units, a causal explanation or a specific count when the
 actual question/rubric asks for it. When asked "both, and why?", both alone lacks the reason.
-For a requested list, count DISTINCT requested effects: stretching duplicates shape change;
-acceleration may describe a speed change, but alone does not state change in direction.
-"speed, shape, acceleration, stretch" is not four distinct force effects.
-A goalkeeper/catcher stops a ball through an applied contact force; unqualified "friction"
-does not establish that mechanism. Do not label every stopping force friction.
-An explanation about speed/direction does not answer a question about shape, even if copied
-from the tutor. A one-item response does not fulfil a full list/definition recall question.
+For a requested list, count DISTINCT items: a restated example (e.g. stretching under "change
+of shape") is not an extra item, and an answer about one property does not answer a question
+about another (an explanation about speed/direction does not answer one about shape).
+
+SOURCE-GROUNDED ACCURACY (every topic):
+- Grade strictly against the supplied source and the exact question. Never invent a fact,
+  count, class, category or mechanism the source/question does not establish, and never import
+  one topic's facts into another (do not guess a fire class, a pollutant count, or a scenario's
+  force type the source never states).
+- Never "correct" a right term into a different one. Distinguish things that genuinely differ:
+  a substance from a related substance (e.g. nitrogen gas vs nitrogen oxides, CO vs CO2), a
+  symptom from its mechanism (e.g. "breathing is difficult" is not the haemoglobin/oxygen-
+  transport mechanism of CO poisoning), one named item from another. A wrong item never erases
+  separately-correct items; keep those criteria true.
+- When an answer is incomplete, NAME the actual missing item in feedback and complete_answer,
+  tied to the rubric and source — never "add the third one".
+- A short, scientifically-correct name answering a "which element/item" question is an ANSWER,
+  not a help request (a trailing "?" may just signal uncertainty); do not demand an unstated process.
+
 Correct an IDEA, not English. For incorrect answers give an accurate complete_answer and
 a plain-language feedback explanation describing the specific missing/wrong requirement.
 diff_html, when useful, is ONLY <del>wrong phrase</del><ins>correct phrase</ins>, insertion

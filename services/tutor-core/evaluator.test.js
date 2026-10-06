@@ -238,7 +238,7 @@ test('prompt binds obligations and serialises student instructions as untrusted 
   assert.deepEqual(JSON.parse(messages[0].content).rubric.criteria, forceRubric.criteria);
   assert.match(system, /ACTUAL LAST QUESTION/);
   assert.match(system, /count DISTINCT/);
-  assert.match(system, /unqualified "friction"/);
+  assert.match(system, /Grade strictly against the supplied source/);
   assert.match(system, /causal explanation/);
   assert.equal(options.temperature, 0);
 });
