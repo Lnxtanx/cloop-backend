@@ -1,88 +1,33 @@
 # tutor-core
 
-The session engine. Structure lives here, in code; the model is left only
-language.
+Server-owned tutoring flow:
 
-## Session shape
+```text
+PROBE → THEORY → OBJECTIVES → [DIALOGUE ×1 → CHECK ×1] per goal
+      → ROUNDUP ×1 per goal → WRAP → DONE
+```
 
-    PROBE → THEORY → OBJECTIVES → [ DIALOGUE ×2 → CHECK ×1 ] per goal → WRAP → DONE
+The server owns phases, assessment slots, attachments, and score calculations. The model interprets free text and writes tutor language/initial question rubrics. Semantic interpretation and generated factual keys remain model-dependent; this is not a deterministic scientific oracle.
 
-`state.js` owns the phase. It is never read back out of the model's own
-output, and the question type (`open` vs `mcq`) is decided per phase rather
-than left to the model — multiple choice happens only in CHECK, as assessment
-of what the dialogue taught, never as the teaching itself.
+Each final question is persisted with a private `lastQuestionRubric` and its actual options. The evaluator returns evidence per required criterion; code combines that evidence rather than accepting a model verdict or percentage. Known MCQ selections use the stored key directly. Missing or malformed evidence is ungraded (`null`), never a fallback 75% success. English is not graded, but an English error label alone cannot establish correctness.
 
-## What each module is for
+Each goal has three scored slots: DIALOGUE, CHECK, ROUNDUP. First verified responses fix credit; retries are diagnostic evidence. HELP/IDK mark assistance. Skipped and unverified slots remain explicit in coverage. Independent written recall and complete assessment coverage gate Mastered. Completion, closure, assessed coverage, and mastery are separate.
 
-| file | role |
-|---|---|
-| `state.js` | the phase machine, intent vocabulary, escalation ladder. Pure. |
-| `summary.js` | the mastery report, computed from tallies the machine recorded. |
-| `evaluator.js` | model call 1 — intent and grading. |
-| `evaluator-guards.js` | the grading rules the *server* enforces. Pure. |
-| `tutor-generator.js` | model call 2 — the bubbles. |
-| `validate.js` | deterministic repair of the model's output before persistence. |
-| `orchestrator.js` | the pipeline, and the seam between all of the above. |
+New recall questions are uncoached and matched to complete stored goal facts. Assistance after a failed first recall can teach, but cannot certify independent recall. Retries preserve both the pending question and its rubric. Repeated directive names on a different goal are allowed; infrastructure retries stay neutral.
 
-## The two vocabularies
+The validator enforces two bubbles, at most 19 words per bubble, complete questions, safe correction HTML, and CHECK-only MCQs. Invalid generated MCQs become grounded written assessments. Correction cards include an explanation and no numeric score, including after refresh. End artifacts are cached and reused on DONE.
 
-The evaluator classifies intent as `ANSWER | ACK | HELP_REQUEST | IDK |
-OFF_TOPIC | GIBBERISH`. The state machine acts on `ANSWER | ACK | HELP | IDK |
-OFF_TOPIC`. Everything crossing that seam goes through
-`state.normalizeIntent`, which accepts both.
+| Module | Responsibility |
+| --- | --- |
+| `state.js` | Pure transitions, counters, three assessment slots, assistance/attempt records |
+| `summary.js` | Earned score, coverage, recall, mastery and completion report |
+| `evaluator.js` / `evaluator-guards.js` | Exact-question semantic evidence, MCQ key comparison, schema and English guards |
+| `tutor-generator.js` | Prompt/directive language and private question rubric |
+| `validate.js` | Deterministic presentation and question-contract validation |
+| `orchestrator.js` | Previous-question evaluation → next-state/question → validation/persistence contract |
+| `revision-generator.js` | All-goal source-grounded notes and fallback |
+| `diagram-cache.js` | Stored goal facts rendered as a Mermaid map |
 
-This is not incidental. A live session sent a student the identical two
-bubbles three turns running because `HELP_REQUEST` matched nothing in the
-state machine and the turn fell through to the phase default. Anything
-unrecognised now normalises to `HELP` rather than falling through: a student
-we cannot classify needs a hand, not the same sentence twice.
+Run `npm test` for isolated, dependency-stubbed suites and `node services/tutor-core/simulate.js --sessions 500 --seed 42` for adversarial state simulations. Simulation failures produce a nonzero exit code. These checks do not call a live model or database.
 
-## Never saying the same thing twice
-
-`instructionFor` will not return the directive the previous turn used.
-Identical directives produce near-identical bubbles. When a directive would
-repeat, the `ESCALATION` ladder moves to one that teaches the same point a
-different way, and the depth walked is driven by how long the student has been
-stuck — not merely by "is this the same as last time", which made an early
-version of the ladder alternate between two rungs forever.
-
-The last rung stops asking and starts helping: `give_starter` hands over a
-sentence opening to finish, and `reveal_and_move_on` gives the answer plainly
-and continues. After `STUCK_LIMIT` consecutive non-answers the phase advances
-regardless, so a student who never answers still reaches a summary.
-
-## Grading the concept, not the English
-
-`evaluator-guards.js` reverses any wrong verdict whose stated reason is
-spelling, grammar, tense or phrasing. "It is increase" is a right answer.
-The evaluator prompt says so too, but a prompt is a request and this is the
-enforcement.
-
-Corrections are also gated on `isScored(phase)`: PROBE, THEORY and OBJECTIVES
-ask the student to predict and think aloud, and those answers must not come
-back with a red strikethrough and a crying face.
-
-## Checking a change
-
-    node --test services/tutor-core/*.test.js
-    node services/tutor-core/simulate.js --sessions 500 --seed 42
-
-`state.test.js`, `validate.test.js`, `regression.test.js`, `pipeline.test.js`
-and `simulate.js` run standalone — they stub or avoid the model client
-entirely. `orchestrator.test.js` loads `evaluator.js` unstubbed and so needs
-`services/ai/deepseek-client.js`, which exists only in the application repo.
-
-`regression.test.js` replays sessions that shipped broken. `simulate.js`
-plays whole sessions and asserts what a student would actually experience.
-
-Both must fail when the bug they describe is reintroduced — that is the point
-of them. To confirm they still have teeth, break `normalizeIntent` so it
-returns its argument unchanged, and check that you get test failures *and*
-simulation violations. Checks that pass against known-broken code are worse
-than no checks, because they are believed.
-
-For the same reason, invariants in `simulate.js` are written against the
-fixture's own `kind` field rather than against anything the code under test
-computes. An earlier version asked the state machine to classify the intent
-first, so a broken classifier silently skipped the check that would have
-caught it.
+See the [upgrade specification and transcript audit](../../docs/cloop-prompt-upgrade.md) for changed contracts, rollout requirements, and known limits.

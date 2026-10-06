@@ -2,6 +2,12 @@
 
 Consolidated home for the **topic chat tutor** feature's backend logic and prompts.
 
+The default message route uses [Tutor-Core V2](../tutor-core/README.md), whose
+server-owned flow includes ROUNDUP before scoring. The six-phase prompt below
+belongs to the explicitly selected legacy V1 flow. Goal generation and greeting
+are shared; the [upgrade specification](../../docs/cloop-prompt-upgrade.md)
+describes their current source and grading contracts.
+
 ## Layout
 
 ```

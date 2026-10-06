@@ -162,16 +162,19 @@ async function generateGlobalTopics(globalSubjectId, chapter, board, grade, subj
 /**
  * Generate global learning goals for a specific topic
  */
-async function generateGlobalGoals(topic, logger = console) {
+async function generateGlobalGoals(topic, logger = console, context = {}) {
 	logger.log(`  Generating goals for Topic: ${topic.title}`);
 
 	try {
-		const goalsData = await generateTopicGoals(topic.title, topic.content);
+		const goalsData = await generateTopicGoals(topic.title, topic.content, context);
 
 		let goals = goalsData.goals || [];
-		if (goals.length < 4) {
+		if (goals.length < 2) {
 			logger.log(`  ⚠️ Insufficient goals (${goals.length}) for ${topic.title}, retrying...`);
-			goals = await regenerateGoalsUntilMinimum(topic);
+			goals = await regenerateGoalsUntilMinimum(topic, 2, context);
+		}
+		if (goals.length < 2) {
+			throw new Error(`Global topic ${topic.id} has no complete supported goal set after retries`);
 		}
 
 		// Store in global_topic_goals table
@@ -193,25 +196,25 @@ async function generateGlobalGoals(topic, logger = console) {
 		return createdGoals;
 	} catch (error) {
 		logger.error(`  ✗ Error generating global goals for topic ${topic.title}:`, error.message);
-		return [];
+		throw error;
 	}
 }
 
 /**
  * Regenerate goals until we have at least N valid goals
  */
-async function regenerateGoalsUntilMinimum(topic, minimumGoals = 4) {
+async function regenerateGoalsUntilMinimum(topic, minimumGoals = 2, context = {}) {
 	let attempts = 0;
 	const maxAttempts = 3;
 	let goals = [];
 
 	while (goals.length < minimumGoals && attempts < maxAttempts) {
-		const newGoals = await generateTopicGoals(topic.title, topic.content);
-		goals = [...new Set([...goals, ...newGoals.goals])];
+		const newGoals = await generateTopicGoals(topic.title, topic.content, context);
+		goals = newGoals.goals; // A complete validated set, never duplicate sets.
 		attempts++;
 	}
 
-	return goals.slice(0, Math.max(minimumGoals, goals.length));
+	return goals;
 }
 
 /**
@@ -247,14 +250,15 @@ async function ensureGlobalCurriculum(board, grade, subjectName, subjectCode = n
 		}
 	});
 
-	if (existingGlobalSubject && existingGlobalSubject.chapters.length > 0) {
+	const existingStatus = await checkGlobalCurriculumStatus(board, grade, subjectName);
+	if (existingGlobalSubject && existingGlobalSubject.chapters.length > 0 &&
+		(!existingStatus || (existingStatus.status === 'completed' && existingStatus.goals_generated))) {
 		logger.log('Global curriculum already exists in database with chapters, skipping generation.');
 		return { globalSubject: existingGlobalSubject, alreadyExisted: true };
 	}
 
 	// 2. Check global curriculum status table
-	const existingStatus = await checkGlobalCurriculumStatus(board, grade, subjectName);
-	if (existingStatus && existingStatus.status === 'completed' && existingStatus.global_subject_id) {
+	if (existingStatus && existingStatus.status === 'completed' && existingStatus.goals_generated && existingStatus.global_subject_id) {
 		const globalSubject = await prisma.global_subjects.findUnique({
 			where: { id: existingStatus.global_subject_id },
 		});
@@ -370,12 +374,12 @@ async function ensureGlobalCurriculum(board, grade, subjectName, subjectCode = n
 					where: { topic_id: topic.id },
 				});
 
-				if (existingGoalsCount >= 4) {
+				if (existingGoalsCount >= 2) {
 					totalGoalsCount += existingGoalsCount;
 					continue;
 				}
 
-				const goals = await generateGlobalGoals(topic, logger);
+				const goals = await generateGlobalGoals(topic, logger, { board, classLevel: grade });
 				totalGoalsCount += goals.length;
 
 				// Small delay to avoid rate limiting
@@ -402,6 +406,7 @@ async function ensureGlobalCurriculum(board, grade, subjectName, subjectCode = n
 
 		await updateGlobalStatus(board, grade, subjectName, {
 			status: 'failed',
+			goals_generated: false,
 			error_message: error.message,
 		});
 
@@ -516,7 +521,7 @@ async function generateMissingGlobalGoals() {
 			}
 		}
 
-		return { success: true, total: topicsWithoutGoals.length, generated, failed };
+		return { success: failed === 0, total: topicsWithoutGoals.length, generated, failed };
 	} catch (error) {
 		console.error('Error generating missing global goals:', error);
 		throw error;

@@ -13,6 +13,7 @@
  */
 
 const prisma = require('../../lib/prisma');
+const { scoredGoalIndex, goalCompletion } = require('../tutor-core/state');
 
 // ─── Turn Logging ──────────────────────────────────────────────────────────
 
@@ -29,7 +30,7 @@ async function recordTurnLog(turnResult, context) {
             answeredPhase, gradedThisTurn, messages, masteryReport } = turnResult;
     const { userId, topicId, chapterId, subjectId, goalId, chatId, userMessage } = context;
 
-    const goalIndex = nextState.goalIndex || 0;
+    const goalIndex = Number.isInteger(context.goalIndex) ? context.goalIndex : scoredGoalIndex(nextState) || 0;
     const perGoalStats = nextState.perGoal?.[goalIndex] || { correct: 0, total: 0, errors: [] };
 
     // Preview of AI response (first 500 chars of first bubble)
@@ -89,7 +90,7 @@ async function recordTurnLog(turnResult, context) {
         end_reason: nextState.endedReason || null,
 
         // Graded flag
-        was_graded: gradedThisTurn || false
+        was_graded: gradedThisTurn === true && typeof evaluatorResult.is_correct === 'boolean'
       }
     });
 
@@ -115,7 +116,7 @@ async function recordErrorIfWrong(turnResult, context, turnLogId = null) {
     const { evaluatorResult, nextState, answeredPhase } = turnResult;
 
     // Only record actual wrong answers
-    if (evaluatorResult.intent !== 'ANSWER' || evaluatorResult.is_correct !== false) {
+    if (!turnResult.gradedThisTurn || evaluatorResult.intent !== 'ANSWER' || evaluatorResult.is_correct !== false) {
       return;
     }
 
@@ -238,7 +239,7 @@ async function endChatSession(userId, topicId, turnResult) {
         correct_answers: masteryReport?.correct_answers || 0,
         incorrect_answers: masteryReport?.incorrect_answers || 0,
         score_percent: masteryReport?.score_percent || 0,
-        goals_completed: masteryReport?.goals_covered || nextState.goalIndex || 0,
+        goals_completed: masteryReport?.goals_completed ?? nextState.perGoal?.filter((_, i) => goalCompletion(nextState, i)).length ?? 0,
         goals_total: nextState.goalTotal || session.goals_total,
         end_reason: nextState.endedReason || 'complete',
         performance_level: masteryReport?.performance_level || null,
@@ -251,17 +252,19 @@ async function endChatSession(userId, topicId, turnResult) {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
+    const topicCompleted = masteryReport?.session_completed === true && masteryReport?.recall_completed === true &&
+      masteryReport?.goals_total > 0 && masteryReport?.goals_completed === masteryReport?.goals_total;
     await prisma.user_daily_stats.upsert({
       where: { user_id_date: { user_id: userId, date: today } },
       create: {
         user_id: userId,
         date: today,
         total_study_time_seconds: durationSec,
-        topics_completed: 1
+        topics_completed: topicCompleted ? 1 : 0
       },
       update: {
         total_study_time_seconds: { increment: durationSec },
-        topics_completed: { increment: 1 },
+        topics_completed: topicCompleted ? { increment: 1 } : undefined,
         updated_at: new Date()
       }
     });
@@ -393,7 +396,9 @@ async function updateDailyStudyStats(userId, turnResult, topicId) {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const isAnswer = turnResult.evaluatorResult?.intent === 'ANSWER';
+    const isAnswer = turnResult.gradedThisTurn === true &&
+      turnResult.evaluatorResult?.intent === 'ANSWER' &&
+      typeof turnResult.evaluatorResult?.is_correct === 'boolean';
     const isCorrect = turnResult.evaluatorResult?.is_correct === true;
 
     await prisma.user_daily_stats.upsert({

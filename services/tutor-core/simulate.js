@@ -1,237 +1,226 @@
 /**
- * Adversarial simulation of the session shape.
- *
- * Plays whole sessions and asserts, on every turn, what a student would
- * actually experience — including the three things the last live session got
- * wrong: multiple choice used as teaching, an option letter graded without its
- * text, and a session that ends with no report.
+ * Seeded adversarial simulation of server-owned pacing and evidence.
  *
  *   node services/tutor-core/simulate.js --sessions 400 --seed 42
+ *
+ * Expected score evidence is tracked independently from state.perGoal. A
+ * failure exits nonzero so this simulation can be used in deployment checks.
  */
-
-const S = require("./state");
-const { buildReport } = require("./summary");
+const S = require('./state');
+const { buildReport } = require('./summary');
 
 function rng(seed) {
-  let s = seed >>> 0 || 1;
-  return () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296);
+  let value = seed >>> 0 || 1;
+  return () => ((value = (value * 1664525 + 1013904223) >>> 0) / 4294967296);
 }
 
 const TOPICS = [
-  { title: "Chemical Properties of Acids and Bases", goals: ["Acid-metal reactions", "Acid-carbonate reactions", "Base-metal reactions", "Gas testing", "Comparing reactivity"] },
-  { title: "Friction", goals: ["Identify friction", "Compare surfaces", "Reduce friction", "Friction in daily life"] },
-  { title: "Linear Equations", goals: ["Name the unknown", "Isolate the variable", "Check the solution"] },
-  { title: "Photosynthesis", goals: ["Inputs", "Outputs", "Chlorophyll", "Limiting factors", "Experiments", "Food chains"] },
+  { title: 'Chemical Properties of Acids and Bases', goals: ['Acid-metal reactions', 'Acid-carbonate reactions', 'Base-metal reactions', 'Gas testing', 'Comparing reactivity'] },
+  { title: 'Friction', goals: ['Identify friction', 'Compare surfaces', 'Reduce friction', 'Friction in daily life'] },
+  { title: 'Linear Equations', goals: ['Name the unknown', 'Isolate the variable', 'Check the solution'] },
+  { title: 'Photosynthesis', goals: ['Inputs', 'Outputs', 'Chlorophyll', 'Limiting factors', 'Experiments', 'Food chains'] },
 ];
 
-const ERRORS = ["Conceptual Error", "Calculation Error", "Spelling Error", "Incomplete Answer"];
-
+// Fixture kind is independent ground truth, not the classifier under test.
 const STUDENTS = [
-  { text: "vinegar reacts with chalk and gives off a gas", intent: "ANSWER", kind: "answer", correct: true },
-  { text: "carbon dioxide", intent: "ANSWER", kind: "answer", correct: true },
-  { text: "yes salt and water", intent: "ANSWER", kind: "answer", correct: true },
-  { text: "hydrogen gas", intent: "ANSWER", kind: "answer", correct: false, errorType: "Conceptual Error" },
-  { text: "gas of hydoyeg", intent: "ANSWER", kind: "answer", correct: false, errorType: "Conceptual Error" },
-  { text: "ok", intent: "ACK", kind: "stuck" },
-  { text: "pls explain", intent: "HELP_REQUEST", kind: "stuck" },
-  { text: "i dont know", intent: "IDK", kind: "stuck" },
-  { text: "my dog is called rex", intent: "OFF_TOPIC", kind: "offtopic" },
-  { text: "asdfghjk", intent: "GIBBERISH", kind: "offtopic" },
+  { text: 'carbon dioxide', intent: 'ANSWER', kind: 'answer', correct: true },
+  { text: 'yes salt and water', intent: 'ANSWER', kind: 'answer', correct: true },
+  { text: 'hydrogen gas', intent: 'ANSWER', kind: 'answer', correct: false, errorType: 'Conceptual' },
+  { text: 'gas of hydoyeg', intent: 'ANSWER', kind: 'answer', correct: false, errorType: 'Incomplete' },
+  { text: 'ok', intent: 'ACK', kind: 'ack' },
+  { text: 'pls explain', intent: 'HELP_REQUEST', kind: 'assistance' },
+  { text: 'i dont know', intent: 'IDK', kind: 'assistance' },
+  { text: 'my dog is called rex', intent: 'OFF_TOPIC', kind: 'offtopic' },
+  { text: 'asdfghjk', intent: 'GIBBERISH', kind: 'offtopic' },
+  { text: 'a scientific answer during an outage', intent: 'ANSWER', kind: 'unavailable', correct: null, evaluationStatus: 'unavailable' },
+  // A historical fallback called an outage answer correct-ish. It earns none.
+  { text: 'a guessed fallback answer', intent: 'ANSWER', kind: 'unavailable', correct: true, evaluationStatus: 'unavailable' },
 ];
 
-/**
- * Instructions that just carry on with the lesson plan.
- *
- * If the student said "I don't know" or "explain it" and the tutor answers
- * with one of these, it has ignored them — which is exactly what production
- * did when the two modules disagreed about what an intent is called.
- */
-const CARRY_ON = new Set([
-  "probe_prior_knowledge", "teach_theory", "state_objectives",
-  "open_goal_dialogue", "continue_dialogue", "assess_with_mcq",
-]);
+const CARRY_ON = new Set(['probe_prior_knowledge', 'teach_theory', 'state_objectives',
+  'open_goal_dialogue', 'continue_dialogue', 'assess_with_mcq', 'roundup_recall']);
+const ASSISTANCE = new Set(['correct_and_reask', 'reteach_new_angle', 'hint_then_easier',
+  'explain_differently', 'give_starter', 'reveal_and_move_on', 'teach_theory_analogy']);
+const SCORED_PHASES = new Set(['DIALOGUE', 'CHECK', 'ROUNDUP']);
 
-const violations = [];
-const instructionsSeen = new Set();
-const typesByPhase = new Map();
-function check(cond, label, detail) {
-  if (!cond) violations.push({ label, detail });
+/** Identity uses phase/counters, not the implementation's advancement flag. */
+function questionIdentity(state) {
+  if (state.phase === 'ROUNDUP') return `ROUNDUP:${state.roundupIndex || 0}:${state.recallThisGoal || 0}`;
+  if (state.phase === 'DIALOGUE') return `DIALOGUE:${state.goalIndex}:${state.openThisGoal || 0}`;
+  if (state.phase === 'CHECK') return `CHECK:${state.goalIndex}:${state.mcqThisGoal || 0}`;
+  return state.phase;
 }
 
-function runSession(seed, topic) {
+function runSession(seed, topic, { students = STUDENTS, sequence = null } = {}) {
   const rand = rng(seed);
-  const pick = (a) => a[Math.floor(rand() * a.length)];
-
-  let state = S.initialState(topic.goals.length);
-  let turns = 0;
-  let prevInstruction = null;
-  let longestRepeat = 1;
-  let repeatRun = 1;
-  let openAsked = 0;
-  let mcqAsked = 0;
-  let guard = 0;
+  const violations = [];
+  const instructionsSeen = new Set();
   const phasesSeen = new Set();
+  const typesByPhase = new Map();
+  const expected = new Map();
+  const check = (condition, label, detail) => {
+    if (!condition) violations.push({ label, detail });
+  };
+  const pick = (values) => values[Math.floor(rand() * values.length)];
+  let state = S.initialState(topic.goals.length);
+  // Bootstrap asks PROBE without inventing a student's first response.
+  let previousInstruction = S.instructionFor(state, { intent: 'ANSWER' });
+  state.lastInstruction = previousInstruction;
+  let turns = 0, openAsked = 0, mcqAsked = 0, repeatRun = 1, longestRepeat = 1;
+  const guardLimit = 400;
 
-  while (state.phase !== "DONE" && guard++ < 400) {
+  while (state.phase !== 'DONE' && turns < guardLimit) {
     const before = state;
-    phasesSeen.add(before.phase);
-
-    // The server decides the question type — the model is never asked.
+    const beforeIdentity = questionIdentity(before);
     const qType = S.questionTypeFor(before.phase);
-    const scored = S.isScored(before.phase);
-    const attachments = S.attachmentsFor(before);
+    const scored = SCORED_PHASES.has(before.phase);
+    const goalIndex = before.phase === 'ROUNDUP' ? (before.roundupIndex || 0) : before.goalIndex;
+    phasesSeen.add(before.phase);
     if (!typesByPhase.has(before.phase)) typesByPhase.set(before.phase, new Set());
     typesByPhase.get(before.phase).add(qType);
-
-    // WRAP asks nothing, so it legitimately has no question type.
-    const asksSomething = before.phase !== "WRAP";
-    check(asksSomething ? ["open", "mcq"].includes(qType) : qType === null,
-      "unexpected question type", `${before.phase}: ${qType}`);
-    check(qType === "mcq" ? before.phase === "CHECK" : true,
-      "multiple choice outside the assessment phase", `${before.phase}`);
-    if (before.phase === "PROBE") check(!scored, "the opening probe was scored", "PROBE");
-    if (before.phase === "THEORY") check(attachments.includes("diagram") && attachments.includes("key_points"),
-      "theory turn carried no diagram or key points", "THEORY");
-
-    if (qType === "open") openAsked++;
-    else if (qType === "mcq") mcqAsked++;
-
-    const student = pick(STUDENTS);
-    const instruction = S.instructionFor(before, { intent: student.intent });
-    instructionsSeen.add(instruction);
-    check(Boolean(instruction), "no instruction for a reachable state", `${before.phase}/${student.intent}`);
-
-    // THE FAILURE THAT SHIPPED. Identical directives produce identical
-    // bubbles, and a live student was sent the same two sentences three turns
-    // running. Closing instructions are exempt: WRAP says its one thing.
-    const closing = instruction === "wrap_with_report" || instruction === "close_off_topic" || instruction === "session_over";
-    if (!closing) {
-      check(instruction !== prevInstruction,
-        "the tutor repeated itself verbatim", `${before.phase}: ${instruction} twice`);
+    check(before.phase === 'WRAP' ? qType === null : ['open', 'mcq'].includes(qType),
+      'unexpected question type', `${before.phase}: ${qType}`);
+    check(qType !== 'mcq' || before.phase === 'CHECK', 'multiple choice outside CHECK', before.phase);
+    check(before.phase !== 'PROBE' || !S.isScored(before.phase), 'the opening probe was scored', before.phase);
+    if (before.phase === 'THEORY') {
+      const attachments = S.attachmentsFor(before);
+      check(attachments.includes('diagram') && attachments.includes('key_points'),
+        'theory omitted diagram/key points', before.phase);
     }
-    // A student who says they are stuck must be answered, not read the script.
-    //
-    // `kind` is the fixture's own ground truth, deliberately NOT derived from
-    // the code under test. An earlier version of this check asked the state
-    // machine to classify the intent first, which meant a broken classifier
-    // silently skipped the check that would have caught it.
-    if (student.kind === "stuck") {
-      check(!CARRY_ON.has(instruction),
-        "the tutor ignored a stuck student and carried on with the lesson",
-        `${student.intent} in ${before.phase} → ${instruction}`);
+    if (qType === 'open') openAsked++;
+    if (qType === 'mcq') mcqAsked++;
+
+    const student = sequence ? sequence[turns % sequence.length] : pick(students);
+    const unavailable = student.kind === 'unavailable';
+    if (scored) {
+      if (!expected.has(beforeIdentity)) expected.set(beforeIdentity, { goalIndex, phase: before.phase, assisted: false, assessed: false, credit: false });
+      const slot = expected.get(beforeIdentity);
+      if (student.kind === 'assistance' || before.questionAssisted) slot.assisted = true;
+      if (student.kind === 'answer' && !unavailable && typeof student.correct === 'boolean' && !slot.assessed) {
+        slot.assessed = true;
+        slot.credit = student.correct === true && !slot.assisted;
+      }
     }
 
-    repeatRun = instruction === prevInstruction ? repeatRun + 1 : 1;
-    if (repeatRun > longestRepeat) longestRepeat = repeatRun;
-    prevInstruction = instruction;
-
-    // Every non-closing turn must leave the student something to write.
-    check(closing || ["open", "mcq"].includes(qType),
-      "a turn left the student with nothing to answer", `${before.phase}/${instruction}`);
-
-    state = S.advance({ ...before, lastInstruction: instruction }, {
-      intent: student.intent,
-      correct: student.correct,
-      offTopic: student.offTopic,
-      errorType: student.errorType || pick(ERRORS),
-      answerText: student.text,
-      questionText: `Question about ${topic.goals[before.goalIndex] || topic.title}?`,
-      questionOptions: qType === "mcq" ? [{ text: "Calcium carbonate", value: "A" }, { text: "Sodium chloride", value: "B" }] : null,
+    state = S.advance(before, {
+      intent: student.intent, correct: student.correct,
+      evaluationStatus: unavailable ? 'unavailable' : 'evaluated',
+      previousQuestionAssisted: before.questionAssisted,
+      errorType: student.errorType || null, answerText: student.text,
     });
+    // Match orchestration: decide the generator directive AFTER advancing.
+    const instruction = S.instructionFor(state, { intent: student.intent });
+    instructionsSeen.add(instruction);
+    check(typeof instruction === 'string' && instruction.length > 0,
+      'no instruction for reachable state', `${state.phase}/${student.intent}`);
+    const closing = ['WRAP', 'DONE'].includes(state.phase);
+    const sameQuestion = beforeIdentity === questionIdentity(state);
+    const neutralOutageRetry = unavailable && instruction === 'reask_shorter';
+    if (!closing && sameQuestion && !neutralOutageRetry) {
+      check(instruction !== previousInstruction, 'same question repeated its directive', `${beforeIdentity}: ${instruction}`);
+    }
+    if (student.kind === 'assistance') {
+      check(closing || !CARRY_ON.has(instruction), 'stuck student received no assistance', `${student.intent}: ${instruction}`);
+    }
+    if (!closing && !sameQuestion && scored && !state.revealPending) {
+      check(!ASSISTANCE.has(instruction), 'a new assessment leaked a hint before an answer', `${beforeIdentity} -> ${questionIdentity(state)}: ${instruction}`);
+    }
+    repeatRun = instruction === previousInstruction && sameQuestion ? repeatRun + 1 : 1;
+    longestRepeat = Math.max(longestRepeat, repeatRun);
+    previousInstruction = instruction;
+    state.lastInstruction = instruction;
+    state.questionAssisted = !closing && sameQuestion && (before.questionAssisted || ASSISTANCE.has(instruction));
+    const nextType = S.questionTypeFor(state.phase);
+    state.lastQuestionText = closing ? '' : `Question about ${topic.goals[state.phase === 'ROUNDUP' ? state.roundupIndex : state.goalIndex]}?`;
+    state.lastQuestionOptions = nextType === 'mcq'
+      ? [{ text: 'Calcium carbonate', value: 'Calcium carbonate' }, { text: 'Sodium chloride', value: 'Sodium chloride' }] : null;
     turns++;
 
-    if (student.kind !== "answer") {
-      // A non-answer holds the phase — unless the student has been stuck for
-      // STUCK_LIMIT turns, in which case the tutor gives the answer and moves
-      // on rather than looping on a question they cannot begin.
-      const held = state.phase === before.phase;
-      const closed = before.phase === "WRAP" && state.phase === "DONE";
-      const limit = state.endedReason === "turn_limit" || state.endedReason === "off_topic";
-      const escaped = state.revealPending === true;
-      check(held || closed || limit || escaped,
-        `phase advanced on ${student.intent}`, `${before.phase}→${state.phase}`);
-      check(state.perGoal[before.goalIndex].total === before.perGoal[before.goalIndex].total,
-        `a non-answer was scored`, `${student.intent} in ${before.phase}`);
+    if (student.kind !== 'answer' || unavailable) {
+      check(state.perGoal.every((goal, index) => goal.correct === before.perGoal[index].correct && goal.total === before.perGoal[index].total),
+        'non-answer or unavailable grading changed score', `${student.kind} in ${before.phase}`);
     }
-    check(state.goalIndex < state.goalTotal, "goal index ran past the goal count", `${state.goalIndex}/${state.goalTotal}`);
-    check(state.perGoal.length === state.goalTotal, "per-goal tallies lost a goal", "");
-
-    // The options the tutor offered must survive into the next turn, or a
-    // letter cannot be resolved to its text before grading.
-    if (qType === "mcq") {
-      check(Array.isArray(state.lastQuestionOptions) && state.lastQuestionOptions.length > 0,
-        "MCQ options were not carried into state", before.phase);
+    for (let index = 0; index < state.perGoal.length; index++) {
+      const expectedSlots = [...expected.values()].filter((slot) => slot.goalIndex === index && slot.assessed);
+      const expectedCorrect = expectedSlots.filter((slot) => slot.credit).length;
+      const actual = state.perGoal[index];
+      check(actual.total === expectedSlots.length && actual.correct === expectedCorrect,
+        'score disagrees with independent first-response evidence', `goal ${index + 1}: ${actual.correct}/${actual.total} expected ${expectedCorrect}/${expectedSlots.length}`);
+      check(actual.total <= 3 && actual.correct <= actual.total, 'goal exceeded three score slots', `goal ${index + 1}: ${actual.correct}/${actual.total}`);
     }
+    check(state.goalIndex < state.goalTotal && (state.roundupIndex || 0) < state.goalTotal,
+      'goal pointer exceeded goal count', `${state.goalIndex}/${state.roundupIndex}`);
+    check(state.perGoal.length === topic.goals.length, 'state lost a goal', topic.title);
   }
 
-  check(guard < 400, "session never reached DONE", topic.title);
-
-  // ── the report ─────────────────────────────────────────────────────────
-  const report = buildReport(state, topic.goals.map((t) => ({ title: t })));
-  check(typeof report.overall_mastery_percent === "number", "no mastery percentage", topic.title);
-  check(report.overall_mastery_percent >= 0 && report.overall_mastery_percent <= 100,
-    "mastery percentage out of range", String(report.overall_mastery_percent));
-  check(report.per_goal.length === topic.goals.length, "report lost a goal", topic.title);
-  check(Array.isArray(report.key_errors), "no key errors list", topic.title);
-  check(Array.isArray(report.learned_well) && Array.isArray(report.areas_to_improve),
-    "report missing the learned/improve split", topic.title);
-  const counted = report.learned_well.length + report.areas_to_improve.length + report.not_covered.length;
-  check(counted === topic.goals.length, "goals unaccounted for in the report",
-    `${counted} of ${topic.goals.length}`);
-  for (const g of report.per_goal) {
-    check(g.correct <= g.asked, "more correct than asked", g.goal);
-    check(g.accuracy_percent >= 0 && g.accuracy_percent <= 100, "goal accuracy out of range", g.goal);
+  check(state.phase === 'DONE', 'session never terminated', topic.title);
+  check(turns <= S.MAX_TURNS + 1, 'termination exceeded turn budget', `${turns} turns`);
+  const report = buildReport(state, topic.goals.map((title) => ({ title })));
+  const expectedSlots = [...expected.values()].filter((slot) => slot.assessed);
+  const expectedCorrect = expectedSlots.filter((slot) => slot.credit).length;
+  const expectedScore = expectedSlots.length ? Math.round(expectedCorrect / expectedSlots.length * 100) : 0;
+  check(report.overall_mastery_percent === expectedScore, 'report score differs from evidence', `${report.overall_mastery_percent}, expected ${expectedScore}`);
+  check(report.total_questions === expectedSlots.length, 'report counted diagnostic retries as questions', String(report.total_questions));
+  check(report.correct_answers + report.incorrect_answers + report.assisted_answers === report.total_questions,
+    'report answer counts do not reconcile', topic.title);
+  check(report.per_goal.length === topic.goals.length, 'report lost a goal', topic.title);
+  check(report.learned_well.length + report.areas_to_improve.length + report.not_covered.length === topic.goals.length,
+    'report left goals unaccounted', topic.title);
+  for (let index = 0; index < report.per_goal.length; index++) {
+    const goal = report.per_goal[index];
+    const independentRecall = [...expected.values()].find((slot) => slot.goalIndex === index && slot.phase === 'ROUNDUP');
+    check(goal.band !== 'Mastered' || independentRecall?.credit === true,
+      'goal mastered without independent recall', goal.goal);
+    check(!goal.recall_passed || independentRecall?.credit === true,
+      'assisted or wrong recall was passed', goal.goal);
+    check(goal.accuracy_percent >= 0 && goal.accuracy_percent <= 100, 'goal score out of range', goal.goal);
   }
+  check(!report.mastery_confirmed || report.per_goal.every((goal) => goal.recall_passed),
+    'session mastery claimed before all recall passed', topic.title);
 
-  // The student must have written far more than they clicked.
-  return { turns, openAsked, mcqAsked, phasesSeen, report, longestRepeat };
+  return { turns, openAsked, mcqAsked, phasesSeen, typesByPhase, instructionsSeen, report, longestRepeat, violations, state };
 }
 
-function main() {
-  const a = process.argv.slice(2);
-  const n = Number(a[a.indexOf("--sessions") + 1]) || 300;
-  const seed0 = Number(a[a.indexOf("--seed") + 1]) || 1;
-
-  let turns = 0, open = 0, mcq = 0, withReport = 0, worstRepeat = 1;
-  const allPhases = new Set();
-  for (let i = 0; i < n; i++) {
-    const r = runSession(seed0 + i, TOPICS[i % TOPICS.length]);
-    turns += r.turns; open += r.openAsked; mcq += r.mcqAsked;
-    if (r.report.per_goal.length) withReport++;
-    if (r.longestRepeat > worstRepeat) worstRepeat = r.longestRepeat;
-    for (const p of r.phasesSeen) allPhases.add(p);
+/** Bounded reporting is kept separate so tests can verify a failed exit. */
+function printViolations(violations, log = console.log) {
+  const grouped = new Map();
+  for (const violation of violations) {
+    const group = grouped.get(violation.label) || { count: 0, example: violation.detail };
+    group.count++;
+    grouped.set(violation.label, group);
   }
-
-  const openShare = ((open / (open + mcq)) * 100).toFixed(1);
-  console.log("TUTOR CORE — session shape simulation");
-  console.log(`  sessions        ${n} across ${TOPICS.length} topics`);
-  console.log(`  turns           ${turns}  (${(turns / n).toFixed(1)} per session)`);
-  console.log(`  written : mcq   ${open} : ${mcq}   (${openShare}% of questions are written answers)`);
-  console.log(`  phases seen     ${[...allPhases].join(" → ")}`);
-  console.log(`  instructions    ${[...instructionsSeen].sort().join(", ")}`);
-  console.log(`  reports built   ${withReport}/${n}`);
-  console.log(`  longest run of the same directive   ${worstRepeat}`);
-  console.log("");
-  for (const [phase, types] of typesByPhase) {
-    console.log(`    ${phase.padEnd(11)} asks ${[...types].join(" + ")}`);
+  if (!violations.length) {
+    log('✓ no invariant violated in any turn of any session');
+    return 0;
   }
-  console.log("");
-
-  if (violations.length) {
-    const by = new Map();
-    for (const v of violations) {
-      if (!by.has(v.label)) by.set(v.label, []);
-      by.get(v.label).push(v.detail);
-    }
-    console.log(`✗ ${violations.length} INVARIANT VIOLATION(S)\n`);
-    for (const [label, d] of [...by].sort((x, y) => y[1].length - x[1].length)) {
-      console.log(`  ${label}  ×${d.length}`);
-      console.log(`      e.g. ${d[0]}`);
-    }
-    process.exit(1);
+  log(`✗ ${violations.length} INVARIANT VIOLATION(S)`);
+  for (const [label, detail] of [...grouped].sort((left, right) => right[1].count - left[1].count).slice(0, 12)) {
+    log(`  ${label} ×${detail.count}: ${detail.example}`);
   }
-  console.log("✓ no invariant violated in any turn of any session");
+  return 1;
 }
 
-if (require.main === module) main();
-module.exports = { runSession, TOPICS, STUDENTS };
+function main(args = process.argv.slice(2), log = console.log) {
+  const sessionsIndex = args.indexOf('--sessions');
+  const seedIndex = args.indexOf('--seed');
+  const sessions = Math.max(1, Number(sessionsIndex < 0 ? 300 : args[sessionsIndex + 1]) || 300);
+  const seed = Number(seedIndex < 0 ? 1 : args[seedIndex + 1]) || 1;
+  const violations = [];
+  let turns = 0, open = 0, mcq = 0, reports = 0, worstRepeat = 1;
+  const phases = new Set();
+  for (let index = 0; index < sessions; index++) {
+    const result = runSession(seed + index, TOPICS[index % TOPICS.length]);
+    turns += result.turns; open += result.openAsked; mcq += result.mcqAsked;
+    reports += result.report.per_goal.length > 0 ? 1 : 0;
+    worstRepeat = Math.max(worstRepeat, result.longestRepeat);
+    for (const phase of result.phasesSeen) phases.add(phase);
+    violations.push(...result.violations);
+  }
+  log(`TUTOR CORE: ${sessions} sessions across ${TOPICS.length} topics; ${turns} turns`);
+  log(`Written/MCQ: ${open}/${mcq}; reports: ${reports}/${sessions}; repeated same-question directives: ${worstRepeat}`);
+  log(`Phases: ${[...phases].join(' -> ')}`);
+  return printViolations(violations, log);
+}
+
+if (require.main === module) process.exitCode = main();
+module.exports = { runSession, questionIdentity, printViolations, main, TOPICS, STUDENTS };

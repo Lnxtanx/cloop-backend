@@ -1,5 +1,10 @@
 const test = require('node:test');
 const assert = require('node:assert');
+const clientPath = require.resolve('../ai/deepseek-client');
+require.cache[clientPath] = { id: clientPath, filename: clientPath, loaded: true, exports: {
+  invokeModel: async () => { throw new Error('No provider calls in this unit test'); },
+  extractJson: JSON.parse,
+} };
 const { findLastQuestion } = require('./orchestrator');
 const { resolveOptionAnswer } = require('./evaluator');
 
@@ -96,4 +101,11 @@ test('findLastQuestionOptions falls back to chat history if state has no options
     { sender: 'ai', message: 'Question?', options: [{ text: 'Fatter', value: 'Fatter' }] }
   ];
   assert.deepStrictEqual(findLastQuestionOptions(history, null), [{ text: 'Fatter', value: 'Fatter' }]);
+});
+
+test('explicit written question never inherits an earlier MCQ', () => {
+  const history = [{ sender: 'ai', message: 'Which force?', options: [{ text: 'Friction', value: 'Friction' }] },
+    { sender: 'ai', message: 'State the effect of force?' }];
+  assert.strictEqual(findLastQuestionOptions(history, { lastQuestionOptions: null }), null);
+  assert.strictEqual(findLastQuestionOptions(history, null), null);
 });

@@ -222,7 +222,8 @@ test("the brief handed to the model carries no figure it could contradict", () =
   const b = reportBrief(r);
   assert.strictEqual(b.overall_mastery_percent, r.overall_mastery_percent);
   assert.deepStrictEqual(Object.keys(b).sort(), [
-    "goals_covered", "goals_total", "overall_mastery_percent", "strongest", "top_error", "weakest",
+    "assessment_coverage_percent", "ended_reason", "goals_covered", "goals_total", "overall_mastery_percent",
+    "recall_completed", "recall_passed", "strongest", "top_error", "weakest",
   ]);
 });
 

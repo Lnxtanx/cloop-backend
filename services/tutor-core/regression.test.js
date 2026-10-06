@@ -102,6 +102,8 @@ test("grammar is never the reason an answer is wrong", () => {
       error_type: reason,
       diff_html: "<del>It is increase</del><ins>It will fizz more</ins>",
       reasoning: "",
+      criterion_results: [{ id: "effect", satisfied: true, evidence: "increase", required: true }],
+      contradictions: [],
     });
     assert.strictEqual(graded.is_correct, true, `"${reason}" still marks the student wrong`);
     assert.strictEqual(graded.diff_html, null, `"${reason}" still shows a correction`);

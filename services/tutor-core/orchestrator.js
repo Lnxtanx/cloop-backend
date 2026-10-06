@@ -1,248 +1,142 @@
-const { evaluateStudentTurn, resolveOptionAnswer } = require('./evaluator');
-const { advance, instructionFor, initialState, questionTypeFor, isScored, attachmentsFor, normalizeIntent } = require('./state');
+const { evaluateStudentTurn } = require('./evaluator');
+const { advance, instructionFor, initialState, questionTypeFor, isScored, attachmentsFor, normalizeIntent, scoredGoalIndex } = require('./state');
 const { generateTutorResponse } = require('./tutor-generator');
 const { enforce } = require('./validate');
 const { getCachedDiagram } = require('./diagram-cache');
 const { buildReport, reportBrief } = require('./summary');
-const { generateRevisionSheet } = require('./revision-generator');
+const { generateRevisionSheet, buildFallbackRevisionSheet } = require('./revision-generator');
 
-/**
- * Extract the last question asked by the tutor from chat history or state
- */
 function findLastQuestion(chatHistory, state) {
-  if (state?.lastQuestionText) {
-    return state.lastQuestionText;
+  if (state?.lastQuestionText) return state.lastQuestionText;
+  const history = Array.isArray(chatHistory) ? chatHistory : [];
+  for (let i = history.length - 1; i >= 0; i--) {
+    const msg = history[i];
+    if (msg.sender === 'ai' && msg.message && /[?？]/.test(msg.message)) return msg.message;
   }
-
-  if (Array.isArray(chatHistory)) {
-    for (let i = chatHistory.length - 1; i >= 0; i--) {
-      const msg = chatHistory[i];
-      if (msg.sender === 'ai' && msg.message && /[?？]/.test(msg.message)) {
-        return msg.message;
-      }
-    }
-  }
-
   return 'What do you understand about this concept?';
 }
 
-/**
- * Extract the last question options asked by the tutor from state or chat history
- */
 function findLastQuestionOptions(chatHistory, state) {
-  if (Array.isArray(state?.lastQuestionOptions) && state.lastQuestionOptions.length > 0) {
-    return state.lastQuestionOptions;
-  }
-  if (Array.isArray(chatHistory)) {
-    for (let i = chatHistory.length - 1; i >= 0; i--) {
-      const msg = chatHistory[i];
-      if (msg.sender === 'ai' && Array.isArray(msg.options) && msg.options.length > 0) {
-        return msg.options;
-      }
-    }
+  // An explicit null means the last question was written. Never resurrect old MCQs.
+  if (state && Object.hasOwn(state, 'lastQuestionOptions')) return state.lastQuestionOptions || null;
+  const history = Array.isArray(chatHistory) ? chatHistory : [];
+  for (let i = history.length - 1; i >= 0; i--) {
+    const msg = history[i];
+    if (msg.sender !== 'ai' || !msg.message || !/[?？]/.test(msg.message)) continue;
+    return Array.isArray(msg.options) && msg.options.length ? msg.options : null;
   }
   return null;
 }
 
-/**
- * The Central Orchestrator Pipeline
- *
- * Runs Steps 1 -> 2 -> 3 -> 4:
- * 1. Evaluates user input (resolves option letters, semantic intent, grading, diff).
- * 2. Advances server-owned state machine (crisp 2-turn per goal progression).
- * 3. Generates Socratic dialogue bubbles (explains first on struggle, respects questionType).
- * 4. Deterministically validates and auto-heals output before persistence.
- *
- * @param {object} params
- * @param {string} params.studentMessage
- * @param {object} params.topic - { id, title, content }
- * @param {Array}  params.goals - Array of global_topic_goals
- * @param {Array}  params.chatHistory - Recent admin_chat messages
- * @param {object} [params.currentState] - Session state from DB or memory
- * @param {object} [params.userProfile] - { board, grade_level, name }
- * @param {boolean} [params.wantsVideo] - Explicit or detected video request
- * @returns {Promise<object>} Orchestrated turn result
- */
-async function processTutorTurn({
-  studentMessage,
-  topic,
-  goals = [],
-  chatHistory = [],
-  currentState = null,
-  userProfile = {},
-  wantsVideo = false
-}) {
-  const goalTotal = Math.max(1, goals.length);
-  const state = currentState || initialState(goalTotal);
+const noEvaluation = () => ({ intent: 'ACK', is_correct: null, score_percent: null,
+  error_type: null, diff_html: null, complete_answer: null, evaluation_status: 'not_applicable' });
+const ASSISTANCE = new Set(['correct_and_reask', 'reteach_new_angle', 'hint_then_easier',
+  'explain_differently', 'give_starter', 'reveal_and_move_on', 'teach_theory_analogy']);
 
-  const fallbackGoal = { id: 0, title: topic.title, description: '' };
-
-  // Which goal is "live" for a given state. During the per-goal teaching loop
-  // that is goalIndex; during the closing round-up the tutor walks the goals
-  // again by roundupIndex. The evaluator grades against the goal that was just
-  // asked (pre-advance state); the generator asks about the goal the new state
-  // has moved to (post-advance state).
-  const goalForState = (st) => {
-    const idx = st.phase === 'ROUNDUP'
-      ? Math.min(st.roundupIndex || 0, goalTotal - 1)
-      : Math.min(st.goalIndex, goalTotal - 1);
-    return goals[idx] || fallbackGoal;
-  };
-
-  const currentGoalIndex = Math.min(state.goalIndex, goalTotal - 1);
-  const currentGoal = goalForState(state);
-
-  const lastQuestionText = findLastQuestion(chatHistory, state);
-  const lastQuestionOptions = findLastQuestionOptions(chatHistory, state);
-  const classLevel = userProfile.grade_level ? `Class ${userProfile.grade_level}` : 'Class 10';
-
-  // ── Step 1: Evaluator Engine (LLM Call 1, Temp 0.0, ~1.5s) ──────────────────
-  const evaluatorResult = await evaluateStudentTurn({
-    studentMessage,
-    lastQuestionText,
-    lastQuestionOptions,
-    topicTitle: topic.title,
-    topicContent: topic.content || '',
-    currentGoal,
-    goalIndex: currentGoalIndex,
-    totalGoals: goalTotal,
-    classLevel
-  });
-
-  // ── Step 2: State Machine Advance (Pure JS, < 1ms) ──────────────────────────
-  const intent = normalizeIntent(evaluatorResult.intent);
-  const answeredPhase = state.phase; // the phase the student was answering IN
-
-  const nextState = advance(state, {
-    intent,
-    correct: evaluatorResult.is_correct,
-    offTopic: intent === 'OFF_TOPIC',
-    errorType: evaluatorResult.error_type,
-    answerText: evaluatorResult.resolved_answer || studentMessage,
-    wantsVideo
-  });
-
-  // CRITICAL INVARIANT: instructionFor is called strictly on POST-ADVANCE state
-  const stateInstruction = instructionFor(nextState, { intent });
-
-  // Remember it, so the next turn cannot issue the same directive again.
-  nextState.lastInstruction = stateInstruction;
-
-  const questionType = questionTypeFor(nextState.phase);
-  const attachments = attachmentsFor(nextState);
-
-  // If wrapping, build mastery report and revision sheet
-  let masteryReport = null;
-  let masteryBrief = null;
-  let revisionSheet = null;
-  if (nextState.phase === 'WRAP' || nextState.phase === 'DONE') {
-    masteryReport = buildReport(nextState, goals);
-    masteryBrief = reportBrief(masteryReport);
-    try {
-      revisionSheet = await generateRevisionSheet({
-        topicTitle: topic.title,
-        goals,
-        keyErrors: masteryReport.key_errors,
-        classLevel
-      });
-    } catch (revErr) {
-      console.warn('[Orchestrator] Revision sheet generation warning:', revErr.message);
-    }
+function closingMessage(report) {
+  if (!report.total_questions) return 'We paused without graded evidence. Your revision sheet is ready for another try.';
+  if (report.legacy_evidence) return `Recorded score: ${report.overall_mastery_percent}%. Earlier evidence needs a fresh session to confirm mastery.`;
+  if (report.mastery_confirmed) return `You earned ${report.overall_mastery_percent}% with independent recall. Your revision sheet is ready!`;
+  if (report.ended_reason !== 'complete' || !report.recall_completed || report.assessment_coverage_percent < 100) {
+    return `Assessed answers: ${report.overall_mastery_percent}%. Coverage is incomplete; use your revision sheet to practise.`;
   }
-
-  // The goal the NEXT question is about. In ROUNDUP this walks the goals again
-  // by roundupIndex, so the recall question targets the right definition/formula.
-  const generatorGoal = goalForState(nextState);
-
-  // ── Step 3: Socratic Dialogue Generator (LLM Call 2, Temp 0.4, ~2.0s) ──────
-  const rawTutorOutput = await generateTutorResponse({
-    topicTitle: topic.title,
-    currentGoalTitle: generatorGoal.title,
-    currentGoalDescription: generatorGoal.description || '',
-    topicContent: topic.content || '',
-    studentMessage,
-    evaluatorResult,
-    stateInstruction,
-    questionType,
-    phase: nextState.phase,
-    reportBrief: masteryBrief,
-    lastQuestionText,
-    recentHistory: chatHistory,
-    classLevel,
-    wantsVideo
-  });
-
-  // ── Step 3b: Diagram / Attachments Retrieval ──────────────────────────────
-  let mermaidDiagram = null;
-  if (attachments.includes('diagram')) {
-    mermaidDiagram = getCachedDiagram(topic.title, currentGoal.title, currentGoal);
-  }
-
-  // ── Step 4: Quality & Structural Validator (Pure JS, < 1ms) ────────────────
-  const fallbackQuestion = questionType === 'mcq'
-    ? `Which of these best explains ${generatorGoal.title}?`
-    : (nextState.phase === 'ROUNDUP'
-        ? `In your own words, what is the key idea of ${generatorGoal.title}?`
-        : `What do you think is the next key step in ${generatorGoal.title}?`);
-
-  const validated = enforce(rawTutorOutput, {
-    isCorrect: evaluatorResult.is_correct,
-    phase: nextState.phase,
-    questionType,
-    fallbackQuestion,
-    diffHtml: evaluatorResult.diff_html,
-    studentMessage: evaluatorResult.resolved_answer || studentMessage
-  });
-
-  // Remember the new question & options in state for next turn
-  const bubbleWithOptions = validated.messages.find(m => Array.isArray(m.options) && m.options.length > 0);
-  const finalBubble = validated.messages[validated.messages.length - 1];
-  if (finalBubble && finalBubble.message) {
-    nextState.lastQuestionText = finalBubble.message;
-  }
-  nextState.lastQuestionOptions = Array.isArray(bubbleWithOptions?.options) && bubbleWithOptions.options.length > 0
-    ? bubbleWithOptions.options
-    : (Array.isArray(finalBubble?.options) && finalBubble.options.length > 0 ? finalBubble.options : null);
-
-  // Build user correction object for UI
-  // Any answer attempt evaluated produces userCorrection feedback for the UI.
-  // Correct answers get green feedback (is_correct: true, emoji: '😊').
-  // Incorrect answers get red feedback (is_correct: false, diff_html, emoji: '😅').
-  const gradedThisTurn = intent === 'ANSWER' && isScored(answeredPhase);
-  const isAnswer = intent === 'ANSWER';
-  const isCorrect = evaluatorResult.is_correct === true;
-  const userCorrection = isAnswer ? {
-    message_type: 'user_correction',
-    diff_html: validated.diff_html || null,
-    complete_answer: evaluatorResult.complete_answer || null,
-    emoji: isCorrect ? '😊' : (evaluatorResult.score_percent === 0 ? '😓' : (evaluatorResult.score_percent < 50 ? '😅' : '😊')),
-    feedback: {
-      is_correct: isCorrect,
-      score_percent: evaluatorResult.score_percent,
-      error_type: isCorrect ? (validated.diff_html ? 'Spelling' : null) : evaluatorResult.error_type
-    }
-  } : null;
-
-  return {
-    evaluatorResult,
-    intent,
-    answeredPhase,
-    gradedThisTurn,
-    nextState,
-    stateInstruction,
-    questionType,
-    attachments,
-    masteryReport,
-    revisionSheet,
-    messages: validated.messages,
-    userCorrection,
-    mermaid_diagram: mermaidDiagram,
-    all_goals_completed: nextState.phase === 'WRAP' || nextState.phase === 'DONE'
-  };
+  return `Your score is ${report.overall_mastery_percent}%. Review the goals needing independent recall in your revision sheet.`;
 }
 
-module.exports = {
-  processTutorTurn,
-  findLastQuestion,
-  findLastQuestionOptions
-};
+/** The server persists question contracts privately; students receive bubbles and feedback only. */
+async function processTutorTurn({ studentMessage = '', topic, goals = [], chatHistory = [],
+  currentState = null, userProfile = {}, wantsVideo = false }) {
+  const goalTotal = Math.max(1, goals.length);
+  const state = currentState || initialState(goalTotal);
+  const fallbackGoal = { id: 0, title: topic.title, description: topic.content || '' };
+  const goalForState = st => goals[Math.min(scoredGoalIndex(st) || 0, goalTotal - 1)] || fallbackGoal;
+  const currentGoal = goalForState(state);
+  const lastQuestionText = findLastQuestion(chatHistory, state);
+  const lastQuestionOptions = state.lastQuestionType === 'open' ? null : findLastQuestionOptions(chatHistory, state);
+  const classLevel = [userProfile.grade_level ? `Class ${userProfile.grade_level}` : 'school', userProfile.board || ''].filter(Boolean).join(' ');
+  const starting = !currentState && !String(studentMessage).trim();
+  const terminal = state.phase === 'WRAP' || state.phase === 'DONE';
+
+  let evaluatorResult = noEvaluation();
+  if (!starting && !terminal) {
+    evaluatorResult = await evaluateStudentTurn({ studentMessage, lastQuestionText, lastQuestionOptions,
+      lastQuestionRubric: state.lastQuestionRubric || null, phase: state.phase,
+      topicTitle: topic.title, topicContent: topic.content || '', currentGoal,
+      goalIndex: scoredGoalIndex(state), totalGoals: goalTotal, classLevel });
+  }
+  const intent = normalizeIntent(evaluatorResult.intent);
+  const nextState = starting ? { ...state } : advance(state, { intent,
+    correct: evaluatorResult.is_correct, evaluationStatus: evaluatorResult.evaluation_status,
+    previousQuestionAssisted: state.questionAssisted, offTopic: intent === 'OFF_TOPIC',
+    errorType: evaluatorResult.error_type, answerText: evaluatorResult.resolved_answer || studentMessage, wantsVideo });
+  const stateInstruction = instructionFor(nextState, { intent: starting ? 'ANSWER' : intent });
+  nextState.lastInstruction = stateInstruction;
+  let questionType = questionTypeFor(nextState.phase);
+  const attachments = attachmentsFor(nextState);
+  const ending = nextState.phase === 'WRAP' || nextState.phase === 'DONE';
+  let masteryReport = null;
+  let revisionSheet = null;
+  if (ending) {
+    masteryReport = state.wrapArtifacts?.masteryReport || buildReport(nextState, goals);
+    revisionSheet = state.wrapArtifacts?.revisionSheet || null;
+    if (!revisionSheet) {
+      try {
+        revisionSheet = await generateRevisionSheet({ topicTitle: topic.title, goals,
+          keyErrors: masteryReport.key_errors, classLevel, masteryReport });
+      } catch {
+        revisionSheet = buildFallbackRevisionSheet({ topicTitle: topic.title, goals,
+          keyErrors: masteryReport.key_errors, masteryReport });
+      }
+    }
+    nextState.wrapArtifacts = { masteryReport, revisionSheet };
+  }
+
+  const generatorGoal = goalForState(nextState);
+  const sameAssessment = !starting && !nextState.assessmentAdvanced && !ending &&
+    state.phase === nextState.phase && scoredGoalIndex(state) === scoredGoalIndex(nextState);
+  const generationContext = { topicTitle: topic.title, currentGoalTitle: generatorGoal.title,
+    currentGoalDescription: generatorGoal.description || '', topicContent: topic.content || '',
+    previousGoalTitle: currentGoal.title, previousGoalDescription: currentGoal.description || '',
+    studentMessage, evaluatorResult, stateInstruction, questionType, phase: nextState.phase,
+    reportBrief: masteryReport ? reportBrief(masteryReport) : null, lastQuestionText,
+    lastQuestionRubric: state.lastQuestionRubric || null, lastQuestionOptions, sameAssessment,
+    recentHistory: chatHistory, classLevel, wantsVideo: attachments.includes('video') && wantsVideo };
+  // Code owns closing figures and claims. DONE reuses artifacts without model calls.
+  const rawTutorOutput = ending
+    ? { messages: [{ message: closingMessage(masteryReport), message_type: 'text' }] }
+    : await generateTutorResponse(generationContext);
+  const validated = enforce(rawTutorOutput, { ...generationContext,
+    isCorrect: evaluatorResult.is_correct, diffHtml: evaluatorResult.diff_html,
+    studentMessage: evaluatorResult.resolved_answer || studentMessage });
+  questionType = validated.questionType;
+  const finalBubble = validated.messages[validated.messages.length - 1];
+  nextState.lastQuestionText = ending ? '' : finalBubble?.message || '';
+  nextState.lastQuestionOptions = ending ? null : finalBubble?.options || null;
+  nextState.lastQuestionRubric = ending ? null : validated.lastQuestionRubric;
+  nextState.lastQuestionType = questionType;
+  nextState.questionAssisted = sameAssessment && (state.questionAssisted || ASSISTANCE.has(stateInstruction));
+  const gradedThisTurn = !terminal && intent === 'ANSWER' && isScored(state.phase) &&
+    typeof evaluatorResult.is_correct === 'boolean' && evaluatorResult.evaluation_status !== 'unavailable';
+  const isAnswer = !terminal && !starting && intent === 'ANSWER';
+  const userCorrection = isAnswer ? {
+    message_type: 'user_correction', diff_html: validated.diff_html || null,
+    complete_answer: evaluatorResult.complete_answer || null,
+    emoji: evaluatorResult.is_correct === true ? '😊' : '😅',
+    feedback: { is_correct: evaluatorResult.is_correct, error_type: evaluatorResult.error_type || null,
+      explanation: evaluatorResult.feedback || (evaluatorResult.is_correct === true
+        ? 'Your answer meets the question requirements.' : evaluatorResult.is_correct === false
+          ? 'Review the corrected concept, then try again.' : 'This answer could not be graded. Please try again.'),
+      evaluation_status: evaluatorResult.evaluation_status || 'available' }
+  } : null;
+  const diagram = attachments.includes('diagram') ? getCachedDiagram(topic.title, generatorGoal.title, generatorGoal) : null;
+  return { evaluatorResult, intent, answeredPhase: state.phase, gradedThisTurn, nextState,
+    stateInstruction, questionType, attachments, masteryReport, revisionSheet,
+    messages: validated.messages, userCorrection, mermaid_diagram: diagram,
+    all_goals_completed: !!(masteryReport?.session_completed && masteryReport?.recall_completed &&
+      masteryReport.goals_completed === masteryReport.goals_total),
+    session_closed: ending,
+    session_completed: masteryReport?.session_completed || false,
+    mastery_confirmed: masteryReport?.mastery_confirmed || false };
+}
+
+module.exports = { processTutorTurn, findLastQuestion, findLastQuestionOptions, closingMessage };

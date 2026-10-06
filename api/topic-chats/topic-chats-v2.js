@@ -1,6 +1,6 @@
 const prisma = require('../../lib/prisma');
 const { processTutorTurn } = require('../../services/tutor-core/orchestrator');
-const { resolveOptionAnswer } = require('../../services/tutor-core/evaluator');
+const { scoredGoalIndex, goalCompletion } = require('../../services/tutor-core/state');
 const { searchYouTube } = require('../../services/media-search');
 const { getCachedDiagram } = require('../../services/tutor-core/diagram-cache');
 const { recordTurnLog, recordErrorIfWrong, updateDailyStudyStats, endChatSession, updateCurriculumSummary } = require('../../services/analytics/topic-data-collector');
@@ -47,6 +47,35 @@ function optionsFromDb(options) {
   });
 }
 
+function goalIndexFor(state, goals) {
+  return Math.max(0, Math.min(state ? scoredGoalIndex(state) || 0 : 0, goals.length - 1));
+}
+
+function incorrectFor(stats) {
+  const assistedCorrect = Object.values(stats.assessments || {})
+    .filter((slot) => slot.assessed && slot.first_correct === true && slot.outcome !== 'correct').length;
+  return Math.max(0, stats.total - stats.correct - assistedCorrect);
+}
+
+/** Student feedback never exposes a per-answer score or private evaluator rationale. */
+function correctionForStudent(turnResult) {
+  const correction = turnResult.userCorrection;
+  if (!correction) return null;
+  const verdict = turnResult.evaluatorResult?.is_correct;
+  if (typeof verdict !== 'boolean') return null;
+  return {
+    message_type: 'user_correction',
+    diff_html: correction.diff_html || null,
+    complete_answer: correction.complete_answer || null,
+    emoji: verdict === true ? '😊' : verdict === false ? '😅' : null,
+    feedback: {
+      is_correct: typeof verdict === 'boolean' ? verdict : null,
+      error_type: correction.feedback?.error_type || null,
+      explanation: correction.feedback?.explanation || turnResult.evaluatorResult?.feedback || null
+    }
+  };
+}
+
 /**
  * Handle POST /api/topic-chats/:topicId/message using Tutor-Core V2 Pipeline
  */
@@ -79,9 +108,11 @@ async function handleTopicChatMessageV2(req, res) {
       include: {
         chapter: {
           select: {
+            id: true,
+            subject_id: true,
             title: true,
             subject: {
-              select: { name: true }
+              select: { id: true, name: true }
             }
           }
         }
@@ -131,16 +162,9 @@ async function handleTopicChatMessageV2(req, res) {
       options: optionsFromDb(m.options)
     }));
 
-    // Resolve letter/number option (e.g. "A", "B", "1") to the full answer text if recent AI message had options
-    const prevAiMsg = parsedRecentMessages.find(m => m.sender === 'ai' && Array.isArray(m.options) && m.options.length > 0);
-    let effectiveMessage = (message || '').trim();
-    if (prevAiMsg && effectiveMessage) {
-      const resolved = resolveOptionAnswer(effectiveMessage, prevAiMsg.options);
-      if (resolved.isOption && resolved.resolvedText) {
-        effectiveMessage = resolved.resolvedText;
-      }
-    }
-
+    // Keep the student's answer intact. Only the evaluator may resolve an
+    // option against the current question, never an older MCQ in history.
+    const effectiveMessage = (message || '').trim();
     const chatHistory = [...parsedRecentMessages].reverse();
 
     // 4. Load previous session state from latest chat_process feedback
@@ -166,7 +190,7 @@ async function handleTopicChatMessageV2(req, res) {
     }
 
     // Determine currently active goal
-    const activeGoalIndex = previousState ? Math.min(previousState.goalIndex, topicGoals.length - 1) : 0;
+    const activeGoalIndex = goalIndexFor(previousState, topicGoals);
     const activeGoal = topicGoals[activeGoalIndex] || topicGoals[0];
 
     // 5. Create placeholder user message in admin_chat
@@ -216,15 +240,25 @@ async function handleTopicChatMessageV2(req, res) {
 
     const nextGoalIndex = turnResult.nextState.goalIndex;
     const isSessionWrapping = turnResult.nextState.phase === 'WRAP' || turnResult.nextState.phase === 'DONE';
+    const currentGoalIndex = isSessionWrapping ? activeGoalIndex : goalIndexFor(turnResult.nextState, topicGoals);
+    const publicCorrection = correctionForStudent(turnResult);
+    const allGoalsCompleted = topicGoals.length > 0 && topicGoals.every((_, i) => goalCompletion(turnResult.nextState, i));
+    const sessionCompleted = isSessionWrapping && (turnResult.session_completed === true ||
+      turnResult.masteryReport?.session_completed === true || turnResult.nextState.endedReason === 'complete');
+    const allGoalsCovered = sessionCompleted && allGoalsCompleted && turnResult.masteryReport?.recall_completed === true &&
+      turnResult.masteryReport?.goals_completed === topicGoals.length;
+    const sessionClosed = !!turnResult.masteryReport;
+    const masteryConfirmed = isSessionWrapping && turnResult.masteryReport?.mastery_confirmed === true;
+    const closingAlreadyPersisted = previousState?.phase === 'WRAP' || previousState?.phase === 'DONE';
 
     // 8. Update user message record in admin_chat
     const updatedUserMsg = await prisma.admin_chat.update({
       where: { id: userMessageRecord.id },
       data: {
         message: effectiveMessage || '',
-        message_type: turnResult.userCorrection ? 'user_correction' : 'text',
-        diff_html: turnResult.userCorrection?.diff_html || null,
-        emoji: turnResult.userCorrection?.emoji || (turnResult.evaluatorResult.is_correct ? '😊' : '😅')
+        message_type: publicCorrection ? 'user_correction' : 'text',
+        diff_html: publicCorrection?.diff_html || null,
+        emoji: publicCorrection?.emoji || null
       },
       select: {
         id: true,
@@ -240,7 +274,7 @@ async function handleTopicChatMessageV2(req, res) {
 
     // Link user message to goal progress
     if (activeGoal) {
-      const isGoalDone = activeGoalIndex < nextGoalIndex || isSessionWrapping;
+      const isGoalDone = goalCompletion(turnResult.nextState, activeGoalIndex);
       const stats = turnResult.nextState.perGoal?.[activeGoalIndex] || { total: 0, correct: 0 };
       await prisma.chat_goal_progress.create({
         data: {
@@ -249,7 +283,7 @@ async function handleTopicChatMessageV2(req, res) {
           user_id,
           num_questions: stats.total,
           num_correct: stats.correct,
-          num_incorrect: Math.max(0, stats.total - stats.correct),
+          num_incorrect: incorrectFor(stats),
           is_completed: isGoalDone
         }
       });
@@ -257,7 +291,7 @@ async function handleTopicChatMessageV2(req, res) {
 
     // 9. Persist AI message bubbles
     const savedAiMessages = [];
-    const currentGoalRecord = topicGoals[Math.min(nextGoalIndex, topicGoals.length - 1)] || activeGoal;
+    const currentGoalRecord = topicGoals[currentGoalIndex] || activeGoal;
 
     for (const bubble of turnResult.messages) {
       if (!bubble || (!bubble.message?.trim() && !bubble.options?.length)) continue;
@@ -284,8 +318,8 @@ async function handleTopicChatMessageV2(req, res) {
       });
 
       if (currentGoalRecord) {
-        const isGoalDone = nextGoalIndex < nextGoalIndex || isSessionWrapping;
-        const stats = turnResult.nextState.perGoal?.[nextGoalIndex] || { total: 0, correct: 0 };
+        const isGoalDone = goalCompletion(turnResult.nextState, currentGoalIndex);
+        const stats = turnResult.nextState.perGoal?.[currentGoalIndex] || { total: 0, correct: 0 };
         await prisma.chat_goal_progress.create({
           data: {
             chat_id: aiRecord.id,
@@ -293,7 +327,7 @@ async function handleTopicChatMessageV2(req, res) {
             user_id,
             num_questions: stats.total,
             num_correct: stats.correct,
-            num_incorrect: Math.max(0, stats.total - stats.correct),
+            num_incorrect: incorrectFor(stats),
             is_completed: isGoalDone
           }
         });
@@ -306,19 +340,13 @@ async function handleTopicChatMessageV2(req, res) {
     }
 
     // 9b. If Session is wrapping or done, persist Session Summary & Revision Sheet cards
-    if (isSessionWrapping && turnResult.masteryReport) {
+    if (isSessionWrapping && turnResult.masteryReport && !closingAlreadyPersisted) {
+      // Preserve coverage, incomplete recall and assisted evidence on refresh.
       const summaryPayload = {
-        score_percent: turnResult.masteryReport.score_percent,
-        overall_score_percent: turnResult.masteryReport.overall_score_percent,
-        star_rating: turnResult.masteryReport.star_rating,
-        performance_level: turnResult.masteryReport.performance_level,
-        total_questions: turnResult.masteryReport.total_questions,
-        correct_answers: turnResult.masteryReport.correct_answers,
-        incorrect_answers: turnResult.masteryReport.incorrect_answers,
-        top_error_types: turnResult.masteryReport.top_error_types,
-        weak_goals: turnResult.masteryReport.weak_goals,
-        has_weak_areas: turnResult.masteryReport.has_weak_areas,
-        goal_performance: turnResult.masteryReport.goal_performance
+        ...turnResult.masteryReport,
+        session_completed: sessionCompleted,
+        session_closed: sessionClosed,
+        mastery_confirmed: masteryConfirmed
       };
 
       const summaryRecord = await prisma.admin_chat.create({
@@ -355,7 +383,7 @@ async function handleTopicChatMessageV2(req, res) {
               num_questions: 0,
               num_correct: 0,
               num_incorrect: 0,
-              is_completed: isSessionWrapping
+              is_completed: goalCompletion(turnResult.nextState, currentGoalIndex)
             }
           });
         } catch (e) {}
@@ -371,11 +399,11 @@ async function handleTopicChatMessageV2(req, res) {
 
       const revisionPayload = turnResult.revisionSheet || {
         topic: topic.title,
-        key_concepts: topicGoals.map(g => `${g.title}: ${g.description || 'Core concept mastered.'}`),
+        key_concepts: topicGoals.map(g => `${g.title}: ${g.description || 'Key concept to revise.'}`),
         definitions: topicGoals.map(g => ({ term: g.title, definition: g.description || `Key concept in ${topic.title}` })),
         quick_recall_tips: (turnResult.masteryReport?.key_errors || []).map(e => `Common mistake to avoid: ${e.type}`),
         practice_next_time: `Notice how ${topic.title} applies in everyday technology and science.`,
-        key_points: topicGoals.map(g => `${g.title}: ${g.description || 'Core concept mastered.'}`),
+        key_points: topicGoals.map(g => `${g.title}: ${g.description || 'Key concept to revise.'}`),
         common_mistakes: (turnResult.masteryReport?.key_errors || []).map(e => `${e.type} (${e.count}x)`),
         your_weak_spots: (turnResult.masteryReport?.areas_to_improve || []).map(a => a.goal)
       };
@@ -446,32 +474,30 @@ async function handleTopicChatMessageV2(req, res) {
       }
     }
 
-    // 10. Sync goal progress in database for all completed goals
+    // 10. Sync completion from assessment evidence, including incomplete exits.
     for (let i = 0; i < topicGoals.length; i++) {
       const g = topicGoals[i];
-      const isGoalDone = i < nextGoalIndex || isSessionWrapping;
+      const isGoalDone = goalCompletion(turnResult.nextState, i);
       const stats = turnResult.nextState.perGoal?.[i] || { total: 0, correct: 0 };
 
-      if (isGoalDone) {
-        await prisma.chat_goal_progress.updateMany({
-          where: { user_id, goal_id: g.id },
-          data: {
-            is_completed: true,
-            num_questions: stats.total,
-            num_correct: stats.correct,
-            num_incorrect: Math.max(0, stats.total - stats.correct),
-            updated_at: new Date()
-          }
-        });
-      }
+      await prisma.chat_goal_progress.updateMany({
+        where: { user_id, goal_id: g.id },
+        data: {
+          is_completed: isGoalDone,
+          num_questions: stats.total,
+          num_correct: stats.correct,
+          num_incorrect: incorrectFor(stats),
+          updated_at: new Date()
+        }
+      });
     }
 
     // Sync user_topic_progress for the overall topic
-    const isTopicCompleted = isSessionWrapping || turnResult.all_goals_completed || nextGoalIndex >= topicGoals.length;
-    const completedGoalsCount = isTopicCompleted ? topicGoals.length : Math.min(nextGoalIndex, topicGoals.length);
+    const isTopicCompleted = allGoalsCovered;
+    const completedGoalsCount = topicGoals.filter((_, i) => goalCompletion(turnResult.nextState, i)).length;
     const completionPercent = topicGoals.length > 0
-      ? (isTopicCompleted ? 100 : Math.round((completedGoalsCount / topicGoals.length) * 100))
-      : 100;
+      ? Math.round((completedGoalsCount / topicGoals.length) * 100)
+      : 0;
 
     await prisma.user_topic_progress.upsert({
       where: {
@@ -494,7 +520,8 @@ async function handleTopicChatMessageV2(req, res) {
       }
     });
 
-    if (isTopicCompleted) {
+    // Early termination still closes time tracking, without completing the topic.
+    if (isSessionWrapping && !closingAlreadyPersisted) {
       try {
         await prisma.study_sessions.updateMany({
           where: {
@@ -527,12 +554,13 @@ async function handleTopicChatMessageV2(req, res) {
       data: {
         chat_id: userMessageRecord.id,
         user_message: message || '',
-        corrected_message: turnResult.userCorrection?.complete_answer || null,
+        corrected_message: publicCorrection?.complete_answer || null,
         ai_response: JSON.stringify(turnResult.messages),
         wrong_message: turnResult.evaluatorResult.is_correct === false ? message : null,
         feedback: {
           session_state: turnResult.nextState,
           evaluator_result: turnResult.evaluatorResult,
+          user_correction: publicCorrection,
           state_instruction: turnResult.stateInstruction,
           mastery_report: turnResult.masteryReport || null
         }
@@ -540,18 +568,23 @@ async function handleTopicChatMessageV2(req, res) {
     });
 
     // 12. Record learning_turns analytics for Mastery Engine
-    if (turnResult.evaluatorResult.intent === 'ANSWER') {
+    if (turnResult.gradedThisTurn && typeof turnResult.evaluatorResult.is_correct === 'boolean') {
       try {
         await prisma.learning_turns.create({
           data: {
             topic_id: parseInt(topicId),
             user_id,
             chat_id: userMessageRecord.id,
-            is_correct: turnResult.evaluatorResult.is_correct || false,
-            score_percent: turnResult.evaluatorResult.score_percent || 0,
+            goal_id: activeGoal?.id || null,
+            question_text: previousState?.lastQuestionText || null,
+            user_answer_raw: effectiveMessage,
+            is_correct: turnResult.evaluatorResult.is_correct,
+            score_percent: turnResult.evaluatorResult.score_percent ?? null,
             error_type: turnResult.evaluatorResult.error_type || null,
             corrected_answer: turnResult.evaluatorResult.complete_answer || null,
-            diff_html: turnResult.userCorrection?.diff_html || null
+            diff_html: publicCorrection?.diff_html || null,
+            feedback_text: publicCorrection?.feedback.explanation || null,
+            feedback_json: publicCorrection?.feedback || null
           }
         });
       } catch (ltErr) {
@@ -567,6 +600,7 @@ async function handleTopicChatMessageV2(req, res) {
         chapterId: topic.chapter?.id || null,
         subjectId: topic.chapter?.subject_id || topic.subject_id || null,
         goalId: activeGoal?.id || null,
+        goalIndex: activeGoalIndex,
         chatId: userMessageRecord.id,
         userMessage: effectiveMessage
       };
@@ -574,11 +608,11 @@ async function handleTopicChatMessageV2(req, res) {
       const turnLogId = await recordTurnLog(turnResult, turnLogContext);
 
       // Find the last question from chat history for error context
-      const lastQ = chatHistory.find(m => m.sender === 'ai' && m.message && /[?？]/.test(m.message));
+      const lastQ = [...chatHistory].reverse().find(m => m.sender === 'ai' && m.message && /[?？]/.test(m.message));
 
       await recordErrorIfWrong(turnResult, {
         ...turnLogContext,
-        lastQuestionText: lastQ?.message || null
+        lastQuestionText: previousState?.lastQuestionText || lastQ?.message || null
       }, turnLogId);
 
       await updateDailyStudyStats(user_id, turnResult, parseInt(topicId));
@@ -588,8 +622,9 @@ async function handleTopicChatMessageV2(req, res) {
 
     // 13. Asynchronous / On-Demand Media (YouTube & Diagrams)
     let fetchedVideos = [];
-    const isStruggling = turnResult.nextState.consecutiveWrong >= 1 || turnResult.nextState.stuckStreak >= 1;
-    const wantsDiagram = /\b(diagram|drawing|chart|flowchart|mermaid|visual)\b/i.test(message || '');
+    // Media follows the state machine's attachment plan. A request or a wrong
+    // answer cannot bypass assessment-only ROUNDUP or a terminal phase.
+    const mediaAllowed = !['ROUNDUP', 'WRAP', 'DONE'].includes(turnResult.nextState.phase);
 
     const linkMediaToGoal = async (chatId) => {
       if (!currentGoalRecord) return;
@@ -602,13 +637,13 @@ async function handleTopicChatMessageV2(req, res) {
             num_questions: 0,
             num_correct: 0,
             num_incorrect: 0,
-            is_completed: isSessionWrapping
+            is_completed: goalCompletion(turnResult.nextState, currentGoalIndex)
           }
         });
       } catch (e) {}
     };
 
-    if (wantsVideo || isStruggling || turnResult.attachments?.includes('video')) {
+    if (mediaAllowed && turnResult.attachments?.includes('video')) {
       try {
         fetchedVideos = await searchYouTube(`${topic.title} ${currentGoalRecord?.title || ''}`);
       } catch (ytErr) {
@@ -616,9 +651,8 @@ async function handleTopicChatMessageV2(req, res) {
       }
     }
 
-    // Attach Mermaid diagram whenever student is struggling ("I don't know"), asked for a diagram/video, or turn carries it
-    let mermaidDiagram = turnResult.mermaid_diagram;
-    if (!mermaidDiagram && (isStruggling || wantsDiagram || wantsVideo || turnResult.attachments?.includes('diagram'))) {
+    let mermaidDiagram = mediaAllowed && turnResult.attachments?.includes('diagram') ? turnResult.mermaid_diagram : null;
+    if (!mermaidDiagram && mediaAllowed && turnResult.attachments?.includes('diagram')) {
       mermaidDiagram = getCachedDiagram(topic.title, currentGoalRecord?.title || topic.title, currentGoalRecord);
     }
 
@@ -747,24 +781,24 @@ async function handleTopicChatMessageV2(req, res) {
     });
 
     const updatedGoals = rawUpdatedGoals.map((g, idx) => {
-      const isDone = idx < nextGoalIndex || isSessionWrapping;
+      const isDone = goalCompletion(turnResult.nextState, idx);
       const existingProgress = g.chat_goal_progress?.[0];
       const goalStats = turnResult.nextState.perGoal?.[idx] || { total: 0, correct: 0 };
       return {
         ...g,
-        is_completed: isDone || existingProgress?.is_completed || false,
+        is_completed: isDone,
         chat_goal_progress: [
           {
             id: existingProgress?.id || 0,
             goal_id: g.id,
             user_id,
-            is_completed: isDone || existingProgress?.is_completed || false,
-            num_questions: existingProgress?.num_questions ?? goalStats.total,
-            num_correct: existingProgress?.num_correct ?? goalStats.correct,
-            num_incorrect: existingProgress?.num_incorrect ?? Math.max(0, goalStats.total - goalStats.correct),
-            score_percent: goalStats.total > 0
+            is_completed: isDone,
+            num_questions: goalStats.total,
+            num_correct: goalStats.correct,
+            num_incorrect: incorrectFor(goalStats),
+            ...(isSessionWrapping ? { score_percent: goalStats.total > 0
               ? Math.round((goalStats.correct / goalStats.total) * 100)
-              : (existingProgress?.score_percent || 0),
+              : null } : {}),
             updated_at: new Date()
           }
         ]
@@ -777,11 +811,15 @@ async function handleTopicChatMessageV2(req, res) {
     return res.status(201).json({
       userMessage: updatedUserMsg,
       aiMessages: savedAiMessages,
-      feedback: turnResult.userCorrection?.feedback || null,
-      userCorrection: turnResult.userCorrection || null,
-      all_goals_completed: turnResult.all_goals_completed,
+      feedback: publicCorrection?.feedback || null,
+      userCorrection: publicCorrection,
+      all_goals_completed: allGoalsCovered,
+      session_completed: sessionCompleted,
+      session_closed: sessionClosed,
+      mastery_confirmed: masteryConfirmed,
+      ...(sessionClosed ? { masteryReport: turnResult.masteryReport, revisionSheet: turnResult.revisionSheet || null } : {}),
       goals: updatedGoals,
-      mermaid_diagram: turnResult.mermaid_diagram || null,
+      mermaid_diagram: mermaidDiagram || null,
       youtube_video: fetchedVideos.length > 0 ? {
         title: fetchedVideos[0].title,
         search_query: `${topic.title} ${currentGoalRecord?.title || ''}`

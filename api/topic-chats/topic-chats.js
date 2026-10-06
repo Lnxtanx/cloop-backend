@@ -3,6 +3,7 @@ const router = express.Router()
 const axios = require('axios')
 const { authenticateToken } = require('../../middleware/auth')
 const { generateTopicChatResponse, generateTopicGreeting, generateTopicGoals } = require('../../services/topic-chat/topic-chat')
+const { publicChatProcess } = require('../../services/tutor-core/public-feedback')
 const { invokeModel } = require('../../services/ai/deepseek-client')
 const { createLearningTurn, incrementExplainCount, calculateMasteryScore } = require('../../services/learning_turns_tracker')
 const { searchYouTube, searchImages } = require('../../services/media-search')
@@ -357,7 +358,7 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 			if (msg.sender === 'user') {
 				if (turn && (turn.diff_html || turn.is_correct !== undefined)) {
 					const emoji = msg.emoji || turn.emoji || (turn.is_correct ? '😊' :
-						(turn.score_percent === 0 ? '😓' : turn.score_percent < 50 ? '😢' : '😅'))
+						'😅')
 					
 					chatMessages.push({
 						...msg,
@@ -369,9 +370,10 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 						emoji: emoji,
 						feedback: {
 							is_correct: turn.is_correct,
-							score_percent: turn.score_percent,
 							error_type: turn.error_type || null,
-						}
+							explanation: turn.feedback_text || (turn.is_correct ? 'Your answer meets the question requirements.' : 'Review the corrected concept.'),
+						},
+						complete_answer: turn.corrected_answer || null
 					})
 				} else {
 					// Plain user message
@@ -721,7 +723,8 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 			},
 			messages: chatMessages.filter(m => m.sender === 'user'),
 			aiMessages: chatMessages.filter(m => m.sender === 'ai'),
-			rawProcesses: rawProcesses,
+			// Question rubrics, answer keys, evaluator reasoning, and live tallies stay server-side.
+			rawProcesses: rawProcesses.map(publicChatProcess),
 			goals: updatedGoals
 		})
 	} catch (err) {
@@ -2895,4 +2898,3 @@ router.post('/:topicId/update-time', authenticateToken, async (req, res) => {
 })
 
 module.exports = router
-

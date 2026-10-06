@@ -21,6 +21,10 @@
  *   the round-up = 3 scored questions per goal. The round-up touches every goal,
  *   so a normal session assesses the whole syllabus before scoring.
  *
+ * Each goal/phase has one assessment slot. Its first assessable response fixes
+ * credit; retries are diagnostic attempts. Assistance cannot erase an initial
+ * error, and skipped or unavailable assessments are reported separately.
+ *
  * Every function here is pure: same input, same output, no I/O, no clock, no
  * randomness. `advance` never mutates the state it is given.
  */
@@ -50,7 +54,7 @@ function normalizeIntent(intent) {
   return INTENT_ALIASES[String(intent).trim().toUpperCase()] || "HELP";
 }
 
-/** 1 written answer per goal. Fast, crisp pacing (2 questions per goal). */
+/** 1 written teaching question per goal, followed by MCQ and final recall. */
 const OPEN_PER_GOAL = 1;
 
 /** 1 multiple-choice check per goal. Assessment only, after dialogue. */
@@ -80,6 +84,9 @@ const LADDER_DEPTH = 3;
 
 /** Hard stop on total turns across the session. */
 const MAX_TURNS = 40;
+
+/** A grading outage may hold a question, but must not trap the student. */
+const MAX_UNVERIFIED_ATTEMPTS = 3;
 
 /** Mastery bands, applied to a goal's accuracy. */
 const BANDS = [
@@ -113,7 +120,11 @@ function initialState(goalTotal) {
     wantsVideo: false,
     lastInstruction: null,
     instructionRepeats: 0,
-    perGoal: Array.from({ length: total }, () => ({ correct: 0, total: 0, errors: [] })),
+    assessmentAdvanced: true,
+    questionAssisted: false,
+    evaluatorUnavailableStreak: 0,
+    assessmentVersion: 2,
+    perGoal: Array.from({ length: total }, () => ({ correct: 0, total: 0, errors: [], assessments: {} })),
     endedReason: null,
   };
 }
@@ -129,6 +140,13 @@ function questionTypeFor(phase) {
 /** Whether an answer in this phase counts toward mastery. */
 function isScored(phase) {
   return phase === "DIALOGUE" || phase === "CHECK" || phase === "ROUNDUP";
+}
+
+/** A goal is completed only after all three slots are assessed and finalized. */
+function goalCompletion(state, index) {
+  const assessments = state?.perGoal?.[index]?.assessments;
+  return ["DIALOGUE", "CHECK", "ROUNDUP"].every((phase) =>
+    assessments?.[phase]?.completed === true && assessments?.[phase]?.assessed === true);
 }
 
 /**
@@ -162,15 +180,69 @@ function attachmentsFor(state) {
   }
 }
 
-/** Advance the session by one turn. */
+/** Copy nested evidence, including sessions persisted before slot scoring. */
+function copyGoalEvidence(goal = {}) {
+  const assessments = Object.fromEntries(Object.entries(goal.assessments || {}).map(([phase, slot]) => [phase, {
+    ...slot,
+    attempts: (slot.attempts || []).map((attempt) => ({ ...attempt })),
+  }]));
+  return {
+    ...goal,
+    correct: Number.isFinite(goal.correct) ? goal.correct : 0,
+    total: Number.isFinite(goal.total) ? goal.total : 0,
+    errors: [...(goal.errors || [])],
+    assessments,
+  };
+}
+
+/** One scored slot per goal/phase. Retries are diagnostic evidence only. */
+function assessmentFor(state) {
+  const goal = state.perGoal[scoredGoalIndex(state)];
+  if (!goal || !isScored(state.phase)) return null;
+  if (!goal.assessments[state.phase]) {
+    goal.assessments[state.phase] = {
+      outcome: "pending", assessed: false, assisted: false, completed: false, attempts: [],
+    };
+  }
+  return goal.assessments[state.phase];
+}
+
+/** Reset question-specific pressure whenever a new assessment opens. */
+function advanceQuestion(prev, state, { reveal = false } = {}) {
+  state.revealPending = reveal;
+  state.revealGoalIndex = reveal ? scoredGoalIndex(prev) : null;
+  state.revealPhase = reveal ? prev.phase : null;
+  state.phase = nextPhase(prev, state);
+  state.lastQuestionType = questionTypeFor(state.phase);
+  state.stuckStreak = 0;
+  state.consecutiveWrong = 0;
+  state.evaluatorUnavailableStreak = 0;
+  state.reteachPending = false;
+  state.questionAssisted = false;
+  state.assessmentAdvanced = true;
+}
+
+/** Advance the session by one turn; grade the final allowed answer first. */
 function advance(state, event = {}) {
   const s = {
     ...state,
-    perGoal: state.perGoal.map((g) => ({ ...g, errors: [...g.errors] })),
+    perGoal: (state.perGoal || []).map(copyGoalEvidence),
+    assessmentAdvanced: false,
   };
   const intent = normalizeIntent(event.intent);
-  s.totalTurns = state.totalTurns + 1;
+  s.totalTurns = (state.totalTurns || 0) + 1;
   s.wantsVideo = !!event.wantsVideo;
+
+  // All branches apply the cap after processing the current response.
+  const finish = () => {
+    if (s.totalTurns >= MAX_TURNS && s.phase !== "DONE" && s.phase !== "WRAP") {
+      s.phase = "WRAP";
+      s.endedReason = "turn_limit";
+    } else if (s.phase === "WRAP" && !s.endedReason) {
+      s.endedReason = "complete";
+    }
+    return s;
+  };
 
   if (event.questionText) s.lastQuestionText = event.questionText;
   if (event.questionOptions !== undefined) s.lastQuestionOptions = event.questionOptions;
@@ -183,70 +255,100 @@ function advance(state, event = {}) {
     return s;
   }
 
-  // Out of turns: finish properly, with a report.
-  if (s.totalTurns >= MAX_TURNS) {
-    s.phase = "WRAP";
-    s.endedReason = "turn_limit";
-    return s;
-  }
-
   // ── Repeated off-topic answers close the session kindly ──────────────────
   if (intent === "OFF_TOPIC" || event.offTopic) {
-    s.offTopicStreak = state.offTopicStreak + 1;
+    s.evaluatorUnavailableStreak = 0;
+    s.offTopicStreak = (state.offTopicStreak || 0) + 1;
     if (s.offTopicStreak >= OFF_TOPIC_STRIKES) {
       s.phase = "WRAP";
       s.endedReason = "off_topic";
     }
-    return s;
+    return finish();
   }
   s.offTopicStreak = 0;
 
+  const slot = isScored(state.phase) ? assessmentFor(s) : null;
+  const previousAssisted = event.previousQuestionAssisted === true || state.questionAssisted === true;
+  if (slot && previousAssisted) slot.assisted = true;
+
   // ── Non-answers hold the phase, but move forward after STUCK_LIMIT ───────
   if (intent !== "ANSWER") {
+    s.evaluatorUnavailableStreak = 0;
+    if (slot) {
+      slot.attempts.push({ intent, correct: null, assisted: previousAssisted, evaluator_status: "not_applicable" });
+      if (intent === "HELP" || intent === "IDK") slot.assisted = true;
+    }
     s.stuckStreak = (state.stuckStreak || 0) + 1;
     s.reteachPending = intent === "HELP" || intent === "IDK";
     if (s.stuckStreak >= STUCK_LIMIT) {
-      s.stuckStreak = 0;
-      s.reteachPending = false;
-      s.revealPending = true; // explain the concept and reveal the answer
-      s.phase = nextPhase(state, s);
-      s.lastQuestionType = questionTypeFor(s.phase);
+      if (slot) {
+        if (!slot.assessed) slot.outcome = "skipped";
+        slot.completed = true;
+      }
+      advanceQuestion(state, s, { reveal: true });
     }
-    return s;
+    return finish();
   }
   s.stuckStreak = 0;
   s.revealPending = false;
 
-  // ── Record mastery evidence ──────────────────────────────────────────────
-  if (isScored(state.phase)) {
-    const g = s.perGoal[scoredGoalIndex(state)];
-    if (g) {
-      g.total += 1;
-      if (event.correct) g.correct += 1;
-      else if (event.errorType) g.errors.push(event.errorType);
+  // A failed evaluator is unknown evidence, never a correct-ish answer.
+  const unavailable = event.evaluationStatus === "unavailable" || typeof event.correct !== "boolean";
+  if (unavailable) {
+    if (slot) {
+      slot.attempts.push({ intent, correct: null, assisted: previousAssisted, evaluator_status: "unavailable" });
+      if (!slot.assessed) slot.outcome = "unverified";
     }
-    s.totalQuestions = state.totalQuestions + 1;
+    s.evaluatorUnavailableStreak = (state.evaluatorUnavailableStreak || 0) + 1;
+    s.reteachPending = false;
+    if (s.evaluatorUnavailableStreak >= MAX_UNVERIFIED_ATTEMPTS) {
+      if (slot) slot.completed = true;
+      advanceQuestion(state, s);
+    }
+    return finish();
+  }
+  s.evaluatorUnavailableStreak = 0;
+
+  // The first assessable response fixes credit for this slot. Later hints and
+  // easier checks can teach, but cannot retrospectively certify recall.
+  if (slot) {
+    const g = s.perGoal[scoredGoalIndex(state)];
+    slot.attempts.push({
+      intent, correct: event.correct, assisted: previousAssisted || slot.assisted,
+      evaluator_status: "available", error_type: event.errorType || null,
+    });
+    if (!slot.assessed) {
+      slot.assessed = true;
+      slot.first_correct = event.correct;
+      slot.outcome = event.correct === true && !slot.assisted ? "correct"
+        : (slot.assisted ? "assisted" : "incorrect");
+      g.total += 1;
+      if (slot.outcome === "correct") g.correct += 1;
+      s.totalQuestions = (state.totalQuestions || 0) + 1;
+    }
+    if (event.correct === false && event.errorType) g.errors.push(event.errorType);
   }
 
   if (state.phase === "PROBE") s.probeAnswer = event.answerText || null;
 
   // ── A wrong answer in an assessed phase is re-taught before moving on ─────
   if (event.correct === false && isScored(state.phase)) {
-    s.consecutiveWrong = state.consecutiveWrong + 1;
+    s.consecutiveWrong = (state.consecutiveWrong || 0) + 1;
     if (s.consecutiveWrong < MAX_ATTEMPTS) {
       s.reteachPending = true;
-      return s;
+      if (slot) slot.assisted = true;
+      return finish();
     }
+    if (slot) slot.completed = true;
+    advanceQuestion(state, s, { reveal: true });
+    return finish();
   }
-  s.reteachPending = false;
-  s.consecutiveWrong = 0;
-
-  s.phase = nextPhase(state, s);
-  s.lastQuestionType = questionTypeFor(s.phase);
-  return s;
+  if (slot) slot.completed = true;
+  advanceQuestion(state, s);
+  return finish();
 }
 
-/** The transition table: PROBE -> THEORY -> OBJECTIVES -> DIALOGUE -> CHECK -> (next goal) -> WRAP */
+/** Teaching loop followed by one ROUNDUP recall per goal, then WRAP. */
 function nextPhase(prev, s) {
   switch (prev.phase) {
     case "PROBE":
@@ -358,6 +460,12 @@ function baseInstruction(state, intent) {
 
 /** What the generator should be told to do this turn. */
 function instructionFor(state, event = {}) {
+  // Infrastructure failures do not show that the student is struggling.
+  // A neutral retry preserves independent assessment instead of leaking a
+  // hint through the anti-repetition ladder. Repeats are bounded separately.
+  if (state.phase !== "WRAP" && state.phase !== "DONE" && state.evaluatorUnavailableStreak > 0) {
+    return "reask_shorter";
+  }
   const intent = normalizeIntent(event.intent);
   const base = baseInstruction(state, intent);
   if (base === "wrap_with_report" || base === "close_off_topic" || base === "session_over") {
@@ -367,7 +475,9 @@ function instructionFor(state, event = {}) {
   const pressure = intent === "ANSWER" ? 0 : Math.max(0, (state.stuckStreak || 0) - 1);
   let next = escalate(base, Math.min(pressure, LADDER_DEPTH));
 
-  if (next === state.lastInstruction) next = escalate(next, 1);
+  // Repeating the same recall directive for a NEW goal is correct. Escalating
+  // it into a hint would leak the answer before that goal was assessed.
+  if (!state.assessmentAdvanced && next === state.lastInstruction) next = escalate(next, 1);
   return next;
 }
 
@@ -391,6 +501,7 @@ module.exports = {
   MAX_ATTEMPTS,
   OFF_TOPIC_STRIKES,
   MAX_TURNS,
+  MAX_UNVERIFIED_ATTEMPTS,
   BANDS,
   initialState,
   advance,
@@ -398,6 +509,7 @@ module.exports = {
   instructionFor,
   questionTypeFor,
   isScored,
+  goalCompletion,
   scoredGoalIndex,
   attachmentsFor,
   bandFor,

@@ -239,56 +239,13 @@ Return ONLY valid JSON.`;
 /**
  * Generate clear, measurable learning goals for a topic
  */
-async function generateTopicGoals(topicTitle, topicContent, userId = null) {
-    const topicSummary = truncateContent(topicContent, 250);
-    const systemPrompt = 'You are an expert educational content generator that creates clear, measurable learning objectives. Always respond with valid JSON only.';
-
-    const userPrompt = `You are an expert curriculum designer. For the following topic, generate a list of clear, measurable learning goals (minimum 4). Use specific action verbs (e.g., identify, describe, analyze, demonstrate). Provide the response as a JSON object with the shape:
-{ "goals": [ { "title": "Goal title (short)", "description": "One-sentence measurable description" }, ... ] }
-
-Topic: ${topicTitle}
-Summary: ${topicSummary}
-
-Return ONLY valid JSON.`;
-
-    try {
-        const responseText = await invokeModel(systemPrompt, [{ role: 'user', content: userPrompt }], {
-            temperature: 0.3,
-            userId,
-            featureArea: 'curriculum_generation',
-            subFeature: 'goal_gen',
-            metadata: { topicTitle }
-        });
-
-        const parsed = extractJson(responseText);
-        if (!parsed) {
-            throw new Error('Failed to extract valid JSON from DeepSeek response');
-        }
-
-        let goalsArray = [];
-        if (Array.isArray(parsed)) {
-            goalsArray = parsed;
-        } else if (parsed && Array.isArray(parsed.goals)) {
-            goalsArray = parsed.goals;
-        } else if (parsed && parsed.items && Array.isArray(parsed.items)) {
-            goalsArray = parsed.items;
-        }
-
-        goalsArray = goalsArray.map(g => ({
-            title: (g.title || g.name || '').toString().trim(),
-            description: (g.description || g.desc || '').toString().trim(),
-        })).filter(g => g.title || g.description);
-
-        if (goalsArray.length === 0) {
-            throw new Error('No valid goals extracted from response');
-        }
-
-        console.log(`✓ Goals generated | Count: ${goalsArray.length}`);
-        return { goals: goalsArray };
-    } catch (error) {
-        console.error('❌ Error generating topic goals:', error.message);
-        throw new Error(`Failed to generate topic goals: ${error.message}`);
-    }
+async function generateTopicGoals(topicTitle, topicContent, userIdOrOptions = null) {
+    // One shared goal contract for chat, personal curriculum, and global
+    // curriculum. Preserve the historic third-argument userId signature.
+    const options = userIdOrOptions && typeof userIdOrOptions === 'object'
+        ? userIdOrOptions
+        : { userId: userIdOrOptions };
+    return require('../topic-chat/topic-chat-helpers').generateTopicGoals(topicTitle, topicContent, options);
 }
 
 module.exports = {

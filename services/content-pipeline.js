@@ -175,18 +175,21 @@ async function generateTopicsForChapter(userId, subjectId, chapter, gradeLevel, 
 /**
  * Generate learning goals for a specific topic
  */
-async function generateGoalsForTopic(topic, logger = console) {
+async function generateGoalsForTopic(topic, logger = console, context = {}) {
 	logger.log(`  Generating goals for Topic: ${topic.title}`);
 
 	try {
 		// Generate initial goals
-		const goalsData = await generateTopicGoals(topic.title, topic.content, topic.user_id);
+		const goalsData = await generateTopicGoals(topic.title, topic.content, { ...context, userId: topic.user_id });
 
-		// Ensure we have at least 4 goals
+		// Narrow syllabus topics can have two disjoint goals.
 		let goals = goalsData.goals || [];
-		if (goals.length < 4) {
+		if (goals.length < 2) {
 			logger.log(`  ⚠️ Insufficient goals (${goals.length}) for ${topic.title}, generating more...`);
-			goals = await regenerateGoalsUntilMinimum(topic);
+			goals = await regenerateGoalsUntilMinimum(topic, 2, context);
+		}
+		if (goals.length < 2) {
+			throw new Error(`Topic ${topic.id} has no complete supported goal set after retries`);
 		}
 
 		// Store goals in database
@@ -208,8 +211,7 @@ async function generateGoalsForTopic(topic, logger = console) {
 		return createdGoals;
 	} catch (error) {
 		logger.error(`  ✗ Error generating goals for topic ${topic.title}:`, error.message);
-		// Don't throw - allow pipeline to continue even if goal generation fails
-		return [];
+		throw error;
 	}
 }
 
@@ -377,13 +379,13 @@ async function runContentGenerationPipeline(userId, subjectId) {
 					where: { topic_id: topic.id }
 				});
 
-				if (existingGoalsCount >= 4) {
+				if (existingGoalsCount >= 2) {
 					logger.log(`Goals already exist for topic: ${topic.title}, skipping goal generation.`);
 					totalGoalsCount += existingGoalsCount;
 					continue;
 				}
 
-				const goals = await generateGoalsForTopic(topic, logger);
+				const goals = await generateGoalsForTopic(topic, logger, { board, classLevel: grade_level });
 				totalGoalsCount += goals.length;
 
 				// Small delay to avoid rate limiting
@@ -454,6 +456,7 @@ async function runContentGenerationPipeline(userId, subjectId) {
 		if (user) {
 			await updateGenerationStatus(userId, subjectId, user.grade_level, user.board, {
 				status: 'failed',
+				goals_generated: false,
 				error_message: error.message,
 			});
 		}
@@ -511,20 +514,20 @@ async function runPipelineForAllUserSubjects(userId) {
 }
 
 /**
- * Regenerate goals until we have at least 4 valid goals
+ * Retry a complete goal set; never merge independently generated curricula.
  */
-async function regenerateGoalsUntilMinimum(topic, minimumGoals = 4) {
+async function regenerateGoalsUntilMinimum(topic, minimumGoals = 2, context = {}) {
 	let attempts = 0;
 	const maxAttempts = 3;
 	let goals = [];
 
 	while (goals.length < minimumGoals && attempts < maxAttempts) {
-		const newGoals = await generateTopicGoals(topic.title, topic.content);
-		goals = [...new Set([...goals, ...newGoals.goals])]; // Deduplicate goals
+		const newGoals = await generateTopicGoals(topic.title, topic.content, { ...context, userId: topic.user_id });
+		goals = newGoals.goals;
 		attempts++;
 	}
 
-	return goals.slice(0, Math.max(minimumGoals, goals.length));
+	return goals;
 }
 
 /**
@@ -534,7 +537,7 @@ async function generateMissingGoals() {
 	console.log('\n=== [content-pipeline] Checking for topics without goals ===');
 
 	try {
-		// Find all topics that don't have any goals or have fewer than 4 goals
+		// Find topics with no goals; valid two-goal topics need no padding.
 		const topicsWithoutGoals = await prisma.topics.findMany({
 			where: {
 				topic_goals: {
@@ -598,7 +601,7 @@ async function generateMissingGoals() {
 		console.log(`Failed: ${failed}`);
 
 		return {
-			success: true,
+			success: failed === 0,
 			total: topicsWithoutGoals.length,
 			generated,
 			failed
@@ -716,4 +719,3 @@ module.exports = {
 	generateMissingGoals,
 	generateGoalsForTopic,
 };
-
