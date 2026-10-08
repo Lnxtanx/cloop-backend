@@ -39,9 +39,11 @@ async function resolveTopicIntelligence(topicOrId, prismaClient = null, options 
 
   // 2. Cache miss: Fetch surrounding curriculum context
   let topicRecord = typeof topicOrId === 'object' && topicOrId ? topicOrId : null;
+  const needsFetch = !topicRecord || !topicRecord.chapter?.topics ||
+    typeof topicRecord.chapter?.order !== 'number' || typeof topicRecord.order !== 'number';
   try {
-    if ((!topicRecord || !topicRecord.chapter) && prisma?.global_topics?.findUnique) {
-      topicRecord = await prisma.global_topics.findUnique({
+    if (needsFetch && prisma?.global_topics?.findUnique) {
+      const fullTopic = await prisma.global_topics.findUnique({
         where: { id: topicId },
         include: {
           chapter: {
@@ -55,6 +57,9 @@ async function resolveTopicIntelligence(topicOrId, prismaClient = null, options 
           },
         },
       });
+      if (fullTopic) {
+        topicRecord = fullTopic;
+      }
     }
   } catch (topicFetchErr) {
     console.warn(`[AKG Service] Topic fetch error for topic ${topicId}:`, topicFetchErr.message);
@@ -67,21 +72,31 @@ async function resolveTopicIntelligence(topicOrId, prismaClient = null, options 
   // Determine preceding and succeeding topics from chapter topics array
   if (topicRecord?.chapter?.topics && Array.isArray(topicRecord.chapter.topics)) {
     const sorted = topicRecord.chapter.topics;
-    const currentOrder = topicRecord.order ?? sorted.find(t => t.id === topicId)?.order;
-    if (typeof currentOrder === 'number') {
+    const currentOrder = typeof topicRecord.order === 'number'
+      ? topicRecord.order
+      : sorted.find(t => t.id === topicId)?.order;
+    if (typeof currentOrder === 'number' && Number.isInteger(currentOrder)) {
       precedingTopic = sorted.find(t => t.order === currentOrder - 1) || null;
       succeedingTopic = sorted.find(t => t.order === currentOrder + 1) || null;
     }
   }
 
+  const chapterOrder = typeof topicRecord?.chapter?.order === 'number' && Number.isInteger(topicRecord.chapter.order)
+    ? topicRecord.chapter.order
+    : null;
+  const topicOrder = typeof topicRecord?.order === 'number' && Number.isInteger(topicRecord.order)
+    ? topicRecord.order
+    : null;
+  const subjectId = topicRecord?.chapter?.subject_id;
+
   // If opening topic of chapter, look up last topic of previous chapter
-  if (!precedingTopic && topicRecord?.chapter && typeof topicRecord.order === 'number' && topicRecord.order <= 1) {
+  if (!precedingTopic && subjectId && chapterOrder !== null && chapterOrder > 1 && topicOrder !== null && topicOrder <= 1) {
     try {
-      if (prisma?.global_chapters?.findFirst && topicRecord.chapter.order > 1) {
+      if (prisma?.global_chapters?.findFirst) {
         const prevChapter = await prisma.global_chapters.findFirst({
           where: {
-            subject_id: topicRecord.chapter.subject_id,
-            order: topicRecord.chapter.order - 1,
+            subject_id: subjectId,
+            order: chapterOrder - 1,
           },
           include: {
             topics: {
@@ -101,12 +116,12 @@ async function resolveTopicIntelligence(topicOrId, prismaClient = null, options 
   }
 
   // If last topic of chapter, look up first topic of next chapter
-  if (!succeedingTopic && topicRecord?.chapter && prisma?.global_chapters?.findFirst) {
+  if (!succeedingTopic && subjectId && chapterOrder !== null && prisma?.global_chapters?.findFirst) {
     try {
       const nextChapter = await prisma.global_chapters.findFirst({
         where: {
-          subject_id: topicRecord.chapter.subject_id,
-          order: topicRecord.chapter.order + 1,
+          subject_id: subjectId,
+          order: chapterOrder + 1,
         },
         include: {
           topics: {

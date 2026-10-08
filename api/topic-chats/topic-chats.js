@@ -214,6 +214,7 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 					select: {
 						id: true,
 						title: true,
+						order: true,
 						subject_id: true,
 						subject: {
 							select: {

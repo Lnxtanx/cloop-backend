@@ -110,6 +110,7 @@ async function handleTopicChatMessageV2(req, res) {
         chapter: {
           select: {
             id: true,
+            order: true,
             subject_id: true,
             title: true,
             subject: {
