@@ -4,6 +4,7 @@ const { scoredGoalIndex, goalCompletion } = require('../../services/tutor-core/s
 const { searchYouTube } = require('../../services/media-search');
 const { getCachedDiagram } = require('../../services/tutor-core/diagram-cache');
 const { recordTurnLog, recordErrorIfWrong, updateDailyStudyStats, endChatSession, updateCurriculumSummary } = require('../../services/analytics/topic-data-collector');
+const { resolveTopicIntelligence } = require('../../services/academic-graph/akg-service');
 
 /**
  * Convert model options into an array of strings for admin_chat.options String[] column
@@ -227,6 +228,14 @@ async function handleTopicChatMessageV2(req, res) {
     // 6b. Detect video requests with typo tolerance
     const wantsVideo = /\b(video|vidoe|vedio|vids?|youtube|yt|watch|clip|animation)\b/i.test(effectiveMessage || '');
 
+    // 6c. Resolve Academic Knowledge Graph context (JIT cached)
+    let akgContext = null;
+    try {
+      akgContext = await resolveTopicIntelligence(topic, prisma, { userProfile: userProfile || {} });
+    } catch (akgErr) {
+      console.warn('[Tutor-Core V2] AKG resolution non-fatal:', akgErr.message);
+    }
+
     // 7. Execute Orchestrator Pipeline (Steps 1 -> 2 -> 3 -> 4)
     const turnResult = await processTutorTurn({
       studentMessage: effectiveMessage || '',
@@ -235,7 +244,8 @@ async function handleTopicChatMessageV2(req, res) {
       chatHistory,
       currentState: previousState,
       userProfile: userProfile || {},
-      wantsVideo
+      wantsVideo,
+      akgContext
     });
 
     const nextGoalIndex = turnResult.nextState.goalIndex;

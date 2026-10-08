@@ -271,6 +271,7 @@ model global_topics {
   topic_chat_errors  topic_chat_errors[]
   topic_chat_sessions_rel topic_chat_sessions[]
   tutor_turn_logs    tutor_turn_logs[]
+  academic_intelligence topic_academic_intelligence?
 
   @@index([chapter_id])
   @@index([subject_id])
@@ -1166,5 +1167,21 @@ model topic_chat_sessions {
 
   @@index([user_id, topic_id])
   @@index([user_id, started_at])
+  @@index([topic_id])
+}
+
+model topic_academic_intelligence {
+  id                      Int           @id @default(autoincrement())
+  topic_id                Int           @unique
+  preceding_anchor        String?       @db.Text
+  succeeding_teaser       String?       @db.Text
+  in_scope_concepts       Json
+  out_of_scope_boundaries Json
+  common_misconceptions   Json
+  created_at              DateTime?     @default(now()) @db.Timestamp(6)
+  updated_at              DateTime?     @default(now()) @db.Timestamp(6)
+
+  topic                   global_topics @relation(fields: [topic_id], references: [id], onDelete: Cascade)
+
   @@index([topic_id])
 }

@@ -470,7 +470,7 @@ function sourceGoalFallback(topicTitle, content) {
 }
 
 // ─── Generate greeting (unscored PROBE) ──────────────────────────────
-async function generateTopicGreeting(topicTitle, topicContent, topicGoals = [], user = null) {
+async function generateTopicGreeting(topicTitle, topicContent, topicGoals = [], user = null, akgContext = null) {
   const { enforce, wordCount } = require('../tutor-core/validate');
   const context = academicContext(user || {});
   const shortTitle = String(topicTitle || '').trim();
@@ -505,7 +505,7 @@ This is an unscored PROBE. Return one or two message bubbles, each strictly unde
 BUBBLE 1 — OPTIONAL INTRO: Welcome the student and name the topic. Do NOT explain the concept, list its effects, give a definition, formula, objectives, or reveal the answer before the probe.
 
 FINAL BUBBLE — PROBE QUESTION: Ask one specific, everyday question to discover prior knowledge. End with '?'. The student writes their answer: NO options, leading answer lists, or yes/no guessing. Do not ask several questions at once.
-
+${akgContext?.preceding_anchor ? `PRIOR KNOWLEDGE ANCHOR: The student previously learned: "${akgContext.preceding_anchor}". Anchor the probe question in this prior knowledge without re-teaching it.\n` : ''}
 GOALS TO COVER:
 ${goalsOverview}
 

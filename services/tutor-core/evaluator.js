@@ -189,6 +189,8 @@ SOURCE-GROUNDED ACCURACY (every topic):
   tied to the rubric and source — never "add the third one".
 - A short, scientifically-correct name answering a "which element/item" question is an ANSWER,
   not a help request (a trailing "?" may just signal uncertainty); do not demand an unstated process.
+- When academic_boundaries is provided in context, respect the specified boundaries:
+  check against listed common misconceptions, and do NOT penalize students for omitting out-of-scope concepts.
 
 Correct an IDEA, not English. For incorrect answers give an accurate complete_answer and
 a plain-language feedback explanation describing the specific missing/wrong requirement.
@@ -213,7 +215,7 @@ Schema:
 async function evaluateStudentTurn({
   studentMessage, lastQuestionText, lastQuestionOptions = null, lastQuestionRubric = null,
   phase = null, topicTitle, topicContent = '', currentGoal, goalIndex = 0,
-  totalGoals = 1, classLevel = 'Class 10',
+  totalGoals = 1, classLevel = 'Class 10', akgContext = null
 }) {
   const trimmed = String(studentMessage == null ? '' : studentMessage).trim();
   // Legacy callers without a phase retain option resolution; open phases ignore stale options.
@@ -242,6 +244,7 @@ async function evaluateStudentTurn({
     topic_summary: String(topicContent || '').slice(0, 1800),
     last_question: String(lastQuestionText || ''), options: Array.isArray(options) ? options : null,
     rubric, student_answer: resolved.resolvedText,
+    ...(akgContext?.evaluator_context?.prompt_snippet ? { academic_boundaries: akgContext.evaluator_context.prompt_snippet } : {}),
   };
   try {
     const output = await invokeModel(EVALUATOR_PROMPT, [{ role: 'user', content: JSON.stringify(context) }], {

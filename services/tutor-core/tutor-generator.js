@@ -40,7 +40,8 @@ function buildTutorPrompt(params) {
     topicTitle, currentGoalTitle, currentGoalDescription = '', previousGoalTitle = '', previousGoalDescription = '',
     topicContent = '', studentMessage = '', evaluatorResult = {}, stateInstruction,
     questionType = 'open', phase = 'DIALOGUE', reportBrief = null, lastQuestionText = '',
-    lastQuestionRubric = null, recentHistory = [], classLevel = 'Class 10', sameAssessment = false
+    lastQuestionRubric = null, recentHistory = [], classLevel = 'Class 10', sameAssessment = false,
+    akgContext = null
   } = params;
   const ending = phase === 'WRAP' || phase === 'DONE';
   const mcq = phase === 'CHECK' && questionType === 'mcq';
@@ -56,7 +57,8 @@ function buildTutorPrompt(params) {
     same_assessment: sameAssessment,
     curriculum: String(topicContent).substring(0, 1200),
     recent_history: recentHistory.slice(-4).map(m => ({ speaker: m.sender === 'user' ? 'Student' : 'Tutor', text: m.message })),
-    report: reportBrief
+    report: reportBrief,
+    ...(akgContext?.tutor_context?.prompt_snippet ? { academic_boundaries: akgContext.tutor_context.prompt_snippet } : {})
   };
   const schema = ending
     ? '{ "messages": [{ "message": "Warm accurate closing statement.", "message_type": "text" }], "lastQuestionRubric": null }'
@@ -80,6 +82,7 @@ STRICT RULES:
 8. ${ending ? 'Close without questions, options, or a rubric. Use only the report facts. Never claim confirmed mastery or all goals achieved unless the report explicitly confirms them.' : 'The final bubble must end with an answerable question and a question mark. Do not narrate cards, attachments, or media controls.'}
 9. ${mcq ? 'MCQ choices: 2–4 unique, plausible, scientifically unambiguous actual answer texts. text=value for every option. NEVER A/B/C, dummy answers, duplicate choices, or two correct choices. correct_option_text must exactly equal the single correct option text.' : 'Written turn: no options or correct_option_text. The student writes an answer.'}
 10. Never restate a chapter overview or objectives during mid-session assistance. Never invent a score, mastery claim, or assessment result.
+${akgContext?.tutor_context?.prompt_snippet ? '11. Respect academic boundaries: strictly stay within in-scope concepts; never introduce or ask about out-of-scope/forbidden concepts for this grade level.' : ''}
 
 SCHEMA:
 ${schema}`;

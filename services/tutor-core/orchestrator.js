@@ -45,7 +45,7 @@ function closingMessage(report) {
 
 /** The server persists question contracts privately; students receive bubbles and feedback only. */
 async function processTutorTurn({ studentMessage = '', topic, goals = [], chatHistory = [],
-  currentState = null, userProfile = {}, wantsVideo = false }) {
+  currentState = null, userProfile = {}, wantsVideo = false, akgContext = null }) {
   const goalTotal = Math.max(1, goals.length);
   const state = currentState || initialState(goalTotal);
   const fallbackGoal = { id: 0, title: topic.title, description: topic.content || '' };
@@ -62,7 +62,7 @@ async function processTutorTurn({ studentMessage = '', topic, goals = [], chatHi
     evaluatorResult = await evaluateStudentTurn({ studentMessage, lastQuestionText, lastQuestionOptions,
       lastQuestionRubric: state.lastQuestionRubric || null, phase: state.phase,
       topicTitle: topic.title, topicContent: topic.content || '', currentGoal,
-      goalIndex: scoredGoalIndex(state), totalGoals: goalTotal, classLevel });
+      goalIndex: scoredGoalIndex(state), totalGoals: goalTotal, classLevel, akgContext });
   }
   const intent = normalizeIntent(evaluatorResult.intent);
   const nextState = starting ? { ...state } : advance(state, { intent,
@@ -100,7 +100,8 @@ async function processTutorTurn({ studentMessage = '', topic, goals = [], chatHi
     studentMessage, evaluatorResult, stateInstruction, questionType, phase: nextState.phase,
     reportBrief: masteryReport ? reportBrief(masteryReport) : null, lastQuestionText,
     lastQuestionRubric: state.lastQuestionRubric || null, lastQuestionOptions, sameAssessment,
-    recentHistory: chatHistory, classLevel, wantsVideo: attachments.includes('video') && wantsVideo };
+    recentHistory: chatHistory, classLevel, wantsVideo: attachments.includes('video') && wantsVideo,
+    akgContext };
   // Code owns closing figures and claims. DONE reuses artifacts without model calls.
   const rawTutorOutput = ending
     ? { messages: [{ message: closingMessage(masteryReport), message_type: 'text' }] }

@@ -11,6 +11,7 @@ const { searchYouTube, searchImages } = require('../../services/media-search')
 const prisma = require('../../lib/prisma')
 const { handleTopicChatMessageV2 } = require('./topic-chats-v2')
 const { startChatSession } = require('../../services/analytics/topic-data-collector')
+const { resolveTopicIntelligence } = require('../../services/academic-graph/akg-service')
 
 // Note: Total of 10 questions will be asked across ALL goals (not per goal)
 // The AI will intelligently distribute questions across goals
@@ -512,8 +513,16 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 				select: { board: true, grade_level: true, name: true }
 			});
 
-			// Generate greeting with goals context
-			const greetingData = await generateTopicGreeting(topic.title, topic.content, topicGoals, userProfile)
+			// Resolve Academic Knowledge Graph context (JIT cached)
+			let akgContext = null;
+			try {
+				akgContext = await resolveTopicIntelligence(topic, prisma, { userProfile });
+			} catch (akgErr) {
+				console.warn('[topic-chats] AKG resolution non-fatal:', akgErr.message);
+			}
+
+			// Generate greeting with goals and AKG prior anchor context
+			const greetingData = await generateTopicGreeting(topic.title, topic.content, topicGoals, userProfile, akgContext)
 			initialGreeting = greetingData.messages
 
 			console.log('\n✅ Greeting Generated and Will Be Sent to Frontend:');
