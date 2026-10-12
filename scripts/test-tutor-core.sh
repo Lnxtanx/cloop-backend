@@ -7,7 +7,7 @@ task_test_dir=$(mktemp -d /tmp/cloop-tests.XXXXXX)
 trap 'rm -rf "$task_test_dir"' EXIT
 total_tests=0
 total_suites=0
-for test_file in services/tutor-core/*.test.js services/topic-chat/topic-chat-helpers.test.js services/goal-pipelines.test.js api/topic-chats/topic-chats-v2.test.js; do
+for test_file in services/tutor-core/*.test.js services/academic-graph/*.test.js services/topic-chat/topic-chat-helpers.test.js services/goal-pipelines.test.js api/login/*.test.js api/topic-chats/*.test.js; do
   task_test_output="$task_test_dir/output.log"
   if ! node --test-reporter=tap "$test_file" > "$task_test_output" 2>&1; then
     cat "$task_test_output"

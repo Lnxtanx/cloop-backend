@@ -517,7 +517,7 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 			// Resolve Academic Knowledge Graph context (JIT cached)
 			let akgContext = null;
 			try {
-				akgContext = await resolveTopicIntelligence(topic, prisma, { userProfile });
+				akgContext = await resolveTopicIntelligence(topic, prisma, { userProfile, goals: topicGoals });
 			} catch (akgErr) {
 				console.warn('[topic-chats] AKG resolution non-fatal:', akgErr.message);
 			}

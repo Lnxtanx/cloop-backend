@@ -5,8 +5,18 @@ const jwt = require('jsonwebtoken')
 const router = express.Router()
 
 const prisma = require('../../lib/prisma')
+const { authenticateToken } = require('../../middleware/auth')
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key'
+
+function authorizeUserOwner(req, res, next) {
+	const id = Number(req.params.id)
+	if (!id) return res.status(400).json({ error: 'invalid id' })
+	if (!req.user || req.user.user_id !== id) {
+		return res.status(403).json({ error: 'Forbidden: Access denied to user account' })
+	}
+	next()
+}
 
 // POST /api/login/  { emailOrPhone }
 // New behavior: accept an email or phone and return the user if found (no password required)
@@ -140,7 +150,7 @@ router.post('/', async (req, res) => {
 // --- Simple user CRUD for account management -
 
 // GET /api/login/users/:id
-router.get('/users/:id', async (req, res) => {
+router.get('/users/:id', authenticateToken, authorizeUserOwner, async (req, res) => {
 	const id = Number(req.params.id)
 	if (!id) return res.status(400).json({ error: 'invalid id' })
 
@@ -189,7 +199,7 @@ router.get('/users/:id', async (req, res) => {
 })
 
 // PUT /api/login/users/:id  body: fields to update (name, grade_level, board, subjects, preferred_language, study_goal)
-router.put('/users/:id', async (req, res) => {
+router.put('/users/:id', authenticateToken, authorizeUserOwner, async (req, res) => {
 	const id = Number(req.params.id)
 	if (!id) return res.status(400).json({ error: 'invalid id' })
 
@@ -231,7 +241,7 @@ router.put('/users/:id', async (req, res) => {
 })
 
 // DELETE /api/login/users/:id
-router.delete('/users/:id', async (req, res) => {
+router.delete('/users/:id', authenticateToken, authorizeUserOwner, async (req, res) => {
 	const id = Number(req.params.id)
 	if (!id) return res.status(400).json({ error: 'invalid id' })
 

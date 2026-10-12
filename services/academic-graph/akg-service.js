@@ -40,7 +40,8 @@ async function resolveTopicIntelligence(topicOrId, prismaClient = null, options 
   // 2. Cache miss: Fetch surrounding curriculum context
   let topicRecord = typeof topicOrId === 'object' && topicOrId ? topicOrId : null;
   const needsFetch = !topicRecord || !topicRecord.chapter?.topics ||
-    typeof topicRecord.chapter?.order !== 'number' || typeof topicRecord.order !== 'number';
+    typeof topicRecord.chapter?.order !== 'number' || typeof topicRecord.order !== 'number' ||
+    !topicRecord.goals;
   try {
     if (needsFetch && prisma?.global_topics?.findUnique) {
       const fullTopic = await prisma.global_topics.findUnique({
@@ -54,6 +55,10 @@ async function resolveTopicIntelligence(topicOrId, prismaClient = null, options 
                 select: { id: true, title: true, order: true },
               },
             },
+          },
+          goals: {
+            orderBy: { order: 'asc' },
+            select: { id: true, title: true, description: true },
           },
         },
       });
@@ -143,6 +148,7 @@ async function resolveTopicIntelligence(topicOrId, prismaClient = null, options 
   const classLevel = options.classLevel ||
     (options.userProfile?.grade_level ? `Class ${options.userProfile.grade_level}` : 'Class 10');
   const board = options.board || options.userProfile?.board || 'CBSE';
+  const topicGoals = options.goals || topicRecord?.goals || [];
 
   let synthesized = null;
   try {
@@ -153,6 +159,7 @@ async function resolveTopicIntelligence(topicOrId, prismaClient = null, options 
       succeedingTopic,
       classLevel,
       board,
+      goals: topicGoals,
     });
   } catch (synthErr) {
     console.warn(`[AKG Service] Synthesis failed for topic ${topicId}:`, synthErr.message);
@@ -166,7 +173,8 @@ async function resolveTopicIntelligence(topicOrId, prismaClient = null, options 
   }
 
   // 4. Persist to database (JIT caching)
-  if (prisma?.topic_academic_intelligence?.upsert) {
+  // CRITICAL: Only cache verified model synthesis. Never cache degenerate fallbacks permanently.
+  if (prisma?.topic_academic_intelligence?.upsert && synthesized && !synthesized.is_fallback) {
     try {
       const saved = await prisma.topic_academic_intelligence.upsert({
         where: { topic_id: topicId },
@@ -191,6 +199,8 @@ async function resolveTopicIntelligence(topicOrId, prismaClient = null, options 
     } catch (saveErr) {
       console.warn(`[AKG Service] JIT persistence failed for topic ${topicId} (non-fatal):`, saveErr.message);
     }
+  } else if (synthesized?.is_fallback) {
+    console.warn(`[AKG Service] Degenerate fallback used for topic ${topicId}; skipping DB persistence to prevent caching ungrounded perimeter.`);
   }
 
   return buildAkgContext(synthesized);

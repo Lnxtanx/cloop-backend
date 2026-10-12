@@ -105,6 +105,24 @@ test('buildFallbackIntelligence creates deterministic boundaries on failure', ()
   assert.equal(fallback.succeeding_teaser, 'Coming up next: Fire Safety.');
   assert.deepEqual(fallback.in_scope_concepts, ['Combustion and Flame']);
   assert.ok(fallback.out_of_scope_boundaries.length > 0);
+  assert.equal(fallback.is_fallback, true);
+});
+
+test('buildSynthesisPrompt includes curriculum learning goals when provided', () => {
+  const prompt = buildSynthesisPrompt({
+    topic: { title: 'Electric Current', content: 'Flow of electrons in a circuit.' },
+    chapter: { title: 'Electricity' },
+    classLevel: 'Class 8',
+    board: 'CBSE',
+    goals: [
+      { id: 1, title: 'Understand open and closed circuits', description: 'Draw circuit diagrams with switch' },
+      { id: 2, title: 'Differentiate conductors and insulators' },
+    ],
+  });
+
+  assert.ok(prompt.includes('CURRICULUM LEARNING GOALS:'));
+  assert.ok(prompt.includes('1. Understand open and closed circuits: Draw circuit diagrams with switch'));
+  assert.ok(prompt.includes('2. Differentiate conductors and insulators'));
 });
 
 test('resolveTopicIntelligence serves cached intelligence without synthesizer', async () => {
@@ -207,6 +225,39 @@ test('resolveTopicIntelligence gracefully handles DB errors without crashing', a
   assert.ok(result, 'Should return fallback context without throwing');
   assert.ok(result.in_scope_concepts.length > 0);
   assert.ok(result.out_of_scope_boundaries.length > 0);
+});
+
+test('resolveTopicIntelligence does NOT persist fallback to DB when model synthesis fails', async () => {
+  modelResponse = new Error('Model provider timeout');
+  let upsertCalls = 0;
+
+  const mockPrisma = {
+    topic_academic_intelligence: {
+      findUnique: async () => null, // Cache miss
+      upsert: async () => {
+        upsertCalls++;
+      },
+    },
+    global_topics: {
+      findUnique: async () => ({
+        id: 777,
+        title: 'Acids and Bases',
+        content: 'Acids taste sour and turn blue litmus red.',
+        order: 1,
+        chapter: {
+          id: 12,
+          title: 'Acids, Bases and Salts',
+          order: 2,
+          topics: [{ id: 777, title: 'Acids and Bases', order: 1 }],
+        },
+      }),
+    },
+  };
+
+  const result = await resolveTopicIntelligence(777, mockPrisma);
+  assert.ok(result, 'Should return fallback context');
+  assert.equal(upsertCalls, 0, 'Must NOT persist fallback to DB to prevent poisoning cache');
+  assert.ok(result.in_scope_concepts.includes('Acids and Bases'));
 });
 
 test('buildTutorPrompt correctly ingests AKG boundaries and instructions', () => {

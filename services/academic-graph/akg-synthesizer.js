@@ -15,10 +15,11 @@ function buildFallbackIntelligence({ topic, chapter, precedingTopic, succeedingT
       'Higher-grade formal laws and vector equations',
     ],
     common_misconceptions: [],
+    is_fallback: true,
   };
 }
 
-function buildSynthesisPrompt({ topic, chapter, precedingTopic, succeedingTopic, classLevel = 'Class 10', board = 'CBSE' }) {
+function buildSynthesisPrompt({ topic, chapter, precedingTopic, succeedingTopic, classLevel = 'Class 10', board = 'CBSE', goals = [] }) {
   const chapterContext = chapter?.title ? `Chapter: "${chapter.title}"` : '';
   const precContext = precedingTopic?.title
     ? `Preceding Topic in sequence: "${precedingTopic.title}"`
@@ -26,6 +27,9 @@ function buildSynthesisPrompt({ topic, chapter, precedingTopic, succeedingTopic,
   const succContext = succeedingTopic?.title
     ? `Succeeding Topic in sequence: "${succeedingTopic.title}"`
     : 'This is the final topic of the chapter/sequence.';
+  const goalsContext = Array.isArray(goals) && goals.length > 0
+    ? `\nCURRICULUM LEARNING GOALS:\n${goals.map((g, i) => `${i + 1}. ${g.title}${g.description ? `: ${g.description}` : ''}`).join('\n')}`
+    : '';
 
   return `You are Cloop's Academic Knowledge Graph Synthesizer for Indian school curriculum (${board}, ${classLevel}).
 Analyze this curriculum node and establish strict pedagogical boundaries:
@@ -35,7 +39,7 @@ ${chapterContext}
 ${precContext}
 ${succContext}
 TOPIC SYLLABUS:
-${String(topic.content || '').substring(0, 1000)}
+${String(topic.content || '').substring(0, 1000)}${goalsContext}
 
 YOUR TASK:
 Determine the exact pedagogical perimeter for ${classLevel}:
@@ -58,10 +62,10 @@ Return STRICT JSON matching this schema:
 }
 
 async function synthesizeTopicIntelligence(params) {
-  const { topic, chapter, precedingTopic, succeedingTopic, classLevel = 'Class 10', board = 'CBSE' } = params;
+  const { topic, chapter, precedingTopic, succeedingTopic, classLevel = 'Class 10', board = 'CBSE', goals = [] } = params;
 
   try {
-    const prompt = buildSynthesisPrompt({ topic, chapter, precedingTopic, succeedingTopic, classLevel, board });
+    const prompt = buildSynthesisPrompt({ topic, chapter, precedingTopic, succeedingTopic, classLevel, board, goals: goals || topic?.goals || [] });
     const raw = await invokeModel(
       prompt,
       [{ role: 'user', content: `Generate academic boundaries and misconceptions for: ${topic.title}` }],
@@ -96,6 +100,7 @@ async function synthesizeTopicIntelligence(params) {
               } : null))
             .filter(m => m && m.misconception)
         : [],
+      is_fallback: false,
     };
   } catch (err) {
     console.warn(`[AKG Synthesizer] Fallback used for "${topic?.title}":`, err.message);
