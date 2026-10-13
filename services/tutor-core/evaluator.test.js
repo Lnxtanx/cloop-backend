@@ -296,3 +296,57 @@ test('help requests, typos and repetition complaints classify as HELP without sc
     assert.equal(result.evaluation_status, 'unavailable');
   }
 });
+
+test('direct question does not fail on unasked explanation criteria', async () => {
+  const binaryRubric = {
+    criteria: [
+      { id: 'decision', description: 'State that it is a contact force.', required: true },
+      { id: 'explanation', description: 'Explain that the foot physically touches the ball.', required: true },
+    ],
+    model_answer: 'It is a contact force because the foot touches the ball.',
+  };
+  setOutput(outputFor(binaryRubric, [true, false]));
+  const result = await evaluateStudentTurn({
+    ...params,
+    studentMessage: 'contact force',
+    lastQuestionText: 'Is kicking a football a contact or non-contact force?',
+    lastQuestionRubric: binaryRubric,
+  });
+  assert.equal(result.is_correct, true);
+  assert.equal(result.score_percent, 100);
+});
+
+test('overlong model answer without short sentence sets diff_html to null and preserves complete_answer', async () => {
+  const chemicalRubric = {
+    criteria: [
+      { id: 'signs', description: 'List signs of a chemical reaction.', required: true },
+    ],
+    model_answer: 'Signs of a chemical reaction include a change in colour, evolution of gas, change in temperature, or formation of a precipitate.',
+  };
+  setOutput(outputFor(chemicalRubric, [false], { diff_html: null }));
+  const result = await evaluateStudentTurn({
+    ...params,
+    studentMessage: 'smoke',
+    lastQuestionText: 'What are the signs of a chemical reaction?',
+    lastQuestionRubric: chemicalRubric,
+  });
+  assert.equal(result.is_correct, false);
+  assert.equal(result.diff_html, null);
+  assert.equal(result.complete_answer, chemicalRubric.model_answer);
+});
+
+test('suppresses identical deletion and insertion tags in diff_html', async () => {
+  const rubric = {
+    criteria: [{ id: 'fact', description: 'Identify precipitation.', required: true }],
+    model_answer: 'Precipitation occurs.',
+  };
+  setOutput(outputFor(rubric, [false], { diff_html: '<del>precipitate</del><ins>precipitate</ins>' }));
+  const result = await evaluateStudentTurn({
+    ...params,
+    studentMessage: 'precipitate',
+    lastQuestionText: 'What is formed?',
+    lastQuestionRubric: rubric,
+  });
+  assert.equal(result.diff_html, null);
+});
+

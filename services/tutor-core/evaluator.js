@@ -112,7 +112,7 @@ function readCriteria(parsed, rubric) {
   return results;
 }
 
-function cleanCompleteSentence(text, maxWords = 25) {
+function cleanCompleteSentence(text, maxWords = 15) {
   const clean = String(text || '').trim().replace(/\s+/g, ' ');
   if (!clean) return '';
   const firstSentenceMatch = clean.match(/^([^.!?]+[.!?])/);
@@ -121,16 +121,20 @@ function cleanCompleteSentence(text, maxWords = 25) {
     const words = s.split(/\s+/);
     if (words.length <= maxWords) return s;
   }
+  const clauseMatch = clean.match(/^([^;]+|[^,]+(?=,\s*(?:because|which|since|whereas|as)\b))/i);
+  if (clauseMatch) {
+    const clause = clauseMatch[1].trim();
+    const clauseWords = clause.split(/\s+/);
+    if (clauseWords.length <= maxWords && clauseWords.length >= 3) {
+      return /[.!?]$/.test(clause) ? clause : `${clause}.`;
+    }
+  }
   const words = clean.split(/\s+/);
   if (words.length <= maxWords) {
     return clean;
   }
-  let slice = words.slice(0, maxWords);
-  while (slice.length > 3 && /^(and|or|but|because|with|the|a|an|of|to|in|on|that|which|as|for)$/i.test(slice[slice.length - 1])) {
-    slice.pop();
-  }
-  const joined = slice.join(' ').replace(/[,;:\s]+$/, '');
-  return /[.!?]$/.test(joined) ? joined : `${joined}.`;
+  // An overlong answer without a clean clause or sentence should not be severed mid-thought
+  return '';
 }
 
 function concise(text, count = 14) {
@@ -143,35 +147,65 @@ function safeDiff(diff) {
   const match = diff.match(/^\s*<del>([\s\S]*?)<\/del>\s*<ins>([\s\S]*?)<\/ins>\s*$/i);
   if (!match || !match[2].trim()) return null;
   const deletion = concise(match[1]);
-  const insertion = cleanCompleteSentence(match[2].trim(), 15);
+  const rawIns = match[2].trim();
+  const insWords = rawIns.split(/\s+/);
+  const firstSentence = rawIns.match(/^([^.!?]+[.!?])/);
+  if (insWords.length > 15 && (!firstSentence || firstSentence[1].trim().split(/\s+/).length > 15)) {
+    return null;
+  }
+  const insertion = cleanCompleteSentence(rawIns, 15);
   if (!insertion) return null;
+  if (deletion.trim().toLowerCase() === insertion.trim().toLowerCase()) return null;
   return `<del>${escapeHtml(deletion)}</del><ins>${escapeHtml(insertion)}</ins>`;
 }
 
-function assessedResult(parsed, criteria, rubric, resolved, gradedBy) {
+function assessedResult(parsed, criteria, rubric, resolved, gradedBy, lastQuestionText = '') {
+  const asksExplanation = /\b(why|explain|reason|how\s+do\s+you\s+know|give\s+reasons?)\b/i.test(lastQuestionText || '');
+  const adjustedCriteria = criteria.map(c => {
+    if (!asksExplanation && c.required) {
+      const isExplanation = /\b(explain|explanation|reason|mechanism|why)\b/i.test(`${c.id} ${c.description}`);
+      if (isExplanation) return { ...c, required: false };
+    }
+    return c;
+  });
+  const hasRequired = adjustedCriteria.some(c => c.required);
+  const finalCriteria = hasRequired ? adjustedCriteria : criteria;
   const contradictions = parsed.contradictions;
-  const correct = criteria.filter(c => c.required).every(c => c.satisfied) && contradictions.length === 0;
-  const missing = criteria.filter(c => c.required && !c.satisfied);
+  const correct = finalCriteria.filter(c => c.required).every(c => c.satisfied) && contradictions.length === 0;
+  const missing = finalCriteria.filter(c => c.required && !c.satisfied);
   const modelAnswer = rubric?.model_answer || (typeof parsed.complete_answer === 'string' ? parsed.complete_answer.trim() : null);
   const contentType = contradictions.length ? 'Conceptual'
     : CONTENT_ERRORS.has(parsed.error_type) ? parsed.error_type : 'Incomplete';
+  const reqCount = finalCriteria.filter(c => c.required).length;
+  const satReqCount = finalCriteria.filter(c => c.required && c.satisfied).length;
+  const scorePercent = contradictions.length ? 0
+    : reqCount ? Math.round((satReqCount / reqCount) * 100)
+    : Math.round((finalCriteria.filter(c => c.satisfied).length / finalCriteria.length) * 100);
+
   const result = {
     intent: 'ANSWER', is_correct: correct,
-    score_percent: contradictions.length ? 0 : Math.round(criteria.filter(c => c.satisfied).length / criteria.length * 100),
+    score_percent: scorePercent,
     error_type: correct ? null : contentType,
     diff_html: safeDiff(parsed.diff_html), complete_answer: modelAnswer,
     feedback: typeof parsed.feedback === 'string' && parsed.feedback.trim() ? parsed.feedback.trim()
       : correct ? 'Your answer meets the question’s requirements.'
         : contradictions.length ? contradictions.join(' ') : `Missing: ${missing.map(c => c.description).join('; ')}.`,
-    criterion_results: criteria, contradictions, evaluation_status: 'evaluated', graded_by: gradedBy,
+    criterion_results: finalCriteria, contradictions, evaluation_status: 'evaluated', graded_by: gradedBy,
     suggested_action: correct ? 'MOVE_ON' : 'RETEACH_NEW_ANGLE',
     reasoning: typeof parsed.reasoning === 'string' ? parsed.reasoning : '',
     resolved_answer: resolved.isOption ? resolved.resolvedText : null,
   };
-  if (!correct && !result.diff_html && modelAnswer) {
-    const delText = concise(resolved.resolvedText);
-    const insText = cleanCompleteSentence(modelAnswer, 15);
-    result.diff_html = `<del>${escapeHtml(delText)}</del><ins>${escapeHtml(insText)}</ins>`;
+  if (!correct && !result.diff_html && modelAnswer && !parsed.diff_html) {
+    const answerWords = modelAnswer.split(/\s+/);
+    const firstSentence = modelAnswer.match(/^([^.!?]+[.!?])/);
+    const canFormShortDiff = answerWords.length <= 15 || (firstSentence && firstSentence[1].trim().split(/\s+/).length <= 15);
+    if (canFormShortDiff) {
+      const delText = concise(resolved.resolvedText);
+      const insText = cleanCompleteSentence(modelAnswer, 15);
+      if (insText && delText.trim().toLowerCase() !== insText.trim().toLowerCase()) {
+        result.diff_html = `<del>${escapeHtml(delText)}</del><ins>${escapeHtml(insText)}</ins>`;
+      }
+    }
   }
   return applyGradingGuards(result);
 }
@@ -263,7 +297,7 @@ async function evaluateStudentTurn({
     const criteria = rubric.criteria.map(c => ({ ...c, satisfied: correct, evidence: resolved.resolvedText }));
     return assessedResult({ contradictions: [], complete_answer: rubric.correct_option_text,
       feedback: correct ? 'That option answers the question correctly.' : `The correct option is ${rubric.correct_option_text}.`,
-      error_type: 'Conceptual' }, criteria, { ...rubric, model_answer: rubric.model_answer || rubric.correct_option_text }, resolved, 'mcq_key');
+      error_type: 'Conceptual' }, criteria, { ...rubric, model_answer: rubric.model_answer || rubric.correct_option_text }, resolved, 'mcq_key', lastQuestionText);
   }
 
   const context = {
@@ -289,7 +323,7 @@ async function evaluateStudentTurn({
     };
     const criteria = readCriteria(parsed, rubric);
     if (!criteria) throw new Error('Invalid semantic evidence');
-    const result = assessedResult(parsed, criteria, rubric, resolved, rubric ? 'rubric_semantic' : 'semantic_legacy');
+    const result = assessedResult(parsed, criteria, rubric, resolved, rubric ? 'rubric_semantic' : 'semantic_legacy', lastQuestionText);
     if (result.is_correct === false && !result.complete_answer) throw new Error('Missing correct answer');
     return result;
   } catch (_) {
@@ -299,4 +333,4 @@ async function evaluateStudentTurn({
 }
 
 module.exports = { evaluateStudentTurn, resolveOptionAnswer, applyGradingGuards,
-  LANGUAGE_ONLY_ERRORS, escapeHtml, normalizeRubric };
+  LANGUAGE_ONLY_ERRORS, escapeHtml, normalizeRubric, safeDiff };

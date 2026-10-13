@@ -74,6 +74,13 @@ function cleanCompleteSentence(text, maxWords = 15) {
     const s = firstSentenceMatch[1].trim();
     if (wordCount(s) <= maxWords) return s;
   }
+  const clauseMatch = clean.match(/^([^;]+|[^,]+(?=,\s*(?:because|which|since|whereas|as)\b))/i);
+  if (clauseMatch) {
+    const clause = clauseMatch[1].trim();
+    if (wordCount(clause) <= maxWords && wordCount(clause) >= 3) {
+      return /[.!?]$/.test(clause) ? clause : `${clause}.`;
+    }
+  }
   const words = clean.split(/\s+/);
   if (words.length <= maxWords) {
     return clean;
@@ -97,6 +104,8 @@ function sanitizeDiffHtml(diffHtml, rawStudentText = '') {
   if (!inserted || !removed) return null;
   const cleanInserted = cleanCompleteSentence(inserted, 15);
   const cleanRemoved = wordCount(removed) > 15 ? cleanCompleteSentence(removed, 15).replace(/[.!?]+$/, '') : removed;
+  if (!cleanInserted || !cleanRemoved) return null;
+  if (cleanRemoved.trim().toLowerCase() === cleanInserted.trim().toLowerCase()) return null;
   return `<del>${escapeHtml(cleanRemoved)}</del><ins>${escapeHtml(cleanInserted)}</ins>`;
 }
 
@@ -169,9 +178,8 @@ function enforce(rawOutput, context = {}) {
   let actualQuestionType = rawOutput?.fallbackQuestionType || questionType;
   let rubric = normalizeRubric(rawOutput?.lastQuestionRubric);
   const priorRubric = normalizeRubric(context.lastQuestionRubric);
-  // Retries never replace a multi-part assessment with an easier generated rubric.
-  if (!ending && context.sameAssessment && priorRubric) rubric = priorRubric;
   let questionReplaced = false;
+  let questionAssisted = Boolean(context.sameAssessment);
   const rawMessages = Array.isArray(rawOutput?.messages) ? rawOutput.messages : [];
   const expanded = rawMessages.flatMap(b => splitIntoMicroBubbles(reconcileTone(cleanProse(b?.message), isCorrect))
     .map((message, i, parts) => ({ message, message_type: 'text', ...(i === parts.length - 1 && b.options ? { options: b.options } : {}) })));
@@ -184,20 +192,6 @@ function enforce(rawOutput, context = {}) {
     return { messages, diff_html: sanitizeDiffHtml(diffHtml, studentMessage), lastQuestionRubric: null, questionType: null, questionReplaced: false };
   }
 
-  // Every retry retains its original question, options, answer key, and obligations.
-  // Keeping only the rubric would unfairly ask an easier question and grade a harder one.
-  if (context.sameAssessment && priorRubric) {
-    const pending = buildFocusedFallback(context);
-    const explanation = messages.find(b => !endsWithQuestion(b.message));
-    messages = explanation ? [{ message: explanation.message, message_type: 'text' }, pending.messages[0]] : pending.messages;
-    const retryType = phase === 'CHECK' ? pending.fallbackQuestionType : 'open';
-    if (retryType !== 'mcq') messages.forEach(b => delete b.options);
-    const retryRubric = pending.lastQuestionRubric;
-    if (retryRubric && retryType !== 'mcq') delete retryRubric.correct_option_text;
-    return { messages, diff_html: sanitizeDiffHtml(diffHtml, studentMessage),
-      lastQuestionRubric: retryRubric, questionType: retryType, questionReplaced: true };
-  }
-
   // First recall is uncoached and asks for exactly the full stored core-facts rubric.
   // Assisted retries may explain, but retain that whole question and its original rubric.
   if (phase === 'ROUNDUP' && context.currentGoalDescription) {
@@ -207,6 +201,40 @@ function enforce(rawOutput, context = {}) {
     messages.forEach(b => delete b.options);
     return { messages, diff_html: sanitizeDiffHtml(diffHtml, studentMessage),
       lastQuestionRubric: recall.lastQuestionRubric, questionType: 'open', questionReplaced: true };
+  }
+
+  // CHECK retries restore the original question, choices and key
+  if (context.sameAssessment && priorRubric && phase === 'CHECK') {
+    const pending = buildFocusedFallback(context);
+    const explanation = messages.find(b => !endsWithQuestion(b.message));
+    messages = explanation ? [{ message: explanation.message, message_type: 'text' }, pending.messages[0]] : pending.messages;
+    const retryType = pending.fallbackQuestionType;
+    if (retryType !== 'mcq') messages.forEach(b => delete b.options);
+    const retryRubric = pending.lastQuestionRubric;
+    if (retryRubric && retryType !== 'mcq') delete retryRubric.correct_option_text;
+    return { messages, diff_html: sanitizeDiffHtml(diffHtml, studentMessage),
+      lastQuestionRubric: retryRubric, questionType: retryType, questionReplaced: true, questionAssisted: true };
+  }
+
+  // Open teaching retries (DIALOGUE, THEORY, PROBE): retain valid adaptive question and rubric
+  if (context.sameAssessment && priorRubric) {
+    const candidateFinal = messages[messages.length - 1];
+    const candidateQuestion = cleanProse(candidateFinal?.message);
+    const hasAdaptiveQuestion = endsWithQuestion(candidateQuestion) && wordCount(candidateQuestion) <= MAX_WORDS_PER_BUBBLE;
+    const hasAdaptiveRubric = Boolean(rubric);
+
+    if (hasAdaptiveQuestion && hasAdaptiveRubric) {
+      questionAssisted = true;
+    } else {
+      const pending = buildFocusedFallback(context);
+      const explanation = messages.find(b => !endsWithQuestion(b.message));
+      messages = explanation ? [{ message: explanation.message, message_type: 'text' }, pending.messages[0]] : pending.messages;
+      messages.forEach(b => delete b.options);
+      rubric = pending.lastQuestionRubric;
+      actualQuestionType = 'open';
+      questionReplaced = true;
+      questionAssisted = true;
+    }
   }
 
   const final = messages[messages.length - 1];
@@ -241,7 +269,7 @@ function enforce(rawOutput, context = {}) {
   });
   if (phase !== 'CHECK') actualQuestionType = 'open';
   if (rubric && actualQuestionType !== 'mcq') delete rubric.correct_option_text;
-  return { messages, diff_html: sanitizeDiffHtml(diffHtml, studentMessage), lastQuestionRubric: rubric, questionType: actualQuestionType, questionReplaced };
+  return { messages, diff_html: sanitizeDiffHtml(diffHtml, studentMessage), lastQuestionRubric: rubric, questionType: actualQuestionType, questionReplaced, questionAssisted };
 }
 
 module.exports = { PILL_NARRATION, enforce, cleanProse, wordCount, splitIntoMicroBubbles, endsWithQuestion,

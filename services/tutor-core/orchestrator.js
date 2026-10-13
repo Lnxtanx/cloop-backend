@@ -5,6 +5,7 @@ const { enforce } = require('./validate');
 const { getCachedDiagram } = require('./diagram-cache');
 const { buildReport, reportBrief } = require('./summary');
 const { generateRevisionSheet, buildFallbackRevisionSheet } = require('./revision-generator');
+const { buildAcademicNotes } = require('./academic-notes');
 
 function findLastQuestion(chatHistory, state) {
   if (state?.lastQuestionText) return state.lastQuestionText;
@@ -93,6 +94,7 @@ async function processTutorTurn({ studentMessage = '', topic, goals = [], chatHi
 
   const generatorGoal = goalForState(nextState);
   const currentGoalIdx = scoredGoalIndex(nextState);
+  const academicNotes = generatorGoal ? buildAcademicNotes(generatorGoal, topic.content || '') : null;
   const isRepetitionComplaint = /\b(already\s+asked|same\s+question|asked\s+(this\s+)?before|repeat(ing|ed)?)\b/i.test(studentMessage || '');
   const isHelpOrIdk = intent === 'HELP' || intent === 'IDK';
   const sameAssessment = !starting && !nextState.assessmentAdvanced && !ending &&
@@ -101,6 +103,7 @@ async function processTutorTurn({ studentMessage = '', topic, goals = [], chatHi
   const goalMap = buildGoalMap(goals, currentGoalIdx, nextState.phase);
   const generationContext = { topicTitle: topic.title, currentGoalTitle: generatorGoal.title,
     currentGoalDescription: generatorGoal.description || '', topicContent: topic.content || '',
+    academicNotes,
     previousGoalTitle: currentGoal.title, previousGoalDescription: currentGoal.description || '',
     studentMessage, evaluatorResult, stateInstruction, questionType, phase: nextState.phase,
     reportBrief: masteryReport ? reportBrief(masteryReport) : null, lastQuestionText,
@@ -120,7 +123,7 @@ async function processTutorTurn({ studentMessage = '', topic, goals = [], chatHi
   nextState.lastQuestionOptions = ending ? null : finalBubble?.options || null;
   nextState.lastQuestionRubric = ending ? null : validated.lastQuestionRubric;
   nextState.lastQuestionType = questionType;
-  nextState.questionAssisted = sameAssessment && (state.questionAssisted || ASSISTANCE.has(stateInstruction));
+  nextState.questionAssisted = (sameAssessment && (state.questionAssisted || ASSISTANCE.has(stateInstruction))) || Boolean(validated.questionAssisted);
   const gradedThisTurn = !terminal && intent === 'ANSWER' && isScored(state.phase) &&
     typeof evaluatorResult.is_correct === 'boolean' && evaluatorResult.evaluation_status !== 'unavailable';
   const isAnswer = !terminal && !starting && intent === 'ANSWER';

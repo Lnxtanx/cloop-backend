@@ -113,7 +113,7 @@ function buildTutorPrompt(params) {
     studentMessage = '', evaluatorResult = {}, stateInstruction,
     questionType = 'open', phase = 'DIALOGUE', reportBrief = null, lastQuestionText = '',
     lastQuestionRubric = null, recentHistory = [], classLevel = 'Class 10', sameAssessment = false,
-    akgContext = null, goals = [], goalIndex = 0, goalMap = null
+    akgContext = null, goals = [], goalIndex = 0, goalMap = null, academicNotes = null
   } = params;
   const ending = phase === 'WRAP' || phase === 'DONE';
   const mcq = phase === 'CHECK' && questionType === 'mcq';
@@ -122,18 +122,36 @@ function buildTutorPrompt(params) {
   const conversationHistory = filterConversationHistory(recentHistory);
   const fallbackBoundary = `Stay strictly within the current goal (${currentGoalTitle}) and ${classLevel}; never introduce out-of-scope concepts.`;
   const boundarySnippet = akgContext?.tutor_context?.prompt_snippet || fallbackBoundary;
+  const missingCriteria = Array.isArray(evaluatorResult?.criterion_results)
+    ? evaluatorResult.criterion_results.filter(c => c.required && !c.satisfied).map(c => c.description)
+    : [];
 
   const turnData = {
     topic: topicTitle,
     lesson_progress: resolvedGoalMap,
     asked_questions: askedQuestions,
-    next_goal: { title: currentGoalTitle, description: currentGoalDescription },
+    next_goal: {
+      title: currentGoalTitle,
+      description: currentGoalDescription,
+      ...(academicNotes ? {
+        definition: academicNotes.definition,
+        mechanism: academicNotes.mechanism,
+        key_facts: academicNotes.exam_points,
+        exam_keywords: academicNotes.exam_keywords
+      } : {})
+    },
     previous_goal: { title: previousGoalTitle || currentGoalTitle, description: previousGoalDescription || currentGoalDescription },
     previous_question: lastQuestionText,
     previous_rubric: lastQuestionRubric,
     student_message: studentMessage,
-    previous_evaluation: { intent: evaluatorResult?.intent || 'NONE', is_correct: evaluatorResult?.is_correct ?? null,
-      error_type: evaluatorResult?.error_type || null, complete_answer: evaluatorResult?.complete_answer || null },
+    previous_evaluation: {
+      intent: evaluatorResult?.intent || 'NONE',
+      is_correct: evaluatorResult?.is_correct ?? null,
+      error_type: evaluatorResult?.error_type || null,
+      complete_answer: evaluatorResult?.complete_answer || null,
+      feedback: evaluatorResult?.feedback || null,
+      missing_criteria: missingCriteria
+    },
     same_assessment: sameAssessment,
     recent_history: conversationHistory,
     report: reportBrief,
@@ -143,8 +161,7 @@ function buildTutorPrompt(params) {
     ? '{ "messages": [{ "message": "Warm accurate closing statement.", "message_type": "text" }], "lastQuestionRubric": null }'
     : `{ "messages": [{ "message": "Optional brief feedback or explanation.", "message_type": "text" }, { "message": "Focused complete question?", "message_type": "text"${mcq ? ', "options": [{ "text": "Actual answer text", "value": "Actual answer text" }, { "text": "Plausible distractor", "value": "Plausible distractor" }]' : ''} }], "lastQuestionRubric": { "criteria": [{ "id": "fact_1", "description": "One scientific fact REQUIRED by this exact question", "required": true }], "model_answer": "Complete scientifically accurate answer to this exact question"${mcq ? ', "correct_option_text": "Actual answer text"' : ''} } }`;
   return `You are Cloop, a friendly tutor for CBSE/ICSE/ISC ${classLevel}.
-Your only job is to teach and clarify the current topic. Formal testing, test preparation, scores and mastery reports belong to other components.
-The server owns phases, verdicts, assessment slots, and scores. You write language and an answer rubric.
+You teach, clarify concepts, and assess student understanding according to the current lesson phase. The server owns phases, verdicts, assessment slots, and scores. You write language and an answer rubric.
 Phase: ${phase}. Question type: ${ending ? 'none' : mcq ? 'mcq' : 'open'}.
 Directive: ${guidanceFor(stateInstruction, reportBrief)}
 

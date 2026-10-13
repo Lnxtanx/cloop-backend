@@ -276,15 +276,27 @@ test('a decimal inside an overlong question cannot make its tail appear to be a 
   assert.strictEqual(out.lastQuestionRubric.model_answer, 'A force can change speed');
 });
 
-test('DIALOGUE retries preserve the complete pending question as well as its rubric', () => {
+test('DIALOGUE retries retain model adaptive question and matching rubric when valid', () => {
   const full = V.buildFocusedFallback(goalContext);
   const question = 'What distinct effects can a force have on a body?';
   const out = V.enforce({ messages: [{ message: 'Force can start motion, stop it, or change speed, direction, or shape.' }, { message: 'Can force change shape?' }], lastQuestionRubric: rubric }, {
     ...goalContext, phase: 'DIALOGUE', sameAssessment: true, lastQuestionText: question, lastQuestionRubric: full.lastQuestionRubric
   });
   assert.strictEqual(out.messages.length, 2);
+  assert.strictEqual(out.messages.at(-1).message, 'Can force change shape?');
+  assert.deepStrictEqual(out.lastQuestionRubric, rubric);
+  assert.strictEqual(out.questionAssisted, true);
+});
+
+test('DIALOGUE retries fall back to pending question when model output is invalid or missing rubric', () => {
+  const full = V.buildFocusedFallback(goalContext);
+  const question = 'What distinct effects can a force have on a body?';
+  const out = V.enforce({ messages: [{ message: 'Force can start motion.' }] }, {
+    ...goalContext, phase: 'DIALOGUE', sameAssessment: true, lastQuestionText: question, lastQuestionRubric: full.lastQuestionRubric
+  });
   assert.strictEqual(out.messages.at(-1).message, question);
   assert.deepStrictEqual(out.lastQuestionRubric, full.lastQuestionRubric);
+  assert.strictEqual(out.questionReplaced, true);
 });
 
 test('CHECK retries restore the original question, actual choices and private key', () => {
