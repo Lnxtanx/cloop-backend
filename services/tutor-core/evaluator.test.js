@@ -278,3 +278,21 @@ test('option resolver remains compatible with legacy letter-valued options', () 
   assert.equal(resolveOptionAnswer('2', ['Fatter', 'Thinner']).resolvedText, 'Thinner');
   assert.equal(resolveOptionAnswer('Direction changes', ['Shape']).isOption, false);
 });
+
+test('help requests, typos and repetition complaints classify as HELP without scoring', async () => {
+  setOutput(null, new Error('Model outage fallback test'));
+  const helpInputs = [
+    'explain me that',
+    'explain this',
+    'i havent understodd',
+    'not understood',
+    'you already asked this',
+    'same question',
+  ];
+  for (const input of helpInputs) {
+    const result = await evaluateStudentTurn({ ...params, studentMessage: input });
+    assert.equal(result.intent, 'HELP', `Input "${input}" should classify as HELP`);
+    assert.equal(result.is_correct, null, `Input "${input}" should not be scored`);
+    assert.equal(result.evaluation_status, 'unavailable');
+  }
+});

@@ -93,8 +93,11 @@ async function processTutorTurn({ studentMessage = '', topic, goals = [], chatHi
 
   const generatorGoal = goalForState(nextState);
   const currentGoalIdx = scoredGoalIndex(nextState);
+  const isRepetitionComplaint = /\b(already\s+asked|same\s+question|asked\s+(this\s+)?before|repeat(ing|ed)?)\b/i.test(studentMessage || '');
+  const isHelpOrIdk = intent === 'HELP' || intent === 'IDK';
   const sameAssessment = !starting && !nextState.assessmentAdvanced && !ending &&
-    state.phase === nextState.phase && scoredGoalIndex(state) === currentGoalIdx;
+    state.phase === nextState.phase && scoredGoalIndex(state) === currentGoalIdx &&
+    !isRepetitionComplaint && !isHelpOrIdk;
   const goalMap = buildGoalMap(goals, currentGoalIdx, nextState.phase);
   const generationContext = { topicTitle: topic.title, currentGoalTitle: generatorGoal.title,
     currentGoalDescription: generatorGoal.description || '', topicContent: topic.content || '',

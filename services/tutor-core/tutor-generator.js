@@ -15,14 +15,14 @@ const DIRECTIVE_GUIDANCE = {
   assess_with_mcq: 'Assess the goal using one MCQ with 2–4 distinct plausible answer texts and exactly one correct answer.',
   assess_with_mcq_simpler: 'Assess the goal using one shorter MCQ with two distinct plausible answer texts and exactly one correct answer.',
   roundup_recall: 'Ask full written recall of this goal: its required definition, distinct key facts, and any formula with symbols and units. Never replace this with a yes/no, recognition, example-only, or one-component question. Do not supply its answer or a starter.',
-  correct_and_reask: 'Correct the specific prior misconception briefly. If retrying that question, ask it clearly again without changing what its rubric assesses.',
-  reteach_new_angle: 'For a retry, explain the prior concept with a new accurate everyday example, then reask the same assessment.',
-  reask_shorter: 'For a retry, restate the prior question briefly, preserving all required answer components.',
-  hint_then_easier: 'For a retry, explain the concept simply first, then reask clearly. Preserve the rubric and all required components.',
-  explain_differently: 'For a retry, explain the prior mechanism in plain terms first, then reask the same assessment.',
-  give_starter: 'For a retry, explain the prior concept and offer a starter. Never treat a supported answer as independent recall.',
+  correct_and_reask: 'Correct the specific prior misconception briefly. Then ask a fresh question from a new angle testing the concept.',
+  reteach_new_angle: 'Explain the prior concept with a new accurate everyday example, then ask a fresh question from a new angle.',
+  reask_shorter: 'Explain briefly, then ask a fresh, simpler question testing the concept.',
+  hint_then_easier: 'Explain the concept simply first using an everyday example, then ask a fresh simpler check question. Never repeat the previous question.',
+  explain_differently: 'Explain the prior mechanism in plain terms with an everyday analogy first, then ask a fresh question from a new angle. Never repeat the previous question.',
+  give_starter: 'Explain the prior concept simply with a clear starter, then ask a fresh check question.',
   reveal_and_move_on: 'Explain the answer to the PREVIOUS question using its model answer, then ask the independent NEXT question.',
-  redirect_to_topic: 'Briefly redirect to the topic and repeat the pending focused question.',
+  redirect_to_topic: 'Briefly redirect to the topic and ask a fresh focused question.',
   close_off_topic: 'Kindly say the session is paused and that the student can return later. Do not claim completion or mastery.',
   session_over: 'Wish the student well. Do not ask another question or invent results.',
 };
@@ -110,7 +110,7 @@ function extractAskedQuestions(history = [], lastQuestionText = '') {
 function buildTutorPrompt(params) {
   const {
     topicTitle, currentGoalTitle, currentGoalDescription = '', previousGoalTitle = '', previousGoalDescription = '',
-    topicContent = '', studentMessage = '', evaluatorResult = {}, stateInstruction,
+    studentMessage = '', evaluatorResult = {}, stateInstruction,
     questionType = 'open', phase = 'DIALOGUE', reportBrief = null, lastQuestionText = '',
     lastQuestionRubric = null, recentHistory = [], classLevel = 'Class 10', sameAssessment = false,
     akgContext = null, goals = [], goalIndex = 0, goalMap = null
@@ -135,7 +135,6 @@ function buildTutorPrompt(params) {
     previous_evaluation: { intent: evaluatorResult?.intent || 'NONE', is_correct: evaluatorResult?.is_correct ?? null,
       error_type: evaluatorResult?.error_type || null, complete_answer: evaluatorResult?.complete_answer || null },
     same_assessment: sameAssessment,
-    curriculum: String(topicContent).substring(0, 1200),
     recent_history: conversationHistory,
     report: reportBrief,
     academic_boundaries: boundarySnippet
@@ -159,7 +158,7 @@ STRICT RULES:
 4. If same_assessment is false, assistance directives apply only to the prior answer. Ask a new independent question about next_goal with its full required components. If same_assessment is true, retain the prior assessment requirements; do not lower them to mark an incomplete answer correct.
 5. NEVER REPEAT A QUESTION. Check asked_questions and recent_history before writing. Never repeat a question you have already asked. If a concept needs revisiting, ask it from a new angle with a new example, never the same question reworded. For stuck students (HELP, IDK, or wrong answer), explain accurately BEFORE reasking. Use a simple everyday Indian example.
 6. In ROUNDUP ask full goal recall of its definition, ALL distinct required core facts, and any formula with symbols and units. On a NEW recall (same_assessment=false), do not leak the current recall answer in feedback, an analogy, a definition, a hint, options, or a starter. On a RETRY (same_assessment=true), a wrong answer or HELP/IDK may receive explanation before reasking the SAME full question; the server records this as assistance, never independent mastery. Do not simplify recall into yes/no, recognition, or a one-component check.
-7. Build lastQuestionRubric for the EXACT final question. Split every required answer component into a separate factual criterion with a unique id and required=true. Include a complete model_answer. For full recall, cover the entire goal description. For a retry preserve all prior required criteria. A one-word answer to one component does not satisfy a multi-part rubric. Never add hidden requirements or score answers.
+7. Build lastQuestionRubric for the EXACT final question. Split every required answer component into a separate factual criterion with a unique id and required=true. Include a complete model_answer. For direct or binary questions, accept the direct scientific answer. For full recall, cover the entire goal description. For a retry preserve all prior required criteria. A one-word answer to one component does not satisfy a multi-part rubric. Never add hidden requirements or score answers.
 8. ${ending ? 'Close without questions, options, or a rubric. Use only the report facts. Never claim confirmed mastery or all goals achieved unless the report explicitly confirms them.' : 'The final bubble must end with an answerable question and a question mark. Do not narrate cards, attachments, or media controls.'}
 9. ${mcq ? 'MCQ choices: 2–4 unique, plausible, scientifically unambiguous actual answer texts. text=value for every option. NEVER A/B/C, dummy answers, duplicate choices, or two correct choices. correct_option_text must exactly equal the single correct option text.' : 'Written turn: no options or correct_option_text. The student writes an answer.'}
 10. Never restate a chapter overview or objectives during mid-session assistance. Never invent a score, completion claim, or mastery verdict.

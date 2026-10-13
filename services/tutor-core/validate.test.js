@@ -77,6 +77,15 @@ test('sanitizes bloated diff_html', () => {
   assert.ok(insWords <= 15, `insWords exceeded 15 words: ${insWords}`);
 });
 
+test('sanitizes diff_html without leaving trailing dangling conjunctions', () => {
+  const danglingIns = '<del>Contact</del><ins>Kicking a football with your foot is a contact force, because the foot and ball collide.</ins>';
+  const res = V.sanitizeDiffHtml(danglingIns, 'Contact');
+  assert.ok(res.includes('<del>Contact</del>'));
+  const insText = res.match(/<ins>(.*?)<\/ins>/)[1];
+  assert.ok(!/\b(and|or|but|because|with|the)$/i.test(insText.trim().replace(/[.!?]+$/, '')), `insText should not end with a dangling conjunction: "${insText}"`);
+  assert.ok(V.wordCount(insText) <= 15);
+});
+
 test('strips pill narration so the question stands alone', () => {
   // A real production failure: the tutor spent the student's only bubble
   // sending them to a card instead of asking something they could answer.

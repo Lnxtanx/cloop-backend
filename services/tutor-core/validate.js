@@ -66,6 +66,26 @@ function escapeHtml(text) {
     .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
+function cleanCompleteSentence(text, maxWords = 15) {
+  const clean = String(text || '').trim().replace(/\s+/g, ' ');
+  if (!clean) return '';
+  const firstSentenceMatch = clean.match(/^([^.!?]+[.!?])/);
+  if (firstSentenceMatch) {
+    const s = firstSentenceMatch[1].trim();
+    if (wordCount(s) <= maxWords) return s;
+  }
+  const words = clean.split(/\s+/);
+  if (words.length <= maxWords) {
+    return clean;
+  }
+  let slice = words.slice(0, maxWords);
+  while (slice.length > 3 && /^(and|or|but|because|with|the|a|an|of|to|in|on|that|which|as|for)$/i.test(slice[slice.length - 1])) {
+    slice.pop();
+  }
+  const joined = slice.join(' ').replace(/[,;:\s]+$/, '');
+  return /[.!?]$/.test(joined) ? joined : `${joined}.`;
+}
+
 function sanitizeDiffHtml(diffHtml, rawStudentText = '') {
   if (typeof diffHtml !== 'string') return null;
   const deletions = [...diffHtml.matchAll(/<del\b[^>]*>([\s\S]*?)<\/del\s*>/gi)];
@@ -75,12 +95,9 @@ function sanitizeDiffHtml(diffHtml, rawStudentText = '') {
   const removed = deletions.map(m => m[1]).join(' ').trim() || rawStudentText;
   let inserted = insertions.map(m => m[1]).join(' ').trim();
   if (!inserted || !removed) return null;
-  if (wordCount(inserted) > 15) {
-    const sentence = (inserted.match(/^[^.!?]+[.!?]?/) || [inserted])[0];
-    inserted = sentence.trim().split(/\s+/).slice(0, 15).join(' ');
-  }
-  const surgicalDeletion = wordCount(removed) > 15 ? removed.split(/\s+/).slice(0, 15).join(' ') : removed;
-  return `<del>${escapeHtml(surgicalDeletion)}</del><ins>${escapeHtml(inserted)}</ins>`;
+  const cleanInserted = cleanCompleteSentence(inserted, 15);
+  const cleanRemoved = wordCount(removed) > 15 ? cleanCompleteSentence(removed, 15).replace(/[.!?]+$/, '') : removed;
+  return `<del>${escapeHtml(cleanRemoved)}</del><ins>${escapeHtml(cleanInserted)}</ins>`;
 }
 
 function reconcileTone(messageText, isCorrect) {
