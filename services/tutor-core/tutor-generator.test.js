@@ -114,3 +114,83 @@ test('fallback teaching searches stored facts when the preferred answer exceeds 
   assert.strictEqual(out.messages[0].message, 'A force can change direction');
   assert.strictEqual(out.messages.at(-1).message, params.lastQuestionText);
 });
+
+test('prompt contains no unfilled template interpolation placeholders', () => {
+  const prompt = buildTutorPrompt(params);
+  assert.ok(!/\$\{[^}]+\}/.test(prompt), 'Prompt should not contain raw ${...} template placeholders');
+});
+
+test('prompt contains no test-prep, JEE, NEET, or final-test language', () => {
+  const prompt = buildTutorPrompt(params);
+  assert.ok(!/\b(JEE|NEET|mock[- ]?test|final[- ]?test|test your mastery)\b/i.test(prompt));
+});
+
+test('history filters card rows like Concept Diagram, YouTube Video, and Revision Sheet', () => {
+  const historyWithCards = [
+    { sender: 'user', message: 'Hello' },
+    { sender: 'ai', message: 'Concept Diagram', message_type: 'mermaid_diagram' },
+    { sender: 'ai', message: 'YouTube Video', message_type: 'youtube_video' },
+    { sender: 'ai', message: 'Revision Sheet', message_type: 'revision_sheet' },
+    { sender: 'ai', message: 'What is force?' },
+  ];
+  const prompt = buildTutorPrompt({ ...params, recentHistory: historyWithCards });
+  assert.ok(!prompt.includes('"Concept Diagram"'));
+  assert.ok(!prompt.includes('"YouTube Video"'));
+  assert.ok(!prompt.includes('"Revision Sheet"'));
+  assert.ok(prompt.includes('"What is force?"'));
+});
+
+test('history retains up to 7 real conversation turns instead of capping at 4', () => {
+  const longHistory = Array.from({ length: 10 }, (_, i) => ({
+    sender: i % 2 === 0 ? 'user' : 'ai',
+    message: `Message turn ${i + 1}`
+  }));
+  const prompt = buildTutorPrompt({ ...params, recentHistory: longHistory });
+  assert.ok(prompt.includes('Message turn 4'));
+  assert.ok(prompt.includes('Message turn 10'));
+  assert.ok(!prompt.includes('Message turn 3'));
+});
+
+test('asked questions are extracted and listed in turnData to prevent repetition', () => {
+  const history = [
+    { sender: 'ai', message: 'What happens when a sponge is compressed?' },
+    { sender: 'user', message: 'It changes shape' },
+    { sender: 'ai', message: 'Can you give another example of shape change?' },
+    { sender: 'user', message: 'Stretching rubber' },
+  ];
+  const prompt = buildTutorPrompt({ ...params, recentHistory: history, lastQuestionText: 'Can you give another example of shape change?' });
+  assert.ok(prompt.includes('"asked_questions":'));
+  assert.ok(prompt.includes('What happens when a sponge is compressed?'));
+  assert.ok(prompt.includes('Can you give another example of shape change?'));
+});
+
+test('prompt enforces strict rule never to repeat a question', () => {
+  const prompt = buildTutorPrompt(params);
+  assert.ok(prompt.includes('NEVER REPEAT A QUESTION'));
+  assert.ok(prompt.includes('Never repeat a question you have already asked'));
+});
+
+test('session goal map tracks progress with covered, current, and upcoming statuses', () => {
+  const goals = [
+    { id: 1, title: 'Push and pull' },
+    { id: 2, title: 'Change of direction' },
+    { id: 3, title: 'Change of shape' },
+  ];
+  const prompt = buildTutorPrompt({ ...params, goals, goalIndex: 2 });
+  assert.ok(prompt.includes('goal 3 of 3'));
+  assert.ok(prompt.includes('"status":"covered"'));
+  assert.ok(prompt.includes('"status":"current"'));
+});
+
+test('goal map describes what the current phase is for', () => {
+  const prompt = buildTutorPrompt({ ...params, phase: 'DIALOGUE' });
+  assert.ok(prompt.includes('"phase_purpose":'));
+  assert.ok(prompt.includes('guide the student to write answers') || prompt.includes('teach'));
+});
+
+test('when AKG is absent, fallback boundaries restrict tutor to current goal and class level', () => {
+  const prompt = buildTutorPrompt({ ...params, akgContext: null });
+  assert.ok(prompt.includes('academic_boundaries'));
+  assert.ok(prompt.includes('Stay strictly within the current goal'));
+  assert.ok(prompt.includes('Class 10'));
+});

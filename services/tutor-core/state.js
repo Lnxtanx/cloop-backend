@@ -486,6 +486,36 @@ function bandFor(accuracy) {
   return (BANDS.find((b) => accuracy >= b.min) || BANDS[BANDS.length - 1]).label;
 }
 
+const PHASE_PURPOSES = {
+  PROBE: 'Find what the student already knows before teaching.',
+  THEORY: 'Explain the core concept using an everyday example and clear theory.',
+  OBJECTIVES: 'State what the student will learn in this session.',
+  DIALOGUE: 'Teach the concept and guide the student to write answers.',
+  CHECK: 'Check understanding with an MCQ assessment.',
+  ROUNDUP: 'End-of-lesson written recall of goals just taught, without hints.',
+  WRAP: 'Summarize the session and review mastery without asking questions.',
+  DONE: 'Session finished.',
+};
+
+function buildGoalMap(goals = [], currentIndex = 0, phase = 'DIALOGUE') {
+  const goalList = Array.isArray(goals) && goals.length ? goals : [];
+  const total = goalList.length || 1;
+  const current = Math.min(Math.max(currentIndex || 0, 0), Math.max(0, total - 1));
+  const mappedGoals = goalList.map((g, idx) => {
+    const status = idx < current ? 'covered' : idx === current ? 'current' : 'upcoming';
+    return {
+      index: idx + 1,
+      title: typeof g === 'string' ? g : (g?.title || `Goal ${idx + 1}`),
+      status
+    };
+  });
+  return {
+    progress: `goal ${current + 1} of ${total}`,
+    phase_purpose: PHASE_PURPOSES[phase] || 'Teach and clarify the current topic.',
+    goals: mappedGoals
+  };
+}
+
 module.exports = {
   PHASES,
   INTENTS,
@@ -513,4 +543,6 @@ module.exports = {
   scoredGoalIndex,
   attachmentsFor,
   bandFor,
+  PHASE_PURPOSES,
+  buildGoalMap,
 };

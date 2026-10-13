@@ -288,3 +288,15 @@ test('closed sessions reuse reports and revision sheets without fresh evaluator 
   assert.strictEqual(r.all_goals_completed, false);
   assert.strictEqual(r.userCorrection, null);
 });
+
+test('orchestrator passes the goal map to the generator during a live pipeline turn', async () => {
+  generatorCalls.length = 0;
+  await turn(null, 'carbon dioxide', { is_correct: true });
+  const call = generatorCalls.at(-1);
+  assert.ok(call, 'Generator should be called');
+  assert.ok(call.goalMap, 'Goal map should be passed to generator');
+  assert.match(call.goalMap.progress, /goal \d+ of \d+/);
+  assert.strictEqual(call.goalMap.goals.length, GOALS.length);
+  assert.ok(Array.isArray(call.goals), 'Goals array should be passed');
+  assert.strictEqual(typeof call.goalIndex, 'number');
+});

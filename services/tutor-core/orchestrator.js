@@ -1,5 +1,5 @@
 const { evaluateStudentTurn } = require('./evaluator');
-const { advance, instructionFor, initialState, questionTypeFor, isScored, attachmentsFor, normalizeIntent, scoredGoalIndex } = require('./state');
+const { advance, instructionFor, initialState, questionTypeFor, isScored, attachmentsFor, normalizeIntent, scoredGoalIndex, buildGoalMap } = require('./state');
 const { generateTutorResponse } = require('./tutor-generator');
 const { enforce } = require('./validate');
 const { getCachedDiagram } = require('./diagram-cache');
@@ -92,8 +92,10 @@ async function processTutorTurn({ studentMessage = '', topic, goals = [], chatHi
   }
 
   const generatorGoal = goalForState(nextState);
+  const currentGoalIdx = scoredGoalIndex(nextState);
   const sameAssessment = !starting && !nextState.assessmentAdvanced && !ending &&
-    state.phase === nextState.phase && scoredGoalIndex(state) === scoredGoalIndex(nextState);
+    state.phase === nextState.phase && scoredGoalIndex(state) === currentGoalIdx;
+  const goalMap = buildGoalMap(goals, currentGoalIdx, nextState.phase);
   const generationContext = { topicTitle: topic.title, currentGoalTitle: generatorGoal.title,
     currentGoalDescription: generatorGoal.description || '', topicContent: topic.content || '',
     previousGoalTitle: currentGoal.title, previousGoalDescription: currentGoal.description || '',
@@ -101,7 +103,7 @@ async function processTutorTurn({ studentMessage = '', topic, goals = [], chatHi
     reportBrief: masteryReport ? reportBrief(masteryReport) : null, lastQuestionText,
     lastQuestionRubric: state.lastQuestionRubric || null, lastQuestionOptions, sameAssessment,
     recentHistory: chatHistory, classLevel, wantsVideo: attachments.includes('video') && wantsVideo,
-    akgContext };
+    akgContext, goals, goalIndex: currentGoalIdx, totalGoals: goalTotal, goalMap };
   // Code owns closing figures and claims. DONE reuses artifacts without model calls.
   const rawTutorOutput = ending
     ? { messages: [{ message: closingMessage(masteryReport), message_type: 'text' }] }

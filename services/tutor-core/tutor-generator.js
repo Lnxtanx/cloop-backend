@@ -35,35 +35,116 @@ function guidanceFor(instruction, reportBrief) {
   return `Close warmly with the server's score (${score}). Session completed: ${complete}. All recall completed: ${recalled}. ${complete && recalled ? 'Acknowledge finishing; describe mastery only if the report confirms it.' : 'Mention remaining practice or a pause. Do not claim all goals achieved, confirmed mastery, or full topic completion.'}`;
 }
 
+const CARD_TITLES = new Set(['YouTube Video', 'Concept Diagram', 'Revision Sheet']);
+const CARD_TYPES = new Set(['mermaid_diagram', 'youtube_video', 'revision_sheet', 'session_summary']);
+
+const PHASE_PURPOSES = {
+  PROBE: 'Find what the student already knows before teaching.',
+  THEORY: 'Explain the core concept using an everyday example and clear theory.',
+  OBJECTIVES: 'State what the student will learn in this session.',
+  DIALOGUE: 'Teach the concept and guide the student to write answers.',
+  CHECK: 'Check understanding with an MCQ assessment.',
+  ROUNDUP: 'End-of-lesson written recall of goals just taught, without hints.',
+  WRAP: 'Summarize the session and review mastery without asking questions.',
+  DONE: 'Session finished.',
+};
+
+function buildGoalMap(goals = [], currentIndex = 0, phase = 'DIALOGUE') {
+  const goalList = Array.isArray(goals) && goals.length ? goals : [];
+  const total = goalList.length || 1;
+  const current = Math.min(Math.max(currentIndex || 0, 0), Math.max(0, total - 1));
+  const mappedGoals = goalList.map((g, idx) => {
+    const status = idx < current ? 'covered' : idx === current ? 'current' : 'upcoming';
+    return {
+      index: idx + 1,
+      title: typeof g === 'string' ? g : (g?.title || `Goal ${idx + 1}`),
+      status
+    };
+  });
+  return {
+    progress: `goal ${current + 1} of ${total}`,
+    phase_purpose: PHASE_PURPOSES[phase] || 'Teach and clarify the current topic.',
+    goals: mappedGoals
+  };
+}
+
+function filterConversationHistory(history = []) {
+  if (!Array.isArray(history)) return [];
+  return history
+    .filter(m => {
+      if (!m) return false;
+      const text = String(m.message || m.text || '').trim();
+      if (!text) return false;
+      if (m.message_type && CARD_TYPES.has(m.message_type)) return false;
+      if (CARD_TITLES.has(text)) return false;
+      return true;
+    })
+    .slice(-7)
+    .map(m => ({
+      speaker: m.sender === 'user' || m.speaker === 'Student' ? 'Student' : 'Tutor',
+      text: m.message || m.text || ''
+    }));
+}
+
+function extractAskedQuestions(history = [], lastQuestionText = '') {
+  const asked = [];
+  if (Array.isArray(history)) {
+    for (const m of history) {
+      if (!m) continue;
+      const isAi = m.sender === 'ai' || m.sender === 'Tutor' || m.speaker === 'Tutor';
+      if (!isAi) continue;
+      const text = String(m.message || m.text || '').trim();
+      if (CARD_TITLES.has(text) || (m.message_type && CARD_TYPES.has(m.message_type))) continue;
+      if (/[?？]/.test(text) && !asked.includes(text)) {
+        asked.push(text);
+      }
+    }
+  }
+  const pending = String(lastQuestionText || '').trim();
+  if (pending && /[?？]/.test(pending) && !asked.includes(pending)) {
+    asked.push(pending);
+  }
+  return asked;
+}
+
 function buildTutorPrompt(params) {
   const {
     topicTitle, currentGoalTitle, currentGoalDescription = '', previousGoalTitle = '', previousGoalDescription = '',
     topicContent = '', studentMessage = '', evaluatorResult = {}, stateInstruction,
     questionType = 'open', phase = 'DIALOGUE', reportBrief = null, lastQuestionText = '',
     lastQuestionRubric = null, recentHistory = [], classLevel = 'Class 10', sameAssessment = false,
-    akgContext = null
+    akgContext = null, goals = [], goalIndex = 0, goalMap = null
   } = params;
   const ending = phase === 'WRAP' || phase === 'DONE';
   const mcq = phase === 'CHECK' && questionType === 'mcq';
+  const resolvedGoalMap = goalMap || buildGoalMap(goals, goalIndex, phase);
+  const askedQuestions = extractAskedQuestions(recentHistory, lastQuestionText);
+  const conversationHistory = filterConversationHistory(recentHistory);
+  const fallbackBoundary = `Stay strictly within the current goal (${currentGoalTitle}) and ${classLevel}; never introduce out-of-scope concepts.`;
+  const boundarySnippet = akgContext?.tutor_context?.prompt_snippet || fallbackBoundary;
+
   const turnData = {
     topic: topicTitle,
+    lesson_progress: resolvedGoalMap,
+    asked_questions: askedQuestions,
     next_goal: { title: currentGoalTitle, description: currentGoalDescription },
     previous_goal: { title: previousGoalTitle || currentGoalTitle, description: previousGoalDescription || currentGoalDescription },
     previous_question: lastQuestionText,
     previous_rubric: lastQuestionRubric,
     student_message: studentMessage,
-    previous_evaluation: { intent: evaluatorResult.intent || 'NONE', is_correct: evaluatorResult.is_correct ?? null,
-      error_type: evaluatorResult.error_type || null, complete_answer: evaluatorResult.complete_answer || null },
+    previous_evaluation: { intent: evaluatorResult?.intent || 'NONE', is_correct: evaluatorResult?.is_correct ?? null,
+      error_type: evaluatorResult?.error_type || null, complete_answer: evaluatorResult?.complete_answer || null },
     same_assessment: sameAssessment,
     curriculum: String(topicContent).substring(0, 1200),
-    recent_history: recentHistory.slice(-4).map(m => ({ speaker: m.sender === 'user' ? 'Student' : 'Tutor', text: m.message })),
+    recent_history: conversationHistory,
     report: reportBrief,
-    ...(akgContext?.tutor_context?.prompt_snippet ? { academic_boundaries: akgContext.tutor_context.prompt_snippet } : {})
+    academic_boundaries: boundarySnippet
   };
   const schema = ending
     ? '{ "messages": [{ "message": "Warm accurate closing statement.", "message_type": "text" }], "lastQuestionRubric": null }'
     : `{ "messages": [{ "message": "Optional brief feedback or explanation.", "message_type": "text" }, { "message": "Focused complete question?", "message_type": "text"${mcq ? ', "options": [{ "text": "Actual answer text", "value": "Actual answer text" }, { "text": "Plausible distractor", "value": "Plausible distractor" }]' : ''} }], "lastQuestionRubric": { "criteria": [{ "id": "fact_1", "description": "One scientific fact REQUIRED by this exact question", "required": true }], "model_answer": "Complete scientifically accurate answer to this exact question"${mcq ? ', "correct_option_text": "Actual answer text"' : ''} } }`;
-  return `You are Cloop, a warm, accurate school tutor for ${classLevel}.
+  return `You are Cloop, a friendly tutor for CBSE/ICSE/ISC ${classLevel}.
+Your only job is to teach and clarify the current topic. Formal testing, test preparation, scores and mastery reports belong to other components.
 The server owns phases, verdicts, assessment slots, and scores. You write language and an answer rubric.
 Phase: ${phase}. Question type: ${ending ? 'none' : mcq ? 'mcq' : 'open'}.
 Directive: ${guidanceFor(stateInstruction, reportBrief)}
@@ -73,16 +154,16 @@ ${JSON.stringify(turnData)}
 
 STRICT RULES:
 1. Return ONLY JSON matching the schema. Produce 1–2 text bubbles, each at most 19 words. Keep sentences and questions complete.
-2. Acknowledge the PREVIOUS answer according to previous_evaluation.is_correct ONLY: true allows earned praise; false needs a gentle specific correction; null uses neutral acknowledgment. NEVER say "Exactly right", "Correct", "Spot on", or "Well done" for false/null. A spelling correction alone never changes the verdict.
+2. Acknowledge the PREVIOUS answer according to previous_evaluation.is_correct ONLY: true allows earned praise; false needs a gentle specific correction; null uses neutral acknowledgment. NEVER say "Exactly right", "Correct", "Spot on", or "Well done" for false/null. A spelling correction alone never changes the verdict. English is never graded. Preserve correct content without inventing evidence.
 3. Separate previous-answer feedback from the next question. The PREVIOUS goal/rubric governs corrections and reveals; the NEXT goal governs the new question. Never correct the prior answer using the next goal's answer.
 4. If same_assessment is false, assistance directives apply only to the prior answer. Ask a new independent question about next_goal with its full required components. If same_assessment is true, retain the prior assessment requirements; do not lower them to mark an incomplete answer correct.
-5. For stuck students, explain accurately BEFORE reasking. Use a simple everyday example in service of the exact concept. Do not assert a force always changes shape or motion; describe what the example actually supports. Never introduce unrelated curriculum. A new ROUNDUP question is an independent assessment and must remain uncoached.
+5. NEVER REPEAT A QUESTION. Check asked_questions and recent_history before writing. Never repeat a question you have already asked. If a concept needs revisiting, ask it from a new angle with a new example, never the same question reworded. For stuck students (HELP, IDK, or wrong answer), explain accurately BEFORE reasking. Use a simple everyday Indian example.
 6. In ROUNDUP ask full goal recall of its definition, ALL distinct required core facts, and any formula with symbols and units. On a NEW recall (same_assessment=false), do not leak the current recall answer in feedback, an analogy, a definition, a hint, options, or a starter. On a RETRY (same_assessment=true), a wrong answer or HELP/IDK may receive explanation before reasking the SAME full question; the server records this as assistance, never independent mastery. Do not simplify recall into yes/no, recognition, or a one-component check.
-7. Build lastQuestionRubric for the EXACT final question. Split every required answer component into a separate factual criterion with a unique id and required=true. Include a complete model_answer. For full recall, cover the entire goal description. For a retry preserve all prior required criteria. A one-word answer to one component does not satisfy a multi-part rubric.
+7. Build lastQuestionRubric for the EXACT final question. Split every required answer component into a separate factual criterion with a unique id and required=true. Include a complete model_answer. For full recall, cover the entire goal description. For a retry preserve all prior required criteria. A one-word answer to one component does not satisfy a multi-part rubric. Never add hidden requirements or score answers.
 8. ${ending ? 'Close without questions, options, or a rubric. Use only the report facts. Never claim confirmed mastery or all goals achieved unless the report explicitly confirms them.' : 'The final bubble must end with an answerable question and a question mark. Do not narrate cards, attachments, or media controls.'}
 9. ${mcq ? 'MCQ choices: 2–4 unique, plausible, scientifically unambiguous actual answer texts. text=value for every option. NEVER A/B/C, dummy answers, duplicate choices, or two correct choices. correct_option_text must exactly equal the single correct option text.' : 'Written turn: no options or correct_option_text. The student writes an answer.'}
-10. Never restate a chapter overview or objectives during mid-session assistance. Never invent a score, mastery claim, or assessment result.
-${akgContext?.tutor_context?.prompt_snippet ? '11. Respect academic boundaries: strictly stay within in-scope concepts; never introduce or ask about out-of-scope/forbidden concepts for this grade level.' : ''}
+10. Never restate a chapter overview or objectives during mid-session assistance. Never invent a score, completion claim, or mastery verdict.
+${akgContext?.tutor_context?.prompt_snippet ? '11. Respect academic boundaries: strictly stay within in-scope concepts; never introduce or ask about out-of-scope/forbidden concepts for this grade level.' : `11. Stay strictly within the current goal and ${classLevel}; never introduce out-of-scope concepts.`}
 
 SCHEMA:
 ${schema}`;
@@ -118,4 +199,13 @@ async function generateTutorResponse(params) {
   }
 }
 
-module.exports = { generateTutorResponse, buildTutorPrompt, guidanceFor, DIRECTIVE_GUIDANCE };
+module.exports = {
+  generateTutorResponse,
+  buildTutorPrompt,
+  guidanceFor,
+  DIRECTIVE_GUIDANCE,
+  buildGoalMap,
+  filterConversationHistory,
+  extractAskedQuestions,
+  PHASE_PURPOSES
+};

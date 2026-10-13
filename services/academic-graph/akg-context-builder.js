@@ -47,7 +47,7 @@ function buildTutorSnippet({ preceding_anchor, succeeding_teaser, in_scope_conce
     parts.push(`FOUNDATION: Anchor opening probe in: ${preceding_anchor}`);
   }
   if (in_scope_concepts.length) {
-    parts.push(`IN-SCOPE: ${in_scope_concepts.slice(0, 5).join(', ')}`);
+    parts.push(`IN-SCOPE: ${in_scope_concepts.slice(0, 8).join(', ')}`);
   }
   if (out_of_scope_boundaries.length) {
     parts.push(`FORBIDDEN (Out-of-scope for this grade): ${out_of_scope_boundaries.slice(0, 5).join(', ')}. DO NOT introduce, ask about, or mention these.`);

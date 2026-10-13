@@ -283,3 +283,12 @@ test('buildTutorPrompt correctly ingests AKG boundaries and instructions', () =>
   assert.ok(prompt.includes('Respect academic boundaries'));
 });
 
+test('a sixth in-scope concept reaches the tutor prompt snippet', () => {
+  const snippet = buildTutorSnippet({
+    in_scope_concepts: ['Concept 1', 'Concept 2', 'Concept 3', 'Concept 4', 'Concept 5', 'Concept 6'],
+    out_of_scope_boundaries: ['Forbidden 1', 'Forbidden 2', 'Forbidden 3', 'Forbidden 4', 'Forbidden 5', 'Forbidden 6']
+  });
+  assert.ok(snippet.includes('Concept 6'), 'Sixth in-scope concept should reach tutor snippet');
+  assert.ok(!snippet.includes('Forbidden 6'), 'Forbidden boundaries should stay capped at 5');
+});
+
