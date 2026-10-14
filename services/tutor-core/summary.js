@@ -17,7 +17,8 @@
  * callers to start a fully evidenced assessment instead of inventing slots.
  */
 
-const { bandFor, goalCompletion, OPEN_PER_GOAL, MCQ_PER_GOAL, RECALL_PER_GOAL } = require("./state");
+const { bandFor, goalCompletion, OPEN_PER_GOAL, MCQ_PER_GOAL, RECALL_PER_GOAL,
+  computeTeachingCoverage, computeChecksCompleted } = require("./state");
 
 const pct = (n, d) => (d === 0 ? 0 : Math.round((n / d) * 100));
 
@@ -71,6 +72,7 @@ function buildReport(state, goals = []) {
       attempts: slots.reduce((sum, slot) => sum + (slot.attempts || []).length, 0),
       attempted: asked > 0,
       is_completed: complete,
+      teaching_coverage: state?.teachingCoverage?.[i] || { definition: false, explanation: false, formula: false, example: false },
       recall_completed: recallCompleted,
       recall_passed: recallPassed,
       mastery_confirmed: band === "Mastered",
@@ -133,6 +135,8 @@ function buildReport(state, goals = []) {
     assessments_skipped: perGoal.reduce((n, g) => n + g.skipped_assessments, 0),
     assessments_unverified: perGoal.reduce((n, g) => n + g.unverified_assessments, 0),
     assessment_coverage_percent: Math.min(100, pct(asked, expected)),
+    teaching_coverage_percent: computeTeachingCoverage(state),
+    checks_completed: computeChecksCompleted(state),
     recall_completed: recallCompleted,
     recall_passed: recallPassed,
     recall_goals_completed: perGoal.filter((g) => g.recall_completed).length,

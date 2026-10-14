@@ -125,6 +125,8 @@ function initialState(goalTotal) {
     evaluatorUnavailableStreak: 0,
     assessmentVersion: 2,
     perGoal: Array.from({ length: total }, () => ({ correct: 0, total: 0, errors: [], assessments: {} })),
+    teachingCoverage: Array.from({ length: total }, () => ({ definition: false, explanation: false, formula: false, example: false })),
+    lastQuestionRecord: null,
     endedReason: null,
   };
 }
@@ -227,6 +229,7 @@ function advance(state, event = {}) {
   const s = {
     ...state,
     perGoal: (state.perGoal || []).map(copyGoalEvidence),
+    teachingCoverage: (state.teachingCoverage || []).map(c => ({ ...c })),
     assessmentAdvanced: false,
   };
   const intent = normalizeIntent(event.intent);
@@ -253,6 +256,18 @@ function advance(state, event = {}) {
     s.phase = "DONE";
     s.endedReason = s.endedReason || "complete";
     return s;
+  }
+
+  // ── Question clarifications repair visible question without penalty ─────
+  const isClarification = event.helpSubtype === 'question_clarification' ||
+    event.help_subtype === 'question_clarification' ||
+    event.suggestedAction === 'CLARIFY_TASK' || event.suggested_action === 'CLARIFY_TASK' ||
+    event.suggestedAction === 'CLARIFY_QUESTION' || event.suggested_action === 'CLARIFY_QUESTION';
+  if (isClarification) {
+    s.evaluatorUnavailableStreak = 0;
+    s.reteachPending = false;
+    s.wantsVideo = false;
+    return finish();
   }
 
   // ── Repeated off-topic answers close the session kindly ──────────────────
@@ -460,6 +475,15 @@ function baseInstruction(state, intent) {
 
 /** What the generator should be told to do this turn. */
 function instructionFor(state, event = {}) {
+  // Direct question clarification request
+  if (event.helpSubtype === 'question_clarification' ||
+      event.help_subtype === 'question_clarification' ||
+      event.suggestedAction === 'CLARIFY_TASK' ||
+      event.suggested_action === 'CLARIFY_TASK' ||
+      event.suggestedAction === 'CLARIFY_QUESTION' ||
+      event.suggested_action === 'CLARIFY_QUESTION') {
+    return 'clarify_question';
+  }
   // Infrastructure failures do not show that the student is struggling.
   // A neutral retry preserves independent assessment instead of leaking a
   // hint through the anti-repetition ladder. Repeats are bounded separately.
@@ -516,6 +540,26 @@ function buildGoalMap(goals = [], currentIndex = 0, phase = 'DIALOGUE') {
   };
 }
 
+function computeTeachingCoverage(state) {
+  const coverageList = state?.teachingCoverage || [];
+  if (!coverageList.length) return 0;
+  const taughtCount = coverageList.filter(c => c.definition || c.explanation).length;
+  return Math.round((taughtCount / coverageList.length) * 100);
+}
+
+function computeChecksCompleted(state) {
+  return (state?.perGoal || []).reduce((sum, g) => {
+    const slots = Object.values(g.assessments || {});
+    return sum + slots.filter(s => s.completed && s.assessed).length;
+  }, 0);
+}
+
+function isGoalTaught(state, index) {
+  const coverage = state?.teachingCoverage?.[index];
+  if (!coverage) return false;
+  return Boolean(coverage.definition || coverage.explanation);
+}
+
 module.exports = {
   PHASES,
   INTENTS,
@@ -545,4 +589,7 @@ module.exports = {
   bandFor,
   PHASE_PURPOSES,
   buildGoalMap,
+  computeTeachingCoverage,
+  computeChecksCompleted,
+  isGoalTaught
 };

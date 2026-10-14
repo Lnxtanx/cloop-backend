@@ -4,10 +4,70 @@ const { applyGradingGuards, LANGUAGE_ONLY_ERRORS } = require('./evaluator-guards
 const CONTENT_ERRORS = new Set(['Conceptual', 'Factual', 'Incomplete', 'Calculation']);
 const INTENTS = new Set(['ANSWER', 'ACK', 'HELP', 'IDK', 'OFF_TOPIC']);
 
-function escapeHtml(text) {
+function unescapeHtml(text) {
   return String(text == null ? '' : text)
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#039;/g, "'")
+    .replace(/&#39;/g, "'");
+}
+
+function escapeHtml(text) {
+  const clean = unescapeHtml(text);
+  return clean
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+}
+
+const CLARIFICATION_PATTERN = /^(which|what)\s+(box|ball|car|object|one|goal(\s*\d+)?|diagram|step|cart|sponge|block)\b|\bwhat\s+(is|do\s+you\s+mean\s+by)\s+goal\s*\d*\b|\bwhich\s+one\s+(do\s+you\s+mean|is\s+that)\b|\b(clarify|explain)\s+(the\s+)?(question|wording|scenario)\b|\bcan\s+you\s+clarify\b/i;
+
+function detectHelpSubtype(text) {
+  if (CLARIFICATION_PATTERN.test(String(text || '').trim())) {
+    return 'question_clarification';
+  }
+  return null;
+}
+
+function validateQuestionRubricAlignment(lastQuestionText, rubric) {
+  if (!lastQuestionText || !rubric) return { aligned: true };
+  const questionLower = String(lastQuestionText).trim().toLowerCase();
+  const criteria = rubric.criteria || [];
+
+  const isDirectClassification = /\b(contact\s+or\s+non-?contact|true\s+or\s+false|yes\s+or\s+no|which\s+(one|type|force|substance|object))\b/i.test(questionLower);
+  const asksExplanation = /\b(why|explain|reason|how\s+do\s+you\s+know|give\s+reasons?)\b/i.test(questionLower);
+
+  if (isDirectClassification && !asksExplanation) {
+    const requiredExplainCriteria = criteria.filter(c =>
+      c.required && /\b(explain|reason|why|mechanism|cause)\b/i.test(`${c.id} ${c.description}`)
+    );
+    const totalRequired = criteria.filter(c => c.required).length;
+    if (requiredExplainCriteria.length > 0 && requiredExplainCriteria.length === totalRequired) {
+      return { aligned: false, reason: 'Visible question asks for direct classification but rubric secretly requires unasked explanation.' };
+    }
+  }
+
+  return { aligned: true };
+}
+
+function repairNeeded(intent, resolved, reason = 'Question and rubric conflict; repair needed.') {
+  return {
+    intent,
+    is_correct: null,
+    score_percent: null,
+    error_type: null,
+    diff_html: null,
+    complete_answer: null,
+    feedback: 'Let me clarify the task.',
+    criterion_results: [],
+    contradictions: [],
+    evaluation_status: 'repair_needed',
+    graded_by: null,
+    suggested_action: 'CLARIFY_TASK',
+    reasoning: reason,
+    resolved_answer: resolved.isOption ? resolved.resolvedText : null,
+  };
 }
 
 function optionText(option) {
@@ -46,6 +106,7 @@ function normalizeIntent(intent) {
 function fallbackIntent(text, question, resolved) {
   if (resolved.isOption) return 'ANSWER';
   const lower = String(text || '').trim().toLowerCase();
+  if (CLARIFICATION_PATTERN.test(lower)) return 'HELP';
   if (/^(ok(ay)?|k|got it|continue|next|understood|fine|cool)$/i.test(lower)) return 'ACK';
   if (/^(idk|i\s+don['’]?t\s+know|dont\s+know|no idea|not sure|dunno|pass|\?+)$/i.test(lower)) return 'IDK';
   if (/\b(already\s+asked|same\s+question|asked\s+(this\s+)?before|repeat(ing|ed)?)\b/i.test(lower)) return 'HELP';
@@ -55,12 +116,13 @@ function fallbackIntent(text, question, resolved) {
   return 'ANSWER';
 }
 
-function unavailable(intent, resolved, reason = 'The evaluator could not verify this answer.') {
+function unavailable(intent, resolved, reason = 'The evaluator could not verify this answer.', helpSubtype = null) {
   return {
     intent, is_correct: null, score_percent: null, error_type: null,
     diff_html: null, complete_answer: null, feedback: null,
     criterion_results: [], contradictions: [], evaluation_status: 'unavailable',
-    graded_by: null, suggested_action: intent === 'IDK' || intent === 'HELP' ? 'GIVE_HINT' : 'REASK',
+    graded_by: null, suggested_action: intent === 'IDK' || intent === 'HELP' ? (helpSubtype === 'question_clarification' ? 'CLARIFY_QUESTION' : 'GIVE_HINT') : 'REASK',
+    help_subtype: helpSubtype,
     reasoning: reason, resolved_answer: resolved.isOption ? resolved.resolvedText : null,
   };
 }
@@ -286,8 +348,36 @@ async function evaluateStudentTurn({
   const resolved = resolveOptionAnswer(trimmed, options);
   if (!trimmed) return { ...unavailable('HELP', resolved, 'Empty student message.'), evaluation_status: 'not_applicable' };
 
+  // Direct question clarification check
+  const helpSubtype = detectHelpSubtype(trimmed);
+  if (helpSubtype === 'question_clarification') {
+    return {
+      intent: 'HELP',
+      help_subtype: 'question_clarification',
+      is_correct: null,
+      score_percent: null,
+      error_type: null,
+      diff_html: null,
+      complete_answer: null,
+      feedback: 'Let me clarify the question for you.',
+      criterion_results: [],
+      contradictions: [],
+      evaluation_status: 'not_applicable',
+      graded_by: null,
+      suggested_action: 'CLARIFY_QUESTION',
+      reasoning: 'Student requested question clarification.',
+      resolved_answer: null,
+    };
+  }
+
   const rubric = normalizeRubric(lastQuestionRubric);
   if (lastQuestionRubric != null && !rubric) return unavailable(fallbackIntent(trimmed, lastQuestionText, resolved), resolved, 'Invalid question rubric; answer not graded.');
+
+  // Validate question-rubric alignment before grading
+  const alignment = validateQuestionRubricAlignment(lastQuestionText, rubric);
+  if (!alignment.aligned) {
+    return repairNeeded(fallbackIntent(trimmed, lastQuestionText, resolved), resolved, alignment.reason);
+  }
 
   // A known MCQ key is sufficient evidence and remains usable during model outages.
   if ((phase === 'CHECK' || phase == null) && rubric?.correct_option_text && resolved.isOption) {
@@ -317,10 +407,15 @@ async function evaluateStudentTurn({
     if (!parsed || typeof parsed !== 'object') throw new Error('Invalid evaluator response');
     const intent = normalizeIntent(parsed.intent);
     if (!intent) throw new Error('Invalid evaluator intent');
-    if (intent !== 'ANSWER') return {
-      ...unavailable(intent, resolved, 'Student did not submit an answer.'),
-      evaluation_status: 'not_applicable', suggested_action: intent === 'HELP' || intent === 'IDK' ? 'GIVE_HINT' : intent === 'OFF_TOPIC' ? 'HANDLE_OFF_TOPIC' : 'REASK',
-    };
+    if (intent !== 'ANSWER') {
+      const parsedHelpSubtype = intent === 'HELP' ? (detectHelpSubtype(trimmed) || parsed.help_subtype || null) : null;
+      return {
+        ...unavailable(intent, resolved, 'Student did not submit an answer.', parsedHelpSubtype),
+        evaluation_status: 'not_applicable',
+        suggested_action: parsedHelpSubtype === 'question_clarification' ? 'CLARIFY_QUESTION' : intent === 'HELP' || intent === 'IDK' ? 'GIVE_HINT' : intent === 'OFF_TOPIC' ? 'HANDLE_OFF_TOPIC' : 'REASK',
+        help_subtype: parsedHelpSubtype
+      };
+    }
     const criteria = readCriteria(parsed, rubric);
     if (!criteria) throw new Error('Invalid semantic evidence');
     const result = assessedResult(parsed, criteria, rubric, resolved, rubric ? 'rubric_semantic' : 'semantic_legacy', lastQuestionText);
@@ -328,9 +423,12 @@ async function evaluateStudentTurn({
     return result;
   } catch (_) {
     // Never award credit or expose provider error text when grading fails.
-    return unavailable(fallbackIntent(trimmed, lastQuestionText, resolved), resolved);
+    const fbIntent = fallbackIntent(trimmed, lastQuestionText, resolved);
+    const fbSubtype = fbIntent === 'HELP' ? detectHelpSubtype(trimmed) : null;
+    return unavailable(fbIntent, resolved, 'The evaluator could not verify this answer.', fbSubtype);
   }
 }
 
 module.exports = { evaluateStudentTurn, resolveOptionAnswer, applyGradingGuards,
-  LANGUAGE_ONLY_ERRORS, escapeHtml, normalizeRubric, safeDiff };
+  LANGUAGE_ONLY_ERRORS, escapeHtml, unescapeHtml, normalizeRubric, safeDiff,
+  validateQuestionRubricAlignment, detectHelpSubtype, repairNeeded, CLARIFICATION_PATTERN };

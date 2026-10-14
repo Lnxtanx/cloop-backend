@@ -153,7 +153,7 @@ test('strict bubble limit is 19 words and preserves whole short questions', () =
   assert.strictEqual(V.wordCount(question), 21);
   const out = V.enforce({ messages: [{ message: question }], lastQuestionRubric: rubric }, goalContext);
   assert.ok(out.questionReplaced);
-  assert.strictEqual(out.messages.at(-1).message, 'Explain "Effects of force": definition, key facts, and any formula with units?');
+  assert.strictEqual(out.messages.at(-1).message, 'In simple terms, what is Effects of force and how does it work?');
   assert.ok(out.messages.every(m => V.wordCount(m.message) < 20));
   assert.strictEqual(out.lastQuestionRubric.criteria.length, 4);
 });

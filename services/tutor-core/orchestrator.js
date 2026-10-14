@@ -1,11 +1,35 @@
 const { evaluateStudentTurn } = require('./evaluator');
-const { advance, instructionFor, initialState, questionTypeFor, isScored, attachmentsFor, normalizeIntent, scoredGoalIndex, buildGoalMap } = require('./state');
+const { advance, instructionFor, initialState, questionTypeFor, isScored, attachmentsFor, normalizeIntent,
+  scoredGoalIndex, buildGoalMap, computeTeachingCoverage, computeChecksCompleted, isGoalTaught } = require('./state');
 const { generateTutorResponse } = require('./tutor-generator');
 const { enforce } = require('./validate');
 const { getCachedDiagram } = require('./diagram-cache');
 const { buildReport, reportBrief } = require('./summary');
 const { generateRevisionSheet, buildFallbackRevisionSheet } = require('./revision-generator');
 const { buildAcademicNotes } = require('./academic-notes');
+
+function inspectDeliveredTeaching(messages, goal, academicNotes) {
+  const text = (messages || []).map(m => m.message || '').join(' ').toLowerCase();
+  const coverage = { definition: false, explanation: false, formula: false, example: false };
+  if (!text) return coverage;
+
+  if (/\b(defined as|is defined as|means that|is the|refers to|called|known as|concept of)\b/i.test(text) ||
+      (academicNotes?.definition && text.includes(academicNotes.definition.toLowerCase().slice(0, 20)))) {
+    coverage.definition = true;
+  }
+  if (/\b(because|when|causes|results in|mechanism|occurs when|due to|this happens|as a result)\b/i.test(text) ||
+      (academicNotes?.mechanism && text.includes(academicNotes.mechanism.toLowerCase().slice(0, 20)))) {
+    coverage.explanation = true;
+  }
+  if (/\b(formula|measured in|units?|si unit|kg|m\/s|n\b|joules?|p\s*=|f\s*=|v\s*=)\b/i.test(text) ||
+      (academicNotes?.formulas?.length && academicNotes.formulas.some(f => text.includes(String(f).toLowerCase())))) {
+    coverage.formula = true;
+  }
+  if (/\b(for example|e\.g\.|such as|imagine|consider|like when|take a|for instance)\b/i.test(text)) {
+    coverage.example = true;
+  }
+  return coverage;
+}
 
 function findLastQuestion(chatHistory, state) {
   if (state?.lastQuestionText) return state.lastQuestionText;
@@ -68,9 +92,14 @@ async function processTutorTurn({ studentMessage = '', topic, goals = [], chatHi
   const intent = normalizeIntent(evaluatorResult.intent);
   const nextState = starting ? { ...state } : advance(state, { intent,
     correct: evaluatorResult.is_correct, evaluationStatus: evaluatorResult.evaluation_status,
+    helpSubtype: evaluatorResult.help_subtype, suggestedAction: evaluatorResult.suggested_action,
     previousQuestionAssisted: state.questionAssisted, offTopic: intent === 'OFF_TOPIC',
     errorType: evaluatorResult.error_type, answerText: evaluatorResult.resolved_answer || studentMessage, wantsVideo });
-  const stateInstruction = instructionFor(nextState, { intent: starting ? 'ANSWER' : intent });
+  const stateInstruction = instructionFor(nextState, {
+    intent: starting ? 'ANSWER' : intent,
+    helpSubtype: evaluatorResult.help_subtype,
+    suggestedAction: evaluatorResult.suggested_action
+  });
   nextState.lastInstruction = stateInstruction;
   let questionType = questionTypeFor(nextState.phase);
   const attachments = attachmentsFor(nextState);
@@ -122,8 +151,20 @@ async function processTutorTurn({ studentMessage = '', topic, goals = [], chatHi
   nextState.lastQuestionText = ending ? '' : finalBubble?.message || '';
   nextState.lastQuestionOptions = ending ? null : finalBubble?.options || null;
   nextState.lastQuestionRubric = ending ? null : validated.lastQuestionRubric;
+  nextState.lastQuestionRecord = ending ? null : (validated.questionRecord || null);
   nextState.lastQuestionType = questionType;
   nextState.questionAssisted = (sameAssessment && (state.questionAssisted || ASSISTANCE.has(stateInstruction))) || Boolean(validated.questionAssisted);
+
+  // Record delivered teaching coverage by concept component only after validated content is persisted for delivery
+  if (!ending && nextState.teachingCoverage && nextState.teachingCoverage[currentGoalIdx]) {
+    const turnCoverage = inspectDeliveredTeaching(validated.messages, generatorGoal, academicNotes);
+    const existing = nextState.teachingCoverage[currentGoalIdx];
+    existing.definition = existing.definition || turnCoverage.definition;
+    existing.explanation = existing.explanation || turnCoverage.explanation;
+    existing.formula = existing.formula || turnCoverage.formula;
+    existing.example = existing.example || turnCoverage.example;
+  }
+
   const gradedThisTurn = !terminal && intent === 'ANSWER' && isScored(state.phase) &&
     typeof evaluatorResult.is_correct === 'boolean' && evaluatorResult.evaluation_status !== 'unavailable';
   const isAnswer = !terminal && !starting && intent === 'ANSWER';
@@ -138,9 +179,25 @@ async function processTutorTurn({ studentMessage = '', topic, goals = [], chatHi
       evaluation_status: evaluatorResult.evaluation_status || 'available' }
   } : null;
   const diagram = attachments.includes('diagram') ? getCachedDiagram(topic.title, generatorGoal.title, generatorGoal) : null;
+  const teachingCoveragePercent = computeTeachingCoverage(nextState);
+  const checksCompleted = computeChecksCompleted(nextState);
+  const assessmentHandoff = ending ? {
+    topic: topic.title,
+    sourceVersion: 'v1',
+    teachingCoverage: nextState.teachingCoverage,
+    misconceptions: (nextState.perGoal || []).flatMap(g => g.errors || []),
+    assistanceHistory: (nextState.perGoal || []).map((g, idx) => ({
+      goalIndex: idx,
+      assisted: Object.values(g.assessments || {}).some(a => a.assisted)
+    }))
+  } : null;
+
   return { evaluatorResult, intent, answeredPhase: state.phase, gradedThisTurn, nextState,
     stateInstruction, questionType, attachments, masteryReport, revisionSheet,
     messages: validated.messages, userCorrection, mermaid_diagram: diagram,
+    teaching_coverage_percent: teachingCoveragePercent,
+    checks_completed: checksCompleted,
+    assessment_handoff: assessmentHandoff,
     all_goals_completed: !!(masteryReport?.session_completed && masteryReport?.recall_completed &&
       masteryReport.goals_completed === masteryReport.goals_total),
     session_closed: ending,

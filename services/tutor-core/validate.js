@@ -61,9 +61,24 @@ function splitIntoMicroBubbles(text, maxWords = MAX_WORDS_PER_BUBBLE) {
   return chunks;
 }
 
+function unescapeHtml(text) {
+  return String(text == null ? '' : text)
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#039;/g, "'")
+    .replace(/&#39;/g, "'");
+}
+
 function escapeHtml(text) {
-  return String(text || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  const clean = unescapeHtml(text);
+  return clean
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 function cleanCompleteSentence(text, maxWords = 15) {
@@ -74,10 +89,27 @@ function cleanCompleteSentence(text, maxWords = 15) {
     const s = firstSentenceMatch[1].trim();
     if (wordCount(s) <= maxWords) return s;
   }
-  const clauseMatch = clean.match(/^([^;]+|[^,]+(?=,\s*(?:because|which|since|whereas|as)\b))/i);
-  if (clauseMatch) {
-    const clause = clauseMatch[1].trim();
-    if (wordCount(clause) <= maxWords && wordCount(clause) >= 3) {
+  const commaClauseMatch = clean.match(/^([^,]+)(?=,\s*(?:because|which|since|whereas|as)\b)/i);
+  if (commaClauseMatch) {
+    const clause = commaClauseMatch[1].trim();
+    const words = clause.split(/\s+/);
+    if (words.length <= maxWords && words.length >= 3) {
+      return /[.!?]$/.test(clause) ? clause : `${clause}.`;
+    }
+  }
+  const semicolonMatch = clean.match(/^([^;]+);/);
+  if (semicolonMatch) {
+    const clause = semicolonMatch[1].trim();
+    const words = clause.split(/\s+/);
+    if (words.length <= maxWords && words.length >= 3) {
+      return /[.!?]$/.test(clause) ? clause : `${clause}.`;
+    }
+  }
+  const relativeClauseMatch = clean.match(/^([^.!?]+?)(?=\s+(?:that|which|because|since|whereas)\b)/i);
+  if (relativeClauseMatch) {
+    const clause = relativeClauseMatch[1].trim();
+    const words = clause.split(/\s+/);
+    if (words.length <= maxWords && words.length >= 4) {
       return /[.!?]$/.test(clause) ? clause : `${clause}.`;
     }
   }
@@ -85,12 +117,8 @@ function cleanCompleteSentence(text, maxWords = 15) {
   if (words.length <= maxWords) {
     return clean;
   }
-  let slice = words.slice(0, maxWords);
-  while (slice.length > 3 && /^(and|or|but|because|with|the|a|an|of|to|in|on|that|which|as|for)$/i.test(slice[slice.length - 1])) {
-    slice.pop();
-  }
-  const joined = slice.join(' ').replace(/[,;:\s]+$/, '');
-  return /[.!?]$/.test(joined) ? joined : `${joined}.`;
+  // Preserving complete meaning: if it cannot fit within maxWords cleanly, omit short diff.
+  return '';
 }
 
 function sanitizeDiffHtml(diffHtml, rawStudentText = '') {
@@ -142,10 +170,76 @@ function normalizeOptions(options, correctOption) {
   return result.filter(o => o.text === correctOption).length === 1 ? result : null;
 }
 
-/** Grounded fallback: no invented MCQ answer and no broad chapter question. */
+const PHYSICAL_ENTITIES = ['box', 'ball', 'block', 'car', 'cart', 'sponge', 'wire', 'magnet', 'bulb', 'pendulum', 'beaker', 'spring', 'flask', 'stone', 'toy car'];
+
+function extractEntities(text) {
+  const lower = String(text || '').toLowerCase();
+  return PHYSICAL_ENTITIES.filter(entity => {
+    const re = new RegExp(`\\b${entity}s?\\b`, 'i');
+    return re.test(lower);
+  });
+}
+
+function validateScenarioConsistency(explanationText, questionText) {
+  if (!explanationText || !questionText) return true;
+  const explEntities = extractEntities(explanationText);
+  const qEntities = extractEntities(questionText);
+  if (explEntities.length > 0 && qEntities.length > 0) {
+    const hasOverlap = explEntities.some(e => qEntities.includes(e));
+    if (!hasOverlap) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function extractScenario(explanationText, questionText) {
+  const combined = `${explanationText || ''} ${questionText || ''}`.trim();
+  if (!combined) return null;
+  const entities = extractEntities(combined);
+  const actions = (combined.match(/\b(push(ed|ing)?|pull(ed|ing)?|squeez(ed|ing)?|mov(ed|ing)?|rest(ed|ing)?|drop(ped|ping)?|accelerat(ed|ing)?|decelerat(ed|ing)?|collid(ed|ing)?|stretching|compressing)\b/gi) || [])
+    .map(a => a.toLowerCase());
+  return {
+    object: entities[0] || null,
+    action: actions[0] || null,
+    summary: cleanProse(explanationText || questionText).slice(0, 100)
+  };
+}
+
+function createQuestionRecord(params = {}) {
+  const {
+    questionId,
+    goalId,
+    scenario,
+    questionText = '',
+    options = null,
+    rubric = null,
+    modelAnswer = null,
+    requiredComponentIds = [],
+    assisted = false,
+    sourceVersion = 'v1'
+  } = params;
+
+  return {
+    questionId: questionId || `q_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
+    goalId: goalId || null,
+    scenario: scenario || null,
+    questionText: String(questionText || '').trim(),
+    options: Array.isArray(options) ? options : null,
+    rubric: rubric || null,
+    modelAnswer: modelAnswer || rubric?.model_answer || null,
+    requiredComponentIds: Array.isArray(requiredComponentIds) && requiredComponentIds.length
+      ? requiredComponentIds
+      : (rubric?.criteria || []).map(c => c.id),
+    assisted: Boolean(assisted),
+    sourceVersion: sourceVersion || 'v1'
+  };
+}
+
+/** Grounded fallback: source-backed explanation and check, no internal goal labels, no unbacked formulas. */
 function buildFocusedFallback(context = {}) {
-  const { currentGoalTitle = '', currentGoalDescription = '', sameAssessment = false,
-    lastQuestionText = '', lastQuestionRubric = null, lastQuestionOptions = null } = context;
+  const { currentGoalTitle = '', currentGoalDescription = '', topicTitle = '', academicNotes = null,
+    sameAssessment = false, lastQuestionText = '', lastQuestionRubric = null, lastQuestionOptions = null } = context;
   const priorQuestion = cleanProse(lastQuestionText);
   const priorRubric = normalizeRubric(lastQuestionRubric);
   if (sameAssessment && priorRubric && endsWithQuestion(priorQuestion) && wordCount(priorQuestion) <= MAX_WORDS_PER_BUBBLE) {
@@ -156,15 +250,34 @@ function buildFocusedFallback(context = {}) {
         lastQuestionRubric: priorRubric, fallbackQuestionType: options ? 'mcq' : 'open' };
     }
   }
-  const title = cleanProse(currentGoalTitle).replace(/[?？]+$/, '');
-  const question = title && wordCount(title) <= 9
-    ? `Explain "${title}": definition, key facts, and any formula with units?`
-    : 'State this goal’s definition, key facts, and any formula with units?';
+
+  let title = cleanProse(currentGoalTitle).replace(/[?？]+$/, '');
+  const isGeneric = !title || /^goal\s*\d+/i.test(title);
+  const conceptName = isGeneric ? (cleanProse(topicTitle) || 'this concept') : title;
   const content = String(currentGoalDescription || currentGoalTitle || '').trim();
   const allFacts = content.split(/;|\n/).map(s => s.trim()).filter(Boolean);
   // Illustrations aid teaching; recall should not demand every named example.
   const coreFacts = allFacts.filter(fact => !/^(?:examples?(?:\s+such as|\s*:)|for example\b|e\.g\.)/i.test(fact));
-  const facts = coreFacts.length ? coreFacts : allFacts;
+  const facts = coreFacts.length ? coreFacts : (allFacts.length ? allFacts : [conceptName]);
+
+  const hasFormula = Boolean(academicNotes?.formulas?.length || /\b(formula|units?|si unit|equation)\b/i.test(content));
+
+  let question;
+  if (hasFormula) {
+    question = `What is meant by ${conceptName}, and what is its formula?`;
+    if (wordCount(question) > MAX_WORDS_PER_BUBBLE) {
+      question = `What is the definition and formula for ${conceptName}?`;
+    }
+  } else {
+    question = `In simple terms, what is ${conceptName} and how does it work?`;
+    if (wordCount(question) > MAX_WORDS_PER_BUBBLE) {
+      question = `What is meant by ${conceptName}?`;
+    }
+  }
+  if (wordCount(question) > MAX_WORDS_PER_BUBBLE) {
+    question = `How would you explain ${cleanProse(topicTitle) || 'this concept'}?`;
+  }
+
   return {
     messages: [{ message: question, message_type: 'text' }],
     lastQuestionRubric: content ? { criteria: facts.map((description, i) => ({ id: `fact_${i + 1}`, description, required: true })), model_answer: content } : null,
@@ -173,10 +286,12 @@ function buildFocusedFallback(context = {}) {
 }
 
 function enforce(rawOutput, context = {}) {
-  const { isCorrect = null, phase = 'DIALOGUE', questionType = 'open', diffHtml = null, studentMessage = '' } = context;
+  const { isCorrect = null, phase = 'DIALOGUE', questionType = 'open', diffHtml = null, studentMessage = '',
+    helpSubtype = null, stateInstruction = null } = context;
   const ending = phase === 'WRAP' || phase === 'DONE';
-  let actualQuestionType = rawOutput?.fallbackQuestionType || questionType;
-  let rubric = normalizeRubric(rawOutput?.lastQuestionRubric);
+  const explanationOnly = questionType === 'none' || helpSubtype === 'question_clarification' || stateInstruction === 'clarify_question';
+  let actualQuestionType = explanationOnly ? 'none' : (rawOutput?.fallbackQuestionType || questionType);
+  let rubric = explanationOnly ? null : normalizeRubric(rawOutput?.lastQuestionRubric);
   const priorRubric = normalizeRubric(context.lastQuestionRubric);
   let questionReplaced = false;
   let questionAssisted = Boolean(context.sameAssessment);
@@ -189,18 +304,43 @@ function enforce(rawOutput, context = {}) {
     messages = messages.filter(b => !endsWithQuestion(b.message)).slice(0, 1);
     if (!messages.length) messages = [{ message: 'Your session report and revision sheet are ready.', message_type: 'text' }];
     messages.forEach(b => delete b.options);
-    return { messages, diff_html: sanitizeDiffHtml(diffHtml, studentMessage), lastQuestionRubric: null, questionType: null, questionReplaced: false };
+    return { messages, diff_html: sanitizeDiffHtml(diffHtml, studentMessage), lastQuestionRubric: null, questionType: null, questionReplaced: false, questionRecord: null };
+  }
+
+  if (explanationOnly) {
+    messages.forEach(b => delete b.options);
+    return {
+      messages,
+      diff_html: sanitizeDiffHtml(diffHtml, studentMessage),
+      lastQuestionRubric: null,
+      questionType: 'none',
+      questionReplaced: false,
+      questionAssisted,
+      questionRecord: null
+    };
   }
 
   // First recall is uncoached and asks for exactly the full stored core-facts rubric.
   // Assisted retries may explain, but retain that whole question and its original rubric.
+  // Clarifications are handled above and do not trigger unconditional ROUNDUP replacement.
   if (phase === 'ROUNDUP' && context.currentGoalDescription) {
     const recall = buildFocusedFallback(context);
     const explanation = context.sameAssessment ? messages.find(b => !endsWithQuestion(b.message)) : null;
     messages = explanation ? [explanation, recall.messages[0]] : recall.messages;
     messages.forEach(b => delete b.options);
+    const questionRecord = createQuestionRecord({
+      goalId: context.currentGoalId || context.goalIndex || null,
+      scenario: extractScenario(explanation?.message, recall.messages[0]?.message),
+      questionText: recall.messages[0]?.message,
+      options: null,
+      rubric: recall.lastQuestionRubric,
+      modelAnswer: recall.lastQuestionRubric?.model_answer,
+      requiredComponentIds: (recall.lastQuestionRubric?.criteria || []).map(c => c.id),
+      assisted: questionAssisted,
+      sourceVersion: context.sourceVersion || 'v1'
+    });
     return { messages, diff_html: sanitizeDiffHtml(diffHtml, studentMessage),
-      lastQuestionRubric: recall.lastQuestionRubric, questionType: 'open', questionReplaced: true };
+      lastQuestionRubric: recall.lastQuestionRubric, questionType: 'open', questionReplaced: true, questionRecord };
   }
 
   // CHECK retries restore the original question, choices and key
@@ -212,8 +352,19 @@ function enforce(rawOutput, context = {}) {
     if (retryType !== 'mcq') messages.forEach(b => delete b.options);
     const retryRubric = pending.lastQuestionRubric;
     if (retryRubric && retryType !== 'mcq') delete retryRubric.correct_option_text;
+    const questionRecord = createQuestionRecord({
+      goalId: context.currentGoalId || context.goalIndex || null,
+      scenario: extractScenario(explanation?.message, pending.messages[0]?.message),
+      questionText: pending.messages[0]?.message,
+      options: retryType === 'mcq' ? pending.messages[0]?.options : null,
+      rubric: retryRubric,
+      modelAnswer: retryRubric?.model_answer,
+      requiredComponentIds: (retryRubric?.criteria || []).map(c => c.id),
+      assisted: true,
+      sourceVersion: context.sourceVersion || 'v1'
+    });
     return { messages, diff_html: sanitizeDiffHtml(diffHtml, studentMessage),
-      lastQuestionRubric: retryRubric, questionType: retryType, questionReplaced: true, questionAssisted: true };
+      lastQuestionRubric: retryRubric, questionType: retryType, questionReplaced: true, questionAssisted: true, questionRecord };
   }
 
   // Open teaching retries (DIALOGUE, THEORY, PROBE): retain valid adaptive question and rubric
@@ -263,14 +414,44 @@ function enforce(rawOutput, context = {}) {
   } else if (validOptions) {
     final.options = validOptions;
   }
+
+  // Validate explanation and question scenario consistency before delivery
+  const explanationBubble = messages.length > 1 ? messages.find(b => !endsWithQuestion(b.message)) : null;
+  const questionBubble = messages[messages.length - 1];
+  if (explanationBubble && questionBubble && endsWithQuestion(questionBubble.message)) {
+    if (!validateScenarioConsistency(explanationBubble.message, questionBubble.message)) {
+      let fallback = buildFocusedFallback(context);
+      messages = [explanationBubble, fallback.messages[0]];
+      rubric = fallback.lastQuestionRubric;
+      actualQuestionType = fallback.fallbackQuestionType;
+      questionReplaced = true;
+    }
+  }
+
   // Options belong only to the final CHECK question, never a written or closing bubble.
   messages.forEach((b, i) => {
     if (phase !== 'CHECK' || actualQuestionType !== 'mcq' || i !== messages.length - 1) delete b.options;
   });
   if (phase !== 'CHECK') actualQuestionType = 'open';
   if (rubric && actualQuestionType !== 'mcq') delete rubric.correct_option_text;
-  return { messages, diff_html: sanitizeDiffHtml(diffHtml, studentMessage), lastQuestionRubric: rubric, questionType: actualQuestionType, questionReplaced, questionAssisted };
+
+  const finalQuestionText = ending || actualQuestionType === 'none' ? '' : (final?.message || '');
+  const questionRecord = ending || actualQuestionType === 'none' ? null : createQuestionRecord({
+    goalId: context.currentGoalId || context.goalIndex || null,
+    scenario: extractScenario(explanationBubble?.message, finalQuestionText),
+    questionText: finalQuestionText,
+    options: actualQuestionType === 'mcq' ? final?.options : null,
+    rubric,
+    modelAnswer: rubric?.model_answer,
+    requiredComponentIds: (rubric?.criteria || []).map(c => c.id),
+    assisted: questionAssisted,
+    sourceVersion: context.sourceVersion || 'v1'
+  });
+
+  return { messages, diff_html: sanitizeDiffHtml(diffHtml, studentMessage), lastQuestionRubric: rubric,
+    questionType: actualQuestionType, questionReplaced, questionAssisted, questionRecord };
 }
 
 module.exports = { PILL_NARRATION, enforce, cleanProse, wordCount, splitIntoMicroBubbles, endsWithQuestion,
-  sanitizeDiffHtml, reconcileTone, normalizeRubric, normalizeOptions, buildFocusedFallback, MAX_WORDS_PER_BUBBLE };
+  sanitizeDiffHtml, reconcileTone, normalizeRubric, normalizeOptions, buildFocusedFallback,
+  validateScenarioConsistency, extractScenario, createQuestionRecord, unescapeHtml, escapeHtml, MAX_WORDS_PER_BUBBLE };

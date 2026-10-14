@@ -9,6 +9,8 @@
 const test = require("node:test");
 const assert = require("node:assert");
 const S = require("./state");
+const V = require("./validate");
+const E = require("./evaluator");
 const { applyGradingGuards, LANGUAGE_ONLY_ERRORS } = require("./evaluator-guards");
 
 /** Play a list of turns the way the orchestrator does, recording instructions. */
@@ -153,4 +155,104 @@ test("an off-topic aside does not end a session on its own", () => {
   s = S.advance(s, { intent: "ANSWER", correct: true });
   assert.strictEqual(s.offTopicStreak, 0, "one aside is held against the student");
   assert.notStrictEqual(s.phase, "WRAP");
+});
+
+// ── Screenshot Failure Regressions ─────────────────────────────────────────
+
+// 1. Toy car with decimal and units
+test("regression: toy-car answer with decimal and units is preserved as ANSWER and not severed", () => {
+  const resolved = E.resolveOptionAnswer("0.5 N", null);
+  assert.strictEqual(resolved.isOption, false);
+  const out = V.enforce({
+    messages: [{ message: "Which effect of force explains why a slowly moving toy car on the table accelerates when we push it with 0.5 newtons?" }]
+  }, { phase: "DIALOGUE", currentGoalTitle: "Effects of force", currentGoalDescription: "A force can change speed" });
+  assert.ok(out.questionReplaced);
+  assert.ok(!out.messages.at(-1).message.startsWith("5 newtons"));
+});
+
+// 2. Box-to-ball switching
+test("regression: box-to-ball switching fails scenario validation and triggers grounded replacement", () => {
+  const explanation = "A heavy wooden box is resting on the rough floor.";
+  const conflictingQuestion = "What happens when the ball is kicked across the grass?";
+  assert.strictEqual(V.validateScenarioConsistency(explanation, conflictingQuestion), false);
+
+  const out = V.enforce({
+    messages: [
+      { message: explanation },
+      { message: conflictingQuestion }
+    ],
+    lastQuestionRubric: { criteria: [{ id: "motion", description: "Motion changes", required: true }], model_answer: "Motion changes" }
+  }, { phase: "DIALOGUE", currentGoalTitle: "Friction", currentGoalDescription: "Friction opposes motion" });
+
+  assert.strictEqual(out.questionReplaced, true);
+  assert.ok(out.questionRecord);
+  assert.strictEqual(out.questionRecord.assisted, false);
+});
+
+// 3. Clarification without penalties
+test("regression: clarification queries ('Which box?', 'Which ball?', 'What is Goal 1?') carry no penalty", async () => {
+  for (const query of ["Which box?", "Which ball?", "What is Goal 1?", "can you clarify the question?"]) {
+    const evalRes = await E.evaluateStudentTurn({
+      studentMessage: query,
+      lastQuestionText: "Does the box move?",
+      phase: "DIALOGUE",
+      topicTitle: "Forces",
+      currentGoal: { title: "Contact forces", description: "Friction is a contact force" }
+    });
+    assert.strictEqual(evalRes.intent, "HELP");
+    assert.strictEqual(evalRes.help_subtype, "question_clarification");
+    assert.strictEqual(evalRes.suggested_action, "CLARIFY_QUESTION");
+
+    let s = S.initialState(3);
+    s.stuckStreak = 0;
+    s.consecutiveWrong = 0;
+    const nextS = S.advance(s, evalRes);
+    assert.strictEqual(nextS.stuckStreak, 0, "clarification should not increment stuckStreak");
+    assert.strictEqual(nextS.consecutiveWrong, 0, "clarification should not increment consecutiveWrong");
+    assert.strictEqual(nextS.wantsVideo, false, "clarification should not trigger video");
+
+    const ins = S.instructionFor(nextS, evalRes);
+    assert.strictEqual(ins, "clarify_question");
+  }
+});
+
+// 4. Hidden "why" requirements
+test("regression: visible classification question does not fail on unasked why/explanation requirements", async () => {
+  const question = "Is friction a contact or non-contact force?";
+  const alignment = E.validateQuestionRubricAlignment(question, {
+    criteria: [{ id: "why", description: "Explain why surfaces interact", required: true }],
+    model_answer: "Explain why surfaces interact"
+  });
+  assert.strictEqual(alignment.aligned, false);
+});
+
+// 5. Generic Goal questions
+test("regression: buildFocusedFallback never produces generic Goal questions or unbacked formulas", () => {
+  const fallbackGeneric = V.buildFocusedFallback({
+    currentGoalTitle: "Goal 1",
+    currentGoalDescription: "Friction opposes motion between surfaces",
+    topicTitle: "Friction"
+  });
+  const qText = fallbackGeneric.messages[0].message;
+  assert.ok(!qText.includes("Goal 1"), "fallback must never expose internal goal label 'Goal 1'");
+  assert.ok(!qText.includes("any formula with units"), "fallback must not demand unsupported formulas");
+  assert.ok(qText.includes("Friction"));
+});
+
+// 6. Incomplete corrections
+test("regression: incomplete corrections are omitted rather than severed mid-word", () => {
+  const fullAnswer = "Signs of a chemical reaction include a change in colour, evolution of gas, change in temperature, or formation of a precipitate.";
+  const diffHtml = `<del>fizz</del><ins>${fullAnswer}</ins>`;
+  const sanitized = V.sanitizeDiffHtml(diffHtml, "fizz");
+  assert.strictEqual(sanitized, null, "unsuitable short diff should be omitted, leaving complete_answer intact");
+});
+
+// 7. Double-escaped apostrophes
+test("regression: apostrophes are never double-escaped (don't -> don&#39;t, not don&amp;#39;t)", () => {
+  assert.strictEqual(V.escapeHtml("don't"), "don&#39;t");
+  assert.strictEqual(V.escapeHtml("don&#39;t"), "don&#39;t");
+  assert.strictEqual(V.escapeHtml("don&amp;#39;t"), "don&#39;t");
+  assert.strictEqual(E.escapeHtml("don't"), "don&#039;t");
+  assert.strictEqual(E.escapeHtml("don&#039;t"), "don&#039;t");
+  assert.strictEqual(E.escapeHtml("don&amp;#039;t"), "don&#039;t");
 });

@@ -633,9 +633,11 @@ async function handleTopicChatMessageV2(req, res) {
 
     // 13. Asynchronous / On-Demand Media (YouTube & Diagrams)
     let fetchedVideos = [];
-    // Media follows the state machine's attachment plan. A request or a wrong
-    // answer cannot bypass assessment-only ROUNDUP or a terminal phase.
-    const mediaAllowed = !['ROUNDUP', 'WRAP', 'DONE'].includes(turnResult.nextState.phase);
+    // Media follows the state machine's attachment plan. Suppress media during
+    // question clarification, assessment-only ROUNDUP, or a terminal phase.
+    const isClarification = turnResult.evaluatorResult?.help_subtype === 'question_clarification' ||
+      turnResult.stateInstruction === 'clarify_question';
+    const mediaAllowed = !['ROUNDUP', 'WRAP', 'DONE'].includes(turnResult.nextState.phase) && !isClarification;
 
     const linkMediaToGoal = async (chatId) => {
       if (!currentGoalRecord) return;
@@ -798,6 +800,7 @@ async function handleTopicChatMessageV2(req, res) {
       return {
         ...g,
         is_completed: isDone,
+        teaching_coverage: turnResult.nextState.teachingCoverage?.[idx] || { definition: false, explanation: false, formula: false, example: false },
         chat_goal_progress: [
           {
             id: existingProgress?.id || 0,
@@ -828,6 +831,9 @@ async function handleTopicChatMessageV2(req, res) {
       session_completed: sessionCompleted,
       session_closed: sessionClosed,
       mastery_confirmed: masteryConfirmed,
+      teaching_coverage_percent: turnResult.teaching_coverage_percent ?? null,
+      checks_completed: turnResult.checks_completed ?? null,
+      assessment_handoff: turnResult.assessment_handoff || null,
       ...(sessionClosed ? { masteryReport: turnResult.masteryReport, revisionSheet: turnResult.revisionSheet || null } : {}),
       goals: updatedGoals,
       mermaid_diagram: mermaidDiagram || null,
