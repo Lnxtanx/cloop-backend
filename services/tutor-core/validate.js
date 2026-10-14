@@ -13,8 +13,28 @@ const PILL_NARRATION = [
   /\bthen tell me\b[,:]?\s*/gi,
 ];
 
+function unescapeHtml(text) {
+  return String(text == null ? '' : text)
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#039;/g, "'")
+    .replace(/&#39;/g, "'");
+}
+
+function escapeHtml(text) {
+  const clean = unescapeHtml(text);
+  return clean
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 function cleanProse(text) {
-  let out = String(text || '')
+  let out = unescapeHtml(String(text || ''))
     .replace(/```[\s\S]*?```/g, '')
     .replace(/<think>[\s\S]*?<\/think>/gi, '')
     .replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, '')
@@ -59,26 +79,6 @@ function splitIntoMicroBubbles(text, maxWords = MAX_WORDS_PER_BUBBLE) {
     else chunks.push(s);
   }
   return chunks;
-}
-
-function unescapeHtml(text) {
-  return String(text == null ? '' : text)
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
-    .replace(/&#039;/g, "'")
-    .replace(/&#39;/g, "'");
-}
-
-function escapeHtml(text) {
-  const clean = unescapeHtml(text);
-  return clean
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
 }
 
 function cleanCompleteSentence(text, maxWords = 15) {
@@ -170,7 +170,19 @@ function normalizeOptions(options, correctOption) {
   return result.filter(o => o.text === correctOption).length === 1 ? result : null;
 }
 
-const PHYSICAL_ENTITIES = ['box', 'ball', 'block', 'car', 'cart', 'sponge', 'wire', 'magnet', 'bulb', 'pendulum', 'beaker', 'spring', 'flask', 'stone', 'toy car'];
+const PHYSICAL_ENTITIES = [
+  'box', 'ball', 'block', 'car', 'cart', 'sponge', 'wire', 'magnet', 'bulb', 'pendulum',
+  'beaker', 'spring', 'flask', 'stone', 'toy car', 'hand', 'wall', 'desk', 'table',
+  'floor', 'ground', 'chair', 'book', 'tree', 'rope', 'bucket', 'brick', 'door', 'shelf', 'ceiling'
+];
+
+const CONFLICTING_ENTITY_GROUPS = [
+  ['wall', 'desk', 'table', 'floor', 'ground', 'chair', 'door', 'shelf', 'ceiling'],
+  ['car', 'toy car', 'cart', 'truck', 'bus', 'train', 'bicycle', 'bike'],
+  ['beaker', 'flask', 'cup', 'glass', 'bucket'],
+  ['sponge', 'spring', 'rubber band'],
+  ['box', 'block', 'stone', 'brick']
+];
 
 function extractEntities(text) {
   const lower = String(text || '').toLowerCase();
@@ -180,16 +192,43 @@ function extractEntities(text) {
   });
 }
 
-function validateScenarioConsistency(explanationText, questionText) {
-  if (!explanationText || !questionText) return true;
-  const explEntities = extractEntities(explanationText);
+function validateScenarioConsistency(explanationText, questionText, rubric = null) {
+  if (!questionText) return true;
   const qEntities = extractEntities(questionText);
-  if (explEntities.length > 0 && qEntities.length > 0) {
-    const hasOverlap = explEntities.some(e => qEntities.includes(e));
-    if (!hasOverlap) {
-      return false;
+
+  if (explanationText) {
+    const explEntities = extractEntities(explanationText);
+    if (explEntities.length > 0 && qEntities.length > 0) {
+      for (const group of CONFLICTING_ENTITY_GROUPS) {
+        const inExpl = explEntities.filter(e => group.includes(e));
+        const inQ = qEntities.filter(e => group.includes(e));
+        if (inExpl.length > 0 && inQ.length > 0) {
+          const groupOverlap = inExpl.some(e => inQ.includes(e));
+          if (!groupOverlap) return false;
+        }
+      }
+      const hasOverlap = explEntities.some(e => qEntities.includes(e));
+      if (!hasOverlap) return false;
     }
   }
+
+  if (rubric) {
+    const rubricText = [rubric.model_answer || '', ...(rubric.criteria || []).map(c => c.description || '')].join(' ');
+    const rubricEntities = extractEntities(rubricText);
+    if (rubricEntities.length > 0 && qEntities.length > 0) {
+      for (const group of CONFLICTING_ENTITY_GROUPS) {
+        const inRubric = rubricEntities.filter(e => group.includes(e));
+        const inQ = qEntities.filter(e => group.includes(e));
+        if (inRubric.length > 0 && inQ.length > 0) {
+          const groupOverlap = inRubric.some(e => inQ.includes(e));
+          if (!groupOverlap) return false;
+        }
+      }
+      const hasOverlap = rubricEntities.some(e => qEntities.includes(e));
+      if (!hasOverlap) return false;
+    }
+  }
+
   return true;
 }
 
@@ -236,13 +275,43 @@ function createQuestionRecord(params = {}) {
   };
 }
 
+const PEDAGOGICAL_OBJECTIVE_PREFIXES = /^(?:students\s+(?:will|should)\s+(?:be\s+able\s+to\s+)?|to\s+(?:be\s+able\s+to|understand\s+that|learn\s+that|know\s+that)\s+|understand\s+that\s+|identify\s+(?:the\s+)?|describe\s+(?:the\s+)?|explain\s+(?:how\s+|the\s+|that\s+)?|state\s+(?:the\s+)?|define\s+(?:the\s+)?|differentiate\s+between\s+|distinguish\s+between\s+|recall\s+(?:that\s+)?|recognize\s+(?:that\s+)?|demonstrate\s+(?:that\s+)?|show\s+that\s+|explore\s+(?:the\s+)?|observe\s+(?:the\s+)?|examine\s+(?:the\s+)?|list\s+(?:the\s+)?|name\s+(?:the\s+)?)\b/i;
+
+function cleanConceptHeading(title, topicTitle) {
+  const stripPrefix = s => unescapeHtml(String(s || ''))
+    .trim()
+    .replace(/^(?:topic|goal|chapter|unit|section|lesson)\s*\d*[\s:.-]*/i, '')
+    .replace(/[?？!.,:;]+$/, '')
+    .trim();
+
+  let clean = stripPrefix(title);
+  if (!clean || /^(?:goal|topic|lesson|chapter|unit)\s*\d*$/i.test(clean)) {
+    clean = stripPrefix(topicTitle);
+  }
+  if (!clean) clean = 'this concept';
+  return clean;
+}
+
+function cleanObjectiveText(text) {
+  let s = unescapeHtml(String(text || '')).trim().replace(/\s+/g, ' ');
+  if (!s) return '';
+  const hadTrailingPeriod = /\.$/.test(s);
+  s = s.replace(PEDAGOGICAL_OBJECTIVE_PREFIXES, '');
+  s = s.replace(/(?:,\s*(?:and\s+)?|\s+and\s+)(?:describe|explain|state|identify|give\s+examples?)\s+(?:the\s+)?(?:force|reason|cause|why|how)[^.]*/i, '');
+  s = s.trim();
+  if (!s) return '';
+  s = s.charAt(0).toUpperCase() + s.slice(1);
+  if (hadTrailingPeriod && !/[.!?]$/.test(s)) s += '.';
+  return s;
+}
+
 /** Grounded fallback: source-backed explanation and check, no internal goal labels, no unbacked formulas. */
 function buildFocusedFallback(context = {}) {
   const { currentGoalTitle = '', currentGoalDescription = '', topicTitle = '', academicNotes = null,
-    sameAssessment = false, lastQuestionText = '', lastQuestionRubric = null, lastQuestionOptions = null } = context;
+    sameAssessment = false, isHelpOrIdk = false, lastQuestionText = '', lastQuestionRubric = null, lastQuestionOptions = null } = context;
   const priorQuestion = cleanProse(lastQuestionText);
   const priorRubric = normalizeRubric(lastQuestionRubric);
-  if (sameAssessment && priorRubric && endsWithQuestion(priorQuestion) && wordCount(priorQuestion) <= MAX_WORDS_PER_BUBBLE) {
+  if (sameAssessment && !isHelpOrIdk && priorRubric && endsWithQuestion(priorQuestion) && wordCount(priorQuestion) <= MAX_WORDS_PER_BUBBLE) {
     const options = normalizeOptions(lastQuestionOptions, priorRubric.correct_option_text);
     // Do not turn a letters-only question into an open question with no choices.
     if (!lastQuestionOptions?.length || options) {
@@ -251,19 +320,21 @@ function buildFocusedFallback(context = {}) {
     }
   }
 
-  let title = cleanProse(currentGoalTitle).replace(/[?？]+$/, '');
-  const isGeneric = !title || /^goal\s*\d+/i.test(title);
-  const conceptName = isGeneric ? (cleanProse(topicTitle) || 'this concept') : title;
-  const content = String(currentGoalDescription || currentGoalTitle || '').trim();
-  const allFacts = content.split(/;|\n/).map(s => s.trim()).filter(Boolean);
+  const conceptName = cleanConceptHeading(currentGoalTitle, topicTitle);
+  const rawContent = String(currentGoalDescription || currentGoalTitle || '').trim();
+  const content = cleanObjectiveText(rawContent) || conceptName;
+  const allFacts = rawContent.split(/;|\n/).map(s => cleanObjectiveText(s)).filter(Boolean);
   // Illustrations aid teaching; recall should not demand every named example.
   const coreFacts = allFacts.filter(fact => !/^(?:examples?(?:\s+such as|\s*:)|for example\b|e\.g\.)/i.test(fact));
   const facts = coreFacts.length ? coreFacts : (allFacts.length ? allFacts : [conceptName]);
 
-  const hasFormula = Boolean(academicNotes?.formulas?.length || /\b(formula|units?|si unit|equation)\b/i.test(content));
+  const factualModelAnswer = academicNotes?.definition ? unescapeHtml(academicNotes.definition) : (content || conceptName);
+  const hasFormula = Boolean(academicNotes?.formulas?.length || /\b(formula|units?|si unit|equation)\b/i.test(rawContent));
 
   let question;
-  if (hasFormula) {
+  if (/^(what|how|why|which|can|does|is|are)\b/i.test(conceptName)) {
+    question = `${conceptName.replace(/[?？!.,:;]+$/, '')}?`;
+  } else if (hasFormula) {
     question = `What is meant by ${conceptName}, and what is its formula?`;
     if (wordCount(question) > MAX_WORDS_PER_BUBBLE) {
       question = `What is the definition and formula for ${conceptName}?`;
@@ -275,12 +346,14 @@ function buildFocusedFallback(context = {}) {
     }
   }
   if (wordCount(question) > MAX_WORDS_PER_BUBBLE) {
-    question = `How would you explain ${cleanProse(topicTitle) || 'this concept'}?`;
+    const cleanTopic = cleanConceptHeading(topicTitle, 'this concept');
+    question = `How would you explain ${cleanTopic}?`;
   }
+  question = question.replace(/[?？]+$/, '?');
 
   return {
     messages: [{ message: question, message_type: 'text' }],
-    lastQuestionRubric: content ? { criteria: facts.map((description, i) => ({ id: `fact_${i + 1}`, description, required: true })), model_answer: content } : null,
+    lastQuestionRubric: rawContent ? { criteria: facts.map((description, i) => ({ id: `fact_${i + 1}`, description, required: true })), model_answer: factualModelAnswer } : null,
     fallbackQuestionType: 'open'
   };
 }
@@ -324,10 +397,13 @@ function enforce(rawOutput, context = {}) {
   // Assisted retries may explain, but retain that whole question and its original rubric.
   // Clarifications are handled above and do not trigger unconditional ROUNDUP replacement.
   if (phase === 'ROUNDUP' && context.currentGoalDescription) {
+    const isAssistanceDirective = Boolean(context.stateInstruction && ['correct_and_reask', 'reteach_new_angle', 'hint_then_easier', 'explain_differently', 'give_starter', 'reveal_and_move_on'].includes(context.stateInstruction));
+    const isRetryOrAssisted = Boolean(context.sameAssessment || context.isHelpOrIdk || context.questionAssisted || isAssistanceDirective);
     const recall = buildFocusedFallback(context);
-    const explanation = context.sameAssessment ? messages.find(b => !endsWithQuestion(b.message)) : null;
+    const explanation = isRetryOrAssisted ? messages.find(b => !endsWithQuestion(b.message)) : null;
     messages = explanation ? [explanation, recall.messages[0]] : recall.messages;
     messages.forEach(b => delete b.options);
+    const isActuallyAssisted = Boolean(context.questionAssisted || isAssistanceDirective || context.isHelpOrIdk);
     const questionRecord = createQuestionRecord({
       goalId: context.currentGoalId || context.goalIndex || null,
       scenario: extractScenario(explanation?.message, recall.messages[0]?.message),
@@ -336,11 +412,11 @@ function enforce(rawOutput, context = {}) {
       rubric: recall.lastQuestionRubric,
       modelAnswer: recall.lastQuestionRubric?.model_answer,
       requiredComponentIds: (recall.lastQuestionRubric?.criteria || []).map(c => c.id),
-      assisted: questionAssisted,
+      assisted: isActuallyAssisted,
       sourceVersion: context.sourceVersion || 'v1'
     });
     return { messages, diff_html: sanitizeDiffHtml(diffHtml, studentMessage),
-      lastQuestionRubric: recall.lastQuestionRubric, questionType: 'open', questionReplaced: true, questionRecord };
+      lastQuestionRubric: recall.lastQuestionRubric, questionType: 'open', questionReplaced: true, questionAssisted: isActuallyAssisted, questionRecord };
   }
 
   // CHECK retries restore the original question, choices and key
@@ -419,7 +495,7 @@ function enforce(rawOutput, context = {}) {
   const explanationBubble = messages.length > 1 ? messages.find(b => !endsWithQuestion(b.message)) : null;
   const questionBubble = messages[messages.length - 1];
   if (explanationBubble && questionBubble && endsWithQuestion(questionBubble.message)) {
-    if (!validateScenarioConsistency(explanationBubble.message, questionBubble.message)) {
+    if (!validateScenarioConsistency(explanationBubble.message, questionBubble.message, rubric)) {
       let fallback = buildFocusedFallback(context);
       messages = [explanationBubble, fallback.messages[0]];
       rubric = fallback.lastQuestionRubric;
@@ -435,12 +511,13 @@ function enforce(rawOutput, context = {}) {
   if (phase !== 'CHECK') actualQuestionType = 'open';
   if (rubric && actualQuestionType !== 'mcq') delete rubric.correct_option_text;
 
-  const finalQuestionText = ending || actualQuestionType === 'none' ? '' : (final?.message || '');
+  const deliveredFinalBubble = messages[messages.length - 1];
+  const finalQuestionText = ending || actualQuestionType === 'none' ? '' : (deliveredFinalBubble?.message || '');
   const questionRecord = ending || actualQuestionType === 'none' ? null : createQuestionRecord({
     goalId: context.currentGoalId || context.goalIndex || null,
     scenario: extractScenario(explanationBubble?.message, finalQuestionText),
     questionText: finalQuestionText,
-    options: actualQuestionType === 'mcq' ? final?.options : null,
+    options: actualQuestionType === 'mcq' ? deliveredFinalBubble?.options : null,
     rubric,
     modelAnswer: rubric?.model_answer,
     requiredComponentIds: (rubric?.criteria || []).map(c => c.id),
@@ -454,4 +531,5 @@ function enforce(rawOutput, context = {}) {
 
 module.exports = { PILL_NARRATION, enforce, cleanProse, wordCount, splitIntoMicroBubbles, endsWithQuestion,
   sanitizeDiffHtml, reconcileTone, normalizeRubric, normalizeOptions, buildFocusedFallback,
-  validateScenarioConsistency, extractScenario, createQuestionRecord, unescapeHtml, escapeHtml, MAX_WORDS_PER_BUBBLE };
+  validateScenarioConsistency, extractScenario, createQuestionRecord, unescapeHtml, escapeHtml,
+  cleanConceptHeading, cleanObjectiveText, CONFLICTING_ENTITY_GROUPS, PHYSICAL_ENTITIES, MAX_WORDS_PER_BUBBLE };

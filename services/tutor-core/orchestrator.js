@@ -85,7 +85,9 @@ async function processTutorTurn({ studentMessage = '', topic, goals = [], chatHi
   let evaluatorResult = noEvaluation();
   if (!starting && !terminal) {
     evaluatorResult = await evaluateStudentTurn({ studentMessage, lastQuestionText, lastQuestionOptions,
-      lastQuestionRubric: state.lastQuestionRubric || null, phase: state.phase,
+      lastQuestionRubric: state.lastQuestionRubric || null,
+      scenario: state.lastQuestionRecord?.scenario || null,
+      phase: state.phase,
       topicTitle: topic.title, topicContent: topic.content || '', currentGoal,
       goalIndex: scoredGoalIndex(state), totalGoals: goalTotal, classLevel, akgContext });
   }
@@ -137,6 +139,7 @@ async function processTutorTurn({ studentMessage = '', topic, goals = [], chatHi
     studentMessage, evaluatorResult, stateInstruction, questionType, phase: nextState.phase,
     reportBrief: masteryReport ? reportBrief(masteryReport) : null, lastQuestionText,
     lastQuestionRubric: state.lastQuestionRubric || null, lastQuestionOptions, sameAssessment,
+    isHelpOrIdk, intent, isRepetitionComplaint,
     recentHistory: chatHistory, classLevel, wantsVideo: attachments.includes('video') && wantsVideo,
     akgContext, goals, goalIndex: currentGoalIdx, totalGoals: goalTotal, goalMap };
   // Code owns closing figures and claims. DONE reuses artifacts without model calls.

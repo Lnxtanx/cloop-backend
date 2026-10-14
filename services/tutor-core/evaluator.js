@@ -1,8 +1,17 @@
 const { invokeModel, extractJson } = require('../ai/deepseek-client');
 const { applyGradingGuards, LANGUAGE_ONLY_ERRORS } = require('./evaluator-guards');
+const { cleanObjectiveText, CONFLICTING_ENTITY_GROUPS, PHYSICAL_ENTITIES } = require('./validate');
 
 const CONTENT_ERRORS = new Set(['Conceptual', 'Factual', 'Incomplete', 'Calculation']);
 const INTENTS = new Set(['ANSWER', 'ACK', 'HELP', 'IDK', 'OFF_TOPIC']);
+
+function extractEntities(text) {
+  const lower = String(text || '').toLowerCase();
+  return PHYSICAL_ENTITIES.filter(entity => {
+    const re = new RegExp(`\\b${entity}s?\\b`, 'i');
+    return re.test(lower);
+  });
+}
 
 function unescapeHtml(text) {
   return String(text == null ? '' : text)
@@ -30,7 +39,7 @@ function detectHelpSubtype(text) {
   return null;
 }
 
-function validateQuestionRubricAlignment(lastQuestionText, rubric) {
+function validateQuestionRubricAlignment(lastQuestionText, rubric, scenario = null) {
   if (!lastQuestionText || !rubric) return { aligned: true };
   const questionLower = String(lastQuestionText).trim().toLowerCase();
   const criteria = rubric.criteria || [];
@@ -45,6 +54,35 @@ function validateQuestionRubricAlignment(lastQuestionText, rubric) {
     const totalRequired = criteria.filter(c => c.required).length;
     if (requiredExplainCriteria.length > 0 && requiredExplainCriteria.length === totalRequired) {
       return { aligned: false, reason: 'Visible question asks for direct classification but rubric secretly requires unasked explanation.' };
+    }
+  }
+
+  // Check scenario and entity alignment between question, rubric, and saved scenario
+  const qEntities = extractEntities(lastQuestionText);
+  const rubricText = [rubric.model_answer || '', ...criteria.map(c => c.description || '')].join(' ');
+  const rubricEntities = extractEntities(rubricText);
+
+  if (qEntities.length > 0 && rubricEntities.length > 0) {
+    for (const group of CONFLICTING_ENTITY_GROUPS) {
+      const inQ = qEntities.filter(e => group.includes(e));
+      const inRubric = rubricEntities.filter(e => group.includes(e));
+      if (inQ.length > 0 && inRubric.length > 0 && !inQ.some(e => inRubric.includes(e))) {
+        return { aligned: false, reason: `Visible question scenario (${inQ.join(', ')}) conflicts with rubric scenario (${inRubric.join(', ')}).` };
+      }
+    }
+  }
+
+  if (scenario) {
+    const scenText = [scenario.object || '', scenario.summary || ''].join(' ');
+    const scenEntities = extractEntities(scenText);
+    if (scenEntities.length > 0) {
+      for (const group of CONFLICTING_ENTITY_GROUPS) {
+        const inScen = scenEntities.filter(e => group.includes(e));
+        const inQ = qEntities.filter(e => group.includes(e));
+        if (inScen.length > 0 && inQ.length > 0 && !inScen.some(e => inQ.includes(e))) {
+          return { aligned: false, reason: `Visible question scenario (${inQ.join(', ')}) conflicts with saved scenario (${inScen.join(', ')}).` };
+        }
+      }
     }
   }
 
@@ -235,7 +273,8 @@ function assessedResult(parsed, criteria, rubric, resolved, gradedBy, lastQuesti
   const contradictions = parsed.contradictions;
   const correct = finalCriteria.filter(c => c.required).every(c => c.satisfied) && contradictions.length === 0;
   const missing = finalCriteria.filter(c => c.required && !c.satisfied);
-  const modelAnswer = rubric?.model_answer || (typeof parsed.complete_answer === 'string' ? parsed.complete_answer.trim() : null);
+  const rawModelAnswer = rubric?.model_answer || (typeof parsed.complete_answer === 'string' ? parsed.complete_answer.trim() : null);
+  const modelAnswer = cleanObjectiveText(rawModelAnswer) || rawModelAnswer;
   const contentType = contradictions.length ? 'Conceptual'
     : CONTENT_ERRORS.has(parsed.error_type) ? parsed.error_type : 'Incomplete';
   const reqCount = finalCriteria.filter(c => c.required).length;
@@ -244,14 +283,17 @@ function assessedResult(parsed, criteria, rubric, resolved, gradedBy, lastQuesti
     : reqCount ? Math.round((satReqCount / reqCount) * 100)
     : Math.round((finalCriteria.filter(c => c.satisfied).length / finalCriteria.length) * 100);
 
+  const rawFeedback = typeof parsed.feedback === 'string' && parsed.feedback.trim() ? parsed.feedback.trim()
+    : correct ? 'Your answer meets the question’s requirements.'
+      : contradictions.length ? contradictions.join(' ') : `Missing: ${missing.map(c => c.description).join('; ')}.`;
+  const feedback = unescapeHtml(rawFeedback);
+
   const result = {
     intent: 'ANSWER', is_correct: correct,
     score_percent: scorePercent,
     error_type: correct ? null : contentType,
-    diff_html: safeDiff(parsed.diff_html), complete_answer: modelAnswer,
-    feedback: typeof parsed.feedback === 'string' && parsed.feedback.trim() ? parsed.feedback.trim()
-      : correct ? 'Your answer meets the question’s requirements.'
-        : contradictions.length ? contradictions.join(' ') : `Missing: ${missing.map(c => c.description).join('; ')}.`,
+    diff_html: safeDiff(parsed.diff_html), complete_answer: unescapeHtml(modelAnswer),
+    feedback,
     criterion_results: finalCriteria, contradictions, evaluation_status: 'evaluated', graded_by: gradedBy,
     suggested_action: correct ? 'MOVE_ON' : 'RETEACH_NEW_ANGLE',
     reasoning: typeof parsed.reasoning === 'string' ? parsed.reasoning : '',
@@ -280,7 +322,8 @@ Phrases asking for explanation ("explain me that", "haven't understood", "tell m
 An answer attempt may be one word, a number, an option, a formula, or imperfect English.
 "yes" or "no" is ANSWER when it answers the actual question; an acknowledgement is ACK.
 
-GRADE THE ACTUAL LAST QUESTION, not a broadly related fact or the entire goal description.
+GRADE THE ACTUAL LAST QUESTION AND EXACT SCENARIO, not a broadly related fact or the entire goal description.
+When a scenario is provided in context, evaluate strictly within that scenario (e.g. if the scenario is a wall, do not evaluate against a desk).
 For direct or binary questions (e.g. "is X contact or non-contact?", "which one is saturated?"), accept the direct scientific answer; NEVER demand unasked explanations or "why" unless the question explicitly asks "and explain why".
 Use the provided rubric criteria exactly. If rubric is null, derive 1-8 concrete criteria from
 the LAST QUESTION's obligations, each with an id, description and required:true. These are
@@ -339,7 +382,7 @@ Schema:
  */
 async function evaluateStudentTurn({
   studentMessage, lastQuestionText, lastQuestionOptions = null, lastQuestionRubric = null,
-  phase = null, topicTitle, topicContent = '', currentGoal, goalIndex = 0,
+  scenario = null, phase = null, topicTitle, topicContent = '', currentGoal, goalIndex = 0,
   totalGoals = 1, classLevel = 'Class 10', akgContext = null
 }) {
   const trimmed = String(studentMessage == null ? '' : studentMessage).trim();
@@ -374,7 +417,7 @@ async function evaluateStudentTurn({
   if (lastQuestionRubric != null && !rubric) return unavailable(fallbackIntent(trimmed, lastQuestionText, resolved), resolved, 'Invalid question rubric; answer not graded.');
 
   // Validate question-rubric alignment before grading
-  const alignment = validateQuestionRubricAlignment(lastQuestionText, rubric);
+  const alignment = validateQuestionRubricAlignment(lastQuestionText, rubric, scenario);
   if (!alignment.aligned) {
     return repairNeeded(fallbackIntent(trimmed, lastQuestionText, resolved), resolved, alignment.reason);
   }
@@ -395,6 +438,11 @@ async function evaluateStudentTurn({
     current_goal: { title: currentGoal?.title || 'Core concept', description: currentGoal?.description || '' },
     goal_number: goalIndex + 1, total_goals: totalGoals,
     topic_summary: currentGoal?.description || String(topicContent || '').slice(0, 500),
+    scenario: scenario ? {
+      object: scenario.object || null,
+      action: scenario.action || null,
+      summary: scenario.summary || null
+    } : null,
     last_question: String(lastQuestionText || ''), options: Array.isArray(options) ? options : null,
     rubric, student_answer: resolved.resolvedText,
     ...(akgContext?.evaluator_context?.prompt_snippet ? { academic_boundaries: akgContext.evaluator_context.prompt_snippet } : {}),

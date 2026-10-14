@@ -256,3 +256,128 @@ test("regression: apostrophes are never double-escaped (don't -> don&#39;t, not 
   assert.strictEqual(E.escapeHtml("don&#039;t"), "don&#039;t");
   assert.strictEqual(E.escapeHtml("don&amp;#039;t"), "don&#039;t");
 });
+
+// 8. Topic heading fallback cleaning & no double question marks (??)
+test("regression: cleanConceptHeading strips Topic/Goal prefixes and prevents ??", () => {
+  assert.strictEqual(V.cleanConceptHeading("Topic 3: Objects interacting with other objects?", "Forces"), "Objects interacting with other objects");
+  assert.strictEqual(V.cleanConceptHeading("Goal 1: Newton's Third Law", "Forces"), "Newton's Third Law");
+  assert.strictEqual(V.cleanConceptHeading("Chapter 2 - Action and Reaction", "Forces"), "Action and Reaction");
+
+  const fallbackWithTopic = V.buildFocusedFallback({
+    currentGoalTitle: "Topic 3: Objects interacting with other objects?",
+    currentGoalDescription: "Forces occur in matched interaction pairs",
+    topicTitle: "Forces"
+  });
+  const qText = fallbackWithTopic.messages[0].message;
+  assert.ok(!qText.includes("Topic 3:"), "question should never include 'Topic 3:' prefix");
+  assert.ok(!qText.includes("??"), "question should never end in double question marks ??");
+  assert.ok(qText.endsWith("?"), "question should end with a single question mark");
+
+  const questionHeading = V.buildFocusedFallback({
+    currentGoalTitle: "What is inertia?",
+    currentGoalDescription: "Inertia is the tendency of an object to resist changes in motion",
+    topicTitle: "Laws of Motion"
+  });
+  const qText2 = questionHeading.messages[0].message;
+  assert.strictEqual(qText2, "What is inertia?", "pre-phrased question heading should not be wrapped with 'What is meant by What is...'");
+});
+
+// 9. Separating learning objectives from factual definitions in model answers
+test("regression: cleanObjectiveText strips pedagogical imperative verbs from model answers", () => {
+  const objective = "Identify the two or more objects interacting in each situation and describe the force.";
+  const cleaned = V.cleanObjectiveText(objective);
+  assert.ok(!cleaned.toLowerCase().startsWith("identify"), "pedagogical imperative 'identify' should be stripped");
+  assert.strictEqual(cleaned, "Two or more objects interacting in each situation.");
+
+  const understandObjective = "Understand that action and reaction act on different bodies simultaneously.";
+  const cleaned2 = V.cleanObjectiveText(understandObjective);
+  assert.strictEqual(cleaned2, "Action and reaction act on different bodies simultaneously.");
+
+  const fallback = V.buildFocusedFallback({
+    currentGoalTitle: "Interacting objects",
+    currentGoalDescription: "Identify the two or more objects interacting in each situation and describe the force.",
+    academicNotes: { definition: "When one object exerts a force on another, the second exerts an equal and opposite force on the first." }
+  });
+  assert.strictEqual(fallback.lastQuestionRubric.model_answer, "When one object exerts a force on another, the second exerts an equal and opposite force on the first.");
+});
+
+// 10. Preserve teaching explanations on HELP/IDK in ROUNDUP
+test("regression: enforce in ROUNDUP preserves generator explanation on HELP/IDK turn", () => {
+  const rawOutput = {
+    messages: [
+      { message: "When you push against a wall, the wall pushes back on you with equal force." },
+      { message: "What force does the wall exert in return?" }
+    ]
+  };
+  const enforced = V.enforce(rawOutput, {
+    phase: "ROUNDUP",
+    currentGoalTitle: "Newton's Third Law",
+    currentGoalDescription: "Action and reaction forces are equal in magnitude and opposite in direction",
+    isHelpOrIdk: true,
+    sameAssessment: false,
+    stateInstruction: "hint_then_easier"
+  });
+
+  assert.strictEqual(enforced.messages.length, 2, "explanation bubble must be preserved on HELP/IDK turn");
+  assert.strictEqual(enforced.messages[0].message, "When you push against a wall, the wall pushes back on you with equal force.");
+  assert.strictEqual(enforced.questionAssisted, true);
+});
+
+// 11. Hand/wall suddenly becomes hand/desk: scenario conflict detection across question and rubric
+test("regression: scenario consistency detects conflicting surfaces between explanation, question, and rubric", () => {
+  const explanation = "When your hand pushes against the wall with 10 newtons of force.";
+  const questionDesk = "What force does the desk exert on your hand?";
+  assert.strictEqual(V.validateScenarioConsistency(explanation, questionDesk), false, "wall vs desk must trigger scenario inconsistency");
+
+  const questionWall = "What force does the wall exert on your hand?";
+  const rubricDesk = {
+    criteria: [{ id: "force", description: "Desk exerts equal force", required: true }],
+    model_answer: "The desk exerts 10 newtons on your hand."
+  };
+  assert.strictEqual(V.validateScenarioConsistency(null, questionWall, rubricDesk), false, "question (wall) vs rubric (desk) must fail scenario consistency");
+
+  const rubricWall = {
+    criteria: [{ id: "force", description: "Wall exerts equal force", required: true }],
+    model_answer: "The wall exerts 10 newtons on your hand."
+  };
+  assert.strictEqual(V.validateScenarioConsistency(explanation, questionWall, rubricWall), true, "matching wall scenario across all components passes");
+});
+
+// 12. Evaluator validates saved scenario alignment
+test("regression: evaluator validateQuestionRubricAlignment detects conflict with saved scenario", () => {
+  const question = "What force does the desk exert on your hand?";
+  const rubric = {
+    criteria: [{ id: "force", description: "Equal force", required: true }],
+    model_answer: "Equal force"
+  };
+  const savedScenario = { object: "wall", summary: "hand pushes wall" };
+
+  const alignment = E.validateQuestionRubricAlignment(question, rubric, savedScenario);
+  assert.strictEqual(alignment.aligned, false);
+  assert.ok(alignment.reason.includes("conflicts with saved scenario"));
+});
+
+// 13. Question record is rebuilt from final delivered bubble after fallback
+test("regression: questionRecord matches delivered final bubble when fallback replaces an overlong question", () => {
+  const overlong = "Can you describe what happens to the motion and speed of an object when a balanced or unbalanced force acts upon it in various real-world situations?";
+  const enforced = V.enforce({
+    messages: [{ message: overlong }]
+  }, {
+    phase: "DIALOGUE",
+    currentGoalTitle: "Balanced forces",
+    currentGoalDescription: "Balanced forces produce no change in motion"
+  });
+
+  assert.strictEqual(enforced.questionReplaced, true);
+  const deliveredFinal = enforced.messages.at(-1).message;
+  assert.ok(enforced.questionRecord);
+  assert.strictEqual(enforced.questionRecord.questionText, deliveredFinal, "questionRecord.questionText must match the delivered final bubble");
+  assert.ok(!enforced.questionRecord.questionText.includes("real-world situations"));
+});
+
+// 14. HTML entity unescaping in chat prose
+test("regression: cleanProse unescapes HTML entities so &#39; is not rendered literally", () => {
+  assert.strictEqual(V.cleanProse("Don&#39;t push too hard."), "Don't push too hard.");
+  assert.strictEqual(V.cleanProse("It&quot;s a contact force."), 'It"s a contact force.');
+  assert.strictEqual(V.cleanProse("Salt &amp; water"), "Salt & water");
+});

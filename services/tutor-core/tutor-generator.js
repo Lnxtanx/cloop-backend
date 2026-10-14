@@ -194,10 +194,14 @@ During teaching, explain the required idea before asking about it.
 PROBE may explore prior knowledge without grading it.
 Teach one point at a time; do not demand an untaught full-goal answer.
 
-3. KEEP ONE CLEAR SCENARIO.
+3. KEEP ONE CLEAR SCENARIO & RIGOROUS FORCE PAIRS.
 Identify the actor, object, action and relevant initial situation.
 Keep them consistent across explanation, question, rubric and feedback.
 Introduce a new scenario explicitly before using it.
+For Newton's third law and contact forces:
+- Clearly identify WHO exerts each force and WHICH OBJECT receives it.
+- Action and reaction forces act on DIFFERENT objects (e.g. the table exerts an upward force on the book; the book exerts an equal downward force on the table).
+- The book's weight is Earth's gravitational pull on the book; it is NOT the reaction to the table's upward normal force.
 Never invent movement, direction or other unstated conditions.
 
 4. ANSWER CLARIFICATION DIRECTLY.
@@ -262,7 +266,7 @@ async function generateTutorResponse(params) {
     const fallback = buildFocusedFallback(params);
     // When the model is down, teach from the stored previous answer rather than inventing a correction.
     const helpDirectives = ['correct_and_reask', 'reteach_new_angle', 'hint_then_easier', 'explain_differently', 'give_starter', 'reveal_and_move_on'];
-    if ((params.phase !== 'ROUNDUP' || params.sameAssessment) && helpDirectives.includes(params.stateInstruction)) {
+    if ((params.phase !== 'ROUNDUP' || params.sameAssessment || params.isHelpOrIdk) && helpDirectives.includes(params.stateInstruction)) {
       const answerCandidates = [params.evaluatorResult?.complete_answer, params.lastQuestionRubric?.model_answer,
         params.previousGoalDescription, ...(params.lastQuestionRubric?.criteria || []).map(c => c.description)];
       const shortFact = answerCandidates.flatMap(answer => String(answer || '').split(/;|(?<=[.!?])\s+/))
