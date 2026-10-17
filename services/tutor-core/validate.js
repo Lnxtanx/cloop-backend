@@ -1,4 +1,9 @@
 /** Deterministic safeguards for tutor language and the private question contract. */
+let CHOICE_QUESTION = "Would you like me to explain the answer, or would you like another try?";
+try {
+  const state = require('./state');
+  if (state.CHOICE_QUESTION) CHOICE_QUESTION = state.CHOICE_QUESTION;
+} catch (_) {}
 const MAX_WORDS_PER_BUBBLE = 19; // Strictly fewer than 20.
 const MAX_BUBBLES = 2;
 const PILL_NARRATION = [
@@ -256,7 +261,13 @@ function createQuestionRecord(params = {}) {
     modelAnswer = null,
     requiredComponentIds = [],
     assisted = false,
-    sourceVersion = 'v1'
+    sourceVersion = 'v1',
+    learningPointId = null,
+    learning_point_id = null,
+    explicitRequirements = null,
+    explicit_requirements = null,
+    responseMode = null,
+    response_mode = null
   } = params;
 
   return {
@@ -271,16 +282,21 @@ function createQuestionRecord(params = {}) {
       ? requiredComponentIds
       : (rubric?.criteria || []).map(c => c.id),
     assisted: Boolean(assisted),
-    sourceVersion: sourceVersion || 'v1'
+    sourceVersion: sourceVersion || 'v1',
+    learning_point_id: learning_point_id || learningPointId || null,
+    explicit_requirements: explicit_requirements || explicitRequirements || (rubric?.criteria || []).map(c => c.description),
+    response_mode: response_mode || responseMode || null
   };
 }
 
-const PEDAGOGICAL_OBJECTIVE_PREFIXES = /^(?:students\s+(?:will|should)\s+(?:be\s+able\s+to\s+)?|to\s+(?:be\s+able\s+to|understand\s+that|learn\s+that|know\s+that)\s+|understand\s+that\s+|identify\s+(?:the\s+)?|describe\s+(?:the\s+)?|explain\s+(?:how\s+|the\s+|that\s+)?|state\s+(?:the\s+)?|define\s+(?:the\s+)?|differentiate\s+between\s+|distinguish\s+between\s+|recall\s+(?:that\s+)?|recognize\s+(?:that\s+)?|demonstrate\s+(?:that\s+)?|show\s+that\s+|explore\s+(?:the\s+)?|observe\s+(?:the\s+)?|examine\s+(?:the\s+)?|list\s+(?:the\s+)?|name\s+(?:the\s+)?)\b/i;
+const ACTION_VERBS = /^(?:identify(?:\s+the)?|describe(?:\s+the)?|explain(?:\s+the|\s+how)?|state(?:\s+the)?|define(?:\s+the)?|label(?:\s+the)?|draw(?:\s+the)?|list(?:\s+the)?|name(?:\s+the)?|understand(?:\s+the)?|differentiate\s+between|distinguish\s+between)\s+/i;
+const PEDAGOGICAL_OBJECTIVE_PREFIXES = /^(?:students\s+(?:will|should)\s+(?:be\s+able\s+to\s+)?|to\s+(?:be\s+able\s+to|understand\s+that|learn\s+that|know\s+that)\s+|understand\s+that\s+|identify\s+(?:the\s+)?|describe\s+(?:the\s+)?|explain\s+(?:how\s+|the\s+|that\s+)?|state\s+(?:the\s+)?|define\s+(?:the\s+)?|differentiate\s+between\s+|distinguish\s+between\s+|recall\s+(?:that\s+)?|recognize\s+(?:that\s+)?|demonstrate\s+(?:that\s+)?|show\s+that\s+|explore\s+(?:the\s+)?|observe\s+(?:the\s+)?|examine\s+(?:the\s+)?|list\s+(?:the\s+)?|name\s+(?:the\s+)?|label\s+(?:the\s+)?|draw\s+(?:the\s+)?)\b/i;
 
 function cleanConceptHeading(title, topicTitle) {
   const stripPrefix = s => unescapeHtml(String(s || ''))
     .trim()
     .replace(/^(?:topic|goal|chapter|unit|section|lesson)\s*\d*[\s:.-]*/i, '')
+    .replace(ACTION_VERBS, '')
     .replace(/[?？!.,:;]+$/, '')
     .trim();
 
@@ -360,9 +376,13 @@ function buildFocusedFallback(context = {}) {
 
 function enforce(rawOutput, context = {}) {
   const { isCorrect = null, phase = 'DIALOGUE', questionType = 'open', diffHtml = null, studentMessage = '',
-    helpSubtype = null, stateInstruction = null } = context;
-  const ending = phase === 'WRAP' || phase === 'DONE';
-  const explanationOnly = questionType === 'none' || helpSubtype === 'question_clarification' || stateInstruction === 'clarify_question';
+    helpSubtype = null, stateInstruction = null, response_mode = null } = context;
+  const ending = phase === 'WRAP' || phase === 'DONE' || response_mode === 'closing';
+  const explanationOnly = questionType === 'none' ||
+    helpSubtype === 'question_clarification' ||
+    stateInstruction === 'clarify_question' ||
+    response_mode === 'explain' ||
+    response_mode === 'task_repair';
   let actualQuestionType = explanationOnly ? 'none' : (rawOutput?.fallbackQuestionType || questionType);
   let rubric = explanationOnly ? null : normalizeRubric(rawOutput?.lastQuestionRubric);
   const priorRubric = normalizeRubric(context.lastQuestionRubric);
@@ -378,6 +398,28 @@ function enforce(rawOutput, context = {}) {
     if (!messages.length) messages = [{ message: 'Your session report and revision sheet are ready.', message_type: 'text' }];
     messages.forEach(b => delete b.options);
     return { messages, diff_html: sanitizeDiffHtml(diffHtml, studentMessage), lastQuestionRubric: null, questionType: null, questionReplaced: false, questionRecord: null };
+  }
+
+  if (response_mode === 'offer_choice') {
+    const explanation = messages.find(b => !endsWithQuestion(b.message) && !b.message.includes('explain the answer'));
+    const choiceBubble = {
+      message: CHOICE_QUESTION,
+      message_type: 'text',
+      options: [
+        { text: 'Explain the answer', value: 'Explain the answer' },
+        { text: 'I want another try', value: 'I want another try' }
+      ]
+    };
+    messages = explanation ? [explanation, choiceBubble] : [choiceBubble];
+    return {
+      messages,
+      diff_html: sanitizeDiffHtml(diffHtml, studentMessage),
+      lastQuestionRubric: null,
+      questionType: 'choice',
+      questionReplaced: false,
+      questionAssisted: true,
+      questionRecord: null
+    };
   }
 
   if (explanationOnly) {
@@ -413,7 +455,9 @@ function enforce(rawOutput, context = {}) {
       modelAnswer: recall.lastQuestionRubric?.model_answer,
       requiredComponentIds: (recall.lastQuestionRubric?.criteria || []).map(c => c.id),
       assisted: isActuallyAssisted,
-      sourceVersion: context.sourceVersion || 'v1'
+      sourceVersion: context.sourceVersion || 'v1',
+      learning_point_id: context.learning_point_id || context.activeLearningPointId || null,
+      response_mode
     });
     return { messages, diff_html: sanitizeDiffHtml(diffHtml, studentMessage),
       lastQuestionRubric: recall.lastQuestionRubric, questionType: 'open', questionReplaced: true, questionAssisted: isActuallyAssisted, questionRecord };
@@ -437,7 +481,9 @@ function enforce(rawOutput, context = {}) {
       modelAnswer: retryRubric?.model_answer,
       requiredComponentIds: (retryRubric?.criteria || []).map(c => c.id),
       assisted: true,
-      sourceVersion: context.sourceVersion || 'v1'
+      sourceVersion: context.sourceVersion || 'v1',
+      learning_point_id: context.learning_point_id || context.activeLearningPointId || null,
+      response_mode
     });
     return { messages, diff_html: sanitizeDiffHtml(diffHtml, studentMessage),
       lastQuestionRubric: retryRubric, questionType: retryType, questionReplaced: true, questionAssisted: true, questionRecord };
@@ -522,7 +568,9 @@ function enforce(rawOutput, context = {}) {
     modelAnswer: rubric?.model_answer,
     requiredComponentIds: (rubric?.criteria || []).map(c => c.id),
     assisted: questionAssisted,
-    sourceVersion: context.sourceVersion || 'v1'
+    sourceVersion: context.sourceVersion || 'v1',
+    learning_point_id: context.learning_point_id || context.activeLearningPointId || null,
+    response_mode
   });
 
   return { messages, diff_html: sanitizeDiffHtml(diffHtml, studentMessage), lastQuestionRubric: rubric,
@@ -532,4 +580,4 @@ function enforce(rawOutput, context = {}) {
 module.exports = { PILL_NARRATION, enforce, cleanProse, wordCount, splitIntoMicroBubbles, endsWithQuestion,
   sanitizeDiffHtml, reconcileTone, normalizeRubric, normalizeOptions, buildFocusedFallback,
   validateScenarioConsistency, extractScenario, createQuestionRecord, unescapeHtml, escapeHtml,
-  cleanConceptHeading, cleanObjectiveText, CONFLICTING_ENTITY_GROUPS, PHYSICAL_ENTITIES, MAX_WORDS_PER_BUBBLE };
+  cleanConceptHeading, cleanObjectiveText, CONFLICTING_ENTITY_GROUPS, PHYSICAL_ENTITIES, MAX_WORDS_PER_BUBBLE, CHOICE_QUESTION };

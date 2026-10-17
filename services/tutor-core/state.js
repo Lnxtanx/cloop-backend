@@ -83,7 +83,7 @@ const STUCK_LIMIT = 2;
 const LADDER_DEPTH = 3;
 
 /** Hard stop on total turns across the session. */
-const MAX_TURNS = 40;
+const MAX_TURNS = 60;
 
 /** A grading outage may hold a question, but must not trap the student. */
 const MAX_UNVERIFIED_ATTEMPTS = 3;
@@ -95,6 +95,9 @@ const BANDS = [
   { min: 0.4, label: "Developing" },
   { min: 0.0, label: "Emerging" },
 ];
+
+const CHOICE_QUESTION = "Would you like me to explain the answer, or would you like another try?";
+const RESPONSE_MODES = ["check", "teach", "offer_choice", "explain", "task_repair", "closing"];
 
 function initialState(goalTotal) {
   const total = Math.max(1, goalTotal | 0);
@@ -127,6 +130,9 @@ function initialState(goalTotal) {
     perGoal: Array.from({ length: total }, () => ({ correct: 0, total: 0, errors: [], assessments: {} })),
     teachingCoverage: Array.from({ length: total }, () => ({ definition: false, explanation: false, formula: false, example: false })),
     lastQuestionRecord: null,
+    active_learning_point_id: null,
+    response_mode: "check",
+    learning_support: {},
     endedReason: null,
   };
 }
@@ -222,6 +228,20 @@ function advanceQuestion(prev, state, { reveal = false } = {}) {
   state.reteachPending = false;
   state.questionAssisted = false;
   state.assessmentAdvanced = true;
+  state.active_learning_point_id = null;
+  state.response_mode = (state.phase === "WRAP" || state.phase === "DONE") ? "closing" : (reveal ? "explain" : "check");
+}
+
+function learningPointIdFor(state, event = {}) {
+  if (event.learningPointId) return String(event.learningPointId);
+  if (event.active_learning_point_id) return String(event.active_learning_point_id);
+  if (state.active_learning_point_id) return String(state.active_learning_point_id);
+  if (state.lastQuestionRecord?.learning_point_id) return String(state.lastQuestionRecord.learning_point_id);
+  if (state.phase === "PROBE") return "probe";
+  if (state.phase === "THEORY") return "theory";
+  if (state.phase === "OBJECTIVES") return "objectives";
+  if (state.phase === "ROUNDUP") return `roundup_goal_${state.roundupIndex || 0}`;
+  return `goal_${scoredGoalIndex(state) || 0}_${String(state.phase || '').toLowerCase()}`;
 }
 
 /** Advance the session by one turn; grade the final allowed answer first. */
@@ -235,6 +255,28 @@ function advance(state, event = {}) {
   const intent = normalizeIntent(event.intent);
   s.totalTurns = (state.totalTurns || 0) + 1;
   s.wantsVideo = !!event.wantsVideo;
+
+  const learningSupport = {};
+  if (state.learning_support && typeof state.learning_support === 'object') {
+    for (const [k, v] of Object.entries(state.learning_support)) {
+      learningSupport[k] = { ...v };
+    }
+  }
+  s.learning_support = learningSupport;
+
+  const pointId = learningPointIdFor(state, event);
+  s.active_learning_point_id = pointId;
+
+  if (!learningSupport[pointId]) {
+    learningSupport[pointId] = {
+      unsuccessful_responses: 0,
+      attempt_count: 0,
+      awaiting_learning_choice: false,
+      awaiting_choice: false,
+      assisted: false,
+    };
+  }
+  const currentPoint = learningSupport[pointId];
 
   // All branches apply the cap after processing the current response.
   const finish = () => {
@@ -258,15 +300,78 @@ function advance(state, event = {}) {
     return s;
   }
 
-  // ── Question clarifications repair visible question without penalty ─────
-  const isClarification = event.helpSubtype === 'question_clarification' ||
+  const slot = isScored(state.phase) ? assessmentFor(s) : null;
+  const previousAssisted = event.previousQuestionAssisted === true || state.questionAssisted === true;
+  if (slot && previousAssisted) slot.assisted = true;
+
+  // ── Route explicit control requests before academic handling ─────────────
+  const requestKind = event.requestKind || event.request_kind || null;
+
+  // 1. Question clarification: repair visible question without penalty
+  const isClarification = requestKind === 'clarify_task' ||
+    event.helpSubtype === 'question_clarification' ||
     event.help_subtype === 'question_clarification' ||
     event.suggestedAction === 'CLARIFY_TASK' || event.suggested_action === 'CLARIFY_TASK' ||
     event.suggestedAction === 'CLARIFY_QUESTION' || event.suggested_action === 'CLARIFY_QUESTION';
   if (isClarification) {
+    s.response_mode = 'task_repair';
     s.evaluatorUnavailableStreak = 0;
     s.reteachPending = false;
     s.wantsVideo = false;
+    return finish();
+  }
+
+  // 2. Direct explanation request: "Tell me the answer" / "Please explain"
+  if (requestKind === 'explain_answer' || event.suggestedAction === 'EXPLAIN_ANSWER') {
+    currentPoint.awaiting_learning_choice = false;
+    currentPoint.awaiting_choice = false;
+    currentPoint.assisted = true;
+    s.response_mode = 'explain';
+    s.reteachPending = false;
+    s.evaluatorUnavailableStreak = 0;
+    if (slot) {
+      slot.assisted = true;
+      if (!slot.assessed) {
+        slot.assessed = true;
+        slot.first_correct = false;
+        slot.outcome = "assisted";
+        s.perGoal[scoredGoalIndex(state)].total += 1;
+        s.totalQuestions = (state.totalQuestions || 0) + 1;
+      }
+      slot.completed = true;
+    }
+    advanceQuestion(state, s, { reveal: true });
+    return finish();
+  }
+
+  // 3. Retry request: "Another try"
+  if (requestKind === 'try_again' || event.suggestedAction === 'RETRY') {
+    currentPoint.awaiting_learning_choice = false;
+    currentPoint.awaiting_choice = false;
+    currentPoint.unsuccessful_responses = 0;
+    currentPoint.attempt_count = 0;
+    currentPoint.assisted = true;
+    s.response_mode = 'check';
+    s.reteachPending = true;
+    s.questionAssisted = true;
+    s.evaluatorUnavailableStreak = 0;
+    if (slot) slot.assisted = true;
+    return finish();
+  }
+
+  // 4. Move on request: "Teach something else"
+  if (requestKind === 'move_on') {
+    currentPoint.awaiting_learning_choice = false;
+    currentPoint.awaiting_choice = false;
+    currentPoint.assisted = true;
+    s.response_mode = 'check';
+    s.reteachPending = false;
+    s.evaluatorUnavailableStreak = 0;
+    if (slot && !slot.assessed) {
+      slot.outcome = "skipped";
+      slot.completed = true;
+    }
+    advanceQuestion(state, s);
     return finish();
   }
 
@@ -282,9 +387,41 @@ function advance(state, event = {}) {
   }
   s.offTopicStreak = 0;
 
-  const slot = isScored(state.phase) ? assessmentFor(s) : null;
-  const previousAssisted = event.previousQuestionAssisted === true || state.questionAssisted === true;
-  if (slot && previousAssisted) slot.assisted = true;
+  // ── When awaiting choice, resolve text choice if requestKind was not set ─
+  if (currentPoint.awaiting_learning_choice || state.response_mode === 'offer_choice') {
+    const rawAnswer = String(event.answerText || '').trim().toLowerCase();
+    const wantsTry = /\b(try|again|retry|another|attempt|let\s+me|second\s+one|option\s*2)\b/i.test(rawAnswer);
+    const wantsExplain = /\b(explain|answer|tell\s+me|why|solution|what\s+is\s+it|first\s+one|option\s*1)\b/i.test(rawAnswer) ||
+      intent === 'IDK' || intent === 'HELP';
+
+    if (wantsTry) {
+      currentPoint.awaiting_learning_choice = false;
+      currentPoint.awaiting_choice = false;
+      currentPoint.unsuccessful_responses = 0;
+      currentPoint.attempt_count = 0;
+      currentPoint.assisted = true;
+      s.response_mode = 'check';
+      s.reteachPending = true;
+      s.questionAssisted = true;
+      if (slot) slot.assisted = true;
+      return finish();
+    } else if (wantsExplain) {
+      currentPoint.awaiting_learning_choice = false;
+      currentPoint.awaiting_choice = false;
+      currentPoint.assisted = true;
+      s.response_mode = 'explain';
+      s.reteachPending = false;
+      if (slot) {
+        slot.assisted = true;
+        if (!slot.assessed) {
+          slot.outcome = "skipped";
+          slot.completed = true;
+        }
+      }
+      advanceQuestion(state, s, { reveal: true });
+      return finish();
+    }
+  }
 
   // ── Non-answers hold the phase, but move forward after STUCK_LIMIT ───────
   if (intent !== "ANSWER") {
@@ -295,6 +432,20 @@ function advance(state, event = {}) {
     }
     s.stuckStreak = (state.stuckStreak || 0) + 1;
     s.reteachPending = intent === "HELP" || intent === "IDK";
+
+    if (state.phase !== 'ROUNDUP' && (intent === "IDK" || intent === "HELP")) {
+      currentPoint.unsuccessful_responses = (currentPoint.unsuccessful_responses || 0) + 1;
+      currentPoint.attempt_count = currentPoint.unsuccessful_responses;
+      currentPoint.assisted = true;
+      if (currentPoint.unsuccessful_responses === 2) {
+        currentPoint.awaiting_learning_choice = true;
+        currentPoint.awaiting_choice = true;
+        s.response_mode = 'offer_choice';
+        s.reteachPending = false;
+        return finish();
+      }
+    }
+
     if (s.stuckStreak >= STUCK_LIMIT) {
       if (slot) {
         if (!slot.assessed) slot.outcome = "skipped";
@@ -346,18 +497,46 @@ function advance(state, event = {}) {
 
   if (state.phase === "PROBE") s.probeAnswer = event.answerText || null;
 
-  // ── A wrong answer in an assessed phase is re-taught before moving on ─────
-  if (event.correct === false && isScored(state.phase)) {
-    s.consecutiveWrong = (state.consecutiveWrong || 0) + 1;
-    if (s.consecutiveWrong < MAX_ATTEMPTS) {
-      s.reteachPending = true;
-      if (slot) slot.assisted = true;
-      return finish();
-    }
+  // ── Correct answer: clear struggle and advance ───────────────────────────
+  if (event.correct === true) {
+    currentPoint.awaiting_learning_choice = false;
+    currentPoint.awaiting_choice = false;
+    currentPoint.unsuccessful_responses = 0;
+    currentPoint.attempt_count = 0;
+    s.response_mode = 'check';
+    s.consecutiveWrong = 0;
     if (slot) slot.completed = true;
-    advanceQuestion(state, s, { reveal: true });
+    advanceQuestion(state, s);
     return finish();
   }
+
+  // ── A wrong answer in an assessed phase is re-taught or offered choice ───
+  if (event.correct === false && isScored(state.phase)) {
+    s.consecutiveWrong = (state.consecutiveWrong || 0) + 1;
+    currentPoint.unsuccessful_responses = (currentPoint.unsuccessful_responses || 0) + 1;
+    currentPoint.attempt_count = currentPoint.unsuccessful_responses;
+    currentPoint.assisted = true;
+
+    if (currentPoint.unsuccessful_responses >= 2) {
+      // Second unsuccessful response: stop academic questioning and offer choice
+      currentPoint.awaiting_learning_choice = true;
+      currentPoint.awaiting_choice = true;
+      s.response_mode = 'offer_choice';
+      s.reteachPending = false;
+      if (s.consecutiveWrong >= MAX_ATTEMPTS) {
+        if (slot) slot.completed = true;
+        advanceQuestion(state, s, { reveal: true });
+      }
+      return finish();
+    }
+
+    // First unsuccessful response: explain gap + easier check
+    s.response_mode = 'teach';
+    s.reteachPending = true;
+    if (slot) slot.assisted = true;
+    return finish();
+  }
+
   if (slot) slot.completed = true;
   advanceQuestion(state, s);
   return finish();
@@ -432,6 +611,8 @@ const ESCALATION = {
   redirect_to_topic: "reask_shorter",
   give_starter: "reveal_and_move_on",
   reveal_and_move_on: "give_starter",
+  offer_choice: "give_starter",
+  explain_answer: "give_starter",
 };
 
 /** Walk `steps` rungs down the ladder from `instruction`. */
@@ -449,6 +630,9 @@ function baseInstruction(state, intent) {
   }
   if (state.revealPending) return "reveal_and_move_on";
   if (intent === "OFF_TOPIC") return "redirect_to_topic";
+  if (state.response_mode === "offer_choice") return "offer_choice";
+  if (state.response_mode === "explain") return "explain_answer";
+  if (state.response_mode === "task_repair") return "clarify_question";
   if (intent === "ACK") return "reask_shorter";
   if (intent === "IDK") return "hint_then_easier";
   if (intent === "HELP") return "explain_differently";
@@ -481,7 +665,8 @@ function instructionFor(state, event = {}) {
       event.suggestedAction === 'CLARIFY_TASK' ||
       event.suggested_action === 'CLARIFY_TASK' ||
       event.suggestedAction === 'CLARIFY_QUESTION' ||
-      event.suggested_action === 'CLARIFY_QUESTION') {
+      event.suggested_action === 'CLARIFY_QUESTION' ||
+      state.response_mode === 'task_repair') {
     return 'clarify_question';
   }
   // Infrastructure failures do not show that the student is struggling.
@@ -591,5 +776,8 @@ module.exports = {
   buildGoalMap,
   computeTeachingCoverage,
   computeChecksCompleted,
-  isGoalTaught
+  isGoalTaught,
+  CHOICE_QUESTION,
+  RESPONSE_MODES,
+  learningPointIdFor,
 };

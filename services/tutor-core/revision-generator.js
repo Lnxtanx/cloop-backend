@@ -1,5 +1,9 @@
 /** Grounded revision notes generated at WRAP, with a deterministic fallback. */
 const { invokeModel, extractJson } = require('../ai/deepseek-client');
+let cleanObjectiveText = null;
+try {
+  cleanObjectiveText = require('./validate').cleanObjectiveText;
+} catch (_) {}
 
 const wordCount = value => String(value || '').trim().split(/\s+/u).filter(Boolean).length;
 const plainText = value => typeof value === 'string' && value.trim().length > 0 && !/[<>\u0000-\u0008]/u.test(value);
@@ -50,10 +54,14 @@ function buildFallbackRevisionSheet({ topicTitle, goals = [], keyErrors = [], ma
   const sheet = {
     topic: clean(topicTitle) || 'Study Revision',
     key_concepts: sourceGoals.map(goal => goal.title),
-    definitions: sourceGoals.filter(goal => goal.description).map(goal => ({
-      term: goal.title,
-      definition: clauses(goal.description)[0] || goal.description
-    })),
+    definitions: sourceGoals.filter(goal => goal.description).map(goal => {
+      const rawDef = clauses(goal.description)[0] || goal.description;
+      const cleanDef = cleanObjectiveText ? cleanObjectiveText(rawDef) : rawDef;
+      return {
+        term: goal.title,
+        definition: cleanDef || rawDef
+      };
+    }),
     formulas: unique(sourceGoals.map(formulaFor)),
     quick_recall_tips: [
       earlyEnd ? 'Session ended early; review unassessed goals before your next attempt.' : 'Recall each concept in your own words without notes.',

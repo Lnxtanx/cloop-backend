@@ -40,7 +40,8 @@ const STUDENTS = [
 const CARRY_ON = new Set(['probe_prior_knowledge', 'teach_theory', 'state_objectives',
   'open_goal_dialogue', 'continue_dialogue', 'assess_with_mcq', 'roundup_recall']);
 const ASSISTANCE = new Set(['correct_and_reask', 'reteach_new_angle', 'hint_then_easier',
-  'explain_differently', 'give_starter', 'reveal_and_move_on', 'teach_theory_analogy']);
+  'explain_differently', 'give_starter', 'reveal_and_move_on', 'teach_theory_analogy',
+  'offer_choice', 'explain_answer']);
 const SCORED_PHASES = new Set(['DIALOGUE', 'CHECK', 'ROUNDUP']);
 
 /** Identity uses phase/counters, not the implementation's advancement flag. */

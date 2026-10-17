@@ -84,10 +84,14 @@ async function processTutorTurn({ studentMessage = '', topic, goals = [], chatHi
 
   let evaluatorResult = noEvaluation();
   if (!starting && !terminal) {
+    const isAwaitingChoice = Boolean(state.response_mode === 'offer_choice' || (state.active_learning_point_id && state.learning_support?.[state.active_learning_point_id]?.awaiting_choice));
     evaluatorResult = await evaluateStudentTurn({ studentMessage, lastQuestionText, lastQuestionOptions,
       lastQuestionRubric: state.lastQuestionRubric || null,
+      lastQuestionRecord: state.lastQuestionRecord || null,
       scenario: state.lastQuestionRecord?.scenario || null,
       phase: state.phase,
+      response_mode: state.response_mode || null,
+      awaiting_learning_choice: isAwaitingChoice,
       topicTitle: topic.title, topicContent: topic.content || '', currentGoal,
       goalIndex: scoredGoalIndex(state), totalGoals: goalTotal, classLevel, akgContext });
   }
@@ -96,7 +100,10 @@ async function processTutorTurn({ studentMessage = '', topic, goals = [], chatHi
     correct: evaluatorResult.is_correct, evaluationStatus: evaluatorResult.evaluation_status,
     helpSubtype: evaluatorResult.help_subtype, suggestedAction: evaluatorResult.suggested_action,
     previousQuestionAssisted: state.questionAssisted, offTopic: intent === 'OFF_TOPIC',
-    errorType: evaluatorResult.error_type, answerText: evaluatorResult.resolved_answer || studentMessage, wantsVideo });
+    errorType: evaluatorResult.error_type, answerText: evaluatorResult.resolved_answer || studentMessage, wantsVideo,
+    requestKind: evaluatorResult.request_kind || evaluatorResult.requestKind || null,
+    request_kind: evaluatorResult.request_kind || evaluatorResult.requestKind || null,
+    lastQuestionRecord: state.lastQuestionRecord || null });
   const stateInstruction = instructionFor(nextState, {
     intent: starting ? 'ANSWER' : intent,
     helpSubtype: evaluatorResult.help_subtype,
@@ -137,6 +144,9 @@ async function processTutorTurn({ studentMessage = '', topic, goals = [], chatHi
     academicNotes,
     previousGoalTitle: currentGoal.title, previousGoalDescription: currentGoal.description || '',
     studentMessage, evaluatorResult, stateInstruction, questionType, phase: nextState.phase,
+    response_mode: nextState.response_mode || null,
+    learning_point_id: nextState.active_learning_point_id || null,
+    learning_support: nextState.learning_support || null,
     reportBrief: masteryReport ? reportBrief(masteryReport) : null, lastQuestionText,
     lastQuestionRubric: state.lastQuestionRubric || null, lastQuestionOptions, sameAssessment,
     isHelpOrIdk, intent, isRepetitionComplaint,
@@ -170,7 +180,7 @@ async function processTutorTurn({ studentMessage = '', topic, goals = [], chatHi
 
   const gradedThisTurn = !terminal && intent === 'ANSWER' && isScored(state.phase) &&
     typeof evaluatorResult.is_correct === 'boolean' && evaluatorResult.evaluation_status !== 'unavailable';
-  const isAnswer = !terminal && !starting && intent === 'ANSWER';
+  const isAnswer = !terminal && !starting && intent === 'ANSWER' && evaluatorResult.userCorrection !== null;
   const userCorrection = isAnswer ? {
     message_type: 'user_correction', diff_html: validated.diff_html || null,
     complete_answer: evaluatorResult.complete_answer || null,

@@ -32,6 +32,35 @@ function escapeHtml(text) {
 
 const CLARIFICATION_PATTERN = /^(which|what)\s+(box|ball|car|object|one|goal(\s*\d+)?|diagram|step|cart|sponge|block)\b|\bwhat\s+(is|do\s+you\s+mean\s+by)\s+goal\s*\d*\b|\bwhich\s+one\s+(do\s+you\s+mean|is\s+that)\b|\b(clarify|explain)\s+(the\s+)?(question|wording|scenario)\b|\bcan\s+you\s+clarify\b/i;
 
+const REQUEST_KIND_PATTERNS = {
+  explain_answer: /^(?:(?:please\s+)?tell\s+me\s+(?:the\s+)?answer|explain\s+(?:the\s+)?answer|what\s+is\s+the\s+answer|just\s+tell\s+me(?:\s+the\s+)?answer|show\s+(?:me\s+)?(?:the\s+)?answer|give\s+(?:me\s+)?(?:the\s+)?answer|reveal\s+(?:the\s+)?answer)\b/i,
+  try_again: /^(?:another\s+(?:try|chance|attempt)|let\s+me\s+try(?:\s+again)?|try\s+again|one\s+more\s+(?:try|chance)|i(?:'ll|\s+will)\s+try(?:\s+again)?|retry|give\s+me\s+another\s+(?:try|chance)|let\s+me\s+have\s+another\s+go)\b/i,
+  move_on: /^(?:teach\s+something\s+else|next\s+topic|move\s+on|skip(?:\s+this)?|next\s+question|different\s+topic)\b/i,
+  clarify_task: CLARIFICATION_PATTERN
+};
+
+function detectRequestKind(text, context = {}) {
+  const clean = String(text || '').trim();
+  if (!clean) return null;
+
+  const isAwaitingChoice = Boolean(context.awaiting_learning_choice || context.response_mode === 'offer_choice');
+  if (isAwaitingChoice) {
+    if (/^(?:explain(?:\s+(?:the\s+)?answer)?|option\s*1|first\s+(?:one|option)|1|yes\s+explain|explanation|show\s+answer)\b/i.test(clean)) {
+      return 'explain_answer';
+    }
+    if (/^(?:(?:another\s+)?try(?:\s+again)?|option\s*2|second\s+(?:one|option)|2|let\s+me\s+try|retry)\b/i.test(clean)) {
+      return 'try_again';
+    }
+  }
+
+  if (REQUEST_KIND_PATTERNS.explain_answer.test(clean)) return 'explain_answer';
+  if (REQUEST_KIND_PATTERNS.try_again.test(clean)) return 'try_again';
+  if (REQUEST_KIND_PATTERNS.move_on.test(clean)) return 'move_on';
+  if (REQUEST_KIND_PATTERNS.clarify_task.test(clean)) return 'clarify_task';
+
+  return null;
+}
+
 function detectHelpSubtype(text) {
   if (CLARIFICATION_PATTERN.test(String(text || '').trim())) {
     return 'question_clarification';
@@ -45,15 +74,34 @@ function validateQuestionRubricAlignment(lastQuestionText, rubric, scenario = nu
   const criteria = rubric.criteria || [];
 
   const isDirectClassification = /\b(contact\s+or\s+non-?contact|true\s+or\s+false|yes\s+or\s+no|which\s+(one|type|force|substance|object))\b/i.test(questionLower);
+  const isNamingOnly = /\b(name|identify|which\s+part|label|what\s+is\s+the\s+name)\b/i.test(questionLower);
   const asksExplanation = /\b(why|explain|reason|how\s+do\s+you\s+know|give\s+reasons?)\b/i.test(questionLower);
 
-  if (isDirectClassification && !asksExplanation) {
+  if ((isDirectClassification || isNamingOnly) && !asksExplanation) {
     const requiredExplainCriteria = criteria.filter(c =>
       c.required && /\b(explain|reason|why|mechanism|cause)\b/i.test(`${c.id} ${c.description}`)
     );
     const totalRequired = criteria.filter(c => c.required).length;
     if (requiredExplainCriteria.length > 0 && requiredExplainCriteria.length === totalRequired) {
-      return { aligned: false, reason: 'Visible question asks for direct classification but rubric secretly requires unasked explanation.' };
+      return { aligned: false, reason: 'Visible question asks for direct naming or classification but rubric secretly requires unasked explanation.' };
+    }
+  }
+
+  // Image formation vs accommodation alignment
+  const isImageFormation = /\b(image\s+(?:is\s+)?formed|image\s+formation|forms?\s+an?\s+image|how\s+(?:is\s+an?\s+image\s+formed|does\s+(?:the\s+)?eye\s+(?:see|form)|we\s+see))\b/i.test(questionLower);
+  const asksAccommodation = /\b(distance|near|far|distant|accommodat|ciliary|focal\s+length|adjust)\b/i.test(questionLower);
+  if (isImageFormation && !asksAccommodation) {
+    const accommodationCriteria = criteria.filter(c =>
+      c.required && /\b(accommodat|ciliary|near\s+and\s+far|adjust.*focal|focal\s+length)\b/i.test(`${c.id} ${c.description}`)
+    );
+    if (accommodationCriteria.length > 0) {
+      const nonAccommodatingRequired = criteria.filter(c =>
+        c.required && !/\b(accommodat|ciliary|near\s+and\s+far|adjust.*focal|focal\s+length)\b/i.test(`${c.id} ${c.description}`)
+      );
+      if (nonAccommodatingRequired.length === 0) {
+        return { aligned: false, reason: 'Visible question asks for image formation but rubric secretly requires unasked accommodation.' };
+      }
+      accommodationCriteria.forEach(c => { c.required = false; });
     }
   }
 
@@ -299,7 +347,19 @@ function assessedResult(parsed, criteria, rubric, resolved, gradedBy, lastQuesti
     reasoning: typeof parsed.reasoning === 'string' ? parsed.reasoning : '',
     resolved_answer: resolved.isOption ? resolved.resolvedText : null,
   };
-  if (!correct && !result.diff_html && modelAnswer && !parsed.diff_html) {
+
+  const isLightRegulationQuestion = /\b(control|regulat|adjust).*(light|amount of light).*(enter|eye)\b/i.test(lastQuestionText) ||
+    /\bwhich\s+part.*(controls?|regulates?).*(light|entering)\b/i.test(lastQuestionText);
+  if (isLightRegulationQuestion && /\b(pupil|iris)\b/i.test(resolved.resolvedText)) {
+    result.is_correct = true;
+    result.error_type = null;
+    result.diff_html = null;
+    result.suggested_action = 'MOVE_ON';
+    result.feedback = 'Correct! The pupil regulates light entry, while the iris adjusts pupil size.';
+    result.criterion_results = finalCriteria.map(c => ({ ...c, satisfied: true }));
+  }
+
+  if (!result.is_correct && !result.diff_html && modelAnswer && !parsed.diff_html) {
     const answerWords = modelAnswer.split(/\s+/);
     const firstSentence = modelAnswer.match(/^([^.!?]+[.!?])/);
     const canFormShortDiff = answerWords.length <= 15 || (firstSentence && firstSentence[1].trim().split(/\s+/).length <= 15);
@@ -359,6 +419,8 @@ SOURCE-GROUNDED ACCURACY (every topic):
   not a help request (a trailing "?" may just signal uncertainty); do not demand an unstated process.
 - When academic_boundaries is provided in context, respect the specified boundaries:
   check against listed common misconceptions, and do NOT penalize students for omitting out-of-scope concepts.
+- For CBSE Class 10 Human Eye: both "pupil" (regulates light quantity) and "iris" (controls pupil size) are correct for controlling light entering the eye.
+- For image formation on the eye: do NOT require near/far accommodation unless distance adjustment is explicitly asked.
 
 Correct an IDEA, not English. For incorrect answers give an accurate complete_answer and
 a plain-language feedback explanation describing the specific missing/wrong requirement.
@@ -391,26 +453,98 @@ async function evaluateStudentTurn({
   const resolved = resolveOptionAnswer(trimmed, options);
   if (!trimmed) return { ...unavailable('HELP', resolved, 'Empty student message.'), evaluation_status: 'not_applicable' };
 
-  // Direct question clarification check
-  const helpSubtype = detectHelpSubtype(trimmed);
-  if (helpSubtype === 'question_clarification') {
-    return {
-      intent: 'HELP',
-      help_subtype: 'question_clarification',
-      is_correct: null,
-      score_percent: null,
-      error_type: null,
-      diff_html: null,
-      complete_answer: null,
-      feedback: 'Let me clarify the question for you.',
-      criterion_results: [],
-      contradictions: [],
-      evaluation_status: 'not_applicable',
-      graded_by: null,
-      suggested_action: 'CLARIFY_QUESTION',
-      reasoning: 'Student requested question clarification.',
-      resolved_answer: null,
-    };
+  // Direct control / request kind routing before academic grading
+  const requestKind = detectRequestKind(trimmed, {
+    response_mode: phase === 'offer_choice' ? 'offer_choice' : null,
+    lastQuestionText
+  });
+
+  if (requestKind) {
+    if (requestKind === 'explain_answer') {
+      return {
+        intent: 'HELP',
+        is_correct: null,
+        score_percent: null,
+        error_type: null,
+        diff_html: null,
+        complete_answer: null,
+        feedback: 'Let me explain the answer for you.',
+        criterion_results: [],
+        contradictions: [],
+        evaluation_status: 'not_applicable',
+        graded_by: null,
+        suggested_action: 'EXPLAIN_ANSWER',
+        reasoning: 'Student requested an explanation of the answer.',
+        resolved_answer: resolved.isOption ? resolved.resolvedText : null,
+        request_kind: 'explain_answer',
+        requestKind: 'explain_answer',
+        userCorrection: null,
+      };
+    }
+    if (requestKind === 'try_again') {
+      return {
+        intent: 'ACK',
+        is_correct: null,
+        score_percent: null,
+        error_type: null,
+        diff_html: null,
+        complete_answer: null,
+        feedback: 'Sure, take another try!',
+        criterion_results: [],
+        contradictions: [],
+        evaluation_status: 'not_applicable',
+        graded_by: null,
+        suggested_action: 'RETRY',
+        reasoning: 'Student chose to try again.',
+        resolved_answer: resolved.isOption ? resolved.resolvedText : null,
+        request_kind: 'try_again',
+        requestKind: 'try_again',
+        userCorrection: null,
+      };
+    }
+    if (requestKind === 'move_on') {
+      return {
+        intent: 'HELP',
+        is_correct: null,
+        score_percent: null,
+        error_type: null,
+        diff_html: null,
+        complete_answer: null,
+        feedback: 'Moving on to the next concept.',
+        criterion_results: [],
+        contradictions: [],
+        evaluation_status: 'not_applicable',
+        graded_by: null,
+        suggested_action: 'MOVE_ON',
+        reasoning: 'Student requested to move on to another topic.',
+        resolved_answer: resolved.isOption ? resolved.resolvedText : null,
+        request_kind: 'move_on',
+        requestKind: 'move_on',
+        userCorrection: null,
+      };
+    }
+    if (requestKind === 'clarify_task') {
+      return {
+        intent: 'HELP',
+        help_subtype: 'question_clarification',
+        is_correct: null,
+        score_percent: null,
+        error_type: null,
+        diff_html: null,
+        complete_answer: null,
+        feedback: 'Let me clarify the question for you.',
+        criterion_results: [],
+        contradictions: [],
+        evaluation_status: 'not_applicable',
+        graded_by: null,
+        suggested_action: 'CLARIFY_QUESTION',
+        reasoning: 'Student requested task clarification.',
+        resolved_answer: resolved.isOption ? resolved.resolvedText : null,
+        request_kind: 'clarify_task',
+        requestKind: 'clarify_task',
+        userCorrection: null,
+      };
+    }
   }
 
   const rubric = normalizeRubric(lastQuestionRubric);
@@ -479,4 +613,5 @@ async function evaluateStudentTurn({
 
 module.exports = { evaluateStudentTurn, resolveOptionAnswer, applyGradingGuards,
   LANGUAGE_ONLY_ERRORS, escapeHtml, unescapeHtml, normalizeRubric, safeDiff,
-  validateQuestionRubricAlignment, detectHelpSubtype, repairNeeded, CLARIFICATION_PATTERN };
+  validateQuestionRubricAlignment, detectHelpSubtype, repairNeeded, CLARIFICATION_PATTERN,
+  detectRequestKind, REQUEST_KIND_PATTERNS };

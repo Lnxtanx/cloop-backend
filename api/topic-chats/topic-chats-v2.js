@@ -155,7 +155,8 @@ async function handleTopicChatMessageV2(req, res) {
         sender: true,
         message: true,
         message_type: true,
-        options: true
+        options: true,
+        created_at: true
       }
     });
 
@@ -167,6 +168,17 @@ async function handleTopicChatMessageV2(req, res) {
     // Keep the student's answer intact. Only the evaluator may resolve an
     // option against the current question, never an older MCQ in history.
     const effectiveMessage = (message || '').trim();
+
+    // Deduplication guard: ignore exact duplicate student submission within 3 seconds
+    const lastUserMsg = recentMessages.find(m => m.sender === 'user');
+    if (lastUserMsg && effectiveMessage && lastUserMsg.message === effectiveMessage) {
+      const diffMs = Date.now() - new Date(lastUserMsg.created_at || Date.now()).getTime();
+      if (diffMs >= 0 && diffMs < 3000) {
+        console.warn(`[Tutor-Core V2] Deduplication: duplicate message within ${diffMs}ms ignored:`, effectiveMessage);
+        return res.status(200).json({ status: 'duplicate_ignored', message: 'Message already received' });
+      }
+    }
+
     const chatHistory = [...parsedRecentMessages].reverse();
 
     // 4. Load previous session state from latest chat_process feedback
@@ -573,7 +585,9 @@ async function handleTopicChatMessageV2(req, res) {
           evaluator_result: turnResult.evaluatorResult,
           user_correction: publicCorrection,
           state_instruction: turnResult.stateInstruction,
-          mastery_report: turnResult.masteryReport || null
+          mastery_report: turnResult.masteryReport || null,
+          question_id: previousState?.lastQuestionRecord?.questionId || null,
+          active_question_record: previousState?.lastQuestionRecord || null
         }
       }
     });

@@ -155,6 +155,10 @@ test("a wrong answer re-teaches, and both teaching tiers are reachable", () => {
   assert.strictEqual(s.phase, "DIALOGUE");
   assert.strictEqual(S.instructionFor(s, { intent: "ANSWER" }), "correct_and_reask");
   s = S.advance(s, wrong);
+  assert.strictEqual(s.response_mode, "offer_choice");
+  assert.strictEqual(S.instructionFor(s, { intent: "ANSWER" }), "offer_choice");
+  s = S.advance(s, { intent: "ACK", requestKind: "try_again" });
+  assert.strictEqual(s.response_mode, "check");
   assert.strictEqual(S.instructionFor(s, { intent: "ANSWER" }), "reteach_new_angle");
 });
 
