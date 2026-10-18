@@ -4,7 +4,7 @@
  * Guarantees DeepSeek-V4-Pro with Always-On Thinking and prefix prompt caching across all features.
  */
 
-const { invokeModel, invokeReasoner, extractJson } = require('../../providers');
+const { invokeModel, invokeReasoner, extractJson } = require('../../ai/providers');
 
 module.exports = {
   invokeModel,
