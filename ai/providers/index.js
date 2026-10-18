@@ -1,11 +1,11 @@
 /**
  * Cloop Unified AI Providers Layer
- * Centralized gateway for LLM models (DeepSeek with Always-On Thinking), Web Search, Prompt Caching, and Telemetry.
+ * Centralized gateway for LLM models (DeepSeek with Always-On Thinking), Gemini (Live voice + Flash text), Web Search, Prompt Caching, and Telemetry.
  *
  * Usage:
  *   const { invokeReasoner, executeSearch, recordTokenUsage } = require('../providers');
  *   // or
- *   const { deepseek, search, telemetry, cache } = require('../providers');
+ *   const { deepseek, gemini, search, telemetry, cache } = require('../providers');
  */
 
 const { invokeModel } = require('./deepseek/client');
@@ -14,6 +14,7 @@ const { executeSearch, fetchWebPage, searchCurriculumSyllabus } = require('./dee
 const { MODELS, ENDPOINTS, THINKING_CONFIG, TIMEOUTS } = require('./deepseek/constants');
 const { recordTokenUsage } = require('./telemetry/token-logger');
 const { assembleCachedPrompt, computeCacheMetrics } = require('./cache/prompt-cache');
+const gemini = require('./gemini');
 
 module.exports = {
   // Top-level direct helpers
@@ -27,6 +28,11 @@ module.exports = {
   assembleCachedPrompt,
   computeCacheMetrics,
 
+  // Gemini shortcuts (Live duplex voice + Flash text)
+  createGeminiLiveSession: gemini.createLiveSession,
+  generateGeminiText: gemini.generateText,
+  generateGeminiJson: gemini.generateJson,
+
   // Namespaced modules
   deepseek: {
     invokeModel,
@@ -37,6 +43,7 @@ module.exports = {
     THINKING_CONFIG,
     TIMEOUTS,
   },
+  gemini,
   search: {
     executeSearch,
     fetchWebPage,

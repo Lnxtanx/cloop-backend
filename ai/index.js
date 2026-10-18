@@ -2,9 +2,9 @@
  * Cloop Central AI Gateway
  *
  * Top-level entrypoint for AI Infrastructure:
- * - providers: LLM models, DeepSeek Always-On Thinking, Prefix Caching, Telemetry
+ * - providers: LLM models (DeepSeek, Gemini Live voice + Flash text), Search, Caching, Telemetry
  * - tools: Reusable agent tools (Search, AKG Knowledge Graph, Diagram Fetcher)
- * - agents: Domain-specific AI Agents (Socratic Tutor)
+ * - agents: Domain-specific AI Agents (Socratic Tutor, English Voice-to-Voice)
  */
 
 const providers = require('./providers');
@@ -19,6 +19,7 @@ module.exports = {
 
   // Direct shortcuts for high-frequency access
   socraticTutor: agents.socraticTutor,
+  gemini: providers.gemini,
   invokeModel: providers.invokeModel,
   invokeReasoner: providers.invokeReasoner,
   extractJson: providers.extractJson,
