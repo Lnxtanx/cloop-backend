@@ -4,10 +4,11 @@
  */
 
 const socraticTutor = require('./socratic-tutor');
+const englishVoice = require('./english-voice');
 
 module.exports = {
   socraticTutor,
+  englishVoice,
   // Future agents:
-  // voiceTutor: require('./voice-tutor'),
   // englishTutor: require('./english-tutor'),
 };
