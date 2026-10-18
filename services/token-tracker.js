@@ -15,7 +15,7 @@ const prisma = require('../lib/prisma');
  * @param {string} params.featureArea - Feature area ('curriculum_generation', 'topic_chat', 'normal_chat', 'practice_test', 'memory_context')
  * @param {string} [params.subFeature=null] - Sub-feature ('chapter_gen', 'concept_eval', etc.)
  * @param {string} [params.provider='deepseek'] - LLM Provider name
- * @param {string} [params.modelName='deepseek-chat'] - LLM Model name
+ * @param {string} [params.modelName='deepseek-v4-pro'] - LLM Model name
  * @param {number} [params.promptTokens=0] - Input token count
  * @param {number} [params.completionTokens=0] - Output token count
  * @param {number} [params.totalTokens=0] - Total token count
@@ -38,7 +38,7 @@ function logTokenUsage(params = {}) {
             const featureArea = (params.featureArea || 'general').trim();
             const subFeature = params.subFeature ? params.subFeature.trim() : null;
             const provider = (params.provider || 'deepseek').trim();
-            const modelName = (params.modelName || 'deepseek-chat').trim();
+            const modelName = (params.modelName || 'deepseek-v4-pro').trim();
             const status = (params.status || 'success').trim();
 
             // 1. Insert raw token log record

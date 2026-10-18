@@ -388,10 +388,14 @@ function enforce(rawOutput, context = {}) {
   const priorRubric = normalizeRubric(context.lastQuestionRubric);
   let questionReplaced = false;
   let questionAssisted = Boolean(context.sameAssessment);
+  const isTeachingOrExplanation = explanationOnly || phase === 'THEORY' || response_mode === 'teach' || response_mode === 'explain';
+  const effectiveMaxBubbles = isTeachingOrExplanation ? 4 : MAX_BUBBLES;
   const rawMessages = Array.isArray(rawOutput?.messages) ? rawOutput.messages : [];
   const expanded = rawMessages.flatMap(b => splitIntoMicroBubbles(reconcileTone(cleanProse(b?.message), isCorrect))
     .map((message, i, parts) => ({ message, message_type: 'text', ...(i === parts.length - 1 && b.options ? { options: b.options } : {}) })));
-  let messages = expanded.length > MAX_BUBBLES ? [expanded[0], expanded[expanded.length - 1]] : expanded;
+  let messages = expanded.length > effectiveMaxBubbles
+    ? (isTeachingOrExplanation ? expanded.slice(0, effectiveMaxBubbles) : [expanded[0], expanded[expanded.length - 1]])
+    : expanded;
 
   if (ending) {
     messages = messages.filter(b => !endsWithQuestion(b.message)).slice(0, 1);

@@ -603,7 +603,7 @@ Help ${userProfile?.name || 'the user'} improve English speaking, grammar, writi
       systemPrompt,
       [{ role: 'user', content: userMessage }],
       {
-        modelId: 'deepseek-chat',
+        modelId: 'deepseek-v4-pro',
         temperature: 0.7,
         userId,
         featureArea: 'general_english_tutor'
@@ -648,7 +648,7 @@ ${text}`;
       prompt,
       [{ role: 'user', content: 'Translate now.' }],
       {
-        modelId: 'deepseek-chat',
+        modelId: 'deepseek-v4-pro',
         temperature: 0.3,
         featureArea: 'chat_translation'
       }

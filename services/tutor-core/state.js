@@ -304,8 +304,14 @@ function advance(state, event = {}) {
   const previousAssisted = event.previousQuestionAssisted === true || state.questionAssisted === true;
   if (slot && previousAssisted) slot.assisted = true;
 
+  // Single-turn modes (explain and task_repair) transition back to check on the next incoming turn
+  if (state.response_mode === 'explain' || state.response_mode === 'task_repair') {
+    s.response_mode = 'check';
+  }
+
   // ── Route explicit control requests before academic handling ─────────────
   const requestKind = event.requestKind || event.request_kind || null;
+  const rawStudentText = String(event.answerText || '').trim();
 
   // 1. Question clarification: repair visible question without penalty
   const isClarification = requestKind === 'clarify_task' ||
@@ -359,8 +365,10 @@ function advance(state, event = {}) {
     return finish();
   }
 
-  // 4. Move on request: "Teach something else"
-  if (requestKind === 'move_on') {
+  // 4. Move on request: "Teach something else" / "Next question"
+  const isExplicitMoveOn = requestKind === 'move_on' ||
+    (intent !== 'OFF_TOPIC' && !event.offTopic && /\b(next(?:\s+question|\s+topic)?|move\s+on|proceed|skip)\b/i.test(rawStudentText));
+  if (isExplicitMoveOn) {
     currentPoint.awaiting_learning_choice = false;
     currentPoint.awaiting_choice = false;
     currentPoint.assisted = true;
@@ -433,7 +441,13 @@ function advance(state, event = {}) {
     s.stuckStreak = (state.stuckStreak || 0) + 1;
     s.reteachPending = intent === "HELP" || intent === "IDK";
 
-    if (state.phase !== 'ROUNDUP' && (intent === "IDK" || intent === "HELP")) {
+    if (isScored(state.phase) && state.phase !== 'ROUNDUP' && (intent === "IDK" || intent === "HELP")) {
+      const isElaboration = /\b(explain\s+more|tell\s+me\s+more|more\s+detail|elaborate|give\s+(?:an?\s+)?example|can\s+you\s+explain)\b/i.test(String(event.answerText || '').trim());
+      if (isElaboration) {
+        s.response_mode = 'teach';
+        s.reteachPending = true;
+        return finish();
+      }
       currentPoint.unsuccessful_responses = (currentPoint.unsuccessful_responses || 0) + 1;
       currentPoint.attempt_count = currentPoint.unsuccessful_responses;
       currentPoint.assisted = true;

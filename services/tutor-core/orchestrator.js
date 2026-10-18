@@ -70,7 +70,7 @@ function closingMessage(report) {
 
 /** The server persists question contracts privately; students receive bubbles and feedback only. */
 async function processTutorTurn({ studentMessage = '', topic, goals = [], chatHistory = [],
-  currentState = null, userProfile = {}, wantsVideo = false, akgContext = null }) {
+  currentState = null, userProfile = {}, wantsVideo = false, akgContext = null, userId = null }) {
   const goalTotal = Math.max(1, goals.length);
   const state = currentState || initialState(goalTotal);
   const fallbackGoal = { id: 0, title: topic.title, description: topic.content || '' };
@@ -93,7 +93,7 @@ async function processTutorTurn({ studentMessage = '', topic, goals = [], chatHi
       response_mode: state.response_mode || null,
       awaiting_learning_choice: isAwaitingChoice,
       topicTitle: topic.title, topicContent: topic.content || '', currentGoal,
-      goalIndex: scoredGoalIndex(state), totalGoals: goalTotal, classLevel, akgContext });
+      goalIndex: scoredGoalIndex(state), totalGoals: goalTotal, classLevel, akgContext, userId });
   }
   const intent = normalizeIntent(evaluatorResult.intent);
   const nextState = starting ? { ...state } : advance(state, { intent,
@@ -121,7 +121,7 @@ async function processTutorTurn({ studentMessage = '', topic, goals = [], chatHi
     if (!revisionSheet) {
       try {
         revisionSheet = await generateRevisionSheet({ topicTitle: topic.title, goals,
-          keyErrors: masteryReport.key_errors, classLevel, masteryReport });
+          keyErrors: masteryReport.key_errors, classLevel, masteryReport, userId });
       } catch {
         revisionSheet = buildFallbackRevisionSheet({ topicTitle: topic.title, goals,
           keyErrors: masteryReport.key_errors, masteryReport });
@@ -151,7 +151,7 @@ async function processTutorTurn({ studentMessage = '', topic, goals = [], chatHi
     lastQuestionRubric: state.lastQuestionRubric || null, lastQuestionOptions, sameAssessment,
     isHelpOrIdk, intent, isRepetitionComplaint,
     recentHistory: chatHistory, classLevel, wantsVideo: attachments.includes('video') && wantsVideo,
-    akgContext, goals, goalIndex: currentGoalIdx, totalGoals: goalTotal, goalMap };
+    akgContext, goals, goalIndex: currentGoalIdx, totalGoals: goalTotal, goalMap, userId };
   // Code owns closing figures and claims. DONE reuses artifacts without model calls.
   const rawTutorOutput = ending
     ? { messages: [{ message: closingMessage(masteryReport), message_type: 'text' }] }

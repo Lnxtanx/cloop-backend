@@ -114,7 +114,7 @@ function isValidSheet(parsed, fallback) {
   return true;
 }
 
-async function generateRevisionSheet({ topicTitle, goals = [], keyErrors = [], classLevel = '10', masteryReport } = {}) {
+async function generateRevisionSheet({ topicTitle, goals = [], keyErrors = [], classLevel = '10', masteryReport, userId = null } = {}) {
   const sourceGoals = normalizeGoals(goals);
   const fallback = buildFallbackRevisionSheet({ topicTitle, goals, keyErrors, masteryReport });
   const goalsText = sourceGoals.map((goal, index) => `${index + 1}. ${goal.title}: ${goal.description || 'No verified definition supplied; do not invent one.'}`).join('\n');
@@ -143,7 +143,8 @@ Return STRICT JSON with all these keys:
   try {
     const raw = await invokeModel(systemPrompt, [{ role: 'user', content: 'Create the grounded revision sheet.' }], {
       temperature: 0.3, maxTokens: 800, jsonFormat: true,
-      featureArea: 'tutor-core', subFeature: 'revision-sheet'
+      featureArea: 'tutor-core', subFeature: 'revision-sheet',
+      userId: userId || null,
     });
     const parsed = extractJson(typeof raw === 'string' ? raw : raw?.text);
     if (!isValidSheet(parsed, fallback)) throw new Error('Invalid or ungrounded revision sheet');

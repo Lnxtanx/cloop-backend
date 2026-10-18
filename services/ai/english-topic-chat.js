@@ -3,7 +3,7 @@ const prisma = require('../../lib/prisma');
 
 /**
  * English AI Topic Tutor Service
- * Powered by DeepSeek (deepseek-chat) for real-time conversational roleplay
+ * Powered by DeepSeek (deepseek-v4-pro) for real-time conversational roleplay
  * and Indian-English grammar correction with live HTML diffs.
  */
 
@@ -179,7 +179,7 @@ CURRENT LEARNER RESPONSE TO EVALUATE:
       systemPrompt,
       messages,
       {
-        modelId: 'deepseek-chat',
+        modelId: 'deepseek-v4-pro',
         temperature: 0.6,
         jsonFormat: true,
         userId,
@@ -293,7 +293,7 @@ JSON format:
       systemPrompt,
       [{ role: 'user', content: `Start scenario: ${topicTitle}` }],
       {
-        modelId: 'deepseek-chat',
+        modelId: 'deepseek-v4-pro',
         temperature: 0.6,
         jsonFormat: true
       }

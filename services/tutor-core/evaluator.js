@@ -584,6 +584,7 @@ async function evaluateStudentTurn({
   try {
     const output = await invokeModel(EVALUATOR_PROMPT, [{ role: 'user', content: JSON.stringify(context) }], {
       temperature: 0, maxTokens: 900, jsonFormat: true, featureArea: 'tutor-core', subFeature: 'evaluator',
+      userId: context.userId || null,
     });
     const parsed = extractJson(typeof output === 'string' ? output : output?.text);
     if (!parsed || typeof parsed !== 'object') throw new Error('Invalid evaluator response');

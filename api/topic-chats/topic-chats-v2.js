@@ -257,6 +257,7 @@ async function handleTopicChatMessageV2(req, res) {
       chatHistory,
       currentState: previousState,
       userProfile: userProfile || {},
+      userId: user_id,
       wantsVideo,
       akgContext
     });

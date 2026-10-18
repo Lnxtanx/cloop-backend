@@ -272,7 +272,8 @@ async function generateTutorResponse(params) {
     responseMode === 'task_repair';
   try {
     const raw = await invokeModel(buildTutorPrompt(params), [{ role: 'user', content: 'Write this tutor turn following the server directive and JSON schema.' }], {
-      temperature: 0.4, maxTokens: 900, jsonFormat: true, featureArea: 'tutor-core', subFeature: 'dialogue-generator'
+      temperature: 0.4, maxTokens: 900, jsonFormat: true, featureArea: 'tutor-core', subFeature: 'dialogue-generator',
+      userId: params.userId || null,
     });
     const parsed = extractJson(typeof raw === 'string' ? raw : raw.text);
     if (!parsed || !Array.isArray(parsed.messages) || !parsed.messages.length) throw new Error('Invalid tutor messages');

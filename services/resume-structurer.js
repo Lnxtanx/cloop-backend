@@ -59,7 +59,7 @@ CRITICAL RULES:
     const rawResult = await invokeModel(systemPrompt, [
       { role: 'user', content: userMessage }
     ], {
-      modelId: 'deepseek-chat',
+      modelId: 'deepseek-v4-pro',
       temperature: 0.2,
       maxTokens: 1200,
       userId: metadata.userId || null,
