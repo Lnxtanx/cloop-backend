@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const axios = require('axios')
 const { authenticateToken } = require('../../middleware/auth')
-const { generateTopicChatResponse, generateTopicGreeting, generateTopicGoals } = require('../../services/topic-chat/topic-chat')
+const { generateTopicChatResponse, generateTopicGreeting, generateTopicGoals, filterGoalsForStartingTopic } = require('../../services/topic-chat/topic-chat')
 const { publicChatProcess } = require('../../services/tutor-core/public-feedback')
 const { invokeModel } = require('../../services/ai/deepseek-client')
 const { createLearningTurn, incrementExplainCount, calculateMasteryScore } = require('../../services/learning_turns_tracker')
@@ -563,7 +563,7 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 		})
 
 		// Fetch topic goals with progress info
-		const topicGoals = await prisma.global_topic_goals.findMany({
+		const rawTopicGoals = await prisma.global_topic_goals.findMany({
 			where: {
 				topic_id: parseInt(topicId)
 			},
@@ -582,6 +582,7 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 				}
 			}
 		})
+		const topicGoals = filterGoalsForStartingTopic(topic, rawTopicGoals)
 
 		// If no messages and no goals, generate initial greeting
 		let needsGreeting = chatMessages.length === 0
@@ -732,7 +733,7 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 		}
 
 		// Refetch goals after potential creation
-		const updatedGoals = await prisma.global_topic_goals.findMany({
+		const rawUpdatedGoals = await prisma.global_topic_goals.findMany({
 			where: {
 				topic_id: parseInt(topicId)
 			},
@@ -751,6 +752,7 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 				}
 			}
 		})
+		const updatedGoals = filterGoalsForStartingTopic(topic, rawUpdatedGoals)
 
 		// 🔧 FIX: Re-fetch chat messages after storing greeting
 		// This ensures greeting messages are included in the response
@@ -957,7 +959,7 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 		})
 
 		// Fetch topic goals with progress data for context
-		const topicGoals = await prisma.global_topic_goals.findMany({
+		const rawTopicGoals = await prisma.global_topic_goals.findMany({
 			where: {
 				topic_id: parseInt(topicId)
 			},
@@ -976,6 +978,7 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 				}
 			}
 		})
+		const topicGoals = filterGoalsForStartingTopic(topic, rawTopicGoals)
 
 		// Find current goal (first incomplete goal)
 		let currentGoal = null
@@ -2035,8 +2038,9 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 			})
 
 			// Replace topicGoals with updated data so AI sees correct state
+			const filteredUpdatedGoals = filterGoalsForStartingTopic(topic, updatedGoalsAfterProgress)
 			topicGoals.length = 0
-			topicGoals.push(...updatedGoalsAfterProgress)
+			topicGoals.push(...filteredUpdatedGoals)
 
 			// Re-determine currentGoal with updated completion status
 			currentGoal = null
@@ -2585,7 +2589,7 @@ router.post('/:topicId/option', authenticateToken, async (req, res) => {
 		const chatHistory = recentMessages.reverse();
 
 		// Fetch topic goals and current goal WITH progress data
-		const topicGoals = await prisma.global_topic_goals.findMany({
+		const rawTopicGoals = await prisma.global_topic_goals.findMany({
 			where: { topic_id: parseInt(topicId) },
 			orderBy: { order: 'asc' },
 			include: {
@@ -2596,6 +2600,7 @@ router.post('/:topicId/option', authenticateToken, async (req, res) => {
 				}
 			}
 		});
+		const topicGoals = filterGoalsForStartingTopic(topic, rawTopicGoals);
 		let currentGoal = null;
 		for (const goal of topicGoals) {
 			const progress = goal.chat_goal_progress?.[0];
@@ -2638,7 +2643,7 @@ router.post('/:topicId/option', authenticateToken, async (req, res) => {
 				});
 
 				// Re-fetch goals with updated progress
-				const updatedTopicGoals = await prisma.global_topic_goals.findMany({
+				const rawUpdatedTopicGoals = await prisma.global_topic_goals.findMany({
 					where: { topic_id: parseInt(topicId) },
 					orderBy: { order: 'asc' },
 					include: {
@@ -2649,6 +2654,7 @@ router.post('/:topicId/option', authenticateToken, async (req, res) => {
 						}
 					}
 				});
+				const updatedTopicGoals = filterGoalsForStartingTopic(topic, rawUpdatedTopicGoals);
 
 				// Re-determine current goal
 				let updatedCurrentGoal = null;
@@ -2836,7 +2842,7 @@ router.post('/:topicId/option', authenticateToken, async (req, res) => {
 		}
 
 		// Return updated goals
-		const updatedGoalsForClient = await prisma.global_topic_goals.findMany({
+		const rawGoalsForClient = await prisma.global_topic_goals.findMany({
 			where: { topic_id: parseInt(topicId) },
 			orderBy: { order: 'asc' },
 			include: {
@@ -2847,6 +2853,7 @@ router.post('/:topicId/option', authenticateToken, async (req, res) => {
 				}
 			}
 		});
+		const updatedGoalsForClient = filterGoalsForStartingTopic(topic, rawGoalsForClient);
 
 		return res.status(201).json({ aiMessages, userCorrection: aiResponse.user_correction || null, feedback: aiResponse.feedback || null, goals: updatedGoalsForClient });
 	} catch (err) {

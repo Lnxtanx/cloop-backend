@@ -55,16 +55,18 @@ function pipelineResult(nextState, overrides = {}) {
   };
 }
 
-function fixture(previousState, result) {
+function fixture(previousState, result, options = {}) {
   const calls = {};
   const saved = new Map();
   let counter = 100;
+  const activeTopic = options.topic || { id: 1, title: 'Effects of force', content: 'Force changes motion or shape.',
+    chapter: { id: 5, subject_id: 6, title: 'Exploring forces', subject: { id: 6, name: 'Science' } } };
+  const activeGoals = options.goals || GOALS;
   const record = (name, args) => (calls[name] ||= []).push(args);
   const select = (row, fields) => fields ? Object.fromEntries(Object.keys(fields).filter((k) => fields[k]).map((k) => [k, row[k] ?? null])) : row;
   const prisma = {
-    global_topics: { findUnique: async () => ({ id: 1, title: 'Effects of force', content: 'Force changes motion or shape.',
-      chapter: { id: 5, subject_id: 6, title: 'Exploring forces', subject: { id: 6, name: 'Science' } } }) },
-    global_topic_goals: { findMany: async () => GOALS.map((goal) => ({ ...goal, chat_goal_progress: [{ id: goal.id + 30, is_completed: true, score_percent: 99 }] })) },
+    global_topics: { findUnique: async () => activeTopic },
+    global_topic_goals: { findMany: async () => activeGoals.map((goal) => ({ ...goal, chat_goal_progress: [{ id: goal.id + 30, is_completed: true, score_percent: 99 }] })) },
     admin_chat: {
       findMany: async () => [
         { id: 91, sender: 'ai', message: previousState?.lastQuestionText || 'What changes?', options: [] },
@@ -104,6 +106,7 @@ function fixture(previousState, result) {
     '../../services/tutor-core/orchestrator': { processTutorTurn: async (args) => { record('processTutorTurn', args); return result; } },
     '../../services/media-search': { searchYouTube: async (...args) => { record('searchYouTube', args); return [{ title: 'Video', url: 'https://example.com/video' }]; } },
     '../../services/tutor-core/diagram-cache': { getCachedDiagram: (...args) => { record('getCachedDiagram', args); return { code: 'graph TD; A-->B', title: 'Diagram' }; } },
+    '../../services/academic-graph/akg-service': { resolveTopicIntelligence: async () => null },
     '../../services/analytics/topic-data-collector': analytics
   });
   return {
@@ -318,3 +321,36 @@ test('analytics does not count a finished skipped recall sequence as a completed
   assert.equal(daily.create.topics_completed, 0);
   assert.equal(daily.update.topics_completed, undefined);
 });
+
+test('handleTopicChatMessageV2 filters goals for starting topic (Topic 1) while retaining full goals for Topic 2', async () => {
+  const fiveGoals = [
+    { id: 1, title: 'Concept of force as a push or pull', order: 1 },
+    { id: 2, title: 'Examples of forces in everyday life', order: 2 },
+    { id: 3, title: 'Effects of force on objects', order: 3 },
+    { id: 4, title: 'Demonstrate force application', order: 4 },
+    { id: 5, title: 'Analyze force scenarios', order: 5 }
+  ];
+
+  const topic1 = {
+    id: 10,
+    title: 'Topic 1: What Is a Force?',
+    order: 1,
+    content: 'A force is a push or pull.',
+    chapter: { id: 5, subject_id: 6, title: 'Forces', subject: { id: 6, name: 'Science' } }
+  };
+
+  const f = fixture(teachingState(), pipelineResult(teachingState()), {
+    topic: topic1,
+    goals: fiveGoals
+  });
+
+  const response = await f.send('hello');
+  assert.equal(f.calls.processTutorTurn[0].goals.length, 3);
+  assert.deepEqual(f.calls.processTutorTurn[0].goals.map(g => g.title), [
+    'Concept of force as a push or pull',
+    'Examples of forces in everyday life',
+    'Effects of force on objects'
+  ]);
+  assert.equal(response.goals.length, 3);
+});
+

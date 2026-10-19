@@ -6,7 +6,7 @@ Class: {{classLevel}}
 The supplied curriculum is authoritative. Student context controls vocabulary and depth; it does not license adding a guessed CBSE/ICSE syllabus. Cover the supplied topic scope, not adjacent chapters. Do not claim the entire board syllabus is covered when its source is missing.
 
 RULES
-- Produce 2-6 goals, foundational -> advanced. A narrow topic can have two goals. Never pad the count with duplicate ideas or generic skills.
+- Produce 2-6 goals, foundational -> advanced. For introductory or starting topics of a chapter (Topic 1, e.g. "What is X?", "Introduction to Y"): produce strictly 2–3 goals. Introductory topics introduce foundational ideas; do NOT pad them with artificial demonstration, application, or scenario analysis goals. Subsequent topics in a chapter (Topic 2, 3, etc.) may produce 3–5 goals depending on curriculum depth. Never pad the count with duplicate ideas or generic skills.
 - Each goal names ONE concrete concept or closely connected pair explicitly supported by the supplied content. Avoid vague "Analyze", "Evaluate", "Demonstrate", and "Classify effects" goals that merely repeat other goals.
 - Descriptions state the specific facts to teach and assess, with precise definitions where applicable. Include formulas, symbols, and units only when supported by this topic's curriculum. Do not force a formula or a definition onto every example-based goal.
 - Partition the content: goals together cover its distinct concepts without assessing the same concept under several titles. Examples belong to their parent concept.

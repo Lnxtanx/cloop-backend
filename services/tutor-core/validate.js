@@ -289,8 +289,8 @@ function createQuestionRecord(params = {}) {
   };
 }
 
-const ACTION_VERBS = /^(?:identify(?:\s+the)?|describe(?:\s+the)?|explain(?:\s+the|\s+how)?|state(?:\s+the)?|define(?:\s+the)?|label(?:\s+the)?|draw(?:\s+the)?|list(?:\s+the)?|name(?:\s+the)?|understand(?:\s+the)?|differentiate\s+between|distinguish\s+between)\s+/i;
-const PEDAGOGICAL_OBJECTIVE_PREFIXES = /^(?:students\s+(?:will|should)\s+(?:be\s+able\s+to\s+)?|to\s+(?:be\s+able\s+to|understand\s+that|learn\s+that|know\s+that)\s+|understand\s+that\s+|identify\s+(?:the\s+)?|describe\s+(?:the\s+)?|explain\s+(?:how\s+|the\s+|that\s+)?|state\s+(?:the\s+)?|define\s+(?:the\s+)?|differentiate\s+between\s+|distinguish\s+between\s+|recall\s+(?:that\s+)?|recognize\s+(?:that\s+)?|demonstrate\s+(?:that\s+)?|show\s+that\s+|explore\s+(?:the\s+)?|observe\s+(?:the\s+)?|examine\s+(?:the\s+)?|list\s+(?:the\s+)?|name\s+(?:the\s+)?|label\s+(?:the\s+)?|draw\s+(?:the\s+)?)\b/i;
+const ACTION_VERBS = /^(?:identify(?:\s+the)?|describe(?:\s+the)?|explain(?:\s+the|\s+how)?|state(?:\s+the)?|define(?:\s+the)?|demonstrate(?:\s+the|\s+how)?|analyze(?:\s+the)?|apply(?:\s+the)?|calculate(?:\s+the)?|compare(?:\s+the)?|observe(?:\s+the)?|label(?:\s+the)?|draw(?:\s+the)?|list(?:\s+the)?|name(?:\s+the)?|understand(?:\s+the)?|differentiate\s+between|distinguish\s+between)\s+/i;
+const PEDAGOGICAL_OBJECTIVE_PREFIXES = /^(?:students\s+(?:will|should)\s+(?:be\s+able\s+to\s+)?|to\s+(?:be\s+able\s+to|understand\s+that|learn\s+that|know\s+that)\s+|understand\s+that\s+|identify\s+(?:the\s+)?|describe\s+(?:the\s+)?|explain\s+(?:how\s+|the\s+|that\s+)?|state\s+(?:the\s+)?|define\s+(?:the\s+)?|demonstrate\s+(?:the\s+|that\s+)?|analyze\s+(?:the\s+)?|apply\s+(?:the\s+)?|differentiate\s+between\s+|distinguish\s+between\s+|recall\s+(?:that\s+)?|recognize\s+(?:that\s+)?|show\s+that\s+|explore\s+(?:the\s+)?|observe\s+(?:the\s+)?|examine\s+(?:the\s+)?|list\s+(?:the\s+)?|name\s+(?:the\s+)?|label\s+(?:the\s+)?|draw\s+(?:the\s+)?)\b/i;
 
 function cleanConceptHeading(title, topicTitle) {
   const stripPrefix = s => unescapeHtml(String(s || ''))
@@ -348,7 +348,19 @@ function buildFocusedFallback(context = {}) {
   const hasFormula = Boolean(academicNotes?.formulas?.length || /\b(formula|units?|si unit|equation)\b/i.test(rawContent));
 
   let question;
-  if (/^(what|how|why|which|can|does|is|are)\b/i.test(conceptName)) {
+  const mentionsQuantity = rawContent.match(/\b(?:at\s+least\s+)?(three|two|four|3|2|4)\s+(?:real-world\s+|everyday\s+)?examples\b/i);
+  const countWord = mentionsQuantity ? mentionsQuantity[1].toLowerCase() : null;
+  const cleanTopicNoun = cleanConceptHeading(topicTitle, '').replace(/^(?:what\s+is\s+(?:a\s+)?|what\s+are\s+(?:the\s+)?)/i, '').replace(/[?？!.,:;]+$/, '').trim() || conceptName;
+
+  if (/\bexamples?\b/i.test(currentGoalTitle) || /^examples?\b/i.test(conceptName)) {
+    const num = countWord ? (countWord === '3' ? 'three' : countWord === '2' ? 'two' : countWord) : 'three';
+    const pluralNoun = /s$/i.test(cleanTopicNoun) ? cleanTopicNoun : `${cleanTopicNoun}s`;
+    question = `What are ${num} real-world examples of ${pluralNoun}, and how does each work?`;
+  } else if (/\bdemonstrat/i.test(currentGoalTitle) || /^demonstrat/i.test(conceptName)) {
+    question = `How can you demonstrate ${conceptName} using a simple everyday object?`;
+  } else if (/\banaly/i.test(currentGoalTitle) || /^analy/i.test(conceptName)) {
+    question = `In an everyday situation, how would you analyze ${conceptName}?`;
+  } else if (/^(what|how|why|which|can|does|is|are)\b/i.test(conceptName)) {
     question = `${conceptName.replace(/[?？!.,:;]+$/, '')}?`;
   } else if (hasFormula) {
     question = `What is meant by ${conceptName}, and what is its formula?`;

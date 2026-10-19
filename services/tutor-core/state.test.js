@@ -241,3 +241,12 @@ test("every reachable state yields an instruction", () => {
     s = S.advance(s, { intent: "ANSWER", correct: i % 3 !== 0, errorType: "Conceptual Error" });
   }
 });
+
+test("explicit exit commands ('end the session', 'stop', 'quit') end the session gracefully with user_requested", () => {
+  for (const phrase of ["end the session", "stop", "quit", "khatam karo", "wrap up", "i want to stop"]) {
+    let s = { ...S.initialState(3), phase: "DIALOGUE" };
+    s = S.advance(s, { answerText: phrase, intent: "OFF_TOPIC" });
+    assert.strictEqual(s.phase, "WRAP", `Failed to wrap on '${phrase}'`);
+    assert.strictEqual(s.endedReason, "user_requested", `Incorrect endedReason on '${phrase}'`);
+  }
+});

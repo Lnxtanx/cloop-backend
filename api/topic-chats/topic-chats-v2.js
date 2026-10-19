@@ -5,6 +5,7 @@ const { searchYouTube } = require('../../services/media-search');
 const { getCachedDiagram } = require('../../services/tutor-core/diagram-cache');
 const { recordTurnLog, recordErrorIfWrong, updateDailyStudyStats, endChatSession, updateCurriculumSummary } = require('../../services/analytics/topic-data-collector');
 const { resolveTopicIntelligence } = require('../../services/academic-graph/akg-service');
+const { filterGoalsForStartingTopic } = require('../../services/topic-chat/topic-chat-helpers');
 
 /**
  * Convert model options into an array of strings for admin_chat.options String[] column
@@ -126,7 +127,7 @@ async function handleTopicChatMessageV2(req, res) {
     }
 
     // 2. Fetch topic goals with latest progress
-    const topicGoals = await prisma.global_topic_goals.findMany({
+    const rawGoals = await prisma.global_topic_goals.findMany({
       where: { topic_id: parseInt(topicId) },
       orderBy: { order: 'asc' },
       include: {
@@ -137,6 +138,10 @@ async function handleTopicChatMessageV2(req, res) {
         }
       }
     });
+
+    // Restrict goals ONLY for starting topics (Topic 1) so introductions do not overwhelm students.
+    // Subsequent topics (Topic 2, 3, etc.) are 100% exempt and maintain full curriculum depth.
+    const topicGoals = filterGoalsForStartingTopic(topic, rawGoals);
 
     const goalIds = topicGoals.map(g => g.id);
 
@@ -815,7 +820,7 @@ async function handleTopicChatMessageV2(req, res) {
     });
 
     // 15. Fetch updated goals for UI with synchronized progress
-    const rawUpdatedGoals = await prisma.global_topic_goals.findMany({
+    const fetchedGoals = await prisma.global_topic_goals.findMany({
       where: { topic_id: parseInt(topicId) },
       orderBy: { order: 'asc' },
       include: {
@@ -826,6 +831,8 @@ async function handleTopicChatMessageV2(req, res) {
         }
       }
     });
+
+    const rawUpdatedGoals = filterGoalsForStartingTopic(topic, fetchedGoals);
 
     const updatedGoals = rawUpdatedGoals.map((g, idx) => {
       const isDone = goalCompletion(turnResult.nextState, idx);

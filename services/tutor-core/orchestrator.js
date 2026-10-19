@@ -59,6 +59,9 @@ const ASSISTANCE = new Set(['correct_and_reask', 'reteach_new_angle', 'hint_then
   'explain_differently', 'give_starter', 'reveal_and_move_on', 'teach_theory_analogy']);
 
 function closingMessage(report) {
+  if (report.ended_reason === 'user_requested') {
+    return "We'll wrap up here as requested! Great effort today—you can review your progress and practice anytime with your revision sheet.";
+  }
   if (!report.total_questions) return 'We paused without graded evidence. Your revision sheet is ready for another try.';
   if (report.legacy_evidence) return `Recorded score: ${report.overall_mastery_percent}%. Earlier evidence needs a fresh session to confirm mastery.`;
   if (report.mastery_confirmed) return `You earned ${report.overall_mastery_percent}% with independent recall. Your revision sheet is ready!`;
@@ -219,7 +222,14 @@ async function processTutorTurn(params) {
           ? 'Review the corrected concept, then try again.' : 'This answer could not be graded. Please try again.'),
       evaluation_status: evaluatorResult.evaluation_status || 'available' }
   } : null;
-  const rawDiagram = attachments.includes('diagram') ? getCachedDiagram(topic.title, generatorGoal.title, generatorGoal) : null;
+  const lastTurnHadDiagram = Array.isArray(chatHistory) && chatHistory.length > 0 &&
+    (chatHistory[chatHistory.length - 1]?.message_type === 'mermaid_diagram' ||
+     chatHistory[chatHistory.length - 1]?.diagram ||
+     (chatHistory.length >= 2 && chatHistory[chatHistory.length - 2]?.message_type === 'mermaid_diagram'));
+  const isRedirectionOrRetry = intent === 'OFF_TOPIC' || sameAssessment;
+  const suppressDuplicateDiagram = lastTurnHadDiagram && isRedirectionOrRetry && !wantsDiagram && nextState.phase !== 'THEORY';
+
+  const rawDiagram = (attachments.includes('diagram') && !suppressDuplicateDiagram) ? getCachedDiagram(topic.title, generatorGoal.title, generatorGoal) : null;
   const diagram = rawDiagram ? {
     ...rawDiagram,
     trigger: isHelpOrIdk ? 'visual_explanation' : (rawDiagram.trigger || 'teaching'),

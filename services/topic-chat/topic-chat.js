@@ -6,7 +6,8 @@ const {
   normalizeUserCorrectionOptions,
   generateTopicGreeting,
   generateTopicGoals,
-  determinePhase
+  determinePhase,
+  filterGoalsForStartingTopic
 } = require('./topic-chat-helpers');
 
 /**
@@ -570,4 +571,5 @@ module.exports = {
   generateTopicChatResponse,
   generateTopicGreeting,
   generateTopicGoals,
+  filterGoalsForStartingTopic,
 };

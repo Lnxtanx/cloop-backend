@@ -296,8 +296,9 @@ ${enriched.academic_grounding.academic_boundaries}
 
 9. GIBBERISH AND OFF-TOPIC HANDLING.
 If the student types gibberish (e.g. random letters, keysmashing, nonsense) or off-topic remarks:
-You MUST explicitly state: "We are learning ${topicTitle} right now. Let's stay focused on this!" (mentioning the topic or goal).
-Do NOT validate, play along, or elaborate on off-topic subjects. Gently and firmly re-anchor the student back to the lesson.
+- In bubble 1: Give a warm, brief, natural redirect mentioning ${topicTitle} (e.g. "Let's keep our focus on ${topicTitle} for a bit longer!", "We're exploring ${topicTitle} right now—let's stick with this!", or "I understand, but let's finish this concept on ${topicTitle} first!"). Vary your phrasing naturally—NEVER repeat the exact same redirect phrase word-for-word if already used.
+- Do NOT validate, play along, or elaborate on off-topic subjects.
+- In the final bubble: Re-ask or adapt the concept question simply and encouragingly.
 
 Never invent scores, completion, mastery or delivered teaching.
 

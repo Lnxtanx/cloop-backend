@@ -17,7 +17,7 @@ require.cache[clientPath] = {
     extractJson: text => JSON.parse(text)
   }
 };
-const { generateTopicGoals, generateTopicGreeting } = require('./topic-chat-helpers');
+const { generateTopicGoals, generateTopicGreeting, filterGoalsForStartingTopic } = require('./topic-chat-helpers');
 const { wordCount } = require('../tutor-core/validate');
 
 const SPEED_CONTENT = 'Speed is distance travelled divided by time taken; v = d/t, SI unit m/s. Average speed is total distance divided by total time for the whole journey.';
@@ -153,4 +153,72 @@ test('the pre-generation entry point shares the same goals and userId contract',
   const result = await curriculum.generateTopicGoals('Speed and Average Speed', SPEED_CONTENT, 32);
   assert.deepEqual(result, { goals: SPEED_GOALS });
   assert.equal(calls[0][2].userId, 32);
+});
+
+test('filterGoalsForStartingTopic restricts Topic 1 with 5 goals to strictly 2-3 core goals', () => {
+  const topic1 = { id: 101, title: 'Topic 1: What Is a Force?', order: 1 };
+  const goals = [
+    { id: 1, title: 'Concept of force as a push or pull', order: 1 },
+    { id: 2, title: 'Examples of forces in everyday life', order: 2 },
+    { id: 3, title: 'Effects of force on objects', order: 3 },
+    { id: 4, title: 'Demonstrate force application', order: 4 },
+    { id: 5, title: 'Analyze force scenarios', order: 5 }
+  ];
+
+  const filtered = filterGoalsForStartingTopic(topic1, goals);
+  assert.equal(filtered.length, 3);
+  assert.deepEqual(filtered.map(g => g.title), [
+    'Concept of force as a push or pull',
+    'Examples of forces in everyday life',
+    'Effects of force on objects'
+  ]);
+});
+
+test('filterGoalsForStartingTopic identifies starting topic by title regex even if order is missing', () => {
+  const introTopic = { id: 102, title: 'Introduction to Chemical Reactions' };
+  const goals = [
+    { id: 1, title: 'Reactants and products', order: 1 },
+    { id: 2, title: 'Chemical change indicators', order: 2 },
+    { id: 3, title: 'Demonstrate precipitation', order: 3 },
+    { id: 4, title: 'Analyze scenarios in nature', order: 4 }
+  ];
+
+  const filtered = filterGoalsForStartingTopic(introTopic, goals);
+  assert.equal(filtered.length, 2);
+  assert.deepEqual(filtered.map(g => g.title), [
+    'Reactants and products',
+    'Chemical change indicators'
+  ]);
+});
+
+test('filterGoalsForStartingTopic leaves Topic 2, 3, etc. 100% exempt with full curriculum depth', () => {
+  const topic2 = { id: 201, title: 'Types of Forces: Contact and Non-Contact', order: 2 };
+  const topic3 = { id: 301, title: 'Friction and Its Applications', order: 3 };
+  const goals = [
+    { id: 1, title: 'Contact forces', order: 1 },
+    { id: 2, title: 'Non-contact forces', order: 2 },
+    { id: 3, title: 'Gravitational force', order: 3 },
+    { id: 4, title: 'Magnetic force', order: 4 },
+    { id: 5, title: 'Electrostatic force', order: 5 }
+  ];
+
+  const filteredTopic2 = filterGoalsForStartingTopic(topic2, goals);
+  assert.equal(filteredTopic2.length, 5);
+  assert.deepEqual(filteredTopic2, goals);
+
+  const filteredTopic3 = filterGoalsForStartingTopic(topic3, goals);
+  assert.equal(filteredTopic3.length, 5);
+  assert.deepEqual(filteredTopic3, goals);
+});
+
+test('filterGoalsForStartingTopic preserves starting topic goals when count is already <= 3', () => {
+  const topic1 = { id: 101, title: 'Topic 1: What is Motion?', order: 1 };
+  const goals = [
+    { id: 1, title: 'Rest and motion', order: 1 },
+    { id: 2, title: 'Reference points', order: 2 }
+  ];
+
+  const filtered = filterGoalsForStartingTopic(topic1, goals);
+  assert.equal(filtered.length, 2);
+  assert.deepEqual(filtered, goals);
 });

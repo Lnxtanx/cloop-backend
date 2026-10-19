@@ -383,6 +383,15 @@ function advance(state, event = {}) {
     return finish();
   }
 
+  // ── Explicit session exit command ends the session gracefully ─────────────
+  const isExplicitExit = event.requestKind === 'end_session' || event.request_kind === 'end_session' ||
+    /\b(end(?:\s+the)?\s+session|stop(?:\s+the\s+session)?|quit|finish(?:\s+the)?\s+session|wrap\s+up|i\s+want\s+to\s+(?:stop|leave|quit|end)|khatam\s+karo|close\s+chat|exit(?:\s+session)?)\b/i.test(rawStudentText);
+  if (isExplicitExit) {
+    s.phase = "WRAP";
+    s.endedReason = "user_requested";
+    return finish();
+  }
+
   // ── Repeated off-topic answers close the session kindly ──────────────────
   if (intent === "OFF_TOPIC" || event.offTopic) {
     s.evaluatorUnavailableStreak = 0;

@@ -609,11 +609,43 @@ async function generateTopicGoals(topicTitle, topicContent, options = {}) {
   }
 }
 
+/**
+ * Restricts goals ONLY for the starting topic (Topic 1) of each chapter.
+ * Topic 2, 3, 4, etc. of any chapter are 100% exempt and keep all their goals.
+ *
+ * @param {object} topic - Topic object ({ order, title, ... })
+ * @param {Array<object>} goals - List of goals
+ * @returns {Array<object>} Effective goals for the session
+ */
+function filterGoalsForStartingTopic(topic, goals = []) {
+  if (!Array.isArray(goals) || goals.length <= 3) return goals;
+
+  // STRICT GUARD: Must be Topic 1 (order === 1 or explicit 'Topic 1:' / 'Introduction')
+  const title = String(topic?.title || '').trim();
+  const isStartingTopic = Number(topic?.order) === 1 ||
+    /^(?:topic\s*1\b|introduction\b|intro\b)/i.test(title);
+
+  if (!isStartingTopic) {
+    // Topic 2, 3, 4, etc. maintain all goals and full curriculum depth
+    return goals;
+  }
+
+  // For Topic 1 (Chapter introduction):
+  // Filter out redundant skill padding goals like "Demonstrate" or "Analyze scenarios"
+  const coreGoals = goals.filter(g => {
+    const t = String(g?.title || '').toLowerCase();
+    return !/\b(demonstrate|analyze\s+scenarios|hands-on\s+activity)\b/i.test(t);
+  });
+
+  return coreGoals.length >= 2 ? coreGoals.slice(0, 3) : goals.slice(0, 3);
+}
+
 module.exports = {
   buildSystemPrompt,
   analyzeChatHistory,
   normalizeUserCorrectionOptions,
   generateTopicGreeting,
   generateTopicGoals,
-  determinePhase
+  determinePhase,
+  filterGoalsForStartingTopic
 };
