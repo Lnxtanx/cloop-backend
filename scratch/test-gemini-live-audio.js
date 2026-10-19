@@ -3,7 +3,7 @@ require('dotenv').config({ path: path.join(__dirname, '../.env'), override: true
 const WebSocket = require('ws')
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY
-const GEMINI_MODEL = 'gemini-3.1-flash-live-preview'
+const GEMINI_MODEL = 'gemini-3.8-live'
 const GEMINI_WS_URL = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key=${GEMINI_API_KEY}`
 
 console.log('Testing sending realtimeInput to Gemini Live...')

@@ -52,10 +52,10 @@ function lastFake() {
 // ============================================================
 
 test('G1: Constants define models, endpoints, and the 16k/24k audio contract', () => {
-  assert.equal(gemini.MODELS.LIVE, process.env.GEMINI_LIVE_MODEL || 'gemini-3.1-flash-live-preview');
-  assert.equal(gemini.MODELS.FLASH, process.env.GEMINI_TEXT_MODEL || 'gemini-2.5-flash');
+  assert.equal(gemini.MODELS.LIVE, process.env.GEMINI_LIVE_MODEL || 'gemini-3.8-live');
+  assert.equal(gemini.MODELS.FLASH, process.env.GEMINI_TEXT_MODEL || 'gemini-3.8-flash');
   assert.match(gemini.ENDPOINTS.LIVE_WS, /^wss:\/\/generativelanguage\.googleapis\.com\//);
-  assert.match(gemini.generateContentUrl('gemini-2.5-flash'), /\/v1beta\/models\/gemini-2\.5-flash:generateContent$/);
+  assert.match(gemini.generateContentUrl('gemini-3.8-flash'), /\/v1beta\/models\/gemini-3\.8-flash:generateContent$/);
   assert.equal(gemini.LIVE_CONFIG.INPUT_SAMPLE_RATE, 16000);
   assert.equal(gemini.LIVE_CONFIG.OUTPUT_SAMPLE_RATE, 24000);
   assert.equal(gemini.LIVE_CONFIG.INPUT_MIME_TYPE, 'audio/pcm;rate=16000');
@@ -69,13 +69,13 @@ test('G1: Constants define models, endpoints, and the 16k/24k audio contract', (
 test('G2: buildSetupMessage produces a valid BidiGenerateContentSetup payload', () => {
   const tools = [{ functionDeclarations: [{ name: 'log_error' }] }];
   const msg = buildSetupMessage({
-    model: 'gemini-3.1-flash-live-preview',
+    model: 'gemini-3.8-live',
     systemInstruction: 'You are Cloop.',
     tools,
     voiceName: 'Aoede',
   });
 
-  assert.equal(msg.setup.model, 'models/gemini-3.1-flash-live-preview');
+  assert.equal(msg.setup.model, 'models/gemini-3.8-live');
   assert.deepEqual(msg.setup.generationConfig.responseModalities, ['AUDIO']);
   assert.equal(
     msg.setup.generationConfig.speechConfig.voiceConfig.prebuiltVoiceConfig.voiceName,
@@ -264,7 +264,7 @@ test('G5: generateText shapes the request and returns usage', async () => {
     fetchImpl: fakeFetch,
   });
 
-  assert.match(capturedUrl, /\/models\/gemini-2\.5-flash:generateContent\?key=/);
+  assert.match(capturedUrl, /\/models\/gemini-3\.8-flash:generateContent\?key=/);
   assert.equal(capturedBody.contents[0].parts[0].text, 'Analyze this transcript');
   assert.equal(capturedBody.systemInstruction.parts[0].text, 'Be strict.');
   assert.equal(capturedBody.generationConfig.responseMimeType, 'application/json');

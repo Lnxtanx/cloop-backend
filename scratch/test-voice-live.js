@@ -5,7 +5,7 @@ const path = require('path')
 dotenv.config({ path: path.join(__dirname, '..', '.env') })
 
 const apiKey = process.env.GEMINI_API_KEY
-const model = process.env.GEMINI_LIVE_MODEL || 'gemini-3.1-flash-live-preview'
+const model = process.env.GEMINI_LIVE_MODEL || 'gemini-3.8-live'
 const url = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key=${apiKey}`
 
 const { buildSessionPrompt, LOG_ERROR_TOOL } = require('../ai/agents/english-voice/prompts')

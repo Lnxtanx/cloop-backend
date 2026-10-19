@@ -10,6 +10,7 @@ const LEGACY_EVALUATION_TOOL = {
 	functionDeclarations: [
 		{
 			name: 'submit_speaking_evaluation',
+			behavior: 'BLOCKING',
 			description: 'Submits the comprehensive English speaking assessment report evaluating the candidate across all 8 dimensions.',
 			parameters: {
 				type: 'OBJECT',

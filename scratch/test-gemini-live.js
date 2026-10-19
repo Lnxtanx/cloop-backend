@@ -62,7 +62,7 @@ async function testGeminiModels() {
 		'gemini-2.0-flash-exp',
 		'gemini-2.0-flash-realtime-exp',
 		'gemini-2.5-flash',
-		'gemini-3.1-flash-live-preview'
+		'gemini-3.8-live'
 	]
 
 	for (const model of liveModelsToTest) {

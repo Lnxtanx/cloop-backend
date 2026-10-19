@@ -14,9 +14,9 @@ if (envPath) require('dotenv').config({ path: envPath });
 
 const MODELS = Object.freeze({
   // Realtime duplex voice model (Cloop English voice practice tutor)
-  LIVE: process.env.GEMINI_LIVE_MODEL || 'gemini-3.1-flash-live-preview',
+  LIVE: process.env.GEMINI_LIVE_MODEL || 'gemini-3.8-live',
   // Text model for post-session analysis, consolidation and assessment
-  FLASH: process.env.GEMINI_TEXT_MODEL || 'gemini-2.5-flash',
+  FLASH: process.env.GEMINI_TEXT_MODEL || 'gemini-3.8-flash',
 });
 
 const ENDPOINTS = Object.freeze({

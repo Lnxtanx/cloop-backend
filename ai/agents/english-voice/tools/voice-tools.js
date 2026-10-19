@@ -43,6 +43,7 @@ const LOG_ERROR_TOOL = {
   functionDeclarations: [
     {
       name: 'log_error',
+      behavior: 'BLOCKING',
       description: "Log an error detected in the learner's speech. Call this for EVERY error you detect, even errors you do not correct aloud. This runs silently in the background. Always include 'said' and 'correct' so the app can show the fix in the transcript.",
       parameters: {
         type: 'OBJECT',
@@ -76,6 +77,7 @@ const LOG_ERROR_TOOL = {
     },
     {
       name: 'end_session',
+      behavior: 'BLOCKING',
       description: 'Call this tool to end the voice session and generate the post-session report. You MUST call this tool when: 1) The learner asks to stop, leave, end the chat, or says goodbye (e.g. "I\'m done", "let\'s stop", "bye", "end chat", "I have to go", "bas", "khatam karo"); OR 2) At the ~8-minute check-in the learner says they do NOT want to continue. Before calling it, give the spoken round-up (see the ENDING instructions).',
       parameters: {
         type: 'OBJECT',
@@ -105,6 +107,7 @@ const LOG_ERROR_TOOL = {
     },
     {
       name: 'session_complete',
+      behavior: 'BLOCKING',
       description: 'Alias for end_session. Concludes the practice session and compiles the post-session evaluation report.',
       parameters: {
         type: 'OBJECT',
