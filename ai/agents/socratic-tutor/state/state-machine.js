@@ -99,6 +99,18 @@ const BANDS = [
 const CHOICE_QUESTION = "Would you like me to explain the answer, or would you like another try?";
 const RESPONSE_MODES = ["check", "teach", "offer_choice", "explain", "task_repair", "closing"];
 
+/**
+ * Checks whether the student explicitly commanded the tutor to end or exit the session.
+ * Exit commands are strictly short (<= 8 words) directives. Never matches physics/science answers.
+ */
+function isExplicitExitCommand(text) {
+  const clean = String(text || '').trim();
+  if (!clean) return false;
+  const words = clean.split(/\s+/).filter(Boolean);
+  if (words.length > 8) return false;
+  return /^(?:(?:please\s+)?(?:end|finish|close|stop)\s+(?:the\s+)?(?:session|chat|class|lesson)|(?:please\s+)?(?:stop|wrap\s+up|finish|end)\s+(?:here|now)|let['’]?s\s+(?:stop|wrap\s+up|finish|end)(?:\s+(?:here|now))?|wrap\s+up(?:\s+(?:the\s+)?(?:session|chat))?|i\s+(?:want|would\s+like)\s+to\s+(?:stop|quit|leave|exit|end)(?:\s+(?:the\s+)?(?:session|chat|now|here))?|quit|exit|khatam\s+karo)$/i.test(clean);
+}
+
 function initialState(goalTotal) {
   const total = Math.max(1, goalTotal | 0);
   return {
@@ -384,8 +396,8 @@ function advance(state, event = {}) {
   }
 
   // ── Explicit session exit command ends the session gracefully ─────────────
-  const isExplicitExit = event.requestKind === 'end_session' || event.request_kind === 'end_session' ||
-    /\b(end(?:\s+the)?\s+session|stop(?:\s+the\s+session)?|quit|finish(?:\s+the)?\s+session|wrap\s+up|i\s+want\s+to\s+(?:stop|leave|quit|end)|khatam\s+karo|close\s+chat|exit(?:\s+session)?)\b/i.test(rawStudentText);
+  const isExplicitExit = isExplicitExitCommand(rawStudentText) ||
+    ((event.requestKind === 'end_session' || event.request_kind === 'end_session') && isExplicitExitCommand(rawStudentText));
   if (isExplicitExit) {
     s.phase = "WRAP";
     s.endedReason = "user_requested";

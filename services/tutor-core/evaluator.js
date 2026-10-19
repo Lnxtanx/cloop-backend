@@ -33,7 +33,7 @@ function escapeHtml(text) {
 const CLARIFICATION_PATTERN = /^(which|what)\s+(box|ball|car|object|one|goal(\s*\d+)?|diagram|step|cart|sponge|block)\b|\bwhat\s+(is|do\s+you\s+mean\s+by)\s+goal\s*\d*\b|\bwhich\s+one\s+(do\s+you\s+mean|is\s+that)\b|\b(clarify|explain)\s+(the\s+)?(question|wording|scenario)\b|\bcan\s+you\s+clarify\b/i;
 
 const REQUEST_KIND_PATTERNS = {
-  end_session: /^(?:(?:please\s+)?(?:end|stop|finish|close)(?:\s+(?:the\s+)?session|\s+chat)?|quit|i(?:\s+want\s+to|\s+would\s+like\s+to)?\s+(?:stop|quit|leave|exit|end)|wrap\s+up|khatam\s+karo)\b/i,
+  end_session: /^(?:(?:please\s+)?(?:end|finish|close|stop)\s+(?:the\s+)?(?:session|chat|class|lesson)|(?:please\s+)?(?:stop|wrap\s+up|finish|end)\s+(?:here|now)|let['’]?s\s+(?:stop|wrap\s+up|finish|end)(?:\s+(?:here|now))?|wrap\s+up(?:\s+(?:the\s+)?(?:session|chat))?|i\s+(?:want|would\s+like)\s+to\s+(?:stop|quit|leave|exit|end)(?:\s+(?:the\s+)?(?:session|chat|now|here))?|quit|exit|khatam\s+karo)$/i,
   explain_answer: /^(?:(?:please\s+)?tell\s+me\s+(?:the\s+)?answer|explain\s+(?:the\s+)?answer|what\s+is\s+the\s+answer|just\s+tell\s+me(?:\s+the\s+)?answer|show\s+(?:me\s+)?(?:the\s+)?answer|give\s+(?:me\s+)?(?:the\s+)?answer|reveal\s+(?:the\s+)?answer)\b/i,
   try_again: /^(?:another\s+(?:try|chance|attempt)|let\s+me\s+try(?:\s+again)?|try\s+again|one\s+more\s+(?:try|chance)|i(?:'ll|\s+will)\s+try(?:\s+again)?|retry|give\s+me\s+another\s+(?:try|chance)|let\s+me\s+have\s+another\s+go)\b/i,
   move_on: /(?:teach\s+something\s+(?:else|elase)|next\s+topic|move\s+on|skip(?:\s+this)?|next\s+question|different\s+topic|not\s+in\s+(?:the\s+)?mood)\b/i,
@@ -54,7 +54,8 @@ function detectRequestKind(text, context = {}) {
     }
   }
 
-  if (REQUEST_KIND_PATTERNS.end_session.test(clean)) return 'end_session';
+  const words = clean.split(/\s+/).filter(Boolean);
+  if (words.length <= 8 && REQUEST_KIND_PATTERNS.end_session.test(clean)) return 'end_session';
   if (REQUEST_KIND_PATTERNS.explain_answer.test(clean)) return 'explain_answer';
   if (REQUEST_KIND_PATTERNS.try_again.test(clean)) return 'try_again';
   if (REQUEST_KIND_PATTERNS.move_on.test(clean)) return 'move_on';

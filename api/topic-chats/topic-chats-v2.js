@@ -249,7 +249,7 @@ async function handleTopicChatMessageV2(req, res) {
     // 6c. Resolve Academic Knowledge Graph context (JIT cached)
     let akgContext = null;
     try {
-      akgContext = await resolveTopicIntelligence(topic, prisma, { userProfile: userProfile || {}, goals: topicGoals });
+      akgContext = await resolveTopicIntelligence(topic, prisma, { userProfile: userProfile || {}, goals: topicGoals, nonBlocking: true });
     } catch (akgErr) {
       console.warn('[Tutor-Core V2] AKG resolution non-fatal:', akgErr.message);
     }

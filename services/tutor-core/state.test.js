@@ -242,11 +242,26 @@ test("every reachable state yields an instruction", () => {
   }
 });
 
-test("explicit exit commands ('end the session', 'stop', 'quit') end the session gracefully with user_requested", () => {
-  for (const phrase of ["end the session", "stop", "quit", "khatam karo", "wrap up", "i want to stop"]) {
+test("explicit exit commands ('end the session', 'stop the session', 'quit') end the session gracefully with user_requested", () => {
+  for (const phrase of ["end the session", "stop the session", "quit", "khatam karo", "wrap up", "i want to stop"]) {
     let s = { ...S.initialState(3), phase: "DIALOGUE" };
     s = S.advance(s, { answerText: phrase, intent: "OFF_TOPIC" });
     assert.strictEqual(s.phase, "WRAP", `Failed to wrap on '${phrase}'`);
     assert.strictEqual(s.endedReason, "user_requested", `Incorrect endedReason on '${phrase}'`);
+  }
+});
+
+test("science/physics answers containing 'stop' do NOT trigger exit", () => {
+  const scienceAnswers = [
+    "Force is a push or pull acting on an object. It can make an object start moving, stop, change speed, change direction, or change shape.",
+    "A force can stop a moving ball",
+    "friction makes it stop",
+    "the car comes to a stop"
+  ];
+  for (const answer of scienceAnswers) {
+    let s = { ...S.initialState(3), phase: "DIALOGUE", openThisGoal: 0 };
+    s = S.advance(s, { answerText: answer, intent: "ANSWER", correct: true });
+    assert.notStrictEqual(s.phase, "WRAP", `Should not wrap on science answer: '${answer}'`);
+    assert.notStrictEqual(s.endedReason, "user_requested", `Should not set user_requested on: '${answer}'`);
   }
 });
