@@ -61,7 +61,7 @@ function createEnglishVoiceAgent({ session, learnerProfile = {}, client, deps = 
 
 	function consolidateSessionErrorsFn(sessionId) {
 		const consolidate = deps.consolidateSessionErrors ||
-			require('../../../services/voice-to-voice/error-consolidator').consolidateSessionErrors
+			require('./evaluation/consolidator').consolidateSessionErrors
 		return consolidate(sessionId)
 	}
 
@@ -78,15 +78,28 @@ function createEnglishVoiceAgent({ session, learnerProfile = {}, client, deps = 
 	}
 
 	function persistTurn(turn, speaker) {
-		if (!state.isVoiceSession) return
-		getPrisma().voice_session_turns.create({
-			data: {
-				session_id: state.sessionId,
-				sequence: turn.sequence,
-				speaker,
-				content: turn.content,
-			},
-		}).catch((err) => console.error('[EnglishVoice] Error persisting turn:', err))
+		const prisma = getPrisma()
+		if (state.isVoiceSession) {
+			prisma.voice_session_turns.create({
+				data: {
+					session_id: state.sessionId,
+					sequence: turn.sequence,
+					speaker,
+					content: turn.content,
+				},
+			}).catch((err) => console.error('[EnglishVoice] Error persisting turn:', err))
+		} else {
+			// Legacy assessment transcripts (GET /sessions/:id/turns + fallback engine).
+			// assessment_turns uses 'ai' for the examiner, 'user' for the candidate.
+			prisma.assessment_turns.create({
+				data: {
+					session_id: state.sessionId,
+					sequence: turn.sequence,
+					speaker: speaker === 'tutor' ? 'ai' : 'user',
+					content: turn.content,
+				},
+			}).catch((err) => console.error('[EnglishVoice] Error persisting assessment turn:', err))
+		}
 	}
 
 	function pickGreetingPrompt() {
@@ -94,6 +107,28 @@ function createEnglishVoiceAgent({ session, learnerProfile = {}, client, deps = 
 			return CLOOP_GREETING
 		}
 		return state.isVoiceSession ? VOICE_GREETING : ASSESSMENT_GREETING
+	}
+
+	// 8-minute check-in promised by the session prompt ("[time check]" note)
+	const TIME_CHECK_MS = deps.timeCheckMs !== undefined ? deps.timeCheckMs : 480_000
+	let timeCheckTimer = null
+
+	function scheduleTimeCheck() {
+		if (timeCheckTimer || TIME_CHECK_MS <= 0) return
+		timeCheckTimer = setTimeout(() => {
+			timeCheckTimer = null
+			if (state.sessionCompleted || !geminiSession || !geminiSession.isOpen()) return
+			console.log('⏰ [EnglishVoice] 8-minute check-in triggered')
+			geminiSession.sendClientContent('[time check] We have been practising for about 8 minutes. Warmly ask the learner if they want to keep going, or if they would like to stop here.')
+		}, TIME_CHECK_MS)
+		if (timeCheckTimer.unref) timeCheckTimer.unref()
+	}
+
+	function clearTimeCheck() {
+		if (timeCheckTimer) {
+			clearTimeout(timeCheckTimer)
+			timeCheckTimer = null
+		}
 	}
 
 	// ----------------------------------------------------------
@@ -181,6 +216,7 @@ function createEnglishVoiceAgent({ session, learnerProfile = {}, client, deps = 
 	}
 
 	function onClose(code, reasonText) {
+		clearTimeCheck()
 		console.log(`🔌 [EnglishVoice] Gemini Live disconnected for session ${state.sessionId}: code=${code}${reasonText ? ` reason=${reasonText}` : ''}`)
 		sendToClient({ type: 'gemini_disconnected', code, reason: reasonText || '' })
 	}
@@ -217,6 +253,7 @@ function createEnglishVoiceAgent({ session, learnerProfile = {}, client, deps = 
 				})
 			}
 			await geminiSession.connect()
+			scheduleTimeCheck()
 			return true
 		} catch (err) {
 			console.error('❌ [EnglishVoice] Failed to connect to Gemini Live:', err.message)
@@ -256,6 +293,7 @@ function createEnglishVoiceAgent({ session, learnerProfile = {}, client, deps = 
 
 	async function handleClientClose() {
 		console.log(`🔌 [EnglishVoice] Client WebSocket disconnected for session ${state.sessionId}`)
+		clearTimeCheck()
 		if (geminiSession && geminiSession.isOpen()) {
 			geminiSession.close(1000, 'Client closed')
 		}
@@ -399,6 +437,7 @@ function createEnglishVoiceAgent({ session, learnerProfile = {}, client, deps = 
 				}
 
 				state.sessionCompleted = true
+				clearTimeCheck()
 				console.log(`🏁 [EnglishVoice] ${name} accepted! Reason: ${args.reason || (isUserRequested ? 'user_requested' : 'completed')}, Duration: ${durationSec}s, Exchanges: ${totalExchanges}, Questions: ${args.questions_asked || state.questionCount}`)
 
 				// Flush any pending user speech to turns

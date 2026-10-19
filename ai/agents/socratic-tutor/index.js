@@ -45,4 +45,8 @@ module.exports = {
   findLastQuestion: agent.findLastQuestion,
   findLastQuestionOptions: agent.findLastQuestionOptions,
   closingMessage: agent.closingMessage,
+
+  // Tools & Prompts
+  tools: require('./tools'),
+  prompts: require('./prompts'),
 };

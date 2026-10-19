@@ -21,6 +21,7 @@ const { LEGACY_EVALUATION_TOOL } = require('./tools/legacy-assessment-tools')
 const pcm = require('./audio/pcm')
 const { uploadConversationAudio } = require('./audio/upload')
 const sessionState = require('./state/session-state')
+const { consolidateSessionErrors, processAssessment, DIMENSION_WEIGHTS, DIMENSIONS } = require('./evaluation')
 
 module.exports = {
 	createEnglishVoiceAgent,
@@ -42,4 +43,10 @@ module.exports = {
 	pcm,
 	uploadConversationAudio,
 	sessionState,
+
+	// Post-session evaluation
+	consolidateSessionErrors,
+	processAssessment,
+	DIMENSION_WEIGHTS,
+	DIMENSIONS,
 }

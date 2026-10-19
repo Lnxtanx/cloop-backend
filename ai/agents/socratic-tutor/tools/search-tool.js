@@ -1,31 +1,28 @@
 /**
- * DeepSeek Native Search Agent Tool
- * Enables agents to query verified curriculum syllabi, definitions, and academic facts.
+ * Socratic Tutor Curriculum Search Tool
+ * Directly connects to DeepSeek Native Search API for NCERT/CBSE fact verification and analogy search.
  */
 
-const { executeSearch, searchCurriculumSyllabus } = require('../providers/deepseek/search');
+const { executeSearch, searchCurriculumSyllabus } = require('../../../providers/deepseek/search');
 
-/**
- * Tool definition for LLM tool calling / agent execution
- */
 const searchToolDefinition = Object.freeze({
   name: 'curriculum_search',
-  description: 'Search official CBSE curriculum syllabi, NCERT definitions, and scientific facts.',
+  description: 'Search official CBSE Class 10 NCERT curriculum syllabi, verified definitions, and scientific facts.',
   parameters: {
     type: 'object',
     properties: {
       query: {
         type: 'string',
-        description: 'The search query (e.g., "Class 10 CBSE Accommodation of eye definition")',
+        description: 'Specific scientific question or topic to search (e.g., "Class 10 CBSE Accommodation of eye definition")',
       },
       classLevel: {
         type: 'string',
-        description: 'Academic class level (e.g., "10")',
+        description: 'Academic class level (default: "10")',
         default: '10',
       },
       board: {
         type: 'string',
-        description: 'Educational board (e.g., "CBSE")',
+        description: 'Board curriculum (default: "CBSE")',
         default: 'CBSE',
       },
     },
@@ -34,15 +31,15 @@ const searchToolDefinition = Object.freeze({
 });
 
 /**
- * Execute curriculum search tool
+ * Execute curriculum search
  *
  * @param {Object} args - { query, classLevel, board }
- * @returns {Promise<Object>} { query, results, summary }
+ * @returns {Promise<Object>} { success, query, results, count }
  */
 async function runSearchTool(args = {}) {
   const query = (args.query || '').trim();
   if (!query) {
-    return { error: 'Query parameter is required' };
+    return { success: false, error: 'Query is required', results: [] };
   }
 
   const classLevel = args.classLevel || '10';
@@ -52,7 +49,7 @@ async function runSearchTool(args = {}) {
     const results = await searchCurriculumSyllabus(query, {
       classLevel,
       board,
-      maxResults: 4,
+      maxResults: 3,
     });
 
     return {

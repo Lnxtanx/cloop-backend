@@ -17,6 +17,7 @@ const {
   questionTypeFor,
   isScored,
   attachmentsFor,
+  
   normalizeIntent,
   scoredGoalIndex,
   buildGoalMap,
@@ -27,7 +28,7 @@ const {
 const { generateTutorResponse } = require('./generators/dialogue-generator');
 const { generateRevisionSheet, buildFallbackRevisionSheet } = require('./generators/revision-generator');
 const { enforce } = require('./formatters/bubble-formatter');
-const { getCachedDiagram } = require('../../tools/diagram-tool');
+const { getCachedDiagram } = require('./tools/diagram-tool');
 
 let buildReport, reportBrief;
 try {

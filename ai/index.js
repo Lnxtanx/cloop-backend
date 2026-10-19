@@ -8,13 +8,12 @@
  */
 
 const providers = require('./providers');
-const tools = require('./tools');
 const agents = require('./agents');
 
 module.exports = {
   // Pillars
   providers,
-  tools,
+  tools: agents.socraticTutor.tools,
   agents,
 
   // Direct shortcuts for high-frequency access
