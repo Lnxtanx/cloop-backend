@@ -180,6 +180,8 @@ router.get('/reports/subject/:subjectId', authenticateToken, async (req, res) =>
 		console.error('Error fetching subject reports:', err);
 		return res.status(500).json({ error: 'Failed to fetch subject reports' });
 	}
+});
+
 // GET /api/topic-chats/:topicId/inspector
 // Real-time Turn Inspector & Context Observatory (local dev & AWS EC2)
 router.get('/:topicId/inspector', async (req, res) => {
