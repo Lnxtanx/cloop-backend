@@ -4,7 +4,7 @@
 
 const assert = require('assert')
 const { buildSessionPrompt, LOG_ERROR_TOOL } = require('./ai/agents/english-voice/prompts')
-const s3Storage = require('./services/s3-storage')
+const s3Storage = require('./services/english-voice/audio-storage')
 
 async function runTests() {
   console.log('🧪 Starting Voice Ending Tools & S3 Storage Test Suite...\n')

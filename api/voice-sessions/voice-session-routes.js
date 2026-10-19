@@ -7,7 +7,7 @@ const router = express.Router()
 const prisma = require('../../lib/prisma')
 const { consolidateSessionErrors } = require('../../ai/agents/english-voice/evaluation/consolidator')
 const { getFluencyDashboardData } = require('../../ai/agents/english-voice/reporting/dashboard')
-const s3Storage = require('../../services/s3-storage')
+const s3Storage = require('../../services/english-voice/audio-storage')
 
 /**
  * Middleware: Verify user auth from Bearer token

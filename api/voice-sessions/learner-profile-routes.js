@@ -95,8 +95,8 @@ router.put('/', async (req, res) => {
 // ============================================================
 
 const multer = require('multer')
-const { extractResumeText } = require('../../services/resume-parser')
-const { structureResumeText } = require('../../services/resume-structurer')
+const { extractResumeText } = require('../../services/english-voice/resume-parser')
+const { structureResumeText } = require('../../services/english-voice/resume-structurer')
 
 // In-memory upload only: strictly NO saving to disk or S3
 const upload = multer({

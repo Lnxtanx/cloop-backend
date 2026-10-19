@@ -5,7 +5,7 @@
  * into a structured, lightweight interview context JSON object (~1-2 KB).
  */
 
-const { invokeModel, extractJson } = require('./ai/deepseek-client');
+const { invokeModel, extractJson } = require('../ai/deepseek-client');
 
 /**
  * Parses raw resume text into a structured interview context.

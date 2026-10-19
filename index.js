@@ -115,7 +115,7 @@ const server = http.createServer(app)
 // Voice WebSocket upgrade (voice practice + speaking assessment)
 // Gemini Live duplex session is owned by ai/agents/english-voice; this adapter
 // only handles auth, session verification and client wiring.
-const { handleAssessmentWsUpgrade } = require('./services/voice-live-proxy')
+const { handleAssessmentWsUpgrade } = require('./services/english-voice/live-proxy')
 handleAssessmentWsUpgrade(server)
 
 server.listen(PORT, HOST, async () => {

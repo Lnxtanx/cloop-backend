@@ -1,6 +1,6 @@
 require('dotenv').config()
 const { S3Client, HeadBucketCommand, PutObjectCommand, GetObjectCommand, DeleteObjectCommand, ListObjectsV2Command } = require('@aws-sdk/client-s3')
-const s3Storage = require('./services/s3-storage')
+const s3Storage = require('./services/english-voice/audio-storage')
 
 async function runS3Test() {
   console.log('====================================================')

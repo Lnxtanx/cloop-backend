@@ -1,4 +1,4 @@
-const { extractResumeText } = require('../services/resume-parser')
+const { extractResumeText } = require('../services/english-voice/resume-parser')
 const { buildSessionPrompt } = require('../ai/agents/english-voice/prompts')
 
 async function runTest() {

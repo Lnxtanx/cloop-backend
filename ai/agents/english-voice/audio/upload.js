@@ -12,7 +12,7 @@ async function uploadConversationAudio(sessionState, { s3Storage } = {}) {
 	if (!sessionState.audioChunks || sessionState.audioChunks.length === 0) return null
 
 	sessionState.audioUploaded = true
-	const storage = s3Storage || require('../../../services/s3-storage')
+	const storage = s3Storage || require('../../../services/english-voice/audio-storage')
 	const userCount = sessionState.audioChunks.filter((c) => c.source === 'user').length
 	const aiCount = sessionState.audioChunks.filter((c) => c.source === 'ai').length
 	const fullPcmBuffer = buildConversationPcm(sessionState.audioChunks, TARGET_RECORD_RATE)

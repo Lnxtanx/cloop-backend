@@ -15,13 +15,13 @@
 const WebSocket = require('ws')
 const url = require('url')
 const jwt = require('jsonwebtoken')
-const prisma = require('../lib/prisma')
-const { createEnglishVoiceAgent } = require('../ai/agents/english-voice')
+const prisma = require('../../lib/prisma')
+const { createEnglishVoiceAgent } = require('../../ai/agents/english-voice')
 const {
 	buildConversationPcm,
 	parsePcmRate,
 	resamplePcm16,
-} = require('../ai/agents/english-voice/audio/pcm')
+} = require('../../ai/agents/english-voice/audio/pcm')
 
 function sendJson(ws, payload) {
 	try {
