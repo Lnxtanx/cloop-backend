@@ -15,32 +15,41 @@ const app = express()
 // Configure CORS for development and production
 const corsOptions = {
 	origin: function (origin, callback) {
-		// Allow requests with no origin (like mobile apps, Postman, curl)
-		if (!origin) return callback(null, true)
+		// Allow requests with no origin (mobile apps, curl, server-to-server) or local file:// ("null")
+		if (!origin || origin === 'null') return callback(null, true);
+
+		// Allow any localhost or 127.0.0.1 port (Vite on 5173, Next on 3000, React, Expo, etc.)
+		if (/^https?:\/\/localhost(:\d+)?$/.test(origin) || /^https?:\/\/127\.0\.0\.1(:\d+)?$/.test(origin)) {
+			return callback(null, true);
+		}
+
+		// Allow all local network IPs for development
+		if (/^https?:\/\/(192\.168\.\d+\.\d+|10\.\d+\.\d+\.\d+|172\.(1[6-9]|2[0-9]|3[01])\.\d+\.\d+)(:\d+)?$/.test(origin)) {
+			return callback(null, true);
+		}
+
+		// Allow all cloopapp.com domains and subdomains
+		try {
+			const hostname = new URL(origin).hostname;
+			if (hostname === 'cloopapp.com' || hostname.endsWith('.cloopapp.com')) {
+				return callback(null, true);
+			}
+		} catch (_) {}
 
 		const allowedOrigins = [
-			// Development
-			'http://localhost:8081',
-			'http://localhost:19000',
-			'http://localhost:19002',
-			'http://localhost:3000',
-			'http://localhost:3005',
-			// Production - Add your frontend URLs here
 			process.env.FRONTEND_URL,
 			'https://learn.cloopapp.com',
 			'https://english.cloopapp.com',
 			'https://cloopapp.com',
-		].filter(Boolean)
+			'https://api.cloopapp.com',
+		].filter(Boolean);
 
-		// Allow all local network IPs for development
-		const isLocalNetwork = /^http:\/\/(192\.168|10\.|172\.(1[6-9]|2[0-9]|3[01]))/.test(origin)
-		const isCloopDomain = origin ? /\.cloopapp\.com$/.test(new URL(origin).hostname) : false
-
-		if (allowedOrigins.indexOf(origin) !== -1 || isLocalNetwork || isCloopDomain || process.env.NODE_ENV === 'development') {
-			callback(null, true)
-		} else {
-			callback(new Error('Not allowed by CORS'))
+		if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
+			return callback(null, true);
 		}
+
+		// Return false cleanly rather than throwing an uncaught error
+		return callback(null, false);
 	},
 	credentials: true,
 	methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
