@@ -90,6 +90,7 @@ function makeAgent({ session = {}, mode = 'practice', deps = {} } = {}) {
 			recordTokenUsage: (params) => tokens.push(params),
 			uploadConversationAudio: async () => 'https://s3.example/fake.wav',
 			consolidateSessionErrors: async (sid) => { consolidated.push(sid) },
+			...deps,
 		},
 	})
 
@@ -264,6 +265,49 @@ test('legacy submit_speaking_evaluation completes the assessment', async () => {
 		cefrLevel: 'B1',
 	})
 	assert.equal(gemini.calls.toolResponses[0][0].response.output.status, 'success')
+})
+
+test('legacy assessment turns persist to assessment_turns with ai/user speakers', async () => {
+	const { agent, fakePrisma, captured } = makeAgent({ session: { isVoiceSession: false } })
+	await agent.start()
+	const cb = captured.options.callbacks
+
+	agent.state.currentUserText = 'Hello there'
+	await cb.onModelTurn([])
+	agent.state.currentAiText = 'Tell me about yourself.'
+	await cb.onTurnComplete()
+
+	const userTurn = fakePrisma.calls.find((c) => c.model === 'assessment_turns' && c.args.data.speaker === 'user')
+	assert.equal(userTurn.args.data.content, 'Hello there')
+	const aiTurn = fakePrisma.calls.find((c) => c.model === 'assessment_turns' && c.args.data.speaker === 'ai')
+	assert.equal(aiTurn.args.data.content, 'Tell me about yourself.')
+	assert.equal(fakePrisma.calls.some((c) => c.model === 'voice_session_turns'), false)
+})
+
+test('8-minute time check note is sent to Gemini for active sessions', async () => {
+	const { agent, gemini } = makeAgent({ deps: { timeCheckMs: 15 } })
+	await agent.start()
+	await new Promise((resolve) => setTimeout(resolve, 50))
+	assert.equal(gemini.calls.clientContent.length, 1)
+	assert.match(gemini.calls.clientContent[0].text, /^\[time check\]/)
+})
+
+test('time check is cleared on client close and after completion', async () => {
+	const closed = makeAgent({ deps: { timeCheckMs: 15 } })
+	await closed.agent.start()
+	await closed.agent.handleClientClose()
+	await new Promise((resolve) => setTimeout(resolve, 50))
+	assert.equal(closed.gemini.calls.clientContent.length, 0)
+
+	const completed = makeAgent({ deps: { timeCheckMs: 15 } })
+	await completed.agent.start()
+	completed.agent.handleClientMessage({ type: 'end_session' })
+	await completed.agent.handleToolCalls({
+		functionCalls: [{ name: 'end_session', id: 'call_tc', args: { reason: 'user_requested', summary: 'x', learner_did_well: 'y', one_thing_to_fix: 'z' } }],
+	})
+	await new Promise((resolve) => setTimeout(resolve, 50))
+	const timeChecks = completed.gemini.calls.clientContent.filter((m) => m.text.startsWith('[time check]'))
+	assert.equal(timeChecks.length, 0)
 })
 
 test('client disconnect closes Gemini and records fallback metrics + token usage', async () => {
