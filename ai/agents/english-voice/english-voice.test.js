@@ -40,7 +40,7 @@ function createFakeGeminiSession() {
 function createFakePrisma() {
 	const calls = []
 	const db = {}
-	for (const model of ['voice_sessions', 'voice_session_turns', 'learner_profiles', 'session_errors', 'assessment_sessions', 'assessment_results']) {
+	for (const model of ['voice_sessions', 'voice_session_turns', 'learner_profiles', 'session_errors', 'assessment_sessions', 'assessment_turns', 'assessment_results']) {
 		db[model] = {
 			update: async (args) => { calls.push({ model, op: 'update', args }); return {} },
 			create: async (args) => { calls.push({ model, op: 'create', args }); return { id: 99 } },
@@ -59,7 +59,7 @@ function createFakeClient() {
 	}
 }
 
-function makeAgent({ session = {}, mode = 'practice' } = {}) {
+function makeAgent({ session = {}, mode = 'practice', deps = {} } = {}) {
 	const fakePrisma = createFakePrisma()
 	const client = createFakeClient()
 	const session_ = createFakeGeminiSession()

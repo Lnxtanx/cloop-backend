@@ -158,14 +158,6 @@ router.post('/sessions/:id/complete', async (req, res) => {
 			},
 		})
 
-		// Flush in-memory turns to database
-		const { flushSessionTurns } = require('../../services/voice-to-voice/gemini-live-proxy')
-		if (flushSessionTurns) {
-			await flushSessionTurns(sessionId).catch((err) => {
-				console.error(`[Assessment] Error flushing turns for session ${sessionId}:`, err)
-			})
-		}
-
 		// Check if session was already evaluated natively by Gemini Live in-session tool
 		const latestSession = await prisma.assessment_sessions.findUnique({
 			where: { id: sessionId },
@@ -179,7 +171,7 @@ router.post('/sessions/:id/complete', async (req, res) => {
 		console.log(`[Assessment] Session ${sessionId} triggering fallback evaluation engine`)
 
 		// Trigger async assessment processing (fallback)
-		const { processAssessment } = require('../../services/voice-to-voice/assessment-engine')
+		const { processAssessment } = require('../../ai/agents/english-voice/evaluation/assessment-engine')
 		setImmediate(() => {
 			processAssessment(sessionId).catch((err) => {
 				console.error(`[Assessment] Background processing failed for session ${sessionId}:`, err)

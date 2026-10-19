@@ -5,7 +5,7 @@
 const express = require('express')
 const router = express.Router()
 const prisma = require('../../lib/prisma')
-const { consolidateSessionErrors } = require('../../services/voice-to-voice/error-consolidator')
+const { consolidateSessionErrors } = require('../../ai/agents/english-voice/evaluation/consolidator')
 const { getFluencyDashboardData } = require('../../services/voice-to-voice/dashboard-service')
 const s3Storage = require('../../services/s3-storage')
 
