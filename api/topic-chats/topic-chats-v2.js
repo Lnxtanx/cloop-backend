@@ -657,6 +657,16 @@ async function handleTopicChatMessageV2(req, res) {
       turnResult.stateInstruction === 'clarify_question';
     const mediaAllowed = !['ROUNDUP', 'WRAP', 'DONE'].includes(turnResult.nextState.phase) && !isClarification;
 
+    const isHelpOrIdk = turnResult.intent === 'HELP' || turnResult.intent === 'IDK' ||
+      Boolean(effectiveMessage && /\b(idk|idnt|i\s*dnt|don['’]?t\s+know|dont\s+know|don['’]?t\s+understand|didn['’]?t\s+understand|explain|explain\s+more|help|confused|samjh|samajh)\b/i.test(effectiveMessage));
+    const wantsDiagram = Boolean(effectiveMessage && /\b(diagram|drawing|picture|visual|chart|figure|image)\b/i.test(effectiveMessage));
+
+    function cleanSearchQuery(topicTitle, goalTitle) {
+      const cleanTopic = String(topicTitle || '').replace(/^(?:Goal|Topic|Chapter)\s+\d+:\s*/i, '').trim();
+      const cleanGoal = String(goalTitle || '').replace(/^(?:Goal|Topic|Chapter)\s+\d+:\s*/i, '').trim();
+      return `${cleanTopic} ${cleanGoal}`.trim();
+    }
+
     const linkMediaToGoal = async (chatId) => {
       if (!currentGoalRecord) return;
       try {
@@ -674,17 +684,23 @@ async function handleTopicChatMessageV2(req, res) {
       } catch (e) {}
     };
 
-    if (mediaAllowed && turnResult.attachments?.includes('video')) {
+    const shouldFetchVideo = mediaAllowed && (turnResult.attachments?.includes('video') || wantsVideo || isHelpOrIdk);
+    if (shouldFetchVideo) {
       try {
-        fetchedVideos = await searchYouTube(`${topic.title} ${currentGoalRecord?.title || ''}`);
+        const query = cleanSearchQuery(topic.title, currentGoalRecord?.title);
+        fetchedVideos = await searchYouTube(query);
       } catch (ytErr) {
         console.warn('[Tutor-Core V2] YouTube search failed:', ytErr.message);
       }
     }
 
-    let mermaidDiagram = mediaAllowed && turnResult.attachments?.includes('diagram') ? turnResult.mermaid_diagram : null;
-    if (!mermaidDiagram && mediaAllowed && turnResult.attachments?.includes('diagram')) {
+    const shouldAttachDiagram = mediaAllowed && (turnResult.attachments?.includes('diagram') || isHelpOrIdk || wantsDiagram);
+    let mermaidDiagram = shouldAttachDiagram ? turnResult.mermaid_diagram : null;
+    if (!mermaidDiagram && shouldAttachDiagram) {
       mermaidDiagram = getCachedDiagram(topic.title, currentGoalRecord?.title || topic.title, currentGoalRecord);
+    }
+    if (isHelpOrIdk && mermaidDiagram) {
+      mermaidDiagram = { ...mermaidDiagram, trigger: 'visual_explanation' };
     }
 
     // Persist Mermaid diagram as turn attachment if present
@@ -745,7 +761,7 @@ async function handleTopicChatMessageV2(req, res) {
                 duration: video.duration,
                 viewCount: video.viewCount,
                 trigger: 'teaching',
-                search_query: `${topic.title} ${currentGoalRecord?.title || ''}`
+                search_query: cleanSearchQuery(topic.title, currentGoalRecord?.title)
               }),
               videos: [video.url],
               options: [],
@@ -857,7 +873,7 @@ async function handleTopicChatMessageV2(req, res) {
       mermaid_diagram: mermaidDiagram || null,
       youtube_video: fetchedVideos.length > 0 ? {
         title: fetchedVideos[0].title,
-        search_query: `${topic.title} ${currentGoalRecord?.title || ''}`
+        search_query: cleanSearchQuery(topic.title, currentGoalRecord?.title)
       } : null,
       youtube_results: fetchedVideos
     });

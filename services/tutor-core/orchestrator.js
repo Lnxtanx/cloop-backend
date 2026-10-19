@@ -128,7 +128,19 @@ async function processTutorTurn(params) {
   });
   nextState.lastInstruction = stateInstruction;
   let questionType = questionTypeFor(nextState.phase);
-  const attachments = attachmentsFor(nextState);
+  const isHelpOrIdk = intent === 'HELP' || intent === 'IDK' ||
+    Boolean(studentMessage && /\b(idk|idnt|i\s*dnt|don['’]?t\s+know|dont\s+know|don['’]?t\s+understand|didn['’]?t\s+understand|explain|explain\s+more|help|confused|samjh|samajh)\b/i.test(studentMessage));
+  const isAssistanceDirective = Boolean(stateInstruction && ['hint_then_easier', 'explain_differently', 'reteach_new_angle', 'give_starter', 'reveal_and_move_on'].includes(stateInstruction));
+  const wantsDiagram = Boolean(studentMessage && /\b(diagram|drawing|picture|visual|chart|figure|image)\b/i.test(studentMessage));
+
+  const attachments = [...attachmentsFor(nextState)];
+  const mediaAllowed = !['ROUNDUP', 'WRAP', 'DONE'].includes(nextState.phase);
+  if (mediaAllowed && (isHelpOrIdk || isAssistanceDirective || wantsDiagram)) {
+    if (!attachments.includes('diagram')) attachments.push('diagram');
+  }
+  if (mediaAllowed && (isHelpOrIdk || wantsVideo)) {
+    if (!attachments.includes('video')) attachments.push('video');
+  }
   const ending = nextState.phase === 'WRAP' || nextState.phase === 'DONE';
   let masteryReport = null;
   let revisionSheet = null;
@@ -151,7 +163,6 @@ async function processTutorTurn(params) {
   const currentGoalIdx = scoredGoalIndex(nextState);
   const academicNotes = generatorGoal ? buildAcademicNotes(generatorGoal, topic.content || '') : null;
   const isRepetitionComplaint = /\b(already\s+asked|same\s+question|asked\s+(this\s+)?before|repeat(ing|ed)?)\b/i.test(studentMessage || '');
-  const isHelpOrIdk = intent === 'HELP' || intent === 'IDK';
   const sameAssessment = !starting && !nextState.assessmentAdvanced && !ending &&
     state.phase === nextState.phase && scoredGoalIndex(state) === currentGoalIdx &&
     !isRepetitionComplaint && !isHelpOrIdk;
@@ -208,7 +219,11 @@ async function processTutorTurn(params) {
           ? 'Review the corrected concept, then try again.' : 'This answer could not be graded. Please try again.'),
       evaluation_status: evaluatorResult.evaluation_status || 'available' }
   } : null;
-  const diagram = attachments.includes('diagram') ? getCachedDiagram(topic.title, generatorGoal.title, generatorGoal) : null;
+  const rawDiagram = attachments.includes('diagram') ? getCachedDiagram(topic.title, generatorGoal.title, generatorGoal) : null;
+  const diagram = rawDiagram ? {
+    ...rawDiagram,
+    trigger: isHelpOrIdk ? 'visual_explanation' : (rawDiagram.trigger || 'teaching'),
+  } : null;
   const teachingCoveragePercent = computeTeachingCoverage(nextState);
   const checksCompleted = computeChecksCompleted(nextState);
   const assessmentHandoff = ending ? {

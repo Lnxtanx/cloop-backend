@@ -399,13 +399,18 @@ function enforce(rawOutput, context = {}) {
   const priorRubric = normalizeRubric(context.lastQuestionRubric);
   let questionReplaced = false;
   let questionAssisted = Boolean(context.sameAssessment);
-  const isTeachingOrExplanation = explanationOnly || phase === 'THEORY' || response_mode === 'teach' || response_mode === 'explain';
+  const isHelpOrIdk = Boolean(context.isHelpOrIdk || (studentMessage && /\b(idnt|i\s*dnt|idk|explain|don['’]?t\s+know|dont\s+know|don['’]?t\s+understand|didn['’]?t\s+understand|samjh|samajh)\b/i.test(studentMessage)));
+  const isTeachingOrExplanation = explanationOnly || phase === 'THEORY' || response_mode === 'teach' || response_mode === 'explain' || isHelpOrIdk;
   const effectiveMaxBubbles = isTeachingOrExplanation ? 3 : MAX_BUBBLES;
   const rawMessages = Array.isArray(rawOutput?.messages) ? rawOutput.messages : [];
   const expanded = rawMessages.flatMap(b => splitIntoMicroBubbles(reconcileTone(cleanProse(b?.message), isCorrect))
     .map((message, i, parts) => ({ message, message_type: 'text', ...(i === parts.length - 1 && b.options ? { options: b.options } : {}) })));
   let messages = expanded.length > effectiveMaxBubbles
-    ? (isTeachingOrExplanation ? expanded.slice(0, effectiveMaxBubbles) : [expanded[0], expanded[expanded.length - 1]])
+    ? (isTeachingOrExplanation
+        ? (expanded.length >= 3 && endsWithQuestion(expanded[expanded.length - 1]?.message)
+            ? [expanded[0], expanded[1], expanded[expanded.length - 1]]
+            : expanded.slice(0, effectiveMaxBubbles))
+        : [expanded[0], expanded[expanded.length - 1]])
     : expanded;
 
   if (ending) {

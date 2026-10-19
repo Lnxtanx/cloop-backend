@@ -198,13 +198,15 @@ function buildTutorPrompt(params) {
     pedagogical_guidelines: enriched.temporal_state.pedagogical_guidance,
   };
 
+  const isHelpOrIdk = Boolean(params.isHelpOrIdk || (studentMessage && /\b(idnt|i\s*dnt|idk|explain|don['’]?t\s+know|dont\s+know|don['’]?t\s+understand|didn['’]?t\s+understand|samjh|samajh)\b/i.test(studentMessage)));
+
   const schema = ending
     ? '{ "messages": [{ "message": "Warm accurate closing statement.", "message_type": "text" }], "lastQuestionRubric": null }'
     : isOfferChoice
       ? '{ "messages": [{ "message": "Brief note on the attempt.", "message_type": "text" }, { "message": "Would you like me to explain the answer, or would you like another try?", "message_type": "text", "options": [{ "text": "Explain the answer", "value": "Explain the answer" }, { "text": "I want another try", "value": "I want another try" }] }], "lastQuestionRubric": null }'
       : explanationOnly
-        ? '{ "messages": [{ "message": "Clear intuition under 25 words.", "message_type": "text" }, { "message": "Core concept and everyday analogy under 25 words.", "message_type": "text" }, { "message": "Clear explanation summary under 25 words.", "message_type": "text" }], "lastQuestionRubric": null }'
-        : phase === 'THEORY'
+        ? '{ "messages": [{ "message": "Clear intuition under 25 words.", "message_type": "text" }, { "message": "Core concept and everyday analogy under 25 words.", "message_type": "text" }], "lastQuestionRubric": null }'
+        : (phase === 'THEORY' || isHelpOrIdk)
           ? '{ "messages": [{ "message": "Clear definition under 25 words.", "message_type": "text" }, { "message": "Core principle / mechanism with everyday analogy under 25 words.", "message_type": "text" }, { "message": "Focused check question under 20 words?", "message_type": "text" }], "lastQuestionRubric": { "criteria": [{ "id": "fact_1", "description": "Core conceptual requirement", "required": true }], "model_answer": "Complete conceptual answer" } }'
           : `{ "messages": [{ "message": "Optional brief feedback or explanation under 25 words.", "message_type": "text" }, { "message": "Focused complete question under 20 words?", "message_type": "text"${mcq ? ', "options": [{ "text": "Actual answer text", "value": "Actual answer text" }, { "text": "Plausible distractor", "value": "Plausible distractor" }]' : ''} }], "lastQuestionRubric": { "criteria": [{ "id": "fact_1", "description": "One conceptual fact REQUIRED by this exact question", "required": true }], "model_answer": "Complete conceptually accurate answer to this exact question"${mcq ? ', "correct_option_text": "Actual answer text"' : ''} } }`;
 
@@ -261,11 +263,10 @@ tutor wording as a student misconception.
 
 5. ADAPT WHEN THE STUDENT STRUGGLES OR SAYS "EXPLAIN" / "IDNT" / "IDK".
 When the student says "explain", "i don't understand", "idnt", or "idk":
-Break down the concept in 3 to 4 micro-bubbles, EACH strictly under 25 words:
+Break down the concept in EXACTLY 3 micro-bubbles (2 explanations + 1 check question), EACH strictly under 25 words:
 - Bubble 1: Core idea / definition in plain simple language (under 25 words).
 - Bubble 2: Physical cause or familiar everyday Indian analogy (under 25 words).
-- Bubble 3: Concrete observation or application (under 25 words).
-- Bubble 4: Simple guiding question to check understanding (under 20 words).
+- Bubble 3: Simple guiding check question (under 20 words).
 NEVER REPEAT A QUESTION you have already asked. Do not cycle through the same failed question.
 Follow the server’s support, pause or progression directive.
 
@@ -285,7 +286,7 @@ ${phase === 'ROUNDUP' ? 'For ROUNDUP: require ALL distinct required core facts; 
 
 8. FOLLOW THE OUTPUT CONTRACT & WORD LIMITS.
 Return only JSON matching the supplied schema.
-For THEORY and explanations (when student asks to explain or says idnt/idk): use 3–4 micro-bubbles, with EACH bubble strictly under 25 words.
+For THEORY and explanations (when student asks to explain or says idnt/idk): use AT MOST 3 micro-bubbles (2 brief explanation bubbles under 25 words each, and 1 check question under 20 words).
 For standard dialogue turns: use 1–2 conversational bubbles, each at most 20 words.
 Preserve complete sentences and scientific meaning.
 Options appear only when the server selects MCQ:
@@ -317,7 +318,7 @@ async function generateTutorResponse(params) {
   try {
     const prompt = buildTutorPrompt(params);
     const raw = await invokeModel(prompt, [{ role: 'user', content: 'Write this tutor turn following the server directive and JSON schema.' }], {
-      temperature: 0.4, maxTokens: 3500, jsonFormat: true, featureArea: 'tutor-core', subFeature: 'dialogue-generator',
+      temperature: 0.4, maxTokens: 8192, jsonFormat: true, featureArea: 'tutor-core', subFeature: 'dialogue-generator',
       userId: params.userId || null,
       returnFull: true,
     });
