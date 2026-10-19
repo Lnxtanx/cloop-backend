@@ -182,6 +182,15 @@ router.get('/reports/subject/:subjectId', authenticateToken, async (req, res) =>
 	}
 });
 
+// OPTIONS /api/topic-chats/:topicId/inspector
+// CORS preflight handler
+router.options('/:topicId/inspector', (req, res) => {
+	res.setHeader('Access-Control-Allow-Origin', '*');
+	res.setHeader('Access-Control-Allow-Methods', 'GET, DELETE, OPTIONS');
+	res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+	return res.sendStatus(204);
+});
+
 // GET /api/topic-chats/:topicId/inspector
 // Real-time Turn Inspector & Context Observatory (local dev & AWS EC2)
 router.get('/:topicId/inspector', async (req, res) => {

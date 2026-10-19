@@ -647,12 +647,12 @@
 
       <div class="control-group">
         <span class="control-label">Topic ID</span>
-        <input type="number" id="topicId" value="1">
+        <input type="number" id="topicId" value="1" onchange="fetchTurns()">
       </div>
 
       <div class="control-group">
         <span class="control-label">User ID</span>
-        <input type="number" id="userId" placeholder="All">
+        <input type="number" id="userId" placeholder="All" onchange="fetchTurns()">
       </div>
 
       <button class="btn" id="fetchBtn" onclick="fetchTurns()">
@@ -782,6 +782,17 @@
       } catch (err) {
         console.warn('Failed to fetch inspector turns:', err.message);
         document.getElementById('turnCount').innerText = 'Offline';
+        document.getElementById('turnList').innerHTML = `
+          <li class="empty-state">
+            <div class="empty-icon" style="color: var(--accent-amber);">⚠️</div>
+            <div style="font-weight: 600; color: #f87171;">Could not reach backend</div>
+            <div style="font-size: 11px; margin-top: 6px; color: var(--text-muted); font-family: var(--font-mono); word-break: break-all;">
+              Target: ${escapeHtml(url)}
+            </div>
+            <div style="font-size: 11px; margin-top: 6px; color: var(--text-dim);">
+              Ensure PM2 backend is running on EC2 (<code style="color: #a855f7;">pm2 logs 1</code>)
+            </div>
+          </li>`;
       }
     }
 
@@ -1091,11 +1102,21 @@
         .replace(/'/g, '&#039;');
     }
 
-    // Auto-detect server origin if loaded over HTTP/HTTPS (e.g. AWS EC2 or localhost), else default to api.cloopapp.com
-    if (window.location.protocol.startsWith('http') && window.location.hostname) {
+    // Auto-detect server origin or query parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('server')) {
+      document.getElementById('serverUrl').value = urlParams.get('server');
+    } else if (window.location.protocol.startsWith('http') && window.location.hostname && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1')) {
       document.getElementById('serverUrl').value = window.location.origin;
     } else {
       document.getElementById('serverUrl').value = 'https://api.cloopapp.com';
+    }
+
+    if (urlParams.get('topicId') || urlParams.get('topic')) {
+      document.getElementById('topicId').value = urlParams.get('topicId') || urlParams.get('topic');
+    }
+    if (urlParams.get('userId') || urlParams.get('user_id')) {
+      document.getElementById('userId').value = urlParams.get('userId') || urlParams.get('user_id');
     }
 
     // Auto-load on open
