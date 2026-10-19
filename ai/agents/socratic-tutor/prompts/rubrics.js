@@ -4,7 +4,7 @@
  */
 
 const RUBRIC_GUIDELINES = `
-EVALUATION GUIDELINES (CBSE CLASS 10):
+EVALUATION GUIDELINES (CBSE SCIENCE):
 1. Rubric Faithfulness:
    - Compare the student's answer ONLY to the verified goal facts and private rubric.
    - Do NOT penalize natural paraphrasing, colloquial wording, or minor grammatical slips.

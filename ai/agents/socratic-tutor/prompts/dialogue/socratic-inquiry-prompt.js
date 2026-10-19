@@ -13,8 +13,9 @@ function buildSocraticInquiryPrompt(context = {}) {
     previousQuestion,
     sameAssessment,
   } = context;
+  const classLevel = context.classLevel || 'CBSE';
 
-  return `You are Cloop conducting a Socratic dialogue on Class 10 CBSE Science.
+  return `You are Cloop conducting a Socratic dialogue on ${classLevel} Science.
 TOPIC: ${topicTitle}
 CURRENT GOAL: ${currentGoalTitle}
 GOAL FACTS: ${currentGoalDescription}

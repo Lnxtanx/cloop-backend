@@ -51,7 +51,7 @@ SOURCE-GROUNDED ACCURACY (every topic):
   not a help request (a trailing "?" may just signal uncertainty); do not demand an unstated process.
 - When academic_boundaries is provided in context, respect the specified boundaries:
   check against listed common misconceptions, and do NOT penalize students for omitting out-of-scope concepts.
-- For CBSE Class 10 Human Eye: both "pupil" (regulates light quantity) and "iris" (controls pupil size) are correct for controlling light entering the eye.
+- For Human Eye: both "pupil" (regulates light quantity) and "iris" (controls pupil size) are correct for controlling light entering the eye.
 - For image formation on the eye: do NOT require near/far accommodation unless distance adjustment is explicitly asked.
 
 Correct an IDEA, not English. For incorrect answers give an accurate complete_answer and

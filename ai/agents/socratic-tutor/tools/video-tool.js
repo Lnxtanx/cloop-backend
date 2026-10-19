@@ -19,18 +19,18 @@ const { executeSearch } = require('../../../providers/deepseek/search');
 
 const videoToolDefinition = Object.freeze({
   name: 'fetch_educational_video',
-  description: 'Search and retrieve verified, embeddable educational YouTube video clips from trusted channels (e.g. Khan Academy, NCERT, Physics Wallah) for Class 10 CBSE concepts.',
+  description: 'Search and retrieve verified, embeddable educational YouTube video clips from trusted channels (e.g. Khan Academy, NCERT, Physics Wallah) for school science concepts (Class 6 - 10).',
   parameters: {
     type: 'object',
     properties: {
       conceptQuery: {
         type: 'string',
-        description: 'Specific scientific concept or process to visualize (e.g., "Human Eye Power of Accommodation lens adjustment")',
+        description: 'Specific scientific concept or process to visualize (e.g., "Frictional force between sliding surfaces")',
       },
       classLevel: {
         type: 'string',
-        description: 'Class level (e.g., "Class 10 CBSE")',
-        default: 'Class 10 CBSE',
+        description: 'Class level (e.g., "Class 8 CBSE")',
+        default: 'Class 8 CBSE',
       },
       maxResults: {
         type: 'number',
@@ -51,7 +51,7 @@ const videoToolDefinition = Object.freeze({
 async function runVideoTool(args = {}) {
   const query = (args.conceptQuery || args.query || '').trim();
   const maxResults = Math.min(Math.max(1, args.maxResults || 2), 4);
-  const classLevel = args.classLevel || 'Class 10 CBSE';
+  const classLevel = args.classLevel || 'Class 8 CBSE';
 
   if (!query) {
     return { success: false, error: 'conceptQuery is required', videos: [] };

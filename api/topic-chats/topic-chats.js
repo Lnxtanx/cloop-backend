@@ -180,6 +180,44 @@ router.get('/reports/subject/:subjectId', authenticateToken, async (req, res) =>
 		console.error('Error fetching subject reports:', err);
 		return res.status(500).json({ error: 'Failed to fetch subject reports' });
 	}
+// GET /api/topic-chats/:topicId/inspector
+// Real-time Turn Inspector & Context Observatory (local dev & AWS EC2)
+router.get('/:topicId/inspector', async (req, res) => {
+	res.setHeader('Access-Control-Allow-Origin', '*');
+	res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+	res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+	const { topicId } = req.params;
+	const userId = req.query.user_id ? parseInt(req.query.user_id, 10) : null;
+	const limit = req.query.limit ? parseInt(req.query.limit, 10) : 50;
+
+	try {
+		const { getInspectorTurns } = require('../../ai/agents/socratic-tutor/inspector/inspector-store');
+		const turns = getInspectorTurns({ topicId, userId, limit });
+		return res.status(200).json({
+			status: 'success',
+			topicId: parseInt(topicId, 10),
+			count: turns.length,
+			turns,
+		});
+	} catch (err) {
+		console.error('[Inspector API] Error:', err);
+		return res.status(500).json({ error: 'Failed to fetch inspector turns', message: err.message });
+	}
+});
+
+// DELETE /api/topic-chats/:topicId/inspector
+// Clear inspector turns for a fresh test run
+router.delete('/:topicId/inspector', async (req, res) => {
+	res.setHeader('Access-Control-Allow-Origin', '*');
+	const { topicId } = req.params;
+	try {
+		const { clearInspectorTurns } = require('../../ai/agents/socratic-tutor/inspector/inspector-store');
+		clearInspectorTurns(topicId);
+		return res.status(200).json({ status: 'cleared', topicId: parseInt(topicId, 10) });
+	} catch (err) {
+		return res.status(500).json({ error: 'Failed to clear inspector turns', message: err.message });
+	}
 });
 
 // GET /api/topic-chats/:topicId

@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cloop Socratic AI — Turn Inspector & Context Observatory</title>
+  <style>
+    :root {
+      --bg-primary: #0a0d14;
+      --bg-secondary: #121722;
+      --bg-tertiary: #1a2233;
+      --bg-card: rgba(22, 30, 46, 0.7);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(99, 102, 241, 0.3);
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --accent: #6366f1;
+      --accent-glow: rgba(99, 102, 241, 0.15);
+      --accent-green: #10b981;
+      --accent-green-bg: rgba(16, 185, 129, 0.12);
+      --accent-amber: #f59e0b;
+      --accent-amber-bg: rgba(245, 158, 11, 0.12);
+      --accent-red: #ef4444;
+      --accent-red-bg: rgba(239, 68, 68, 0.12);
+      --accent-purple: #a855f7;
+      --accent-purple-bg: rgba(168, 85, 247, 0.12);
+      --accent-blue: #38bdf8;
+      --accent-blue-bg: rgba(56, 189, 248, 0.12);
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Top Navigation / Controls */
+    header {
+      background: rgba(18, 23, 34, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-logo {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #6366f1, #a855f7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: white;
+      font-size: 15px;
+      box-shadow: 0 0 16px rgba(99, 102, 241, 0.4);
+    }
+
+    .brand-title {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .brand-badge {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--accent-glow);
+      color: #818cf8;
+      border: 1px solid var(--border-accent);
+      font-family: var(--font-mono);
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .control-group {
+      display: flex;
+      align-items: center;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 3px 10px;
+      gap: 8px;
+    }
+
+    .control-label {
+      font-size: 11px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    input, select {
+      background: transparent;
+      border: none;
+      color: var(--text-main);
+      font-size: 13px;
+      font-family: var(--font-mono);
+      outline: none;
+    }
+
+    input[type="text"] {
+      width: 180px;
+    }
+
+    input[type="number"] {
+      width: 60px;
+    }
+
+    .btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover {
+      background: #4f46e5;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: var(--bg-tertiary);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+    }
+
+    .live-indicator {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      user-select: none;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #64748b;
+      transition: all 0.3s;
+    }
+
+    .live-indicator.active .dot {
+      background: var(--accent-green);
+      box-shadow: 0 0 10px var(--accent-green);
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    /* Main Workspace Layout */
+    .workspace {
+      display: grid;
+      grid-template-columns: 280px 1fr 1fr;
+      flex: 1;
+      height: calc(100vh - 58px);
+      overflow: hidden;
+    }
+
+    /* Left Sidebar: Timeline */
+    .sidebar {
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .sidebar-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .sidebar-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .turn-count-badge {
+      background: var(--bg-tertiary);
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+    }
+
+    .turn-list {
+      list-style: none;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .turn-card {
+      background: var(--bg-tertiary);
+      border: 1px solid transparent;
+      border-radius: 8px;
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .turn-card:hover {
+      background: rgba(30, 41, 59, 0.8);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .turn-card.active {
+      background: rgba(99, 102, 241, 0.12);
+      border-color: var(--accent);
+      box-shadow: 0 0 12px rgba(99, 102, 241, 0.15);
+    }
+
+    .turn-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .turn-number {
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .turn-pill {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .pill-probe { background: var(--accent-blue-bg); color: var(--accent-blue); }
+    .pill-theory { background: var(--accent-purple-bg); color: var(--accent-purple); }
+    .pill-dialogue { background: var(--accent-glow); color: #818cf8; }
+    .pill-check { background: var(--accent-amber-bg); color: var(--accent-amber); }
+    .pill-roundup { background: rgba(236, 72, 153, 0.12); color: #f472b6; }
+    .pill-wrap { background: var(--accent-green-bg); color: var(--accent-green); }
+
+    .turn-card-body {
+      font-size: 12px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .turn-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 10px;
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+    }
+
+    .tag-correct { color: var(--accent-green); }
+    .tag-incorrect { color: var(--accent-red); }
+    .tag-neutral { color: var(--text-dim); }
+
+    /* Center & Right Column Panels */
+    .panel {
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      background: var(--bg-primary);
+    }
+
+    .panel:last-child {
+      border-right: none;
+    }
+
+    .panel-header {
+      padding: 14px 20px;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .panel-title {
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel-badge {
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: var(--bg-tertiary);
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+
+    .panel-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    /* Section Cards */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      backdrop-filter: blur(8px);
+    }
+
+    .card-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .directive-banner {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(168, 85, 247, 0.15));
+      border: 1px solid var(--border-accent);
+      border-radius: 10px;
+      padding: 14px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .directive-tag {
+      font-size: 11px;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: #a5b4fc;
+      text-transform: uppercase;
+    }
+
+    .directive-desc {
+      font-size: 13px;
+      color: var(--text-main);
+      line-height: 1.4;
+    }
+
+    /* Student Turn Box */
+    .student-speech {
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent-blue);
+      border-radius: 8px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .speech-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .speech-text {
+      font-size: 14px;
+      font-weight: 500;
+      color: #e2e8f0;
+    }
+
+    /* Reasoning Box */
+    .reasoning-box {
+      background: rgba(168, 85, 247, 0.05);
+      border: 1px solid rgba(168, 85, 247, 0.2);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .reasoning-header {
+      background: rgba(168, 85, 247, 0.1);
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 600;
+      color: #d8b4fe;
+      cursor: pointer;
+    }
+
+    .reasoning-content {
+      padding: 14px;
+      font-size: 12.5px;
+      line-height: 1.6;
+      color: #cbd5e1;
+      font-family: var(--font-mono);
+      white-space: pre-wrap;
+      max-height: 250px;
+      overflow-y: auto;
+    }
+
+    /* Micro-Bubble Simulation */
+    .bubbles-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .chat-bubble {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 12px 12px 12px 2px;
+      padding: 12px 16px;
+      max-width: 90%;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-self: flex-start;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    .bubble-text {
+      font-size: 13.5px;
+      line-height: 1.5;
+      color: var(--text-main);
+    }
+
+    .bubble-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 10px;
+      font-family: var(--font-mono);
+      color: var(--text-dim);
+    }
+
+    .word-badge {
+      background: rgba(255, 255, 255, 0.06);
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .option-pill {
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid var(--border-accent);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 12px;
+      color: #c7d2fe;
+      text-align: left;
+    }
+
+    /* JSON & Code Viewer */
+    pre.code-view {
+      background: #07090e;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 11.5px;
+      font-family: var(--font-mono);
+      color: #93c5fd;
+      overflow-x: auto;
+      max-height: 380px;
+      line-height: 1.5;
+    }
+
+    /* Metrics Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .metric-card {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .metric-label {
+      font-size: 10px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .metric-val {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-main);
+      font-family: var(--font-mono);
+    }
+
+    /* Empty state */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+      color: var(--text-dim);
+      gap: 12px;
+      text-align: center;
+    }
+
+    .empty-icon {
+      font-size: 32px;
+      opacity: 0.5;
+    }
+
+    /* Scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation & Controls -->
+  <header>
+    <div class="brand">
+      <div class="brand-logo">C</div>
+      <div class="brand-title">Cloop Socratic AI</div>
+      <div class="brand-badge">Turn Observatory</div>
+    </div>
+
+    <div class="controls">
+      <div class="control-group">
+        <span class="control-label">Server</span>
+        <input type="text" id="serverUrl" value="https://api.cloopapp.com" placeholder="https://api.cloopapp.com">
+        <div style="display: flex; gap: 4px; margin-left: 2px;">
+          <button type="button" class="btn btn-secondary" style="font-size: 10px; padding: 3px 6px;" onclick="setServer('https://api.cloopapp.com')">Cloud</button>
+          <button type="button" class="btn btn-secondary" style="font-size: 10px; padding: 3px 6px;" onclick="setServer('http://localhost:5000')">Local</button>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <span class="control-label">Topic ID</span>
+        <input type="number" id="topicId" value="1">
+      </div>
+
+      <div class="control-group">
+        <span class="control-label">User ID</span>
+        <input type="number" id="userId" placeholder="All">
+      </div>
+
+      <button class="btn" id="fetchBtn" onclick="fetchTurns()">
+        <span>⟳</span> Fetch Turns
+      </button>
+
+      <button class="btn btn-secondary" onclick="clearTopicTurns()">
+        <span>✕</span> Clear
+      </button>
+
+      <div class="live-indicator active" id="liveToggle" onclick="toggleLive()">
+        <span class="dot"></span>
+        <span>Auto (2s)</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Workspace -->
+  <main class="workspace">
+
+    <!-- Sidebar: Turn Timeline -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <span class="sidebar-title">Turns Timeline</span>
+        <span class="turn-count-badge" id="turnCount">0 turns</span>
+      </div>
+      <ul class="turn-list" id="turnList">
+        <li class="empty-state">
+          <div class="empty-icon">⏳</div>
+          <div>No turns recorded yet for this topic. Start a chat in the app to inspect!</div>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- Center Panel: The Prompt Payload (What was passed to AI) -->
+    <section class="panel">
+      <div class="panel-header">
+        <div class="panel-title">
+          <span>📥</span> Prompt Payload
+          <span class="panel-badge" id="payloadPhaseBadge">Select Turn</span>
+        </div>
+        <div class="panel-actions">
+          <button class="btn btn-secondary" style="font-size: 11px; padding: 4px 8px;" onclick="copyCurrentPrompt()">
+            📋 Copy Prompt
+          </button>
+        </div>
+      </div>
+
+      <div class="panel-body" id="promptPayloadBody">
+        <div class="empty-state">
+          <div class="empty-icon">👈</div>
+          <div>Select a turn from the timeline to inspect the exact prompt payload and context built for DeepSeek.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Panel: Agent Response & Reasoning (How the Agent Responded) -->
+    <section class="panel">
+      <div class="panel-header">
+        <div class="panel-title">
+          <span>📤</span> Agent Execution & Response
+          <span class="panel-badge" id="responseBadge">DeepSeek-V4-Pro</span>
+        </div>
+        <div class="panel-actions">
+          <button class="btn btn-secondary" style="font-size: 11px; padding: 4px 8px;" onclick="exportTurnJson()">
+            💾 Export JSON
+          </button>
+        </div>
+      </div>
+
+      <div class="panel-body" id="agentResponseBody">
+        <div class="empty-state">
+          <div class="empty-icon">🧠</div>
+          <div>Select a turn from the timeline to inspect thinking tokens, micro-bubbles, rubrics, and state transitions.</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    let turnsData = [];
+    let selectedTurnIndex = -1;
+    let autoRefreshInterval = null;
+    let isLive = true;
+
+    function getApiBase() {
+      let url = document.getElementById('serverUrl').value.trim();
+      return url.replace(/\/+$/, '');
+    }
+
+    function setServer(url) {
+      document.getElementById('serverUrl').value = url;
+      fetchTurns();
+    }
+
+    async function fetchTurns() {
+      const topicId = document.getElementById('topicId').value;
+      const userId = document.getElementById('userId').value;
+      const apiBase = getApiBase();
+
+      let url = `${apiBase}/api/topic-chats/${topicId}/inspector`;
+      if (userId) url += `?user_id=${userId}`;
+
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        turnsData = data.turns || [];
+
+        renderTimeline();
+        if (turnsData.length > 0) {
+          if (selectedTurnIndex === -1 || selectedTurnIndex >= turnsData.length) {
+            selectTurn(turnsData.length - 1); // select latest
+          } else {
+            selectTurn(selectedTurnIndex); // keep selection
+          }
+        } else {
+          document.getElementById('turnCount').innerText = '0 turns';
+          document.getElementById('turnList').innerHTML = `
+            <li class="empty-state">
+              <div class="empty-icon">⏳</div>
+              <div>No turns found for Topic ${topicId}. Open this topic in Cloop to start!</div>
+            </li>`;
+          resetPanels();
+        }
+      } catch (err) {
+        console.warn('Failed to fetch inspector turns:', err.message);
+        document.getElementById('turnCount').innerText = 'Offline';
+      }
+    }
+
+    async function clearTopicTurns() {
+      const topicId = document.getElementById('topicId').value;
+      const apiBase = getApiBase();
+      try {
+        await fetch(`${apiBase}/api/topic-chats/${topicId}/inspector`, { method: 'DELETE' });
+        turnsData = [];
+        selectedTurnIndex = -1;
+        renderTimeline();
+        resetPanels();
+      } catch (err) {
+        alert('Failed to clear turns: ' + err.message);
+      }
+    }
+
+    function toggleLive() {
+      isLive = !isLive;
+      const toggle = document.getElementById('liveToggle');
+      if (isLive) {
+        toggle.classList.add('active');
+        startPolling();
+      } else {
+        toggle.classList.remove('active');
+        clearInterval(autoRefreshInterval);
+      }
+    }
+
+    function startPolling() {
+      clearInterval(autoRefreshInterval);
+      autoRefreshInterval = setInterval(() => {
+        if (isLive) fetchTurns();
+      }, 2000);
+    }
+
+    function renderTimeline() {
+      const list = document.getElementById('turnList');
+      document.getElementById('turnCount').innerText = `${turnsData.length} turns`;
+
+      if (turnsData.length === 0) return;
+
+      list.innerHTML = turnsData.map((t, idx) => {
+        const phase = t.generator_input?.phase || t.state_transition?.phase_after || 'DIALOGUE';
+        const phasePillClass = `pill-${phase.toLowerCase()}`;
+        const activeClass = idx === selectedTurnIndex ? 'active' : '';
+
+        const studentText = t.student_turn?.message || (idx === 0 ? 'Session Opener' : 'Turn');
+        const intent = t.student_turn?.intent || '';
+        const isCorrect = t.student_turn?.evaluator_result?.is_correct;
+
+        let verdictTag = '';
+        if (isCorrect === true) verdictTag = '<span class="tag-correct">✓ CORRECT</span>';
+        else if (isCorrect === false) verdictTag = '<span class="tag-incorrect">✕ INCORRECT</span>';
+        else if (intent) verdictTag = `<span class="tag-neutral">${intent}</span>`;
+
+        const latency = t.generator_output?.duration_ms ? `${t.generator_output.duration_ms}ms` : '';
+
+        return `
+          <li class="turn-card ${activeClass}" onclick="selectTurn(${idx})">
+            <div class="turn-card-top">
+              <span class="turn-number">Turn ${idx + 1}</span>
+              <span class="turn-pill ${phasePillClass}">${phase}</span>
+            </div>
+            <div class="turn-card-body">${escapeHtml(studentText)}</div>
+            <div class="turn-card-footer">
+              <span>${verdictTag}</span>
+              <span>${latency}</span>
+            </div>
+          </li>
+        `;
+      }).join('');
+    }
+
+    function selectTurn(index) {
+      selectedTurnIndex = index;
+      renderTimeline();
+
+      const turn = turnsData[index];
+      if (!turn) return;
+
+      renderPromptPayload(turn, index);
+      renderAgentResponse(turn, index);
+    }
+
+    function renderPromptPayload(turn, index) {
+      const container = document.getElementById('promptPayloadBody');
+      const phase = turn.generator_input?.phase || 'DIALOGUE';
+      document.getElementById('payloadPhaseBadge').innerText = `Turn ${index + 1} • ${phase}`;
+
+      const directive = turn.generator_input?.directive || 'probe_prior_knowledge';
+      const boundaries = turn.generator_input?.academic_boundaries || 'Standard curriculum limits apply.';
+      const goal = turn.generator_input?.current_goal?.title || 'Core concept';
+      const prompt = turn.generator_input?.system_prompt || 'No raw system prompt captured.';
+
+      const studentMsg = turn.student_turn?.message || '[Session Opener]';
+      const intent = turn.student_turn?.intent || 'NONE';
+
+      container.innerHTML = `
+        <!-- Student Input Card -->
+        <div class="card">
+          <div class="card-title">
+            <span>Student Turn Input</span>
+            <span class="panel-badge">${intent}</span>
+          </div>
+          <div class="student-speech">
+            <div class="speech-meta">
+              <span>Speaker: Student</span>
+              <span>Answered Phase: ${turn.student_turn?.answered_phase || 'INIT'}</span>
+            </div>
+            <div class="speech-text">"${escapeHtml(studentMsg)}"</div>
+          </div>
+        </div>
+
+        <!-- Socratic Directive & Curriculum Anchor -->
+        <div class="directive-banner">
+          <span class="directive-tag">Directive: ${directive}</span>
+          <div class="directive-desc">Goal: <strong>${escapeHtml(goal)}</strong> (Class ${turn.user?.grade_level || '8'} ${turn.user?.board || 'CBSE'})</div>
+        </div>
+
+        <!-- Academic Boundaries (AKG) -->
+        <div class="card">
+          <div class="card-title">
+            <span>Academic Knowledge Graph (AKG) Guardrails</span>
+            <span>🛡️</span>
+          </div>
+          <div style="font-size: 12.5px; color: #cbd5e1; line-height: 1.5; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 6px;">
+            ${escapeHtml(boundaries)}
+          </div>
+        </div>
+
+        <!-- Exact Raw Prompt Sent to DeepSeek -->
+        <div class="card">
+          <div class="card-title">
+            <span>Exact Prompt Sent to DeepSeek-V4-Pro</span>
+            <span class="panel-badge">${prompt.length} chars</span>
+          </div>
+          <pre class="code-view">${escapeHtml(prompt)}</pre>
+        </div>
+      `;
+    }
+
+    function renderAgentResponse(turn, index) {
+      const container = document.getElementById('agentResponseBody');
+      const bubbles = turn.generator_output?.validated_bubbles || [];
+      const reasoning = turn.generator_output?.reasoning_content;
+      const rubric = turn.generator_output?.next_rubric;
+      const telemetry = turn.generator_output?.telemetry || {};
+      const duration = turn.generator_output?.duration_ms || 0;
+
+      const promptTok = telemetry.promptTokens || telemetry.prompt_tokens || 0;
+      const compTok = telemetry.completionTokens || telemetry.completion_tokens || 0;
+      const cachedTok = telemetry.cachedPromptTokens || telemetry.prompt_cache_hit_tokens || 0;
+      const cacheHitRate = promptTok > 0 ? Math.round((cachedTok / promptTok) * 100) : 0;
+
+      container.innerHTML = `
+        <!-- Telemetry Cards -->
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <span class="metric-label">Latency</span>
+            <span class="metric-val" style="color: #38bdf8;">${duration}ms</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Prompt Tokens</span>
+            <span class="metric-val">${promptTok}</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Cached Tokens</span>
+            <span class="metric-val" style="color: #10b981;">${cachedTok}</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Cache Hit %</span>
+            <span class="metric-val" style="color: #a855f7;">${cacheHitRate}%</span>
+          </div>
+        </div>
+
+        <!-- DeepSeek Thinking Box -->
+        ${reasoning ? `
+          <div class="reasoning-box">
+            <div class="reasoning-header" onclick="toggleReasoning()">
+              <span>🧠 DeepSeek Reasoning Chain (Always-On Thinking)</span>
+              <span id="reasoningToggleIcon">▼</span>
+            </div>
+            <div class="reasoning-content" id="reasoningContent">${escapeHtml(reasoning)}</div>
+          </div>
+        ` : ''}
+
+        <!-- Delivered Micro-Bubbles -->
+        <div class="card">
+          <div class="card-title">
+            <span>Delivered Micro-Bubbles (${bubbles.length})</span>
+            <span class="panel-badge">Student UI</span>
+          </div>
+          <div class="bubbles-container">
+            ${bubbles.map((b, bIdx) => {
+              const words = (b.message || '').trim().split(/\s+/).filter(Boolean).length;
+              const options = b.options || [];
+              return `
+                <div class="chat-bubble">
+                  <div class="bubble-meta">
+                    <span>Bubble ${bIdx + 1}</span>
+                    <span class="word-badge">${words} words</span>
+                  </div>
+                  <div class="bubble-text">${escapeHtml(b.message || '')}</div>
+                  ${options.length ? `
+                    <div class="options-grid">
+                      ${options.map(opt => `<div class="option-pill">• ${escapeHtml(opt.text || opt.value || opt)}</div>`).join('')}
+                    </div>
+                  ` : ''}
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+
+        <!-- Next Question Private Rubric -->
+        ${rubric ? `
+          <div class="card">
+            <div class="card-title">
+              <span>Next Question Private Grading Rubric</span>
+              <span>📋</span>
+            </div>
+            <div style="font-size: 12px; display: flex; flex-direction: column; gap: 8px;">
+              <div><strong>Model Answer:</strong> <span style="color: #a5b4fc;">${escapeHtml(rubric.model_answer || 'None')}</span></div>
+              <div><strong>Required Criteria:</strong></div>
+              <ul style="padding-left: 18px; color: #cbd5e1; display: flex; flex-direction: column; gap: 4px;">
+                ${(rubric.criteria || []).map(c => `<li><span style="color: #818cf8;">[${c.id}]</span> ${escapeHtml(c.description)}</li>`).join('')}
+              </ul>
+            </div>
+          </div>
+        ` : ''}
+
+        <!-- State Machine Transition -->
+        <div class="card">
+          <div class="card-title">
+            <span>State Machine Transition</span>
+            <span>⚙️</span>
+          </div>
+          <div style="display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-family: var(--font-mono); padding: 8px; background: rgba(0,0,0,0.3); border-radius: 6px;">
+            <span>Phase: <strong style="color: #818cf8;">${turn.state_transition?.phase_before || 'INIT'}</strong></span>
+            <span>➔</span>
+            <span>Next: <strong style="color: #10b981;">${turn.state_transition?.phase_after || 'DONE'}</strong></span>
+            <span>Wrong: ${turn.state_transition?.consecutive_wrong || 0}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function toggleReasoning() {
+      const content = document.getElementById('reasoningContent');
+      const icon = document.getElementById('reasoningToggleIcon');
+      if (content.style.display === 'none') {
+        content.style.display = 'block';
+        icon.innerText = '▼';
+      } else {
+        content.style.display = 'none';
+        icon.innerText = '▶';
+      }
+    }
+
+    function resetPanels() {
+      document.getElementById('payloadPhaseBadge').innerText = 'Select Turn';
+      document.getElementById('promptPayloadBody').innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">👈</div>
+          <div>Select a turn to inspect the prompt payload.</div>
+        </div>`;
+      document.getElementById('agentResponseBody').innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">🧠</div>
+          <div>Select a turn to inspect response execution.</div>
+        </div>`;
+    }
+
+    function copyCurrentPrompt() {
+      if (selectedTurnIndex === -1 || !turnsData[selectedTurnIndex]) {
+        alert('Please select a turn first.');
+        return;
+      }
+      const prompt = turnsData[selectedTurnIndex].generator_input?.system_prompt || '';
+      navigator.clipboard.writeText(prompt).then(() => {
+        alert('Prompt payload copied to clipboard!');
+      });
+    }
+
+    function exportTurnJson() {
+      if (selectedTurnIndex === -1 || !turnsData[selectedTurnIndex]) {
+        alert('Please select a turn first.');
+        return;
+      }
+      const turnJson = JSON.stringify(turnsData[selectedTurnIndex], null, 2);
+      const blob = new Blob([turnJson], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `turn_${selectedTurnIndex + 1}_inspector.json`;
+      a.click();
+    }
+
+    function escapeHtml(text) {
+      if (text == null) return '';
+      return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // Auto-detect server origin if loaded over HTTP/HTTPS (e.g. AWS EC2 or localhost), else default to api.cloopapp.com
+    if (window.location.protocol.startsWith('http') && window.location.hostname) {
+      document.getElementById('serverUrl').value = window.location.origin;
+    } else {
+      document.getElementById('serverUrl').value = 'https://api.cloopapp.com';
+    }
+
+    // Auto-load on open
+    fetchTurns();
+    startPolling();
+  </script>
+</body>
+</html>

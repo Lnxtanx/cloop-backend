@@ -29,6 +29,8 @@ const { generateTutorResponse } = require('./generators/dialogue-generator');
 const { generateRevisionSheet, buildFallbackRevisionSheet } = require('./generators/revision-generator');
 const { enforce } = require('./formatters/bubble-formatter');
 const { getCachedDiagram } = require('./tools/diagram-tool');
+const { recordInspectorTurn } = require('./inspector/inspector-store');
+const { buildTeachingContext } = require('./context/context-builder');
 
 let buildReport, reportBrief;
 try {
@@ -236,7 +238,6 @@ async function processTurn({
 
   const generatorGoal = goalForState(nextState);
   const currentGoalIdx = scoredGoalIndex(nextState);
-  const academicNotes = generatorGoal ? buildAcademicNotes(generatorGoal, topic.content || '') : null;
   const isRepetitionComplaint = /\b(already\s+asked|same\s+question|asked\s+(this\s+)?before|repeat(ing|ed)?)\b/i.test(studentMessage || '');
   const isHelpOrIdk = intent === 'HELP' || intent === 'IDK';
   const sameAssessment = !starting && !nextState.assessmentAdvanced && !ending &&
@@ -244,12 +245,28 @@ async function processTurn({
     !isRepetitionComplaint && !isHelpOrIdk;
   const goalMap = buildGoalMap(goals, currentGoalIdx, nextState.phase);
 
+  const enrichedTeachingContext = buildTeachingContext({
+    topic,
+    goals,
+    goalIndex: currentGoalIdx,
+    chatHistory,
+    state: nextState,
+    studentMessage,
+    evaluatorResult,
+    userProfile,
+    akgContext,
+    wantsVideo: attachments.includes('video') && wantsVideo,
+    stateInstruction,
+    reportBrief: masteryReport ? reportBrief(masteryReport) : null,
+  });
+
   const generationContext = {
     topicTitle: topic.title,
     currentGoalTitle: generatorGoal.title,
     currentGoalDescription: generatorGoal.description || '',
     topicContent: topic.content || '',
-    academicNotes,
+    academicNotes: enrichedTeachingContext.academic_grounding,
+    enrichedContext: enrichedTeachingContext,
     previousGoalTitle: currentGoal.title,
     previousGoalDescription: currentGoal.description || '',
     studentMessage,
@@ -342,6 +359,52 @@ async function processTurn({
     })),
   } : null;
 
+  const inspectorPayload = {
+    turn_id: `turn_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+    timestamp: new Date().toISOString(),
+    topic: { id: topic.id, title: topic.title },
+    user: { id: userId, grade_level: userProfile.grade_level || '8', board: userProfile.board || 'CBSE' },
+    student_turn: {
+      message: studentMessage,
+      intent,
+      answered_phase: state.phase,
+      evaluator_result: evaluatorResult,
+    },
+    generator_input: {
+      phase: nextState.phase,
+      goal_index: currentGoalIdx,
+      current_goal: generatorGoal,
+      directive: stateInstruction,
+      system_prompt: rawTutorOutput._inspector?.prompt || null,
+      academic_boundaries: enrichedTeachingContext.academic_grounding.academic_boundaries,
+      academic_notes: enrichedTeachingContext.academic_grounding,
+      enriched_context: enrichedTeachingContext,
+    },
+    generator_output: {
+      reasoning_content: rawTutorOutput._inspector?.reasoning || null,
+      raw_response: rawTutorOutput._inspector?.rawJson || null,
+      validated_bubbles: validated.messages,
+      next_rubric: validated.lastQuestionRubric,
+      question_type: questionType,
+      attachments,
+      diagram,
+      telemetry: rawTutorOutput._inspector?.telemetry || null,
+      duration_ms: rawTutorOutput._inspector?.durationMs || null,
+    },
+    state_transition: {
+      phase_before: state.phase,
+      phase_after: nextState.phase,
+      response_mode: nextState.response_mode || null,
+      consecutive_wrong: nextState.consecutiveWrong || 0,
+      stuck_streak: nextState.stuckStreak || 0,
+      active_learning_point: nextState.active_learning_point_id || null,
+      teaching_coverage_percent: teachingCoveragePercent,
+      checks_completed: checksCompleted,
+    }
+  };
+
+  recordInspectorTurn(inspectorPayload).catch(() => {});
+
   return {
     evaluatorResult,
     intent,
@@ -364,6 +427,7 @@ async function processTurn({
     session_closed: ending,
     session_completed: masteryReport?.session_completed || false,
     mastery_confirmed: masteryReport?.mastery_confirmed || false,
+    inspector_payload: inspectorPayload,
   };
 }
 

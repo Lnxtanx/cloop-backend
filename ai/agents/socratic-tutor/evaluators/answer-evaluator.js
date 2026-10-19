@@ -193,10 +193,14 @@ function fallbackIntent(text, question, resolved) {
   if (resolved.isOption) return 'ANSWER';
   const lower = String(text || '').trim().toLowerCase();
   if (CLARIFICATION_PATTERN.test(lower)) return 'HELP';
+  // Gibberish / noise detection (consonant runs, keysmash, repetitive letters)
+  if (/^[bcdfghjklmnpqrstvwxyz]{5,}$/i.test(lower) || /(.)\1{4,}/.test(lower) || /^(?:asdf|qwer|zxcv|hjkl|jkl;|[a-z]{1,2}\s+[a-z]{1,2}\s+[a-z]{1,2}\s+[a-z]{1,2})$/i.test(lower)) {
+    return 'OFF_TOPIC';
+  }
   if (/^(ok(ay)?|k|got it|continue|next|understood|fine|cool)$/i.test(lower)) return 'ACK';
-  if (/^(idk|i\s+don['’]?t\s+know|dont\s+know|no idea|not sure|dunno|pass|\?+)$/i.test(lower)) return 'IDK';
+  if (/^(idk|idnt|i\s*dnt|i\s+don['’]?t\s+(?:know|understand|get\s*it)|dont\s+(?:know|understand|get\s*it)|no idea|not sure|dunno|pass|\?+)$/i.test(lower)) return 'IDK';
   if (/\b(already\s+asked|same\s+question|asked\s+(this\s+)?before|repeat(ing|ed)?)\b/i.test(lower)) return 'HELP';
-  if (/\b(explain(\s+(me|this|that|again))?|help(\s+me)?|i\s+(haven['’]?t|have\s+not|don['’]?t)\s+(understand|understood|understodd|get\s+it)|didn['’]?t\s+understand|not\s+understood|what\?*|how\s+(so|\?)|why\s+(so|\?)|tell\s+me)\b/i.test(lower)) return 'HELP';
+  if (/\b(idnt|i\s*dnt|explain(\s+(me|this|that|again))?|help(\s+me)?|i\s+(haven['’]?t|have\s+not|don['’]?t)\s+(understand|understood|understodd|get\s+it)|didn['’]?t\s+understand|not\s+understood|samajh|samjh|what\?*|how\s+(so|\?)|why\s+(so|\?)|tell\s+me)\b/i.test(lower)) return 'HELP';
   // "Yes" can answer a yes/no question; do not always classify it as ACK.
   if (/^(yes|no|yep|nope)$/i.test(lower) && !/^(is|are|does|do|can|will|would|should|has|have)\b/i.test(question || '')) return 'ACK';
   return 'ANSWER';

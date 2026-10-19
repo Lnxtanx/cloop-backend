@@ -6,8 +6,9 @@
 
 function buildProbePrompt(context = {}) {
   const { topicTitle, topicContent } = context;
+  const classLevel = context.classLevel || 'CBSE';
 
-  return `You are Cloop opening a fresh Socratic learning session for a Class 10 CBSE student.
+  return `You are Cloop opening a fresh Socratic learning session for a ${classLevel} student.
 TOPIC: ${topicTitle}
 OVERVIEW: ${topicContent || ''}
 

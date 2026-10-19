@@ -5,8 +5,9 @@
 
 function buildMcqCheckPrompt(context = {}) {
   const { topicTitle, currentGoalTitle, currentGoalDescription } = context;
+  const classLevel = context.classLevel || 'CBSE';
 
-  return `You are Cloop creating an MCQ check assessment for Class 10 CBSE Science.
+  return `You are Cloop creating an MCQ check assessment for ${classLevel} Science.
 TOPIC: ${topicTitle}
 GOAL: ${currentGoalTitle}
 FACTS: ${currentGoalDescription}

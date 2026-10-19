@@ -522,17 +522,62 @@ Return VALID JSON only:
   ]
 }`;
 
-    const responseText = await invokeModel(systemPrompt, [
+    const rawResponse = await invokeModel(systemPrompt, [
       { role: 'user', content: `Start the unscored probe for: ${topicTitle}` }
-    ], { temperature: 0.3, maxTokens: 350, jsonFormat: true, featureArea: 'tutor', subFeature: 'greeting' });
+    ], { temperature: 0.3, maxTokens: 350, jsonFormat: true, featureArea: 'tutor', subFeature: 'greeting', returnFull: true });
 
-    const parsed = extractJson(responseText);
+    const rawText = typeof rawResponse === 'string' ? rawResponse : (rawResponse?.content || rawResponse?.text || '');
+    const parsed = extractJson(rawText);
 
     if (!parsed || !Array.isArray(parsed.messages) || parsed.messages.length === 0) {
       throw new Error('Failed to extract valid JSON greeting');
     }
 
-    return validateGreeting(parsed);
+    const validated = validateGreeting(parsed);
+
+    // Record Turn 1 (Initial Socratic Probe) to inspector store
+    try {
+      const { recordInspectorTurn } = require('../../ai/agents/socratic-tutor/inspector/inspector-store');
+      recordInspectorTurn({
+        turn_id: `turn_greeting_${Date.now()}`,
+        timestamp: new Date().toISOString(),
+        topic: { id: topicGoals[0]?.topic_id || null, title: topicTitle },
+        user: { id: user?.user_id || user?.id || null, grade_level: context.classLevel, board: context.board },
+        student_turn: {
+          message: '[Session Started by Student]',
+          intent: 'SESSION_START',
+          answered_phase: 'INIT',
+          evaluator_result: null,
+        },
+        generator_input: {
+          phase: 'PROBE',
+          goal_index: 0,
+          current_goal: topicGoals[0] || null,
+          directive: 'probe_prior_knowledge',
+          system_prompt: systemPrompt,
+          academic_boundaries: akgContext?.preceding_anchor || akgContext?.tutor_context?.prompt_snippet || null,
+          academic_notes: null,
+        },
+        generator_output: {
+          reasoning_content: typeof rawResponse === 'object' ? rawResponse.reasoning : null,
+          raw_response: parsed,
+          validated_bubbles: validated.messages,
+          next_rubric: null,
+          question_type: 'open',
+          attachments: [],
+          diagram: null,
+          telemetry: typeof rawResponse === 'object' ? rawResponse.usage : null,
+          duration_ms: typeof rawResponse === 'object' ? rawResponse.durationMs : null,
+        },
+        state_transition: {
+          phase_before: 'INIT',
+          phase_after: 'PROBE',
+          response_mode: 'check',
+        }
+      }).catch(() => {});
+    } catch (_) {}
+
+    return validated;
   } catch (error) {
     console.error('Error generating greeting:', error.message);
     return validateGreeting(fallback);

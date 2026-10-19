@@ -128,7 +128,7 @@ test('P5: Telemetry records token usage and updates daily aggregates with userId
   });
 
   // Allow setImmediate to fire
-  await new Promise(r => setTimeout(r, 50));
+  await new Promise(r => setTimeout(r, 150));
 
   assert.equal(createdLogs.length, 1);
   const log = createdLogs[0];

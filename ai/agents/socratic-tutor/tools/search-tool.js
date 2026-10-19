@@ -7,18 +7,18 @@ const { executeSearch, searchCurriculumSyllabus } = require('../../../providers/
 
 const searchToolDefinition = Object.freeze({
   name: 'curriculum_search',
-  description: 'Search official CBSE Class 10 NCERT curriculum syllabi, verified definitions, and scientific facts.',
+  description: 'Search official school science curriculum syllabi, verified definitions, and scientific facts.',
   parameters: {
     type: 'object',
     properties: {
       query: {
         type: 'string',
-        description: 'Specific scientific question or topic to search (e.g., "Class 10 CBSE Accommodation of eye definition")',
+        description: 'Specific scientific question or topic to search (e.g., "Friction definition and factors affecting")',
       },
       classLevel: {
         type: 'string',
-        description: 'Academic class level (default: "10")',
-        default: '10',
+        description: 'Academic class level (default: "8")',
+        default: '8',
       },
       board: {
         type: 'string',

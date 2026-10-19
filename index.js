@@ -50,6 +50,9 @@ const corsOptions = {
 app.use(cors(corsOptions))
 app.use(express.json())
 
+// Serve Turn Inspector & Context Observatory Dashboard
+app.use('/inspector', express.static(path.join(__dirname, 'public/inspector')))
+
 // Mount API routes
 app.use('/api/signup', require('./api/signup/signup'))
 app.use('/api/signup/options', require('./api/signup/options'))
