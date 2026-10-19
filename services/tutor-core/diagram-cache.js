@@ -23,6 +23,12 @@ function setCachedDiagram(topicTitle, goalTitle, diagramData, description = '') 
   memoryCache.set(getCacheKey(topicTitle, goalTitle, description), diagramData);
 }
 
+function cleanConceptTitle(text) {
+  return String(text || '')
+    .replace(/^(?:Goal|Topic|Chapter)\s+\d+:\s*/i, '')
+    .trim();
+}
+
 /**
  * Get a cached or synthesized diagram (0ms)
  *
@@ -55,11 +61,34 @@ function getCachedDiagram(topicTitle, goalTitle, goalRecord = null) {
   // Stored goal facts take precedence over broad chapter templates. Those
   // templates can introduce advanced or unrelated science for a narrow goal.
   const safeLabel = value => String(value).replace(/[<>"&\r\n]/g, ' ').trim();
+  const cleanGoal = cleanConceptTitle(goalTitle);
+  const cleanTopic = cleanConceptTitle(topicTitle);
+  const rootConcept = cleanGoal || cleanTopic || 'Core Concept';
+
   const facts = description.split(/;|\n/).map(s => s.trim()).filter(Boolean);
+
+  let code;
+  if (facts.length >= 2) {
+    // Multi-tier connected conceptual flow
+    code = `graph TD\n  A["${safeLabel(rootConcept)}"]`;
+    for (let i = 0; i < facts.length; i++) {
+      const factLabel = safeLabel(facts[i]);
+      if (i === 0) {
+        code += `\n  A --> F0["${factLabel}"]`;
+      } else {
+        code += `\n  F${i - 1} -->|relates to| F${i}["${factLabel}"]`;
+      }
+    }
+  } else if (facts.length === 1) {
+    code = `graph TD\n  A["${safeLabel(cleanTopic || 'Topic Concept')}"] -->|focus| B["${safeLabel(rootConcept)}"]\n  B -->|governing rule| F0["${safeLabel(facts[0])}"]`;
+  } else {
+    // Zero facts: Synthesize a 3-node conceptual pathway
+    code = `graph TD\n  A["${safeLabel(cleanTopic || 'Syllabus Topic')}"] -->|focus| B["${safeLabel(rootConcept)}"]\n  B -->|scientific rule| C["Properties & Principles"]\n  C -->|real-world effect| D["Everyday Applications"]`;
+  }
+
   const diagram = {
-    title: `${goalTitle || 'Topic'} Concept Map`,
-    code: `graph TD\n  A["${safeLabel(goalTitle || topicTitle || 'Topic')}"]` +
-      facts.map((fact, i) => `\n  A --> F${i}["${safeLabel(fact)}"]`).join(''),
+    title: `${cleanGoal || cleanTopic || 'Topic'} Concept Map`,
+    code,
     trigger: 'teaching'
   };
   setCachedDiagram(topicTitle, goalTitle, diagram, description);

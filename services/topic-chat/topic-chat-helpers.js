@@ -524,7 +524,7 @@ Return VALID JSON only:
 
     const rawResponse = await invokeModel(systemPrompt, [
       { role: 'user', content: `Start the unscored probe for: ${topicTitle}` }
-    ], { temperature: 0.3, maxTokens: 2500, jsonFormat: true, featureArea: 'tutor', subFeature: 'greeting', returnFull: true });
+    ], { temperature: 0.3, maxTokens: 8192, reasoningEffort: 'low', jsonFormat: true, featureArea: 'tutor', subFeature: 'greeting', returnFull: true });
 
     const rawText = typeof rawResponse === 'string' ? rawResponse : (rawResponse?.content || rawResponse?.text || '');
     const parsed = extractJson(rawText);

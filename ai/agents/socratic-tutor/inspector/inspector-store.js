@@ -60,10 +60,13 @@ async function recordInspectorTurn(turnPayload) {
   // 3. Database persistence (non-blocking)
   try {
     const prisma = require('../../../../lib/prisma');
-    if (prisma?.tutor_turn_logs?.create) {
-      await prisma.tutor_turn_logs.create({
+    const rawUserId = turnPayload.user?.id ?? turnPayload.user?.user_id;
+    const validUserId = typeof rawUserId === 'number' && Number.isInteger(rawUserId) && rawUserId > 0 ? rawUserId : null;
+
+    if (prisma?.tutor_turn_logs?.create && validUserId && topicId) {
+      prisma.tutor_turn_logs.create({
         data: {
-          user_id: turnPayload.user?.id || 1,
+          user_id: validUserId,
           topic_id: topicId,
           intent: turnPayload.student_turn?.intent || 'ANSWER',
           is_correct: turnPayload.student_turn?.evaluator_result?.is_correct ?? null,

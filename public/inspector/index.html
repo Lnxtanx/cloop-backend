@@ -662,6 +662,14 @@
         <span>⟳</span> Fetch Turns
       </button>
 
+      <button class="btn btn-secondary" onclick="copyFullTurnContext()" title="Copy complete turn context (Prompt + AKG + Student + Agent Response) to clipboard">
+        <span>📋</span> Copy Turn
+      </button>
+
+      <button class="btn btn-secondary" onclick="copyAllTurnsMarkdown()" title="Copy entire session report with all turn prompts and responses">
+        <span>📑</span> Copy All Turns
+      </button>
+
       <button class="btn btn-secondary" onclick="clearTopicTurns()">
         <span>✕</span> Clear
       </button>
@@ -697,9 +705,12 @@
           <span>📥</span> Prompt Payload
           <span class="panel-badge" id="payloadPhaseBadge">Select Turn</span>
         </div>
-        <div class="panel-actions">
-          <button class="btn btn-secondary" style="font-size: 11px; padding: 4px 8px;" onclick="copyCurrentPrompt()">
-            📋 Copy Prompt
+        <div class="panel-actions" style="display: flex; gap: 6px;">
+          <button class="btn" style="font-size: 11px; padding: 4px 10px; background: #4f46e5; color: white; border: none;" onclick="copyFullTurnContext()" title="Copy full prompt, AKG boundaries, and turn data">
+            📋 Copy Full Turn
+          </button>
+          <button class="btn btn-secondary" style="font-size: 11px; padding: 4px 8px;" onclick="copyCurrentPrompt()" title="Copy raw prompt only">
+            Raw Prompt
           </button>
         </div>
       </div>
@@ -719,7 +730,10 @@
           <span>📤</span> Agent Execution & Response
           <span class="panel-badge" id="responseBadge">DeepSeek-V4-Pro</span>
         </div>
-        <div class="panel-actions">
+        <div class="panel-actions" style="display: flex; gap: 6px;">
+          <button class="btn" style="font-size: 11px; padding: 4px 10px; background: #7c3aed; color: white; border: none;" onclick="copyFullTurnContext()" title="Copy full turn data">
+            📋 Copy Full Turn
+          </button>
           <button class="btn btn-secondary" style="font-size: 11px; padding: 4px 8px;" onclick="exportTurnJson()">
             💾 Export JSON
           </button>
@@ -1113,6 +1127,116 @@
         </div>`;
     }
 
+    function formatTurnMarkdown(turn, index) {
+      if (!turn) return '';
+      const phase = turn.generator_input?.phase || turn.state_transition?.phase_after || 'DIALOGUE';
+      const directive = turn.generator_input?.directive || 'None';
+      const goal = turn.generator_input?.current_goal?.title || 'Core Goal';
+      const topic = turn.topic?.title || `Topic ${document.getElementById('topicId').value}`;
+      const userGrade = turn.user?.grade_level || '10';
+      const userBoard = turn.user?.board || 'CBSE';
+      const akg = turn.generator_input?.academic_boundaries || 'Standard curriculum limits apply.';
+      const prompt = turn.generator_input?.system_prompt || 'None captured';
+      
+      const studentMsg = turn.student_turn?.message || '[Session Start]';
+      const intent = turn.student_turn?.intent || 'NONE';
+      const isCorrect = turn.student_turn?.evaluator_result?.is_correct;
+      const evalVerdict = isCorrect === true ? 'CORRECT' : isCorrect === false ? 'INCORRECT' : 'NEUTRAL';
+      const evalFeedback = turn.student_turn?.evaluator_result?.feedback || 'None';
+      const completeAnswer = turn.student_turn?.evaluator_result?.complete_answer || 'None';
+
+      const bubbles = (turn.generator_output?.validated_bubbles || []).map((b, i) => {
+        const opts = (b.options || []).map(o => `    - ${o.text || o.value || o}`).join('\n');
+        return `Bubble ${i + 1}: ${b.message}${opts ? '\n' + opts : ''}`;
+      }).join('\n\n');
+
+      const reasoning = turn.generator_output?.reasoning_content || 'None';
+      const rubric = turn.generator_output?.next_rubric;
+      const rubricText = rubric ? `Model Answer: ${rubric.model_answer}\nCriteria:\n` + (rubric.criteria || []).map(c => `  - [${c.id}] ${c.description}`).join('\n') : 'None';
+      const telemetry = turn.generator_output?.telemetry || {};
+      const duration = turn.generator_output?.duration_ms || 0;
+
+      return `### 🔍 Socratic Tutor Turn ${index + 1} Debug Context
+- **Topic:** ${topic}
+- **Grade / Board:** Class ${userGrade} (${userBoard})
+- **Phase:** ${phase}
+- **Directive:** ${directive}
+- **Learning Goal:** ${goal}
+- **Latency:** ${duration}ms | Tokens: In ${telemetry.promptTokens || telemetry.prompt_tokens || 0} / Out ${telemetry.completionTokens || telemetry.completion_tokens || 0}
+
+#### 👤 Student Turn:
+- **Message:** "${studentMsg}"
+- **Intent:** ${intent} | **Evaluator Verdict:** ${evalVerdict}
+- **Evaluator Feedback:** ${evalFeedback}
+- **Target Complete Answer:** ${completeAnswer}
+
+#### 🛡️ Academic Knowledge Graph (AKG) Guardrails:
+${akg}
+
+#### 📥 Exact Prompt Sent to LLM:
+\`\`\`
+${prompt}
+\`\`\`
+
+#### 🧠 LLM Reasoning (Thinking Content):
+\`\`\`
+${reasoning}
+\`\`\`
+
+#### 📤 Delivered Micro-Bubbles:
+${bubbles || 'No bubbles generated'}
+
+#### 📋 Next Question Private Rubric:
+\`\`\`
+${rubricText}
+\`\`\`
+`;
+    }
+
+    function showToast(msg) {
+      let toast = document.getElementById('inspectorToast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'inspectorToast';
+        toast.style.cssText = 'position: fixed; bottom: 24px; right: 24px; background: #4f46e5; color: white; padding: 12px 20px; border-radius: 8px; font-weight: 600; font-size: 13px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); z-index: 9999; transition: opacity 0.3s;';
+        document.body.appendChild(toast);
+      }
+      toast.innerText = msg;
+      toast.style.opacity = '1';
+      clearTimeout(toast._timeout);
+      toast._timeout = setTimeout(() => { toast.style.opacity = '0'; }, 3000);
+    }
+
+    function copyFullTurnContext() {
+      if (selectedTurnIndex === -1 || !turnsData[selectedTurnIndex]) {
+        alert('Please select a turn from the timeline first.');
+        return;
+      }
+      const text = formatTurnMarkdown(turnsData[selectedTurnIndex], selectedTurnIndex);
+      navigator.clipboard.writeText(text).then(() => {
+        showToast(`✅ Turn ${selectedTurnIndex + 1} context & prompt copied to clipboard!`);
+      }).catch(err => {
+        alert('Clipboard copy failed: ' + err.message);
+      });
+    }
+
+    function copyAllTurnsMarkdown() {
+      if (!turnsData || turnsData.length === 0) {
+        alert('No turns recorded to copy.');
+        return;
+      }
+      const topicId = document.getElementById('topicId').value;
+      let allText = `# 📚 Full Socratic Tutor Session Report (Topic ${topicId})\nTotal Turns: ${turnsData.length}\n\n`;
+      turnsData.forEach((turn, idx) => {
+        allText += formatTurnMarkdown(turn, idx) + '\n---\n\n';
+      });
+      navigator.clipboard.writeText(allText).then(() => {
+        showToast(`✅ All ${turnsData.length} turns copied to clipboard!`);
+      }).catch(err => {
+        alert('Clipboard copy failed: ' + err.message);
+      });
+    }
+
     function copyCurrentPrompt() {
       if (selectedTurnIndex === -1 || !turnsData[selectedTurnIndex]) {
         alert('Please select a turn first.');
@@ -1120,7 +1244,7 @@
       }
       const prompt = turnsData[selectedTurnIndex].generator_input?.system_prompt || '';
       navigator.clipboard.writeText(prompt).then(() => {
-        alert('Prompt payload copied to clipboard!');
+        showToast('Raw system prompt copied to clipboard!');
       });
     }
 

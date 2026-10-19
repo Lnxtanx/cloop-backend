@@ -605,13 +605,13 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 			// Fetch user profile for board/classLevel context
 			const userProfile = await prisma.users.findUnique({
 				where: { user_id: user_id },
-				select: { board: true, grade_level: true, name: true }
+				select: { user_id: true, board: true, grade_level: true, name: true }
 			});
 
-			// Resolve Academic Knowledge Graph context (JIT cached)
+			// Resolve Academic Knowledge Graph context (JIT cached, non-blocking on chat start for instant <2s load)
 			let akgContext = null;
 			try {
-				akgContext = await resolveTopicIntelligence(topic, prisma, { userProfile, goals: topicGoals });
+				akgContext = await resolveTopicIntelligence(topic, prisma, { userProfile, goals: topicGoals, nonBlocking: true });
 			} catch (akgErr) {
 				console.warn('[topic-chats] AKG resolution non-fatal:', akgErr.message);
 			}

@@ -150,6 +150,58 @@ async function resolveTopicIntelligence(topicOrId, prismaClient = null, options 
   const board = options.board || options.userProfile?.board || 'CBSE';
   const topicGoals = options.goals || topicRecord?.goals || [];
 
+  // If non-blocking requested (e.g. on initial chat opening), return fallback immediately
+  // and run full LLM synthesis asynchronously in background to populate DB cache without delaying UI response
+  if (options.nonBlocking) {
+    const fallback = buildFallbackIntelligence({
+      topic: currentTopic,
+      chapter: topicRecord?.chapter || null,
+      precedingTopic,
+      succeedingTopic,
+      classLevel,
+    });
+
+    setImmediate(async () => {
+      try {
+        const bgSynth = await synthesizeTopicIntelligence({
+          topic: currentTopic,
+          chapter: topicRecord?.chapter || null,
+          precedingTopic,
+          succeedingTopic,
+          classLevel,
+          board,
+          goals: topicGoals,
+        });
+        if (prisma?.topic_academic_intelligence?.upsert && bgSynth && !bgSynth.is_fallback) {
+          await prisma.topic_academic_intelligence.upsert({
+            where: { topic_id: topicId },
+            update: {
+              preceding_anchor: bgSynth.preceding_anchor,
+              succeeding_teaser: bgSynth.succeeding_teaser,
+              in_scope_concepts: bgSynth.in_scope_concepts,
+              out_of_scope_boundaries: bgSynth.out_of_scope_boundaries,
+              common_misconceptions: bgSynth.common_misconceptions,
+              updated_at: new Date(),
+            },
+            create: {
+              topic_id: topicId,
+              preceding_anchor: bgSynth.preceding_anchor,
+              succeeding_teaser: bgSynth.succeeding_teaser,
+              in_scope_concepts: bgSynth.in_scope_concepts,
+              out_of_scope_boundaries: bgSynth.out_of_scope_boundaries,
+              common_misconceptions: bgSynth.common_misconceptions,
+            },
+          });
+          console.log(`[AKG Service] Background JIT persistence completed for topic ${topicId}`);
+        }
+      } catch (bgErr) {
+        console.warn(`[AKG Service] Background synthesis non-fatal for topic ${topicId}:`, bgErr.message);
+      }
+    });
+
+    return buildAkgContext(fallback);
+  }
+
   let synthesized = null;
   try {
     synthesized = await synthesizeTopicIntelligence({

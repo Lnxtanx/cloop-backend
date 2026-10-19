@@ -587,7 +587,7 @@ async function evaluateStudentTurn({
   };
   try {
     const output = await invokeModel(EVALUATOR_PROMPT, [{ role: 'user', content: JSON.stringify(context) }], {
-      temperature: 0, maxTokens: 3500, jsonFormat: true, featureArea: 'tutor-core', subFeature: 'evaluator',
+      temperature: 0, maxTokens: 8192, jsonFormat: true, featureArea: 'tutor-core', subFeature: 'evaluator',
       userId: context.userId || null,
     });
     const parsed = extractJson(typeof output === 'string' ? output : output?.text);

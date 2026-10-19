@@ -367,8 +367,19 @@ function buildFocusedFallback(context = {}) {
   }
   question = question.replace(/[?？]+$/, '?');
 
+  const fallbackMessages = [];
+  if (context.isCorrect === true || context.evaluatorResult?.is_correct === true) {
+    fallbackMessages.push({ message: "Spot on! That's correct.", message_type: 'text' });
+  } else if (context.isCorrect === false && context.evaluatorResult?.feedback) {
+    const cleanFb = cleanProse(context.evaluatorResult.feedback);
+    if (cleanFb && wordCount(cleanFb) <= MAX_WORDS_PER_BUBBLE) {
+      fallbackMessages.push({ message: cleanFb, message_type: 'text' });
+    }
+  }
+  fallbackMessages.push({ message: question, message_type: 'text' });
+
   return {
-    messages: [{ message: question, message_type: 'text' }],
+    messages: fallbackMessages,
     lastQuestionRubric: rawContent ? { criteria: facts.map((description, i) => ({ id: `fact_${i + 1}`, description, required: true })), model_answer: factualModelAnswer } : null,
     fallbackQuestionType: 'open'
   };
@@ -389,7 +400,7 @@ function enforce(rawOutput, context = {}) {
   let questionReplaced = false;
   let questionAssisted = Boolean(context.sameAssessment);
   const isTeachingOrExplanation = explanationOnly || phase === 'THEORY' || response_mode === 'teach' || response_mode === 'explain';
-  const effectiveMaxBubbles = isTeachingOrExplanation ? 4 : MAX_BUBBLES;
+  const effectiveMaxBubbles = isTeachingOrExplanation ? 3 : MAX_BUBBLES;
   const rawMessages = Array.isArray(rawOutput?.messages) ? rawOutput.messages : [];
   const expanded = rawMessages.flatMap(b => splitIntoMicroBubbles(reconcileTone(cleanProse(b?.message), isCorrect))
     .map((message, i, parts) => ({ message, message_type: 'text', ...(i === parts.length - 1 && b.options ? { options: b.options } : {}) })));

@@ -53,7 +53,10 @@ async function invokeModel(systemPrompt, messages = [], options = {}) {
   }
   const model = requestedModel;
   const isThinkingEnabled = options.thinking !== 'disabled';
-  const reasoningEffort = options.reasoningEffort || THINKING_CONFIG.DEFAULT_EFFORT;
+  const defaultEffort = (options.subFeature === 'dialogue-generator' || options.subFeature === 'evaluator' || options.subFeature === 'greeting')
+    ? 'medium'
+    : THINKING_CONFIG.DEFAULT_EFFORT;
+  const reasoningEffort = options.reasoningEffort || defaultEffort;
 
   // Format messages
   const formattedMessages = [];
@@ -79,11 +82,11 @@ async function invokeModel(systemPrompt, messages = [], options = {}) {
     });
   }
 
-  let maxTokens = options.maxTokens || 4096;
-  if (isThinkingEnabled && maxTokens < 2500) {
-    // DeepSeek reasoning tokens consume the max_tokens budget.
-    // Ensure at least 3500 tokens so 600-900 thinking tokens leave ample room for full JSON output.
-    maxTokens = Math.max(maxTokens, 3500);
+  let maxTokens = options.maxTokens || 8192;
+  if (isThinkingEnabled) {
+    // DeepSeek reasoning tokens consume the max_tokens budget (API max is 8192).
+    // Ensure max_tokens is at least 8192 so reasoning tokens never crowd out output JSON.
+    maxTokens = Math.max(maxTokens, 8192);
   }
 
   const payload = {
