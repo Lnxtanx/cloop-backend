@@ -71,7 +71,7 @@ async function synthesizeTopicIntelligence(params) {
       [{ role: 'user', content: `Generate academic boundaries and misconceptions for: ${topic.title}` }],
       {
         temperature: 0.2,
-        maxTokens: 600,
+        maxTokens: 3000,
         jsonFormat: true,
         featureArea: 'academic-graph',
         subFeature: 'synthesizer',

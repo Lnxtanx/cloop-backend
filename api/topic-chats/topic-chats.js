@@ -182,6 +182,51 @@ router.get('/reports/subject/:subjectId', authenticateToken, async (req, res) =>
 	}
 });
 
+// GET /api/topic-chats/inspector/recent
+// Auto-detect recent active topics for inspector
+router.options('/inspector/recent', (req, res) => {
+	res.setHeader('Access-Control-Allow-Origin', '*');
+	res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+	res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+	return res.sendStatus(204);
+});
+
+router.get('/inspector/recent', async (req, res) => {
+	res.setHeader('Access-Control-Allow-Origin', '*');
+	res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+	res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+	try {
+		const recentProgress = await prisma.user_topic_progress.findMany({
+			orderBy: { last_accessed_at: 'desc' },
+			take: 8,
+			include: {
+				topic: {
+					select: {
+						id: true,
+						title: true,
+						chapter: { select: { title: true, subject: { select: { name: true, grade: true } } } }
+					}
+				}
+			}
+		});
+
+		const topics = recentProgress
+			.filter(p => p.topic && p.topic.id)
+			.map(p => ({
+				id: p.topic.id,
+				title: p.topic.title,
+				subject: p.topic.chapter?.subject?.name || '',
+				grade: p.topic.chapter?.subject?.grade || '',
+				last_accessed_at: p.last_accessed_at
+			}));
+
+		return res.status(200).json({ topics });
+	} catch (err) {
+		return res.status(200).json({ topics: [] });
+	}
+});
+
 // OPTIONS /api/topic-chats/:topicId/inspector
 // CORS preflight handler
 router.options('/:topicId/inspector', (req, res) => {

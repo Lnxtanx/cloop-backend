@@ -317,7 +317,7 @@ async function generateTutorResponse(params) {
   try {
     const prompt = buildTutorPrompt(params);
     const raw = await invokeModel(prompt, [{ role: 'user', content: 'Write this tutor turn following the server directive and JSON schema.' }], {
-      temperature: 0.4, maxTokens: 900, jsonFormat: true, featureArea: 'tutor-core', subFeature: 'dialogue-generator',
+      temperature: 0.4, maxTokens: 3500, jsonFormat: true, featureArea: 'tutor-core', subFeature: 'dialogue-generator',
       userId: params.userId || null,
       returnFull: true,
     });

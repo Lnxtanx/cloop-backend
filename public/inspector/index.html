@@ -647,7 +647,10 @@
 
       <div class="control-group">
         <span class="control-label">Topic ID</span>
-        <input type="number" id="topicId" value="1" onchange="fetchTurns()">
+        <input type="number" id="topicId" value="1" onchange="fetchTurns()" style="width: 70px;">
+        <select id="recentTopicsSelect" onchange="onSelectRecentTopic(this.value)" style="background: var(--bg-secondary); color: #818cf8; border: 1px solid var(--border-accent); border-radius: 6px; font-size: 11px; padding: 2px 6px; outline: none; cursor: pointer; max-width: 170px;">
+          <option value="">Recent Topics...</option>
+        </select>
       </div>
 
       <div class="control-group">
@@ -746,6 +749,49 @@
 
     function setServer(url) {
       document.getElementById('serverUrl').value = url;
+      loadRecentTopics();
+      fetchTurns();
+    }
+
+    async function loadRecentTopics() {
+      const apiBase = getApiBase();
+      const select = document.getElementById('recentTopicsSelect');
+      if (!select) return;
+      try {
+        const res = await fetch(`${apiBase}/api/topic-chats/inspector/recent`);
+        if (!res.ok) return;
+        const data = await res.json();
+        const topics = data.topics || [];
+        if (topics.length === 0) {
+          select.innerHTML = '<option value="">No recent topics</option>';
+          return;
+        }
+
+        const currentId = document.getElementById('topicId').value;
+        const urlParams = new URLSearchParams(window.location.search);
+        const hasExplicitId = urlParams.get('topicId') || urlParams.get('topic');
+
+        let html = '<option value="">-- Active Topics --</option>';
+        topics.forEach(t => {
+          const label = `${t.id}: ${t.title}${t.subject ? ` (${t.subject})` : ''}`;
+          html += `<option value="${t.id}">${escapeHtml(label)}</option>`;
+        });
+        select.innerHTML = html;
+
+        // Auto-select latest topic if user hasn't explicitly set one via URL or input
+        if (!hasExplicitId && currentId === '1' && topics[0]?.id) {
+          document.getElementById('topicId').value = topics[0].id;
+          select.value = topics[0].id;
+          fetchTurns();
+        } else if (currentId) {
+          select.value = currentId;
+        }
+      } catch (_) {}
+    }
+
+    function onSelectRecentTopic(val) {
+      if (!val) return;
+      document.getElementById('topicId').value = val;
       fetchTurns();
     }
 
@@ -1120,6 +1166,7 @@
     }
 
     // Auto-load on open
+    loadRecentTopics();
     fetchTurns();
     startPolling();
   </script>

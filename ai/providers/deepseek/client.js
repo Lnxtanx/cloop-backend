@@ -79,11 +79,18 @@ async function invokeModel(systemPrompt, messages = [], options = {}) {
     });
   }
 
+  let maxTokens = options.maxTokens || 4096;
+  if (isThinkingEnabled && maxTokens < 2500) {
+    // DeepSeek reasoning tokens consume the max_tokens budget.
+    // Ensure at least 3500 tokens so 600-900 thinking tokens leave ample room for full JSON output.
+    maxTokens = Math.max(maxTokens, 3500);
+  }
+
   const payload = {
     model,
     messages: formattedMessages,
     temperature: options.temperature !== undefined ? options.temperature : 0.6,
-    max_tokens: options.maxTokens || 4096,
+    max_tokens: maxTokens,
   };
 
   // Thinking Mode Configuration
