@@ -69,6 +69,66 @@ function sentencesIn(text) {
   return sentences;
 }
 
+function splitLongSentence(sentence, maxWords = MAX_WORDS_PER_BUBBLE) {
+  const clean = String(sentence || '').trim();
+  if (!clean) return [];
+  if (wordCount(clean) <= maxWords) return [clean];
+
+  const lastPunctMatch = clean.match(/[.!?]+$/);
+  const endPunct = lastPunctMatch ? lastPunctMatch[0] : '.';
+
+  const regex = /([,;:—–]\s*|\s+(?:because|which|since|whereas|although|while|so\s+that|and|but|or|so|then)\b\s*)/i;
+  let remaining = clean;
+  const rawParts = [];
+  while (remaining) {
+    const match = remaining.match(regex);
+    if (!match) {
+      if (remaining.trim()) rawParts.push(remaining.trim());
+      break;
+    }
+    const idx = match.index;
+    const before = remaining.slice(0, idx).trim();
+    if (before) rawParts.push(before);
+    remaining = remaining.slice(idx + match[0].length).trim();
+  }
+
+  const clauses = [];
+  for (const part of rawParts) {
+    if (wordCount(part) <= maxWords) {
+      clauses.push(part);
+    } else {
+      const words = part.split(/\s+/).filter(Boolean);
+      for (let i = 0; i < words.length; i += maxWords) {
+        clauses.push(words.slice(i, i + maxWords).join(' '));
+      }
+    }
+  }
+
+  const chunks = [];
+  for (let i = 0; i < clauses.length; i++) {
+    const clause = clauses[i].trim();
+    if (!clause) continue;
+    const combined = chunks.length ? `${chunks[chunks.length - 1]} ${clause}` : clause;
+    if (chunks.length && wordCount(combined) <= maxWords) {
+      chunks[chunks.length - 1] = combined;
+    } else {
+      chunks.push(clause);
+    }
+  }
+
+  return chunks.map((chunk, idx) => {
+    let c = chunk.trim().replace(/^[,;:—–\s]+/, '').replace(/[,;:—–\s]+$/, '');
+    if (!c) return '';
+    c = c.charAt(0).toUpperCase() + c.slice(1);
+    if (idx === chunks.length - 1) {
+      if (!/[.!?]$/.test(c)) c += endPunct;
+    } else {
+      if (!/[.!?]$/.test(c)) c += '.';
+    }
+    return c;
+  }).filter(Boolean);
+}
+
 // Preserve complete sentences. A chopped fragment is never a valid replacement question.
 function splitIntoMicroBubbles(text, maxWords = MAX_WORDS_PER_BUBBLE) {
   const clean = cleanProse(text);
@@ -78,7 +138,16 @@ function splitIntoMicroBubbles(text, maxWords = MAX_WORDS_PER_BUBBLE) {
   const chunks = [];
   for (const sentence of sentences) {
     const s = sentence.trim();
-    if (wordCount(s) > maxWords) continue;
+    if (wordCount(s) > maxWords) {
+      const parts = splitLongSentence(s, maxWords);
+      for (const p of parts) {
+        if (!p) continue;
+        const combined = chunks.length ? `${chunks[chunks.length - 1]} ${p}` : p;
+        if (chunks.length && wordCount(combined) <= maxWords) chunks[chunks.length - 1] = combined;
+        else chunks.push(p);
+      }
+      continue;
+    }
     const combined = chunks.length ? `${chunks[chunks.length - 1]} ${s}` : s;
     if (chunks.length && wordCount(combined) <= maxWords) chunks[chunks.length - 1] = combined;
     else chunks.push(s);

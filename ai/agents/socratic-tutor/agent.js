@@ -216,10 +216,10 @@ async function processTurn({
 
   const attachments = [...attachmentsFor(nextState)];
   const mediaAllowed = !['ROUNDUP', 'WRAP', 'DONE'].includes(nextState.phase);
-  if (mediaAllowed && (isHelpOrIdk || isAssistanceDirective || wantsDiagram)) {
+  if (mediaAllowed && wantsDiagram) {
     if (!attachments.includes('diagram')) attachments.push('diagram');
   }
-  if (mediaAllowed && (isHelpOrIdk || wantsVideo)) {
+  if (mediaAllowed && wantsVideo) {
     if (!attachments.includes('video')) attachments.push('video');
   }
   const ending = nextState.phase === 'WRAP' || nextState.phase === 'DONE';
@@ -323,11 +323,22 @@ async function processTurn({
 
   questionType = validated.questionType;
   const finalBubble = validated.messages[validated.messages.length - 1];
-  nextState.lastQuestionText = ending ? '' : finalBubble?.message || '';
-  nextState.lastQuestionOptions = ending ? null : finalBubble?.options || null;
-  nextState.lastQuestionRubric = ending ? null : validated.lastQuestionRubric;
-  nextState.lastQuestionRecord = ending ? null : (validated.questionRecord || null);
-  nextState.lastQuestionType = questionType;
+  const isSupportChoice = nextState.response_mode === 'offer_choice' ||
+    stateInstruction === 'offer_choice' ||
+    validated.questionType === 'choice';
+  if (isSupportChoice) {
+    nextState.lastQuestionText = state.lastQuestionText || '';
+    nextState.lastQuestionOptions = state.lastQuestionOptions || null;
+    nextState.lastQuestionRubric = state.lastQuestionRubric || null;
+    nextState.lastQuestionRecord = state.lastQuestionRecord || null;
+    nextState.lastQuestionType = state.lastQuestionType || questionType;
+  } else {
+    nextState.lastQuestionText = ending ? '' : finalBubble?.message || '';
+    nextState.lastQuestionOptions = ending ? null : finalBubble?.options || null;
+    nextState.lastQuestionRubric = ending ? null : validated.lastQuestionRubric;
+    nextState.lastQuestionRecord = ending ? null : (validated.questionRecord || null);
+    nextState.lastQuestionType = questionType;
+  }
   nextState.questionAssisted = (sameAssessment && (state.questionAssisted || ASSISTANCE.has(stateInstruction))) || Boolean(validated.questionAssisted);
 
   const academicNotes = enrichedTeachingContext.academic_grounding;

@@ -663,11 +663,11 @@ function baseInstruction(state, intent) {
   if (state.phase === "WRAP") {
     return state.endedReason === "off_topic" ? "close_off_topic" : "wrap_with_report";
   }
-  if (state.revealPending) return "reveal_and_move_on";
-  if (intent === "OFF_TOPIC") return "redirect_to_topic";
   if (state.response_mode === "offer_choice") return "offer_choice";
   if (state.response_mode === "explain") return "explain_answer";
   if (state.response_mode === "task_repair") return "clarify_question";
+  if (state.revealPending) return "reveal_and_move_on";
+  if (intent === "OFF_TOPIC") return "redirect_to_topic";
   if (intent === "ACK") return "reask_shorter";
   if (intent === "IDK") return "hint_then_easier";
   if (intent === "HELP") return "explain_differently";

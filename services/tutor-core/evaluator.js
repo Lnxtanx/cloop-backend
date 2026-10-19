@@ -451,7 +451,8 @@ Schema:
  */
 async function evaluateStudentTurn({
   studentMessage, lastQuestionText, lastQuestionOptions = null, lastQuestionRubric = null,
-  scenario = null, phase = null, topicTitle, topicContent = '', currentGoal, goalIndex = 0,
+  scenario = null, phase = null, response_mode = null, awaiting_learning_choice = false,
+  topicTitle, topicContent = '', currentGoal, goalIndex = 0,
   totalGoals = 1, classLevel = 'Class 10', akgContext = null
 }) {
   const trimmed = String(studentMessage == null ? '' : studentMessage).trim();
@@ -461,8 +462,10 @@ async function evaluateStudentTurn({
   if (!trimmed) return { ...unavailable('HELP', resolved, 'Empty student message.'), evaluation_status: 'not_applicable' };
 
   // Direct control / request kind routing before academic grading
+  const isAwaitingChoice = Boolean(awaiting_learning_choice || response_mode === 'offer_choice');
   const requestKind = detectRequestKind(trimmed, {
-    response_mode: phase === 'offer_choice' ? 'offer_choice' : null,
+    awaiting_learning_choice: isAwaitingChoice,
+    response_mode: isAwaitingChoice ? 'offer_choice' : (response_mode || null),
     lastQuestionText
   });
 
