@@ -47,14 +47,21 @@ async function invokeModel(systemPrompt, messages = [], options = {}) {
     throw new Error('[DeepSeek] DEEPSEEK_API_KEY is missing in environment variables (.env)');
   }
 
-  let requestedModel = options.modelId || options.model || MODELS.DEFAULT;
+  let requestedModel = options.modelId || options.model;
+  if (!requestedModel) {
+    if (options.subFeature === 'dialogue-generator' || options.subFeature === 'evaluator' || options.subFeature === 'greeting') {
+      requestedModel = MODELS.INTERACTIVE;
+    } else {
+      requestedModel = MODELS.DEFAULT;
+    }
+  }
   if (MODELS.LEGACY_MAP && MODELS.LEGACY_MAP[requestedModel]) {
     requestedModel = MODELS.LEGACY_MAP[requestedModel];
   }
   const model = requestedModel;
   const isThinkingEnabled = options.thinking !== 'disabled';
   const defaultEffort = (options.subFeature === 'dialogue-generator' || options.subFeature === 'evaluator' || options.subFeature === 'greeting')
-    ? 'medium'
+    ? 'low'
     : THINKING_CONFIG.DEFAULT_EFFORT;
   const reasoningEffort = options.reasoningEffort || defaultEffort;
 

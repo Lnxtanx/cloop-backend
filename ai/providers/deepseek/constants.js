@@ -6,19 +6,23 @@
 const DEEPSEEK_BASE_URL = process.env.DEEPSEEK_BASE_URL || 'https://api.deepseek.com';
 
 const MODELS = Object.freeze({
-  // Flagship reasoning & agent model (DeepSeek-V4-Pro, 1M context, highest reasoning depth) - ALWAYS DEFAULT & BEST
+  // Flagship reasoning & agent model (DeepSeek-V4-Pro, 1M context, highest reasoning depth)
   PRO: 'deepseek-v4-pro',
-  // High-throughput fast model (DeepSeek-V4.1-Flash, 1M context, multimodal text+vision)
+  // High-throughput fast reasoning model (DeepSeek-V4.1-Flash, 1M context, multimodal text+vision)
   FLASH: 'deepseek-flash',
-  // Default model across Cloop: ALWAYS DeepSeek-V4-Pro
+  // Default model across Cloop for background synthesis, deep curriculum
   DEFAULT: process.env.DEEPSEEK_MODEL || 'deepseek-v4-pro',
-  // Legacy aliases mapped automatically to PRO so legacy callers are auto-upgraded to best model
+  // Default interactive model for real-time dialogue and turn-by-turn evaluation: DeepSeek-Flash
+  INTERACTIVE: process.env.DEEPSEEK_INTERACTIVE_MODEL || 'deepseek-flash',
+  // Legacy aliases mapped accurately
   LEGACY_MAP: Object.freeze({
-    'deepseek-chat': 'deepseek-v4-pro',
+    'deepseek-chat': 'deepseek-flash',
+    'deepseek-flash': 'deepseek-flash',
+    'deepseek-v4-flash': 'deepseek-flash',
+    'deepseek-v3': 'deepseek-flash',
     'deepseek-reasoner': 'deepseek-v4-pro',
-    'deepseek-v3': 'deepseek-v4-pro',
     'deepseek-v4': 'deepseek-v4-pro',
-    'deepseek-v4-flash': 'deepseek-v4-pro',
+    'deepseek-v4-pro': 'deepseek-v4-pro',
   }),
 });
 
