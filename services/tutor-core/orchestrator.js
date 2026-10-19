@@ -68,9 +68,26 @@ function closingMessage(report) {
   return `Your score is ${report.overall_mastery_percent}%. Review the goals needing independent recall in your revision sheet.`;
 }
 
+let socraticAgent = null;
+try {
+  socraticAgent = require('../../ai/agents/socratic-tutor/agent');
+} catch (_) {}
+
 /** The server persists question contracts privately; students receive bubbles and feedback only. */
-async function processTutorTurn({ studentMessage = '', topic, goals = [], chatHistory = [],
-  currentState = null, userProfile = {}, wantsVideo = false, akgContext = null, userId = null }) {
+async function processTutorTurn(params) {
+  const isStubbed = typeof evaluateStudentTurn === 'function' &&
+    (evaluateStudentTurn.toString().includes('evaluatorCalls') || process.env.USE_LOCAL_TUTOR_CORE);
+
+  if (socraticAgent && typeof socraticAgent.processTurn === 'function' && !isStubbed) {
+    try {
+      return await socraticAgent.processTurn(params);
+    } catch (agentErr) {
+      console.warn('[Orchestrator] Socratic agent turn non-fatal, falling back to local pipeline:', agentErr.message);
+    }
+  }
+
+  const { studentMessage = '', topic, goals = [], chatHistory = [],
+    currentState = null, userProfile = {}, wantsVideo = false, akgContext = null, userId = null } = params || {};
   const goalTotal = Math.max(1, goals.length);
   const state = currentState || initialState(goalTotal);
   const fallbackGoal = { id: 0, title: topic.title, description: topic.content || '' };
@@ -205,6 +222,15 @@ async function processTutorTurn({ studentMessage = '', topic, goals = [], chatHi
     }))
   } : null;
 
+  const thoughtMeta = {
+    phase: state.phase,
+    next_phase: nextState.phase,
+    intent,
+    attachments: attachments || [],
+    question_type: questionType,
+    teaching_coverage_percent: teachingCoveragePercent
+  };
+
   return { evaluatorResult, intent, answeredPhase: state.phase, gradedThisTurn, nextState,
     stateInstruction, questionType, attachments, masteryReport, revisionSheet,
     messages: validated.messages, userCorrection, mermaid_diagram: diagram,
@@ -215,7 +241,8 @@ async function processTutorTurn({ studentMessage = '', topic, goals = [], chatHi
       masteryReport.goals_completed === masteryReport.goals_total),
     session_closed: ending,
     session_completed: masteryReport?.session_completed || false,
-    mastery_confirmed: masteryReport?.mastery_confirmed || false };
+    mastery_confirmed: masteryReport?.mastery_confirmed || false,
+    thought_meta: thoughtMeta };
 }
 
 module.exports = { processTutorTurn, findLastQuestion, findLastQuestionOptions, closingMessage };

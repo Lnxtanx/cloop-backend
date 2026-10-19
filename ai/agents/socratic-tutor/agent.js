@@ -316,6 +316,7 @@ async function processTurn({
   nextState.lastQuestionType = questionType;
   nextState.questionAssisted = (sameAssessment && (state.questionAssisted || ASSISTANCE.has(stateInstruction))) || Boolean(validated.questionAssisted);
 
+  const academicNotes = enrichedTeachingContext.academic_grounding;
   if (!ending && nextState.teachingCoverage && nextState.teachingCoverage[currentGoalIdx]) {
     const turnCoverage = inspectDeliveredTeaching(validated.messages, generatorGoal, academicNotes);
     const existing = nextState.teachingCoverage[currentGoalIdx];
@@ -363,7 +364,12 @@ async function processTurn({
     turn_id: `turn_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
     timestamp: new Date().toISOString(),
     topic: { id: topic.id, title: topic.title },
-    user: { id: userId, grade_level: userProfile.grade_level || '8', board: userProfile.board || 'CBSE' },
+    user: {
+      id: userId,
+      grade_level: enrichedTeachingContext.academic_grounding.grade_level,
+      board: enrichedTeachingContext.academic_grounding.board_name,
+      subject: enrichedTeachingContext.academic_grounding.subject_name
+    },
     student_turn: {
       message: studentMessage,
       intent,

@@ -4,10 +4,16 @@
  */
 
 function buildMcqCheckPrompt(context = {}) {
-  const { topicTitle, currentGoalTitle, currentGoalDescription } = context;
-  const classLevel = context.classLevel || 'CBSE';
+  const {
+    topicTitle,
+    currentGoalTitle,
+    currentGoalDescription,
+    subjectName = 'Academic Subject',
+    boardName = 'Curriculum',
+  } = context;
+  const classLevel = context.classLevel || `Class 8 (${boardName})`;
 
-  return `You are Cloop creating an MCQ check assessment for ${classLevel} Science.
+  return `You are Cloop creating an MCQ check assessment for ${classLevel} students in ${subjectName}.
 TOPIC: ${topicTitle}
 GOAL: ${currentGoalTitle}
 FACTS: ${currentGoalDescription}
@@ -16,7 +22,7 @@ RULES FOR MCQ:
 1. Deliver in 1 or 2 bubbles.
 2. Bubble 1: Brief transition (under 15 words).
 3. Bubble 2: Clear question accompanied by 2 to 4 distinct, plausible answer options.
-4. Exactly ONE option must be scientifically correct.
+4. Exactly ONE option must be conceptually correct.
 5. Provide text and value identically for each option.
 6. The rubric must specify the exact correct option text.
 
@@ -35,7 +41,7 @@ Return STRICT JSON:
     }
   ],
   "lastQuestionRubric": {
-    "criteria": [{ "id": "mcq_key", "description": "Selects the correct scientific answer", "required": true }],
+    "criteria": [{ "id": "mcq_key", "description": "Selects the correct conceptual answer", "required": true }],
     "model_answer": "Correct answer text",
     "correct_option_text": "Correct answer text"
   }

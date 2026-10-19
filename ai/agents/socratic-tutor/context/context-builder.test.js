@@ -105,6 +105,47 @@ test('CB7: Grade-level pedagogy differentiates Class 6 vs Class 8 vs Class 10 co
 
   const class10 = resolveGradePedagogy(10);
   assert.equal(class10.grade, 10);
-  assert.ok(class10.formula_policy.includes('V=IR') || class10.formula_policy.includes('1/f'));
+  assert.ok(class10.formula_policy.includes('Formal formulas'));
   assert.ok(class10.cognitive_depth.includes('Board-exam'));
 });
+
+test('CB8: Multi-subject grounding and analogies work for Mathematics, Biology, and Civics', () => {
+  const { resolveSubjectAndBoard, resolveAnalogies, ensureAcademicGrounding } = require('./context-builder');
+
+  // Math test
+  const mathTopic = {
+    title: 'Linear Equations in One Variable',
+    chapter: { subject: { name: 'Mathematics', board: 'ICSE', grade: '9' } }
+  };
+  const resolvedMath = resolveSubjectAndBoard(mathTopic, { grade_level: '9', board: 'ICSE' });
+  assert.equal(resolvedMath.subjectName, 'Mathematics');
+  assert.equal(resolvedMath.boardName, 'ICSE');
+
+  const mathAnalogies = resolveAnalogies('Linear Equations', 'Solving for x');
+  assert.ok(mathAnalogies.some(a => a.toLowerCase().includes('balance') || a.toLowerCase().includes('box')));
+
+  const mathGrounding = ensureAcademicGrounding({ title: 'Solving Linear Equations', description: 'Isolating the variable.' }, 'Linear Equations', '', 'Mathematics');
+  assert.ok(mathGrounding.definition.includes('mathematical statement') || mathGrounding.definition.includes('Linear Equations'));
+  assert.ok(mathGrounding.mechanism.includes('inverse') || mathGrounding.mechanism.includes('sides'));
+
+  // Biology test
+  const bioAnalogies = resolveAnalogies('Life Processes', 'Photosynthesis in plants');
+  assert.ok(bioAnalogies.some(a => a.toLowerCase().includes('sunlight') || a.toLowerCase().includes('kitchen') || a.toLowerCase().includes('solar')));
+
+  // Civics test
+  const civicsAnalogies = resolveAnalogies('Democratic Politics', 'Constitutional Design');
+  assert.ok(civicsAnalogies.some(a => a.toLowerCase().includes('voting') || a.toLowerCase().includes('cricket') || a.toLowerCase().includes('rules')));
+});
+
+test('CB9: Multi-board context builder produces correct class level for State Board and Cambridge', () => {
+  const stateBoardContext = buildTeachingContext({
+    topic: { title: 'Quadrilaterals', chapter: { subject: { name: 'Mathematics', board: 'Maharashtra State Board' } } },
+    goals: [{ id: 1, title: 'Properties of Parallelogram', description: 'Opposite sides equal.' }],
+    userProfile: { grade_level: '9', board: 'Maharashtra State Board' }
+  });
+
+  assert.equal(stateBoardContext.academic_grounding.board_name, 'Maharashtra State Board');
+  assert.equal(stateBoardContext.academic_grounding.subject_name, 'Mathematics');
+  assert.equal(stateBoardContext.academic_grounding.class_level, 'Class 9 Maharashtra State Board');
+});
+

@@ -27,7 +27,7 @@ Return STRICT JSON:
   "lastQuestionRubric": {
     "criteria": [
       { "id": "recall_def", "description": "Core definition stated accurately", "required": true },
-      { "id": "recall_mechanism", "description": "Mechanism or formula with units", "required": true }
+      { "id": "recall_mechanism", "description": "Mechanism, formula, or key conceptual/historical reasoning", "required": true }
     ],
     "model_answer": "${currentGoalDescription}"
   }

@@ -1,6 +1,6 @@
 /**
  * Revision Sheet Prompt (WRAP Phase)
- * Generates an ultra-grounded, concise CBSE revision study sheet strictly under 200 words.
+ * Generates an ultra-grounded, concise revision study sheet strictly under 200 words.
  */
 
 function buildRevisionSheetPrompt(context = {}) {

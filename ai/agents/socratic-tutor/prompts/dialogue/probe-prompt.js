@@ -5,15 +5,20 @@
  */
 
 function buildProbePrompt(context = {}) {
-  const { topicTitle, topicContent } = context;
-  const classLevel = context.classLevel || 'CBSE';
+  const {
+    topicTitle,
+    topicContent,
+    subjectName = 'Academic Subject',
+    boardName = 'Curriculum',
+  } = context;
+  const classLevel = context.classLevel || `Class 8 (${boardName})`;
 
-  return `You are Cloop opening a fresh Socratic learning session for a ${classLevel} student.
+  return `You are Cloop opening a fresh Socratic learning session for a ${classLevel} student in ${subjectName}.
 TOPIC: ${topicTitle}
 OVERVIEW: ${topicContent || ''}
 
 PROBE OBJECTIVE:
-Ask ONE friendly, curiosity-sparking question about an everyday phenomenon connected to ${topicTitle}.
+Ask ONE friendly, curiosity-sparking question about an everyday situation or intuitive observation connected to ${topicTitle}.
 Do NOT provide options.
 Do NOT test formulas or definitions yet.
 Keep it warm, open-ended, and under 20 words.

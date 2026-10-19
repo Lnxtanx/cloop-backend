@@ -149,7 +149,7 @@ function buildTutorPrompt(params) {
     },
     studentMessage,
     evaluatorResult,
-    userProfile: { grade_level: classLevel },
+    userProfile: params.userProfile || { grade_level: classLevel },
     akgContext,
     wantsVideo: params.wantsVideo,
     stateInstruction,
@@ -158,6 +158,9 @@ function buildTutorPrompt(params) {
 
   const turnData = {
     topic: enriched.academic_grounding.topic_title,
+    subject: enriched.academic_grounding.subject_name,
+    board: enriched.academic_grounding.board_name,
+    grade: enriched.academic_grounding.grade_level,
     lesson_progress: enriched.temporal_state.lesson_progress,
     asked_questions: enriched.temporal_state.asked_questions,
     response_mode: responseMode,
@@ -200,12 +203,12 @@ function buildTutorPrompt(params) {
     : isOfferChoice
       ? '{ "messages": [{ "message": "Brief note on the attempt.", "message_type": "text" }, { "message": "Would you like me to explain the answer, or would you like another try?", "message_type": "text", "options": [{ "text": "Explain the answer", "value": "Explain the answer" }, { "text": "I want another try", "value": "I want another try" }] }], "lastQuestionRubric": null }'
       : explanationOnly
-        ? '{ "messages": [{ "message": "Clear intuition under 25 words.", "message_type": "text" }, { "message": "Physical cause and everyday analogy under 25 words.", "message_type": "text" }, { "message": "Clear explanation summary under 25 words.", "message_type": "text" }], "lastQuestionRubric": null }'
+        ? '{ "messages": [{ "message": "Clear intuition under 25 words.", "message_type": "text" }, { "message": "Core concept and everyday analogy under 25 words.", "message_type": "text" }, { "message": "Clear explanation summary under 25 words.", "message_type": "text" }], "lastQuestionRubric": null }'
         : phase === 'THEORY'
-          ? '{ "messages": [{ "message": "Clear scientific definition under 25 words.", "message_type": "text" }, { "message": "Physical mechanism with everyday analogy under 25 words.", "message_type": "text" }, { "message": "Focused check question under 20 words?", "message_type": "text" }], "lastQuestionRubric": { "criteria": [{ "id": "fact_1", "description": "Core scientific requirement", "required": true }], "model_answer": "Complete scientific answer" } }'
-          : `{ "messages": [{ "message": "Optional brief feedback or explanation under 25 words.", "message_type": "text" }, { "message": "Focused complete question under 20 words?", "message_type": "text"${mcq ? ', "options": [{ "text": "Actual answer text", "value": "Actual answer text" }, { "text": "Plausible distractor", "value": "Plausible distractor" }]' : ''} }], "lastQuestionRubric": { "criteria": [{ "id": "fact_1", "description": "One scientific fact REQUIRED by this exact question", "required": true }], "model_answer": "Complete scientifically accurate answer to this exact question"${mcq ? ', "correct_option_text": "Actual answer text"' : ''} } }`;
+          ? '{ "messages": [{ "message": "Clear definition under 25 words.", "message_type": "text" }, { "message": "Core principle / mechanism with everyday analogy under 25 words.", "message_type": "text" }, { "message": "Focused check question under 20 words?", "message_type": "text" }], "lastQuestionRubric": { "criteria": [{ "id": "fact_1", "description": "Core conceptual requirement", "required": true }], "model_answer": "Complete conceptual answer" } }'
+          : `{ "messages": [{ "message": "Optional brief feedback or explanation under 25 words.", "message_type": "text" }, { "message": "Focused complete question under 20 words?", "message_type": "text"${mcq ? ', "options": [{ "text": "Actual answer text", "value": "Actual answer text" }, { "text": "Plausible distractor", "value": "Plausible distractor" }]' : ''} }], "lastQuestionRubric": { "criteria": [{ "id": "fact_1", "description": "One conceptual fact REQUIRED by this exact question", "required": true }], "model_answer": "Complete conceptually accurate answer to this exact question"${mcq ? ', "correct_option_text": "Actual answer text"' : ''} } }`;
 
-  return `You are Cloop, a warm, accurate tutor for the student’s supplied class and board.
+  return `You are Cloop, a warm, accurate Socratic tutor for ${enriched.academic_grounding.class_level} in ${enriched.academic_grounding.subject_name}.
 Your job is to teach and clarify the current topic.
 Formal testing and test preparation belong to the separate assessment agent.
 
@@ -231,8 +234,8 @@ Use the curriculum, academic notes and current goal.
 Match explanation depth to the student's grade:
 - Class 6: Pure concrete observational phenomena; ZERO algebraic formulas or complex jargon.
 - Class 7: Descriptive processes and elementary mechanisms.
-- Class 8: Fundamental physical laws, qualitative cause-and-effect, simple SI units (Newton, Pascal).
-- Class 9-10: Rigorous definitions, mathematical relations, formal NCERT keywords.
+- Class 8: Fundamental physical laws/principles, qualitative cause-and-effect, simple units.
+- Class 9-10: Rigorous definitions, mathematical relations, formal curriculum keywords.
 Include formulas, conditions and units only when the source requires them for this grade.
 
 2. TEACH BEFORE CHECKING.
@@ -240,15 +243,15 @@ During teaching, explain the required idea before asking about it.
 PROBE may explore prior knowledge without grading it.
 Teach one point at a time; do not demand an untaught full-goal answer.
 
-3. KEEP ONE CLEAR SCENARIO & RIGOROUS FORCE PAIRS.
-Identify the actor, object, action and relevant initial situation.
+3. KEEP ONE CLEAR SCENARIO & DOMAIN RIGOR.
+Identify the actor, object, numbers, or problem steps clearly.
 Keep them consistent across explanation, question, rubric and feedback.
-Introduce a new scenario explicitly before using it.
-For Newton's third law and contact forces:
-- Clearly identify WHO exerts each force and WHICH OBJECT receives it.
-- Action and reaction forces act on DIFFERENT objects (e.g. the table exerts an upward force on the book; the book exerts an equal downward force on the table).
-- The book's weight is Earth's gravitational pull on the book; it is NOT the reaction to the table's upward normal force.
-Never invent movement, direction or other unstated conditions.
+Introduce a new scenario or problem explicitly before using it.
+- If Physics/Mechanics: Clearly identify interacting bodies; action-reaction forces act on DIFFERENT objects.
+- If Mathematics: Preserve step-by-step equality; guide logical deduction rather than giving away numerical answers.
+- If Social Sciences/Humanities: Ensure accurate chronological cause-and-consequence, geographic spatial relationships, and civic rights.
+- If Languages: Ensure accurate grammatical usage and comprehension context.
+Never invent unstated movement, conditions, or facts.
 
 4. ANSWER CLARIFICATION DIRECTLY.
 “Which box?”, “Which ball?” and “What is Goal 1?” request clarification.

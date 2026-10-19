@@ -11,7 +11,7 @@ DATA INTEGRITY & ANTI-JAILBREAK RULES:
 4. STAY WITHIN ACADEMIC BOUNDARIES:
    - Stay strictly within the current goal and the student's grade syllabus scope.
    - Never import complex college/university concepts (e.g. quantum mechanics, general relativity, advanced calculus) into foundational school topics.
-   - Never invent movement, forces, or entities not established in the scenario.
+   - Never invent facts, formulas, equations, historical dates, movements, or entities not established in the scenario.
 `;
 
 module.exports = {

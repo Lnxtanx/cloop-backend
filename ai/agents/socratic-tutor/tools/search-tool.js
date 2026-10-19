@@ -1,19 +1,19 @@
 /**
  * Socratic Tutor Curriculum Search Tool
- * Directly connects to DeepSeek Native Search API for NCERT/CBSE fact verification and analogy search.
+ * Directly connects to DeepSeek Native Search API for curriculum syllabus fact verification and analogy search.
  */
 
 const { executeSearch, searchCurriculumSyllabus } = require('../../../providers/deepseek/search');
 
 const searchToolDefinition = Object.freeze({
   name: 'curriculum_search',
-  description: 'Search official school science curriculum syllabi, verified definitions, and scientific facts.',
+  description: 'Search official school curriculum syllabi, verified definitions, and academic facts across subjects (Mathematics, Science, Social Sciences).',
   parameters: {
     type: 'object',
     properties: {
       query: {
         type: 'string',
-        description: 'Specific scientific question or topic to search (e.g., "Friction definition and factors affecting")',
+        description: 'Specific academic question or concept to search (e.g., "Linear equations in one variable", "Friction factors")',
       },
       classLevel: {
         type: 'string',
@@ -22,7 +22,7 @@ const searchToolDefinition = Object.freeze({
       },
       board: {
         type: 'string',
-        description: 'Board curriculum (default: "CBSE")',
+        description: 'Board curriculum (e.g. "CBSE", "ICSE", "State Board", "Cambridge")',
         default: 'CBSE',
       },
     },

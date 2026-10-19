@@ -359,7 +359,10 @@ async function handleTopicChatMessageV2(req, res) {
 
       savedAiMessages.push({
         ...aiRecord,
-        options: bubble.options || []
+        options: bubble.options || [],
+        metadata: {
+          thought_meta: turnResult.thought_meta || null
+        }
       });
     }
 
