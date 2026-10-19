@@ -15,16 +15,13 @@
 const WebSocket = require('ws')
 const url = require('url')
 const jwt = require('jsonwebtoken')
-const prisma = require('../../lib/prisma')
-const { createEnglishVoiceAgent } = require('../../ai/agents/english-voice')
+const prisma = require('../lib/prisma')
+const { createEnglishVoiceAgent } = require('../ai/agents/english-voice')
 const {
 	buildConversationPcm,
 	parsePcmRate,
 	resamplePcm16,
-} = require('../../ai/agents/english-voice/audio/pcm')
-
-// Active sessions map: sessionId -> agent
-const activeSessions = new Map()
+} = require('../ai/agents/english-voice/audio/pcm')
 
 function sendJson(ws, payload) {
 	try {
@@ -165,8 +162,6 @@ function handleAssessmentWsUpgrade(server) {
 			},
 		})
 
-		activeSessions.set(sid, agent)
-
 		// Handle client messages (audio chunks, end_session trigger)
 		clientWs.on('message', (data) => {
 			let parsed
@@ -184,7 +179,6 @@ function handleAssessmentWsUpgrade(server) {
 			agent.handleClientClose().catch((err) => {
 				console.error('[Voice WS] Error during client-close cleanup:', err)
 			})
-			activeSessions.delete(sid)
 		})
 
 		await agent.start()

@@ -1,6 +1,6 @@
 /**
  * English Speaking Assessment API Routes
- * Completely independent from existing voice-chat routes
+ * Independent from the voice practice routes
  */
 
 const express = require('express')

@@ -6,8 +6,8 @@
  * expected by the frontend UI.
  */
 
-const prisma = require('../../lib/prisma')
-const { COURSE_CATALOG } = require('./voice-session-prompts')
+const prisma = require('../../../../lib/prisma')
+const { COURSE_CATALOG } = require('../prompts')
 
 /**
  * Human-friendly error titles and actionable fixes

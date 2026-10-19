@@ -84,8 +84,6 @@ app.use('/api/notifications', require('./api/notifications/notifications'))
 app.use('/api/practice-tests', require('./api/practice-tests/practice-tests'))
 app.use('/api/practice-analytics', require('./api/practice-tests/analytics'))
 app.use('/api/standard-exams', require('./api/practice-tests/standard-exams'))
-// Voice Chat REST routes
-app.use('/api/voice-chat', require('./api/voice-chat/voice-chat'))
 app.use('/api/internal/tools', require('./api/internal/tools'))
 // AI Token Analytics routes
 app.use('/api/analytics/tokens', require('./api/analytics/tokens'))
@@ -101,7 +99,7 @@ app.use('/api/english/chat', require('./api/english/english-chat-routes'))
 app.use('/api/english/analytics', require('./api/english/english-analytics-routes'))
 app.use('/api/english/vocabulary', require('./api/english/english-vocabulary-routes'))
 
-// English Speaking Assessment routes (completely separate from voice-chat)
+// English Speaking Assessment routes
 app.use('/api/assessment', require('./api/assessment/assessment-routes'))
 
 // Voice Practice Sessions & Learner Profile (v2 Architecture)
@@ -114,21 +112,10 @@ const HOST = process.env.HOST || '0.0.0.0' // Listen on all network interfaces
 // Create HTTP server for both Express and WebSocket
 const server = http.createServer(app)
 
-// Create WebSocket server (Legacy - Removed)
-// const wss = new WebSocket.Server({ noServer: true })
-
-// Voice realtime service (lazy loaded to avoid circular deps)
-// let voiceRealtimeService = null
-
-// Prisma for storing transcripts
-const prisma = require('./lib/prisma')
-
-// Handle WebSocket upgrade requests
-// WebSocket handling for voice chat has been moved to Python microservice
-// wss.handleUpgrade and wss.on('connection') logic removed.
-
-// English Speaking Assessment — Gemini Live WebSocket proxy
-const { handleAssessmentWsUpgrade } = require('./services/voice-to-voice/gemini-live-proxy')
+// Voice WebSocket upgrade (voice practice + speaking assessment)
+// Gemini Live duplex session is owned by ai/agents/english-voice; this adapter
+// only handles auth, session verification and client wiring.
+const { handleAssessmentWsUpgrade } = require('./services/voice-live-proxy')
 handleAssessmentWsUpgrade(server)
 
 server.listen(PORT, HOST, async () => {

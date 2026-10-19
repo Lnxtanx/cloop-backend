@@ -22,6 +22,7 @@ const pcm = require('./audio/pcm')
 const { uploadConversationAudio } = require('./audio/upload')
 const sessionState = require('./state/session-state')
 const { consolidateSessionErrors, processAssessment, DIMENSION_WEIGHTS, DIMENSIONS } = require('./evaluation')
+const { getFluencyDashboardData, evaluateLearnerLevel, LEVEL_METADATA } = require('./reporting/dashboard')
 
 module.exports = {
 	createEnglishVoiceAgent,
@@ -49,4 +50,9 @@ module.exports = {
 	processAssessment,
 	DIMENSION_WEIGHTS,
 	DIMENSIONS,
+
+	// Fluency dashboard aggregation
+	getFluencyDashboardData,
+	evaluateLearnerLevel,
+	LEVEL_METADATA,
 }

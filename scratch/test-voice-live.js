@@ -8,7 +8,7 @@ const apiKey = process.env.GEMINI_API_KEY
 const model = process.env.GEMINI_LIVE_MODEL || 'gemini-3.1-flash-live-preview'
 const url = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key=${apiKey}`
 
-const { buildSessionPrompt, LOG_ERROR_TOOL } = require('../services/voice-session-prompts')
+const { buildSessionPrompt, LOG_ERROR_TOOL } = require('../ai/agents/english-voice/prompts')
 
 console.log('Connecting to Gemini Live at:', url.replace(apiKey, '***'))
 const ws = new WebSocket(url)

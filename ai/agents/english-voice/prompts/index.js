@@ -1,8 +1,5 @@
 /**
  * English Voice-to-Voice — prompt surface
- *
- * Same export shape as the legacy services/voice-to-voice/voice-session-prompts.js
- * so existing consumers keep working through the forwarder shim.
  */
 
 const { COURSE_CATALOG } = require('./course-catalog')

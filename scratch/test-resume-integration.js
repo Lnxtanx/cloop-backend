@@ -1,5 +1,5 @@
 const { extractResumeText } = require('../services/resume-parser')
-const { buildSessionPrompt } = require('../services/voice-to-voice/voice-session-prompts')
+const { buildSessionPrompt } = require('../ai/agents/english-voice/prompts')
 
 async function runTest() {
   console.log('🧪 Starting Resume & Voice Prompt Integration Test...')

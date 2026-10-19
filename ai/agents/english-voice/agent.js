@@ -8,7 +8,7 @@
  *
  * Transport (Gemini Live protocol) comes from ai/providers/gemini.
  * The app-side WebSocket server + auth + learner-profile fetch live in the
- * adapter (services/voice-to-voice/gemini-live-proxy.js).
+ * adapter (services/voice-live-proxy.js).
  *
  * Design:
  *   - `client` is a sink: { send(payload), close(code, reason) } — adapter maps

@@ -3,7 +3,7 @@
  */
 
 const assert = require('assert')
-const { buildSessionPrompt, LOG_ERROR_TOOL } = require('./services/voice-to-voice/voice-session-prompts')
+const { buildSessionPrompt, LOG_ERROR_TOOL } = require('./ai/agents/english-voice/prompts')
 const s3Storage = require('./services/s3-storage')
 
 async function runTests() {

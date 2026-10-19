@@ -3,7 +3,7 @@ const router = express.Router();
 const prisma = require('../../lib/prisma');
 const jwt = require('jsonwebtoken');
 const { generateEnglishTopicChatResponse, generateEnglishTopicGreeting } = require('../../services/ai/english-topic-chat');
-const { COURSE_CATALOG } = require('../../services/voice-to-voice/voice-session-prompts');
+const { COURSE_CATALOG } = require('../../ai/agents/english-voice/prompts');
 
 // Middleware to extract user from JWT token
 function authMiddleware(req, res, next) {
