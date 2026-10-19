@@ -292,6 +292,13 @@ test('8-minute time check note is sent to Gemini for active sessions', async () 
 	assert.match(gemini.calls.clientContent[0].text, /^\[time check\]/)
 })
 
+test('legacy assessment sessions do not schedule a time check', async () => {
+	const { agent, gemini } = makeAgent({ session: { isVoiceSession: false }, deps: { timeCheckMs: 15 } })
+	await agent.start()
+	await new Promise((resolve) => setTimeout(resolve, 50))
+	assert.equal(gemini.calls.clientContent.length, 0)
+})
+
 test('time check is cleared on client close and after completion', async () => {
 	const closed = makeAgent({ deps: { timeCheckMs: 15 } })
 	await closed.agent.start()

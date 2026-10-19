@@ -114,7 +114,8 @@ function createEnglishVoiceAgent({ session, learnerProfile = {}, client, deps = 
 	let timeCheckTimer = null
 
 	function scheduleTimeCheck() {
-		if (timeCheckTimer || TIME_CHECK_MS <= 0) return
+		// Only the voice-practice prompt (buildSessionPrompt) knows the "[time check]" note.
+		if (!state.isVoiceSession || timeCheckTimer || TIME_CHECK_MS <= 0) return
 		timeCheckTimer = setTimeout(() => {
 			timeCheckTimer = null
 			if (state.sessionCompleted || !geminiSession || !geminiSession.isOpen()) return
