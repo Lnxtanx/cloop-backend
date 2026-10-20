@@ -145,6 +145,7 @@ function initialState(goalTotal) {
     active_learning_point_id: null,
     response_mode: "check",
     learning_support: {},
+    pendingAdvanceAfterExplanation: false,
     endedReason: null,
   };
 }
@@ -182,13 +183,12 @@ function scoredGoalIndex(state) {
 function attachmentsFor(state) {
   switch (state.phase) {
     case "THEORY":
-      return ["diagram", "key_points"];
+      return ["key_points"];
     case "OBJECTIVES":
       return ["objectives"];
     case "DIALOGUE": {
       if (state.wantsVideo) return ["video"];
-      // A video only when a goal opens, and only if the student is struggling.
-      return state.openThisGoal === 0 && state.consecutiveWrong > 0 ? ["video"] : [];
+      return [];
     }
     case "ROUNDUP":
       // The round-up is pure assessment: no diagram, no video, just recall.
@@ -240,6 +240,9 @@ function advanceQuestion(prev, state, { reveal = false } = {}) {
   state.reteachPending = false;
   state.questionAssisted = false;
   state.assessmentAdvanced = true;
+  state.advancedFromPhase = prev.phase;
+  state.pendingAdvanceAfterExplanation = false;
+  state.supportRequestKind = null;
   state.active_learning_point_id = null;
   state.response_mode = (state.phase === "WRAP" || state.phase === "DONE") ? "closing" : (reveal ? "explain" : "check");
 }
@@ -263,6 +266,8 @@ function advance(state, event = {}) {
     perGoal: (state.perGoal || []).map(copyGoalEvidence),
     teachingCoverage: (state.teachingCoverage || []).map(c => ({ ...c })),
     assessmentAdvanced: false,
+    advancedFromPhase: null,
+    supportRequestKind: null,
   };
   const intent = normalizeIntent(event.intent);
   s.totalTurns = (state.totalTurns || 0) + 1;
@@ -324,41 +329,61 @@ function advance(state, event = {}) {
   // ── Route explicit control requests before academic handling ─────────────
   const requestKind = event.requestKind || event.request_kind || null;
   const rawStudentText = String(event.answerText || '').trim();
+  if (isExplicitExitCommand(rawStudentText)) {
+    s.phase = 'WRAP';
+    s.endedReason = 'user_requested';
+    return finish();
+  }
 
-  // 1. Question clarification: repair visible question without penalty
-  const isClarification = requestKind === 'clarify_task' ||
+  // Support is a temporary response mode, not a new lesson phase.
+  const explainCurrentAnswer = () => {
+    currentPoint.awaiting_learning_choice = false;
+    currentPoint.awaiting_choice = false;
+    currentPoint.assisted = true;
+    s.response_mode = 'explain';
+    s.reteachPending = false;
+    s.revealPending = false;
+    s.questionAssisted = true;
+    s.evaluatorUnavailableStreak = 0;
+    s.pendingAdvanceAfterExplanation = true;
+    if (slot) {
+      slot.assisted = true;
+      // A request for help is not an assessed incorrect answer.
+      if (!slot.assessed) slot.outcome = 'skipped';
+      slot.completed = true;
+    }
+    return finish();
+  };
+
+  if (requestKind === 'media_request') {
+    s.response_mode = 'explain';
+    s.supportRequestKind = 'media_request';
+    if (slot) slot.assisted = true;
+    return finish();
+  }
+
+  // Broken questions and terminology/recap requests never consume attempts.
+  const isClarification = ['clarify_task', 'clarify_term', 'recap_topic', 'give_example'].includes(requestKind) ||
+    event.evaluationStatus === 'repair_needed' ||
     event.helpSubtype === 'question_clarification' ||
     event.help_subtype === 'question_clarification' ||
     event.suggestedAction === 'CLARIFY_TASK' || event.suggested_action === 'CLARIFY_TASK' ||
     event.suggestedAction === 'CLARIFY_QUESTION' || event.suggested_action === 'CLARIFY_QUESTION';
   if (isClarification) {
     s.response_mode = 'task_repair';
+    s.supportRequestKind = requestKind || 'clarify_task';
     s.evaluatorUnavailableStreak = 0;
     s.reteachPending = false;
     s.wantsVideo = false;
     return finish();
   }
 
-  // 2. Direct explanation request: "Tell me the answer" / "Please explain"
   if (requestKind === 'explain_answer' || event.suggestedAction === 'EXPLAIN_ANSWER') {
-    currentPoint.awaiting_learning_choice = false;
-    currentPoint.awaiting_choice = false;
-    currentPoint.assisted = true;
-    s.response_mode = 'explain';
-    s.reteachPending = false;
-    s.evaluatorUnavailableStreak = 0;
-    if (slot) {
-      slot.assisted = true;
-      if (!slot.assessed) {
-        slot.assessed = true;
-        slot.first_correct = false;
-        slot.outcome = "assisted";
-        s.perGoal[scoredGoalIndex(state)].total += 1;
-        s.totalQuestions = (state.totalQuestions || 0) + 1;
-      }
-      slot.completed = true;
-    }
-    advanceQuestion(state, s, { reveal: true });
+    return explainCurrentAnswer();
+  }
+
+  if (state.awaitingAcademicQuestion && !requestKind && intent !== 'OFF_TOPIC') {
+    s.response_mode = 'check';
     return finish();
   }
 
@@ -366,9 +391,9 @@ function advance(state, event = {}) {
   if (requestKind === 'try_again' || event.suggestedAction === 'RETRY') {
     currentPoint.awaiting_learning_choice = false;
     currentPoint.awaiting_choice = false;
-    currentPoint.unsuccessful_responses = 0;
-    currentPoint.attempt_count = 0;
+    // Preserve cumulative struggle history; this grants one extra attempt.
     currentPoint.assisted = true;
+    s.pendingAdvanceAfterExplanation = false;
     s.response_mode = 'check';
     s.reteachPending = true;
     s.questionAssisted = true;
@@ -379,7 +404,7 @@ function advance(state, event = {}) {
 
   // 4. Move on request: "Teach something else" / "Next question"
   const isExplicitMoveOn = requestKind === 'move_on' ||
-    (intent !== 'OFF_TOPIC' && !event.offTopic && /\b(next(?:\s+question|\s+topic)?|move\s+on|proceed|skip)\b/i.test(rawStudentText));
+    (intent !== 'OFF_TOPIC' && !event.offTopic && /^(?:please\s+)?(?:next(?:\s+question|\s+topic)?|move\s+on|proceed|skip(?:\s+this(?:\s+question)?)?)[.!?]*$/i.test(rawStudentText));
   if (isExplicitMoveOn) {
     currentPoint.awaiting_learning_choice = false;
     currentPoint.awaiting_choice = false;
@@ -416,6 +441,13 @@ function advance(state, event = {}) {
   }
   s.offTopicStreak = 0;
 
+  // The explanation was delivered on the previous turn. Resume only now,
+  // so even the last recall answer is explained before WRAP is generated.
+  if (state.pendingAdvanceAfterExplanation && intent !== 'HELP') {
+    advanceQuestion(state, s);
+    return finish();
+  }
+
   // ── When awaiting choice, resolve text choice if requestKind was not set ─
   if (currentPoint.awaiting_learning_choice || state.response_mode === 'offer_choice') {
     const rawAnswer = String(event.answerText || '').trim().toLowerCase();
@@ -426,30 +458,20 @@ function advance(state, event = {}) {
     if (wantsTry) {
       currentPoint.awaiting_learning_choice = false;
       currentPoint.awaiting_choice = false;
-      currentPoint.unsuccessful_responses = 0;
-      currentPoint.attempt_count = 0;
       currentPoint.assisted = true;
+      s.pendingAdvanceAfterExplanation = false;
       s.response_mode = 'check';
       s.reteachPending = true;
       s.questionAssisted = true;
       if (slot) slot.assisted = true;
       return finish();
     } else if (wantsExplain) {
-      currentPoint.awaiting_learning_choice = false;
-      currentPoint.awaiting_choice = false;
-      currentPoint.assisted = true;
-      s.response_mode = 'explain';
-      s.reteachPending = false;
-      if (slot) {
-        slot.assisted = true;
-        if (!slot.assessed) {
-          slot.outcome = "skipped";
-          slot.completed = true;
-        }
-      }
-      advanceQuestion(state, s, { reveal: true });
-      return finish();
+      return explainCurrentAnswer();
     }
+    // An unrelated reply cannot silently become an academic answer to the
+    // private question while the visible question is a preference choice.
+    s.response_mode = 'offer_choice';
+    return finish();
   }
 
   // ── Non-answers hold the phase, but move forward after STUCK_LIMIT ───────
@@ -462,7 +484,7 @@ function advance(state, event = {}) {
     s.stuckStreak = (state.stuckStreak || 0) + 1;
     s.reteachPending = intent === "HELP" || intent === "IDK";
 
-    if (isScored(state.phase) && state.phase !== 'ROUNDUP' && (intent === "IDK" || intent === "HELP")) {
+    if (intent === "IDK" || intent === "HELP") {
       const isElaboration = /\b(explain\s+more|tell\s+me\s+more|more\s+detail|elaborate|give\s+(?:an?\s+)?example|can\s+you\s+explain)\b/i.test(String(event.answerText || '').trim());
       if (isElaboration) {
         s.response_mode = 'teach';
@@ -472,13 +494,15 @@ function advance(state, event = {}) {
       currentPoint.unsuccessful_responses = (currentPoint.unsuccessful_responses || 0) + 1;
       currentPoint.attempt_count = currentPoint.unsuccessful_responses;
       currentPoint.assisted = true;
-      if (currentPoint.unsuccessful_responses === 2) {
+      if (currentPoint.unsuccessful_responses >= 2) {
         currentPoint.awaiting_learning_choice = true;
         currentPoint.awaiting_choice = true;
         s.response_mode = 'offer_choice';
         s.reteachPending = false;
         return finish();
       }
+      s.response_mode = 'teach';
+      return finish();
     }
 
     if (s.stuckStreak >= STUCK_LIMIT) {
@@ -486,7 +510,7 @@ function advance(state, event = {}) {
         if (!slot.assessed) slot.outcome = "skipped";
         slot.completed = true;
       }
-      advanceQuestion(state, s, { reveal: true });
+      return explainCurrentAnswer();
     }
     return finish();
   }
@@ -546,7 +570,7 @@ function advance(state, event = {}) {
   }
 
   // ── A wrong answer in an assessed phase is re-taught or offered choice ───
-  if (event.correct === false && isScored(state.phase)) {
+  if (event.correct === false && state.phase !== "PROBE") {
     s.consecutiveWrong = (state.consecutiveWrong || 0) + 1;
     currentPoint.unsuccessful_responses = (currentPoint.unsuccessful_responses || 0) + 1;
     currentPoint.attempt_count = currentPoint.unsuccessful_responses;
@@ -558,10 +582,6 @@ function advance(state, event = {}) {
       currentPoint.awaiting_choice = true;
       s.response_mode = 'offer_choice';
       s.reteachPending = false;
-      if (s.consecutiveWrong >= MAX_ATTEMPTS) {
-        if (slot) slot.completed = true;
-        advanceQuestion(state, s, { reveal: true });
-      }
       return finish();
     }
 
@@ -710,7 +730,8 @@ function instructionFor(state, event = {}) {
   if (state.phase !== "WRAP" && state.phase !== "DONE" && state.evaluatorUnavailableStreak > 0) {
     return "reask_shorter";
   }
-  const intent = normalizeIntent(event.intent);
+  // A response to the previous item must not hint the next independent recall.
+  const intent = state.assessmentAdvanced && state.advancedFromPhase && !state.revealPending ? "ANSWER" : normalizeIntent(event.intent);
   const base = baseInstruction(state, intent);
   if (base === "wrap_with_report" || base === "close_off_topic" || base === "session_over") {
     return base;

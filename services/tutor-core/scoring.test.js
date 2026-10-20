@@ -21,15 +21,20 @@ test('a retry is an attempt at one scored slot and cannot replace an initial err
   assert.equal(slot.completed, true);
 });
 
-test('maximum wrong attempts reveal the old answer and reset pressure for the next slot', () => {
-  let state = inPhase('DIALOGUE');
-  for (let i = 0; i < S.MAX_ATTEMPTS; i++) state = S.advance(state, wrong);
-  assert.equal(state.phase, 'CHECK');
+test('repeated wrong answers preserve the slot until the student chooses explanation or retry', () => {
+  let state = S.advance(inPhase('DIALOGUE'), wrong);
+  state = S.advance(state, wrong);
+  assert.equal(state.response_mode, 'offer_choice');
+  state = S.advance(state, { intent: 'ACK', requestKind: 'try_again' });
+  state = S.advance(state, wrong);
+  assert.equal(state.phase, 'DIALOGUE');
+  assert.equal(state.response_mode, 'offer_choice');
   assert.equal(state.perGoal[0].total, 1);
   assert.equal(state.perGoal[0].assessments.DIALOGUE.attempts.length, 3);
-  assert.equal(state.revealPending, true);
-  assert.equal(state.revealGoalIndex, 0);
-  assert.equal(state.revealPhase, 'DIALOGUE');
+  state = S.advance(state, { intent: 'HELP', requestKind: 'explain_answer' });
+  assert.equal(state.phase, 'DIALOGUE');
+  state = S.advance(state, { intent: 'ACK' });
+  assert.equal(state.phase, 'CHECK');
   assert.equal(state.consecutiveWrong, 0);
   assert.equal(state.stuckStreak, 0);
   state = S.advance(state, wrong);
@@ -78,6 +83,10 @@ test('skipped non-answer slots are identified separately from scored errors', ()
   let state = inPhase('ROUNDUP');
   state = S.advance(state, { intent: 'IDK' });
   state = S.advance(state, { intent: 'IDK' });
+  assert.equal(state.response_mode, 'offer_choice');
+  state = S.advance(state, { intent: 'HELP', requestKind: 'explain_answer' });
+  assert.equal(state.phase, 'ROUNDUP');
+  state = S.advance(state, { intent: 'ACK' });
   const report = buildReport(state, goals.slice(0, 1));
   assert.equal(state.phase, 'WRAP');
   assert.equal(report.total_questions, 0);

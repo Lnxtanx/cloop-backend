@@ -73,20 +73,27 @@ function runSession(seed, topic, { students = STUDENTS, sequence = null } = {}) 
   while (state.phase !== 'DONE' && turns < guardLimit) {
     const before = state;
     const beforeIdentity = questionIdentity(before);
-    const qType = S.questionTypeFor(before.phase);
+    const phaseQuestionType = S.questionTypeFor(before.phase);
+    // The screen may show a preference or an explanation while the underlying
+    // lesson phase stays scored. Only the academic task can earn score evidence.
+    const academicPrompt = !['offer_choice', 'explain'].includes(before.response_mode) &&
+      !before.pendingAdvanceAfterExplanation && !before.awaitingAcademicQuestion;
+    const qType = before.phase === 'WRAP' ? null : academicPrompt ? phaseQuestionType : 'none';
     const scored = SCORED_PHASES.has(before.phase);
+    const assessable = scored && academicPrompt;
     const goalIndex = before.phase === 'ROUNDUP' ? (before.roundupIndex || 0) : before.goalIndex;
     phasesSeen.add(before.phase);
     if (!typesByPhase.has(before.phase)) typesByPhase.set(before.phase, new Set());
     typesByPhase.get(before.phase).add(qType);
-    check(before.phase === 'WRAP' ? qType === null : ['open', 'mcq'].includes(qType),
+    check(before.phase === 'WRAP' ? qType === null : academicPrompt ? ['open', 'mcq'].includes(qType) : qType === 'none',
       'unexpected question type', `${before.phase}: ${qType}`);
     check(qType !== 'mcq' || before.phase === 'CHECK', 'multiple choice outside CHECK', before.phase);
     check(before.phase !== 'PROBE' || !S.isScored(before.phase), 'the opening probe was scored', before.phase);
     if (before.phase === 'THEORY') {
       const attachments = S.attachmentsFor(before);
-      check(attachments.includes('diagram') && attachments.includes('key_points'),
-        'theory omitted diagram/key points', before.phase);
+      check(attachments.includes('key_points'), 'theory omitted key points', before.phase);
+      check(!attachments.includes('diagram') && !attachments.includes('video'),
+        'theory attached unsolicited media', before.phase);
     }
     if (qType === 'open') openAsked++;
     if (qType === 'mcq') mcqAsked++;
@@ -97,7 +104,7 @@ function runSession(seed, topic, { students = STUDENTS, sequence = null } = {}) 
       if (!expected.has(beforeIdentity)) expected.set(beforeIdentity, { goalIndex, phase: before.phase, assisted: false, assessed: false, credit: false });
       const slot = expected.get(beforeIdentity);
       if (student.kind === 'assistance' || before.questionAssisted) slot.assisted = true;
-      if (student.kind === 'answer' && !unavailable && typeof student.correct === 'boolean' && !slot.assessed) {
+      if (assessable && student.kind === 'answer' && !unavailable && typeof student.correct === 'boolean' && !slot.assessed) {
         slot.assessed = true;
         slot.credit = student.correct === true && !slot.assisted;
       }
@@ -107,7 +114,7 @@ function runSession(seed, topic, { students = STUDENTS, sequence = null } = {}) 
       intent: student.intent, correct: student.correct,
       evaluationStatus: unavailable ? 'unavailable' : 'evaluated',
       previousQuestionAssisted: before.questionAssisted,
-      errorType: student.errorType || null, answerText: student.text,
+      errorType: student.errorType || null, answerText: student.text, requestKind: student.requestKind || null,
     });
     // Match orchestration: decide the generator directive AFTER advancing.
     const instruction = S.instructionFor(state, { intent: student.intent });
@@ -117,10 +124,13 @@ function runSession(seed, topic, { students = STUDENTS, sequence = null } = {}) 
     const closing = ['WRAP', 'DONE'].includes(state.phase);
     const sameQuestion = beforeIdentity === questionIdentity(state);
     const neutralOutageRetry = unavailable && instruction === 'reask_shorter';
-    if (!closing && sameQuestion && !neutralOutageRetry) {
+    const supportOnly = ['offer_choice', 'explain', 'task_repair'].includes(state.response_mode);
+    if (!closing && sameQuestion && !neutralOutageRetry && !supportOnly) {
       check(instruction !== previousInstruction, 'same question repeated its directive', `${beforeIdentity}: ${instruction}`);
     }
-    if (student.kind === 'assistance') {
+    // Once an answer was explained, the following continuation is not another
+    // failed assessment. A fresh item must use its uncoached opening directive.
+    if (student.kind === 'assistance' && !before.pendingAdvanceAfterExplanation) {
       check(closing || !CARRY_ON.has(instruction), 'stuck student received no assistance', `${student.intent}: ${instruction}`);
     }
     if (!closing && !sameQuestion && scored && !state.revealPending) {
@@ -132,12 +142,19 @@ function runSession(seed, topic, { students = STUDENTS, sequence = null } = {}) 
     state.lastInstruction = instruction;
     state.questionAssisted = !closing && sameQuestion && (before.questionAssisted || ASSISTANCE.has(instruction));
     const nextType = S.questionTypeFor(state.phase);
-    state.lastQuestionText = closing ? '' : `Question about ${topic.goals[state.phase === 'ROUNDUP' ? state.roundupIndex : state.goalIndex]}?`;
-    state.lastQuestionOptions = nextType === 'mcq'
-      ? [{ text: 'Calcium carbonate', value: 'Calcium carbonate' }, { text: 'Sodium chloride', value: 'Sodium chloride' }] : null;
+    // Preserve the pending academic task while displaying support, matching the
+    // public response contract without copying any assessed totals or credit.
+    if (closing) {
+      state.lastQuestionText = '';
+      state.lastQuestionOptions = null;
+    } else if (!supportOnly) {
+      state.lastQuestionText = `Question about ${topic.goals[state.phase === 'ROUNDUP' ? state.roundupIndex : state.goalIndex]}?`;
+      state.lastQuestionOptions = nextType === 'mcq'
+        ? [{ text: 'Calcium carbonate', value: 'Calcium carbonate' }, { text: 'Sodium chloride', value: 'Sodium chloride' }] : null;
+    }
     turns++;
 
-    if (student.kind !== 'answer' || unavailable) {
+    if (!assessable || student.kind !== 'answer' || unavailable) {
       check(state.perGoal.every((goal, index) => goal.correct === before.perGoal[index].correct && goal.total === before.perGoal[index].total),
         'non-answer or unavailable grading changed score', `${student.kind} in ${before.phase}`);
     }

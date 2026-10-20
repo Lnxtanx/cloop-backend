@@ -68,10 +68,16 @@ function fixture(previousState, result, options = {}) {
     global_topics: { findUnique: async () => activeTopic },
     global_topic_goals: { findMany: async () => activeGoals.map((goal) => ({ ...goal, chat_goal_progress: [{ id: goal.id + 30, is_completed: true, score_percent: 99 }] })) },
     admin_chat: {
-      findMany: async () => [
+      findMany: async (args) => {
+        if (args.where?.message_type) {
+          record('mediaHistory.findMany', args);
+          return options.priorMedia || [];
+        }
+        return [
         { id: 91, sender: 'ai', message: previousState?.lastQuestionText || 'What changes?', options: [] },
         { id: 90, sender: 'ai', message: 'Which effect?', options: ['Earlier choice one', 'Earlier choice two'] }
-      ],
+        ];
+      },
       create: async (args) => {
         record('admin_chat.create', args);
         const row = { id: counter++, created_at: new Date(), ...args.data };
@@ -89,7 +95,8 @@ function fixture(previousState, result, options = {}) {
       findFirst: async () => ({ feedback: { session_state: previousState } }),
       create: async (args) => { record('chat_process.create', args); return { id: counter++ }; }
     },
-    users: { findUnique: async () => ({ grade_level: 'VI', board: 'CBSE' }), update: async (args) => record('users.update', args) }
+    users: { findUnique: async () => ({ grade_level: 'VI', board: 'CBSE' }), update: async (args) => record('users.update', args) },
+    topic_chat_sessions: { findFirst: async () => ({ started_at: new Date('2026-10-19T08:00:00Z') }) }
   };
   for (const table of ['chat_goal_progress', 'user_topic_reports', 'user_topic_progress', 'study_sessions', 'learning_turns']) {
     prisma[table] = {};
@@ -104,7 +111,7 @@ function fixture(previousState, result, options = {}) {
   const { handleTopicChatMessageV2 } = loadWithStubs('./topic-chats-v2.js', {
     '../../lib/prisma': prisma,
     '../../services/tutor-core/orchestrator': { processTutorTurn: async (args) => { record('processTutorTurn', args); return result; } },
-    '../../services/media-search': { searchYouTube: async (...args) => { record('searchYouTube', args); return [{ title: 'Video', url: 'https://example.com/video' }]; } },
+    '../../services/media-search': { searchYouTube: async (...args) => { record('searchYouTube', args); return options.videoResults || [{ title: 'Video', url: 'https://example.com/video' }]; } },
     '../../services/tutor-core/diagram-cache': { getCachedDiagram: (...args) => { record('getCachedDiagram', args); return { code: 'graph TD; A-->B', title: 'Diagram' }; } },
     '../../services/academic-graph/akg-service': { resolveTopicIntelligence: async () => null },
     '../../services/analytics/topic-data-collector': analytics
@@ -166,6 +173,59 @@ test('ROUNDUP never fetches or returns teaching media even when a request or att
   assert.equal(response.mermaid_diagram, null);
   assert.deepEqual(response.youtube_results, []);
   assert.ok(response.aiMessages.every((message) => !['mermaid_diagram', 'youtube_video'].includes(message.message_type)));
+});
+
+test('HELP and IDK do not cause the API to add media outside the agent plan', async () => {
+  for (const message of ['I do not know', 'Explain the answer', 'The image is inverted.']) {
+    const state = { ...teachingState(), phase: 'DIALOGUE' };
+    const f = fixture(state, pipelineResult(state, {
+      attachments: [], intent: 'HELP', gradedThisTurn: false, userCorrection: null,
+      evaluatorResult: { intent: 'HELP', is_correct: null },
+    }));
+    const response = await f.send(message);
+    assert.equal(f.calls.searchYouTube, undefined, message);
+    assert.equal(f.calls.getCachedDiagram, undefined, message);
+    assert.equal(f.calls['mediaHistory.findMany'], undefined, 'no history query when no media is planned');
+    assert.equal(f.calls.processTutorTurn[0].wantsVideo, false);
+    assert.equal(response.mermaid_diagram, null);
+    assert.deepEqual(response.youtube_results, []);
+  }
+});
+
+test('planned media already displayed earlier in the session is not saved or returned again', async () => {
+  const state = { ...teachingState(), phase: 'DIALOGUE' };
+  const diagram = { code: 'graph TD; A-->B', title: 'Force diagram' };
+  const video = { id: 'force123', title: 'Force video', url: 'https://www.youtube.com/watch?v=force123' };
+  const f = fixture(state, pipelineResult(state, { attachments: ['video', 'diagram'], mermaid_diagram: diagram }), {
+    priorMedia: [
+      { message_type: 'youtube_video', diff_html: JSON.stringify({ video_id: video.id, url: video.url }) },
+      { message_type: 'mermaid_diagram', diff_html: JSON.stringify(diagram) },
+    ], videoResults: [video],
+  });
+  const response = await f.send('I do not know');
+  assert.equal(response.mermaid_diagram, null);
+  assert.deepEqual(response.youtube_results, []);
+  assert.ok(f.calls['admin_chat.create'].every((call) => !['youtube_video', 'mermaid_diagram'].includes(call.data.message_type)));
+  assert.deepEqual(f.calls['mediaHistory.findMany'][0].where.created_at, { gte: new Date('2026-10-19T08:00:00Z') });
+});
+
+test('an explicit replay request may display the same asset while retaining media response contracts', async () => {
+  const state = { ...teachingState(), phase: 'DIALOGUE' };
+  const diagram = { code: 'graph TD; A-->B', title: 'Force diagram' };
+  const video = { id: 'force123', title: 'Force video', url: 'https://www.youtube.com/watch?v=force123' };
+  const f = fixture(state, pipelineResult(state, { attachments: ['video', 'diagram'], mermaid_diagram: diagram }), {
+    priorMedia: [
+      { message_type: 'youtube_video', diff_html: JSON.stringify({ video_id: video.id, url: video.url }) },
+      { message_type: 'mermaid_diagram', diff_html: JSON.stringify(diagram) },
+    ], videoResults: [video],
+  });
+  const response = await f.send('Show the same video and diagram again');
+  assert.equal(f.calls.processTutorTurn[0].wantsVideo, true);
+  assert.equal(response.mermaid_diagram.code, diagram.code);
+  assert.equal(response.youtube_results[0].id, video.id);
+  const persisted = f.calls['admin_chat.create'].filter((call) => ['youtube_video', 'mermaid_diagram'].includes(call.data.message_type));
+  assert.equal(persisted.length, 2);
+  assert.ok(persisted.every((call) => JSON.parse(call.data.diff_html).asset_id));
 });
 
 test('off-topic termination closes sessions without marking untouched recalls or the topic completed', async () => {

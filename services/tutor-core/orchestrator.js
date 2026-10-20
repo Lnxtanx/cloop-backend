@@ -1,8 +1,11 @@
+const { persistQuestionContract } = require('./question-contract');
+const { mediaRequests } = require('./media-policy');
+const { teachingRequest, requestEvaluation } = require('./learning-requests');
 const { evaluateStudentTurn } = require('./evaluator');
 const { advance, instructionFor, initialState, questionTypeFor, isScored, attachmentsFor, normalizeIntent,
   scoredGoalIndex, buildGoalMap, computeTeachingCoverage, computeChecksCompleted, isGoalTaught } = require('./state');
 const { generateTutorResponse } = require('./tutor-generator');
-const { enforce } = require('./validate');
+const { enforce, paginateSupportBubbles } = require('./validate');
 const { getCachedDiagram } = require('./diagram-cache');
 const { buildReport, reportBrief } = require('./summary');
 const { generateRevisionSheet, buildFallbackRevisionSheet } = require('./revision-generator');
@@ -32,6 +35,7 @@ function inspectDeliveredTeaching(messages, goal, academicNotes) {
 }
 
 function findLastQuestion(chatHistory, state) {
+  if (state?.awaitingAcademicQuestion) return '';
   if (state?.lastQuestionText) return state.lastQuestionText;
   const history = Array.isArray(chatHistory) ? chatHistory : [];
   for (let i = history.length - 1; i >= 0; i--) {
@@ -90,7 +94,9 @@ async function processTutorTurn(params) {
   }
 
   const { studentMessage = '', topic, goals = [], chatHistory = [],
-    currentState = null, userProfile = {}, wantsVideo = false, akgContext = null, userId = null } = params || {};
+    currentState = null, userProfile = {}, wantsVideo: videoRequestedByCaller = false, akgContext = null, userId = null } = params || {};
+  const explicitMedia = mediaRequests(studentMessage);
+  const wantsVideo = videoRequestedByCaller || explicitMedia.video;
   const goalTotal = Math.max(1, goals.length);
   const state = currentState || initialState(goalTotal);
   const fallbackGoal = { id: 0, title: topic.title, description: topic.content || '' };
@@ -103,7 +109,13 @@ async function processTutorTurn(params) {
   const terminal = state.phase === 'WRAP' || state.phase === 'DONE';
 
   let evaluatorResult = noEvaluation();
-  if (!starting && !terminal) {
+  const continuingRecap = Array.isArray(state.supportContinuation) && state.supportContinuation.length > 0 &&
+    /^(?:continue|more|next|ok(?:ay)?|go on|yes)[.!?]*$/i.test(studentMessage.trim());
+  const learningRequest = continuingRecap ? 'recap_topic' : teachingRequest(studentMessage) ||
+    ((explicitMedia.video || explicitMedia.diagram) ? 'media_request' : null);
+  if (learningRequest) evaluatorResult = requestEvaluation(learningRequest);
+  else if (!starting && !terminal && !state.awaitingAcademicQuestion &&
+      !(state.pendingAdvanceAfterExplanation && /^(?:ok(?:ay)?|got it|understood|continue|yes|next)[.!?]*$/i.test(studentMessage.trim()))) {
     const isAwaitingChoice = Boolean(state.response_mode === 'offer_choice' || (state.active_learning_point_id && state.learning_support?.[state.active_learning_point_id]?.awaiting_choice));
     evaluatorResult = await evaluateStudentTurn({ studentMessage, lastQuestionText, lastQuestionOptions,
       lastQuestionRubric: state.lastQuestionRubric || null,
@@ -131,10 +143,10 @@ async function processTutorTurn(params) {
   });
   nextState.lastInstruction = stateInstruction;
   let questionType = questionTypeFor(nextState.phase);
-  const isHelpOrIdk = intent === 'HELP' || intent === 'IDK' ||
-    Boolean(studentMessage && /\b(idk|idnt|i\s*dnt|don['’]?t\s+know|dont\s+know|don['’]?t\s+understand|didn['’]?t\s+understand|explain|explain\s+more|help|confused|samjh|samajh)\b/i.test(studentMessage));
+  const isHelpOrIdk = !nextState.assessmentAdvanced && (intent === 'HELP' || intent === 'IDK' ||
+    Boolean(studentMessage && /\b(idk|idnt|i\s*dnt|don['’]?t\s+know|dont\s+know|don['’]?t\s+understand|didn['’]?t\s+understand|explain|explain\s+more|help|confused|samjh|samajh)\b/i.test(studentMessage)));
   const isAssistanceDirective = Boolean(stateInstruction && ['hint_then_easier', 'explain_differently', 'reteach_new_angle', 'give_starter', 'reveal_and_move_on'].includes(stateInstruction));
-  const wantsDiagram = Boolean(studentMessage && /\b(diagram|drawing|picture|visual|chart|figure|image)\b/i.test(studentMessage));
+  const wantsDiagram = explicitMedia.diagram;
 
   const attachments = [...attachmentsFor(nextState)];
   const mediaAllowed = !['ROUNDUP', 'WRAP', 'DONE'].includes(nextState.phase);
@@ -176,6 +188,8 @@ async function processTutorTurn(params) {
     previousGoalTitle: currentGoal.title, previousGoalDescription: currentGoal.description || '',
     studentMessage, evaluatorResult, stateInstruction, questionType, phase: nextState.phase,
     response_mode: nextState.response_mode || null,
+    assessmentAdvanced: nextState.assessmentAdvanced,
+    supportRequestKind: nextState.supportRequestKind || evaluatorResult.request_kind || null,
     learning_point_id: nextState.active_learning_point_id || null,
     learning_support: nextState.learning_support || null,
     reportBrief: masteryReport ? reportBrief(masteryReport) : null, lastQuestionText,
@@ -186,27 +200,17 @@ async function processTutorTurn(params) {
   // Code owns closing figures and claims. DONE reuses artifacts without model calls.
   const rawTutorOutput = ending
     ? { messages: [{ message: closingMessage(masteryReport), message_type: 'text' }] }
-    : await generateTutorResponse(generationContext);
+    : continuingRecap
+      ? { ...paginateSupportBubbles(state.supportContinuation), recapSourceBacked: true, taskRepair: true, fallbackQuestionType: 'none' }
+      : await generateTutorResponse(generationContext);
   const validated = enforce(rawTutorOutput, { ...generationContext,
     isCorrect: evaluatorResult.is_correct, diffHtml: evaluatorResult.diff_html,
     studentMessage: evaluatorResult.resolved_answer || studentMessage });
   questionType = validated.questionType;
-  const finalBubble = validated.messages[validated.messages.length - 1];
-  const isSupportChoice = nextState.response_mode === 'offer_choice' ||
-    stateInstruction === 'offer_choice' ||
-    validated.questionType === 'choice';
-  if (isSupportChoice) {
-    nextState.lastQuestionText = state.lastQuestionText || '';
-    nextState.lastQuestionOptions = state.lastQuestionOptions || null;
-    nextState.lastQuestionRubric = state.lastQuestionRubric || null;
-    nextState.lastQuestionRecord = state.lastQuestionRecord || null;
-    nextState.lastQuestionType = state.lastQuestionType || questionType;
-  } else {
-    nextState.lastQuestionText = ending ? '' : finalBubble?.message || '';
-    nextState.lastQuestionOptions = ending ? null : finalBubble?.options || null;
-    nextState.lastQuestionRubric = ending ? null : validated.lastQuestionRubric;
-    nextState.lastQuestionRecord = ending ? null : (validated.questionRecord || null);
-    nextState.lastQuestionType = questionType;
+  persistQuestionContract(state, nextState, validated, ending, evaluatorResult.evaluation_status === 'repair_needed');
+  nextState.supportContinuation = validated.supportContinuation || [];
+  if (validated.taskRepair && !ending && !nextState.pendingAdvanceAfterExplanation) {
+    nextState.response_mode = 'task_repair';
   }
   nextState.questionAssisted = (sameAssessment && (state.questionAssisted || ASSISTANCE.has(stateInstruction))) || Boolean(validated.questionAssisted);
 
@@ -220,9 +224,11 @@ async function processTutorTurn(params) {
     existing.example = existing.example || turnCoverage.example;
   }
 
-  const gradedThisTurn = !terminal && intent === 'ANSWER' && isScored(state.phase) &&
+  const gradedThisTurn = !terminal && !state.pendingAdvanceAfterExplanation && !state.awaitingAcademicQuestion &&
+    intent === 'ANSWER' && isScored(state.phase) &&
     typeof evaluatorResult.is_correct === 'boolean' && evaluatorResult.evaluation_status !== 'unavailable';
-  const isAnswer = !terminal && !starting && intent === 'ANSWER' && evaluatorResult.userCorrection !== null;
+  const isAnswer = !terminal && !starting && !state.pendingAdvanceAfterExplanation && !state.awaitingAcademicQuestion &&
+    intent === 'ANSWER' && typeof evaluatorResult.is_correct === 'boolean' && evaluatorResult.userCorrection !== null;
   const userCorrection = isAnswer ? {
     message_type: 'user_correction', diff_html: validated.diff_html || null,
     complete_answer: evaluatorResult.complete_answer || null,

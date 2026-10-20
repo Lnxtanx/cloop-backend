@@ -9,14 +9,12 @@ const {
   getPhaseGuidance
 } = require('./context-builder');
 
-test('CB1: Guaranteed academic grounding generates non-empty definition, mechanism, and SI units even for short stubs', () => {
-  const shortGoal = { title: 'Frictional Force', description: 'Brief note' };
-  const grounding = ensureAcademicGrounding(shortGoal, 'Forces in Nature', '');
-
-  assert.ok(grounding.definition.length > 10, 'Definition must be non-empty');
-  assert.ok(grounding.mechanism.length > 10, 'Mechanism must be non-empty');
-  assert.equal(grounding.si_unit, 'Newton (N)', 'SI unit for force must be Newton');
-  assert.ok(Array.isArray(grounding.exam_points) && grounding.exam_points.length >= 2, 'Exam points must be populated');
+test('CB1: Thin stubs never manufacture definitions, mechanisms or units', () => {
+  const grounding = ensureAcademicGrounding({ title: 'Frictional Force', description: 'Brief note' }, 'Forces in Nature', '');
+  assert.equal(grounding.definition, '');
+  assert.equal(grounding.mechanism, '');
+  assert.equal(grounding.si_unit, 'None');
+  assert.ok(!grounding.exam_points.some(fact => /is defined as|core principles/.test(fact)));
 });
 
 test('CB2: Analogies resolver injects familiar everyday Indian examples', () => {
@@ -59,7 +57,7 @@ test('CB5: Pedagogical phase guidance customizes instructions and word counts pe
 
   const theoryGuidance = getPhaseGuidance('THEORY');
   assert.ok(theoryGuidance.bubble_structure.includes('under 25 words'), 'Theory phase bubbles must be under 25 words each');
-  assert.ok(theoryGuidance.bubble_structure.includes('3-4 micro-bubbles'));
+  assert.match(theoryGuidance.bubble_structure, /(?:up to|at most) 3 micro-bubbles/i);
 
   const checkGuidance = getPhaseGuidance('CHECK');
   assert.ok(checkGuidance.bubble_structure.includes('Multiple Choice Question'));
@@ -69,7 +67,7 @@ test('CB6: Full buildTeachingContext produces structured, complete payload ready
   const context = buildTeachingContext({
     topic: { title: 'Contact Forces', content: 'Friction and muscular forces.' },
     goals: [
-      { id: 1, title: 'Define Friction', description: 'Resistance to sliding.' },
+      { id: 1, title: 'Define Friction', description: 'Friction is a force that opposes relative motion between touching surfaces.' },
       { id: 2, title: 'Muscular Force', description: 'Force by muscles.' }
     ],
     goalIndex: 0,
@@ -124,9 +122,9 @@ test('CB8: Multi-subject grounding and analogies work for Mathematics, Biology, 
   const mathAnalogies = resolveAnalogies('Linear Equations', 'Solving for x');
   assert.ok(mathAnalogies.some(a => a.toLowerCase().includes('balance') || a.toLowerCase().includes('box')));
 
-  const mathGrounding = ensureAcademicGrounding({ title: 'Solving Linear Equations', description: 'Isolating the variable.' }, 'Linear Equations', '', 'Mathematics');
-  assert.ok(mathGrounding.definition.includes('mathematical statement') || mathGrounding.definition.includes('Linear Equations'));
-  assert.ok(mathGrounding.mechanism.includes('inverse') || mathGrounding.mechanism.includes('sides'));
+  const mathGrounding = ensureAcademicGrounding({ title: 'Solving Linear Equations', description: 'A linear equation in one variable is an equation with the variable to the first power; Applying the same inverse operation to both sides preserves equality.' }, 'Linear Equations', '', 'Mathematics');
+  assert.match(mathGrounding.definition, /linear equation in one variable is an equation/i);
+  assert.ok(mathGrounding.exam_points.some(fact => fact.includes('inverse operation')));
 
   // Biology test
   const bioAnalogies = resolveAnalogies('Life Processes', 'Photosynthesis in plants');

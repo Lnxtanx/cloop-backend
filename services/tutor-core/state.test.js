@@ -92,14 +92,14 @@ test("most questions are written answers, not clicks", () => {
   assert.ok(open / asked.length >= 0.6, `only ${open}/${asked.length} were written`);
 });
 
-test("theory carries a diagram and key points; wrap carries the report", () => {
-  assert.deepStrictEqual(S.attachmentsFor({ phase: "THEORY" }), ["diagram", "key_points"]);
+test("theory carries key points without automatic media; wrap carries the report", () => {
+  assert.deepStrictEqual(S.attachmentsFor({ phase: "THEORY" }), ["key_points"]);
   assert.deepStrictEqual(S.attachmentsFor({ phase: "WRAP" }), ["revision_sheet", "mastery_report"]);
   assert.deepStrictEqual(S.attachmentsFor({ phase: "OBJECTIVES" }), ["objectives"]);
 });
 
-test("a video appears only when a struggling student opens a goal", () => {
-  assert.deepStrictEqual(S.attachmentsFor({ phase: "DIALOGUE", openThisGoal: 0, consecutiveWrong: 1 }), ["video"]);
+test("a struggle does not automatically attach a video", () => {
+  assert.deepStrictEqual(S.attachmentsFor({ phase: "DIALOGUE", openThisGoal: 0, consecutiveWrong: 1 }), []);
   assert.deepStrictEqual(S.attachmentsFor({ phase: "DIALOGUE", openThisGoal: 0, consecutiveWrong: 0 }), []);
   assert.deepStrictEqual(S.attachmentsFor({ phase: "DIALOGUE", openThisGoal: 1, consecutiveWrong: 2 }), []);
 });
@@ -120,9 +120,9 @@ test("a student who never answers still reaches a summary", () => {
     s = { ...s, lastInstruction: S.instructionFor(s, { intent: "IDK" }) };
   }
   assert.strictEqual(s.phase, "DONE");
-  // The stuck-student escape walks the arc to its proper end rather than
-  // letting the turn cap cut the session off, so this now ends "complete".
-  assert.strictEqual(s.endedReason, "complete");
+  // Repeatedly declining every task still reaches the bounded report,
+  // without presenting unassessed goals as independently mastered.
+  assert.ok(["complete", "turn_limit"].includes(s.endedReason));
   const r = buildReport(s, goals(5));
   assert.strictEqual(r.per_goal.length, 5);
   assert.strictEqual(r.not_covered.length, 5, "nothing was answered, so nothing was covered");

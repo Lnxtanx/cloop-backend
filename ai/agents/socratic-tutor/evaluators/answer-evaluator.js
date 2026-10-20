@@ -1,3 +1,4 @@
+const { teachingRequest, requestEvaluation } = require('../../../../services/tutor-core/learning-requests');
 const { invokeModel, extractJson } = require('../../../providers');
 const { applyGradingGuards, LANGUAGE_ONLY_ERRORS } = require('../../../../services/tutor-core/evaluator-guards');
 const { cleanObjectiveText, CONFLICTING_ENTITY_GROUPS, PHYSICAL_ENTITIES } = require('../../../../services/tutor-core/validate');
@@ -30,12 +31,12 @@ function escapeHtml(text) {
     .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
 }
 
-const CLARIFICATION_PATTERN = /^(which|what)\s+(box|ball|car|object|one|goal(\s*\d+)?|diagram|step|cart|sponge|block)\b|\bwhat\s+(is|do\s+you\s+mean\s+by)\s+goal\s*\d*\b|\bwhich\s+one\s+(do\s+you\s+mean|is\s+that)\b|\b(clarify|explain)\s+(the\s+)?(question|wording|scenario)\b|\bcan\s+you\s+clarify\b/i;
+const CLARIFICATION_PATTERN = /\b(?:what|why)\s+do\s+you\s+mean(?:\s+by)?\b|\bwhat\s+does\s+(?:that|this|it|the\s+word\s+\w+)\s+mean\b|^(which|what)\s+(box|ball|car|object|one|goal(\s*\d+)?|diagram|step|cart|sponge|block)\b|\bwhat\s+(is|do\s+you\s+mean\s+by)\s+goal\s*\d*\b|\bwhich\s+one\s+(do\s+you\s+mean|is\s+that)\b|\b(clarify|explain)\s+(the\s+)?(question|wording|scenario)\b|\bcan\s+you\s+clarify\b/i;
 
 const REQUEST_KIND_PATTERNS = {
   end_session: /^(?:(?:please\s+)?(?:end|finish|close|stop)\s+(?:the\s+)?(?:session|chat|class|lesson)|(?:please\s+)?(?:stop|wrap\s+up|finish|end)\s+(?:here|now)|let['’]?s\s+(?:stop|wrap\s+up|finish|end)(?:\s+(?:here|now))?|wrap\s+up(?:\s+(?:the\s+)?(?:session|chat))?|i\s+(?:want|would\s+like)\s+to\s+(?:stop|quit|leave|exit|end)(?:\s+(?:the\s+)?(?:session|chat|now|here))?|quit|exit|khatam\s+karo)$/i,
   explain_answer: /^(?:(?:please\s+)?tell\s+me\s+(?:the\s+)?answer|explain\s+(?:the\s+)?answer|what\s+is\s+the\s+answer|just\s+tell\s+me(?:\s+the\s+)?answer|show\s+(?:me\s+)?(?:the\s+)?answer|give\s+(?:me\s+)?(?:the\s+)?answer|reveal\s+(?:the\s+)?answer)\b/i,
-  try_again: /^(?:another\s+(?:try|chance|attempt)|let\s+me\s+try(?:\s+again)?|try\s+again|one\s+more\s+(?:try|chance)|i(?:'ll|\s+will)\s+try(?:\s+again)?|retry|give\s+me\s+another\s+(?:try|chance)|let\s+me\s+have\s+another\s+go)\b/i,
+  try_again: /^(?:i\s+want\s+(?:another|one\s+more)\s+(?:try|chance|attempt)|another\s+(?:try|chance|attempt)|let\s+me\s+try(?:\s+again)?|try\s+again|one\s+more\s+(?:try|chance)|i(?:'ll|\s+will)\s+try(?:\s+again)?|retry|give\s+me\s+another\s+(?:try|chance)|let\s+me\s+have\s+another\s+go)\b/i,
   move_on: /(?:teach\s+something\s+(?:else|elase)|next\s+topic|move\s+on|skip(?:\s+this)?|next\s+question|different\s+topic|not\s+in\s+(?:the\s+)?mood)\b/i,
   clarify_task: CLARIFICATION_PATTERN
 };
@@ -53,6 +54,9 @@ function detectRequestKind(text, context = {}) {
       return 'try_again';
     }
   }
+
+  const learningRequest = teachingRequest(clean);
+  if (learningRequest) return learningRequest;
 
   const words = clean.split(/\s+/).filter(Boolean);
   if (words.length <= 8 && REQUEST_KIND_PATTERNS.end_session.test(clean)) return 'end_session';
@@ -78,16 +82,19 @@ function validateQuestionRubricAlignment(lastQuestionText, rubric, scenario = nu
 
   const isDirectClassification = /\b(contact\s+or\s+non-?contact|true\s+or\s+false|yes\s+or\s+no|which\s+(one|type|force|substance|object))\b/i.test(questionLower);
   const isNamingOnly = /\b(name|identify|which\s+part|label|what\s+is\s+the\s+name)\b/i.test(questionLower);
-  const asksExplanation = /\b(why|explain|reason|how\s+do\s+you\s+know|give\s+reasons?)\b/i.test(questionLower);
+  const asksExplanation = /\b(why|explain|reason|how|justify|describe|prove)\b/i.test(questionLower);
 
   if ((isDirectClassification || isNamingOnly) && !asksExplanation) {
     const requiredExplainCriteria = criteria.filter(c =>
-      c.required && /\b(explain|reason|why|mechanism|cause)\b/i.test(`${c.id} ${c.description}`)
+      c.required && /\b(explain|explanation|reason|why|mechanism|cause)\b/i.test(`${c.id} ${c.description}`.replace(/[_-]/g, ' '))
     );
     const totalRequired = criteria.filter(c => c.required).length;
-    if (requiredExplainCriteria.length > 0 && requiredExplainCriteria.length === totalRequired) {
+    if (requiredExplainCriteria.length === totalRequired && totalRequired > 0) {
       return { aligned: false, reason: 'Visible question asks for direct naming or classification but rubric secretly requires unasked explanation.' };
     }
+    // A mixed rubric is also unfair: preserve the requested classification, but
+    // do not require an explanation the student was never asked to provide.
+    requiredExplainCriteria.forEach(c => { c.required = false; });
   }
 
   // Image formation vs accommodation alignment
@@ -255,12 +262,13 @@ function readCriteria(parsed, rubric) {
     if (rubric) {
       const criterion = rubric.criteria.find(c => c.id === result.id);
       if (!criterion) return null;
-      results.push({ ...criterion, satisfied: result.satisfied, evidence: result.evidence });
+      results.push({ ...criterion, satisfied: result.satisfied, evidence: result.evidence,
+        question_requirement: result.question_requirement });
     } else {
       if (typeof result.description !== 'string' || !result.description.trim() ||
           (result.required !== undefined && result.required !== true)) return null;
       results.push({ id: result.id, description: result.description, required: true,
-        satisfied: result.satisfied, evidence: result.evidence });
+        satisfied: result.satisfied, evidence: result.evidence, question_requirement: result.question_requirement });
     }
   }
   if ((rubric && results.length !== rubric.criteria.length) || !results.some(c => c.required)) return null;
@@ -292,17 +300,37 @@ function cleanCompleteSentence(text, maxWords = 15) {
   return '';
 }
 
-function concise(text, count = 14) {
-  return String(text || '').trim().split(/\s+/).slice(0, count).join(' ');
+function normalizedText(text) {
+  return unescapeHtml(text).replace(/\s+/g, ' ').trim().toLowerCase();
+}
+
+/** A missing required point must be attributable to the visible question.
+ * Do not turn a hidden/invented requirement into a student's failed attempt.
+ * Older evidence with all criteria satisfied remains usable; a new failure
+ * requires the stronger, question-attributed evidence contract.
+ */
+function validateCriterionRequirements(criteria, lastQuestionText) {
+  const question = normalizedText(lastQuestionText);
+  for (const criterion of criteria.filter(c => c.required && !c.satisfied)) {
+    const requirement = typeof criterion.question_requirement === 'string'
+      ? normalizedText(criterion.question_requirement) : '';
+    if (!requirement || !question.includes(requirement)) {
+      return { aligned: false, reason: `Missing criterion "${criterion.id}" has no verified obligation in the visible question.` };
+    }
+  }
+  return { aligned: true };
 }
 
 /** Only the two correction tags survive, with embedded text escaped and sentences kept complete. */
-function safeDiff(diff) {
+function safeDiff(diff, studentText = null) {
   if (typeof diff !== 'string') return null;
   const match = diff.match(/^\s*<del>([\s\S]*?)<\/del>\s*<ins>([\s\S]*?)<\/ins>\s*$/i);
   if (!match || !match[2].trim()) return null;
-  const deletion = concise(match[1]);
-  const rawIns = match[2].trim();
+  const deletion = unescapeHtml(match[1]).replace(/\s+/g, ' ').trim();
+  if (!deletion) return null;
+  // Decode entities before sentence/clause boundaries are examined: otherwise
+  // the semicolon in &#39; can be mistaken for the end of a phrase.
+  const rawIns = unescapeHtml(match[2]).trim();
   const insWords = rawIns.split(/\s+/);
   const firstSentence = rawIns.match(/^([^.!?]+[.!?])/);
   if (insWords.length > 15 && (!firstSentence || firstSentence[1].trim().split(/\s+/).length > 15)) {
@@ -310,21 +338,13 @@ function safeDiff(diff) {
   }
   const insertion = cleanCompleteSentence(rawIns, 15);
   if (!insertion) return null;
-  if (deletion.trim().toLowerCase() === insertion.trim().toLowerCase()) return null;
+  if (normalizedText(deletion) === normalizedText(insertion)) return null;
+  if (studentText != null && !normalizedText(studentText).includes(normalizedText(deletion))) return null;
   return `<del>${escapeHtml(deletion)}</del><ins>${escapeHtml(insertion)}</ins>`;
 }
 
 function assessedResult(parsed, criteria, rubric, resolved, gradedBy, lastQuestionText = '') {
-  const asksExplanation = /\b(why|explain|reason|how\s+do\s+you\s+know|give\s+reasons?)\b/i.test(lastQuestionText || '');
-  const adjustedCriteria = criteria.map(c => {
-    if (!asksExplanation && c.required) {
-      const isExplanation = /\b(explain|explanation|reason|mechanism|why)\b/i.test(`${c.id} ${c.description}`);
-      if (isExplanation) return { ...c, required: false };
-    }
-    return c;
-  });
-  const hasRequired = adjustedCriteria.some(c => c.required);
-  const finalCriteria = hasRequired ? adjustedCriteria : criteria;
+  const finalCriteria = criteria;
   const contradictions = parsed.contradictions;
   const correct = finalCriteria.filter(c => c.required).every(c => c.satisfied) && contradictions.length === 0;
   const missing = finalCriteria.filter(c => c.required && !c.satisfied);
@@ -338,7 +358,9 @@ function assessedResult(parsed, criteria, rubric, resolved, gradedBy, lastQuesti
     : reqCount ? Math.round((satReqCount / reqCount) * 100)
     : Math.round((finalCriteria.filter(c => c.satisfied).length / finalCriteria.length) * 100);
 
-  const rawFeedback = typeof parsed.feedback === 'string' && parsed.feedback.trim() ? parsed.feedback.trim()
+  const hasUnaskedMissingPoint = correct && finalCriteria.some(c => !c.required && !c.satisfied);
+  const rawFeedback = hasUnaskedMissingPoint ? 'Your answer meets the question’s requirements.'
+    : typeof parsed.feedback === 'string' && parsed.feedback.trim() ? parsed.feedback.trim()
     : correct ? 'Your answer meets the question’s requirements.'
       : contradictions.length ? contradictions.join(' ') : `Missing: ${missing.map(c => c.description).join('; ')}.`;
   const feedback = unescapeHtml(rawFeedback);
@@ -347,7 +369,7 @@ function assessedResult(parsed, criteria, rubric, resolved, gradedBy, lastQuesti
     intent: 'ANSWER', is_correct: correct,
     score_percent: scorePercent,
     error_type: correct ? null : contentType,
-    diff_html: safeDiff(parsed.diff_html), complete_answer: unescapeHtml(modelAnswer),
+    diff_html: safeDiff(parsed.diff_html, resolved.resolvedText), complete_answer: unescapeHtml(modelAnswer),
     feedback,
     criterion_results: finalCriteria, contradictions, evaluation_status: 'evaluated', graded_by: gradedBy,
     suggested_action: correct ? 'MOVE_ON' : 'RETEACH_NEW_ANGLE',
@@ -355,28 +377,12 @@ function assessedResult(parsed, criteria, rubric, resolved, gradedBy, lastQuesti
     resolved_answer: resolved.isOption ? resolved.resolvedText : null,
   };
 
-  const isLightRegulationQuestion = /\b(control|regulat|adjust).*(light|amount of light).*(enter|eye)\b/i.test(lastQuestionText) ||
-    /\bwhich\s+part.*(controls?|regulates?).*(light|entering)\b/i.test(lastQuestionText);
-  if (isLightRegulationQuestion && /\b(pupil|iris)\b/i.test(resolved.resolvedText)) {
-    result.is_correct = true;
-    result.error_type = null;
+  // Missing content belongs in feedback and the full answer. Striking through
+  // a correct answer to insert extra facts teaches the student their valid
+  // words were wrong. A correct answer only gets an optional spelling diff.
+  if ((!correct && contentType === 'Incomplete' && contradictions.length === 0) ||
+      (correct && !LANGUAGE_ONLY_ERRORS.has(String(parsed.error_type || '').toLowerCase()))) {
     result.diff_html = null;
-    result.suggested_action = 'MOVE_ON';
-    result.feedback = 'Correct! The pupil regulates light entry, while the iris adjusts pupil size.';
-    result.criterion_results = finalCriteria.map(c => ({ ...c, satisfied: true }));
-  }
-
-  if (!result.is_correct && !result.diff_html && modelAnswer && !parsed.diff_html) {
-    const answerWords = modelAnswer.split(/\s+/);
-    const firstSentence = modelAnswer.match(/^([^.!?]+[.!?])/);
-    const canFormShortDiff = answerWords.length <= 15 || (firstSentence && firstSentence[1].trim().split(/\s+/).length <= 15);
-    if (canFormShortDiff) {
-      const delText = concise(resolved.resolvedText);
-      const insText = cleanCompleteSentence(modelAnswer, 15);
-      if (insText && delText.trim().toLowerCase() !== insText.trim().toLowerCase()) {
-        result.diff_html = `<del>${escapeHtml(delText)}</del><ins>${escapeHtml(insText)}</ins>`;
-      }
-    }
   }
   return applyGradingGuards(result);
 }
@@ -396,6 +402,14 @@ Use the provided rubric criteria exactly. If rubric is null, derive 1-8 concrete
 the LAST QUESTION's obligations, each with an id, description and required:true. These are
 legacy semantic criteria, not proof of complete syllabus coverage.
 Report every criterion once. satisfied is a real JSON boolean, never a string.
+For each criterion return question_requirement: quote the exact words in LAST QUESTION
+that require that point. Return null when that point is not required by the visible
+question. Never borrow requirements from the goal, model answer or textbook checklist.
+In particular, a correct definition plus an agent/receiver answers a definition-and-who
+question; an additional example/category is required only when explicitly requested.
+Do not mark a criterion unsatisfied merely to require extra detail not asked for.
+The server returns an ungraded repair_needed result for an unmet criterion without a
+verbatim question requirement. A flawed rubric is a tutor error, not a student error.
 Evidence must quote the student's actual answer or identify the missing requirement; do not
 invent content. A relevant partial answer fails missing required criteria.
 Do not return your own correctness verdict or score: the server combines the evidence.
@@ -405,7 +419,7 @@ English, spelling, grammar, tense and word order never make content incorrect. R
 misspelled scientific terms when meaning is clear. Offer a gentle spelling diff only if all
 content requirements are met. A language mistake cannot hide a conceptual mistake.
 Only require a formula, symbols, units, a causal explanation or a specific count when the
-actual question/rubric asks for it. When asked "both, and why?", both alone lacks the reason.
+actual visible question asks for it; a hidden rubric requirement is not enough. When asked "both, and why?", both alone lacks the reason.
 For a requested list, count DISTINCT items: a restated example (e.g. stretching under "change
 of shape") is not an extra item, and an answer about one property does not answer a question
 about another (an explanation about speed/direction does not answer one about shape).
@@ -431,6 +445,8 @@ SOURCE-GROUNDED ACCURACY (every topic):
 
 Correct an IDEA, not English. For incorrect answers give an accurate complete_answer and
 a plain-language feedback explanation describing the specific missing/wrong requirement.
+For incomplete answers, retain correct student content; supply the missing point in feedback
+and complete_answer, with diff_html:null. Never strike through a valid partial answer.
 diff_html, when useful, is ONLY <del>wrong phrase</del><ins>correct phrase</ins>, insertion
 under 15 words, using resolved option text rather than a letter. No other HTML.
 For nonanswers, criterion_results:[], contradictions:[], error_type:null, diff_html:null,
@@ -439,7 +455,7 @@ complete_answer:null, feedback:null. No grade for nonanswers.
 Schema:
 {"intent":"ANSWER|ACK|HELP|IDK|OFF_TOPIC",
  "criterion_results":[{"id":"criterion id","description":"criterion (only needed without rubric)",
- "required":true,"satisfied":false,"evidence":"actual student evidence or missing requirement"}],
+ "required":true,"satisfied":false,"question_requirement":"verbatim question words or null","evidence":"actual student evidence or missing requirement"}],
  "contradictions":["specific scientific contradiction"],
  "error_type":"Conceptual|Factual|Incomplete|Calculation|null",
  "diff_html":null,"complete_answer":null,"feedback":null,"reasoning":"brief assessment rationale"}`;
@@ -468,6 +484,8 @@ async function evaluateStudentTurn({
     response_mode: isAwaitingChoice ? 'offer_choice' : (response_mode || null),
     lastQuestionText
   });
+
+  if (['recap_topic', 'give_example', 'clarify_term'].includes(requestKind)) return requestEvaluation(requestKind);
 
   if (requestKind) {
     if (requestKind === 'explain_answer') {
@@ -611,6 +629,8 @@ async function evaluateStudentTurn({
     }
     const criteria = readCriteria(parsed, rubric);
     if (!criteria) throw new Error('Invalid semantic evidence');
+    const requirementAlignment = validateCriterionRequirements(criteria, lastQuestionText);
+    if (!requirementAlignment.aligned) return repairNeeded('ANSWER', resolved, requirementAlignment.reason);
     const result = assessedResult(parsed, criteria, rubric, resolved, rubric ? 'rubric_semantic' : 'semantic_legacy', lastQuestionText);
     if (result.is_correct === false && !result.complete_answer) throw new Error('Missing correct answer');
     return result;
@@ -624,5 +644,5 @@ async function evaluateStudentTurn({
 
 module.exports = { evaluateStudentTurn, resolveOptionAnswer, applyGradingGuards,
   LANGUAGE_ONLY_ERRORS, escapeHtml, unescapeHtml, normalizeRubric, safeDiff,
-  validateQuestionRubricAlignment, detectHelpSubtype, repairNeeded, CLARIFICATION_PATTERN,
+  validateQuestionRubricAlignment, validateCriterionRequirements, detectHelpSubtype, repairNeeded, CLARIFICATION_PATTERN,
   detectRequestKind, REQUEST_KIND_PATTERNS };

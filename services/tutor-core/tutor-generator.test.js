@@ -56,7 +56,7 @@ test('a failed new question generates grounded recall rather than a dummy MCQ', 
   reset(); failure = new Error('model unavailable');
   const out = await generateTutorResponse({ ...params, phase: 'CHECK', questionType: 'mcq', stateInstruction: 'assess_with_mcq' });
   assert.strictEqual(out.fallbackQuestionType, 'open');
-  assert.ok(out.messages.at(-1).message.includes('Change of shape'));
+  assert.ok(out.messages.at(-1).message.includes('force'));
   assert.strictEqual(out.messages.at(-1).options, undefined);
   assert.strictEqual(out.lastQuestionRubric.criteria.length, 2);
   assert.ok(!JSON.stringify(out).includes('Correct concept principle'));
@@ -74,7 +74,7 @@ test('failed new roundup does not leak a definition before asking recall', async
   reset(); failure = new Error('model unavailable');
   const out = await generateTutorResponse({ ...params, phase: 'ROUNDUP', stateInstruction: 'hint_then_easier', sameAssessment: false });
   assert.strictEqual(out.messages.length, 1);
-  assert.ok(out.messages[0].message.includes('Change of shape'));
+  assert.ok(out.messages[0].message.includes('force'));
 });
 
 test('failed roundup retry teaches first while retaining the complete pending question', async () => {

@@ -3,7 +3,7 @@
  *
  * Centralizes and enriches all pedagogical, domain, and temporal context
  * passed to DeepSeek-V4-Pro on every turn:
- * 1. Academic Grounding (Guaranteed non-empty definitions, mechanisms, formulas, SI/numerical units)
+ * 1. Academic Grounding (Source-backed definitions, mechanisms, formulas, and units when available)
  * 2. Multi-Subject Support (Mathematics, Science, Social Sciences, Languages, Humanities)
  * 3. Multi-Board Curriculum Support (CBSE, ICSE, State Boards, Cambridge, IB)
  * 4. Misconceptions & Traps (From AKG and past student errors)
@@ -14,6 +14,7 @@
  */
 
 const { buildAcademicNotes } = require('../../../../services/tutor-core/academic-notes');
+const { factualSourceParts } = require('../../../../services/tutor-core/validate');
 const { getMisconceptionsForTopic } = require('../tools/memory-tool');
 
 // Comprehensive domain-specific analogy catalog
@@ -201,111 +202,24 @@ function resolveSubjectAndBoard(topic = {}, userProfile = {}) {
   return { subjectName, boardName, gradeLevel };
 }
 
-/**
- * Ensure definition and mechanism are NEVER empty, even if topic content is short
- */
+/** Preserve the note contract, but never manufacture facts from a title/objective. */
 function ensureAcademicGrounding(goal, topicTitle = '', topicContent = '', subjectName = '') {
   let notes = null;
-  try {
-    notes = buildAcademicNotes(goal, topicContent);
-  } catch (_) {
-    notes = null;
-  }
-
-  const title = goal?.title || topicTitle || 'Academic Concept';
-  const desc = goal?.description || '';
-
-  // 1. Guaranteed definition across subjects
-  let definition = notes?.definition?.trim() || '';
-  const isStubDefinition = !definition || definition.length < 20 || definition === desc;
-  if (isStubDefinition) {
-    if (/\b(frict)\b/i.test(title)) {
-      definition = 'Frictional force is the opposing force that comes into play when two surfaces in contact move or tend to move with respect to each other.';
-    } else if (/\b(gravit)\b/i.test(title)) {
-      definition = 'Gravitational force is the universal attractive force exerted by any mass on any other mass.';
-    } else if (/\b(magnetic)\b/i.test(title)) {
-      definition = 'Magnetic force is the attraction or repulsion that arises between magnetic poles or moving electric charges.';
-    } else if (/\b(electrostatic)\b/i.test(title)) {
-      definition = 'Electrostatic force is the attractive or repulsive force exerted by an electrically charged object on another object.';
-    } else if (/\b(pressure)\b/i.test(title)) {
-      definition = 'Pressure is the physical force exerted perpendicular per unit surface area of an object.';
-    } else if (/\b(inertia)\b/i.test(title)) {
-      definition = 'Inertia is the natural tendency of an object to resist any change in its state of rest or uniform motion.';
-    } else if (/\b(fractions?|ratios?)\b/i.test(title)) {
-      definition = `${title} represents a numerical part of a whole or a quantitative comparison between quantities.`;
-    } else if (/\b(linear equations?|equations?|algebra)\b/i.test(title)) {
-      definition = `${title} is a mathematical statement establishing equality between two algebraic expressions containing variables.`;
-    } else if (/\b(triangles?|quadrilaterals?|polygons?|geometr|angles?)\b/i.test(title)) {
-      definition = `${title} is a geometric figure defined by specific spatial relationships between sides, angles, and vertices.`;
-    } else if (/\b(photosynthe)\b/i.test(title)) {
-      definition = 'Photosynthesis is the process by which green plants synthesize glucose from carbon dioxide and water using sunlight trapped by chlorophyll.';
-    } else if (/\b(cells?|organelles?)\b/i.test(title)) {
-      definition = `${title} is the basic structural and functional unit of all living organisms.`;
-    } else if (/\b(democra|constitut|parliaments?|rights?)\b/i.test(title)) {
-      definition = `${title} is a foundational civic principle establishing governance, rule of law, and rights for citizens.`;
-    } else if (desc.length > 25) {
-      definition = `${title} is defined as ${desc.split(/[.;]/)[0].toLowerCase()}.`;
-    } else {
-      definition = `${title} is a core academic principle in ${topicTitle || subjectName || 'this subject'} describing this concept.`;
-    }
-  }
-
-  // 2. Guaranteed mechanism / underlying cause
-  let mechanism = notes?.mechanism?.trim() || '';
-  const isGenericMechanism = !mechanism || mechanism.length < 15 || mechanism.includes('Governed by underlying') || mechanism.includes('Operates through the core principles');
-  if (isGenericMechanism) {
-    if (/\b(friction|contact)\b/i.test(title)) {
-      mechanism = 'Occurs because microscopic irregularities on touching surfaces interlock, resisting relative motion.';
-    } else if (/\b(non-contact|gravity|gravitation|magnetic)\b/i.test(title)) {
-      mechanism = 'Acts across empty space through a force field without requiring physical contact between the objects.';
-    } else if (/\b(inertia|first law)\b/i.test(title)) {
-      mechanism = 'Mass inherently resists any change in its velocity unless compelled by an unbalanced external force.';
-    } else if (/\b(pressure)\b/i.test(title)) {
-      mechanism = 'Force exerted perpendicular per unit area; smaller surface area produces significantly higher pressure.';
-    } else if (/\b(fractions?|ratios?)\b/i.test(title)) {
-      mechanism = 'Operates through proportional division, comparing the selected parts against the total equal parts of the whole.';
-    } else if (/\b(linear equations?|equations?|algebra)\b/i.test(title)) {
-      mechanism = 'Solved by performing inverse mathematical operations equally on both sides to isolate the unknown variable.';
-    } else if (/\b(triangles?|quadrilaterals?|polygons?|geometr|angles?)\b/i.test(title)) {
-      mechanism = 'Governed by geometric theorems such as angle sum properties, congruence conditions, and spatial proofs.';
-    } else if (/\b(photosynthe)\b/i.test(title)) {
-      mechanism = 'Light energy excites chlorophyll, splitting water to release oxygen and powering carbon fixation into carbohydrates.';
-    } else if (/\b(cells?|organelles?)\b/i.test(title)) {
-      mechanism = 'Coordinates specialized organelles (nucleus, mitochondria, ribosomes) to maintain cellular life processes.';
-    } else if (/\b(democra|constitut|parliaments?|rights?)\b/i.test(title)) {
-      mechanism = 'Functions through separation of institutional powers, free representation, and checks and balances.';
-    } else {
-      mechanism = desc.length > 25
-        ? `Operates through the core principles of ${title}, explaining cause and effect in the system.`
-        : 'Governed by underlying conceptual interactions and logical relationships in this topic.';
-    }
-  }
-
-  // 3. Formula and SI units
-  const formulas = Array.isArray(notes?.formulas) && notes.formulas.length ? notes.formulas : [];
-  let siUnit = 'None';
-  if (/\b(force|friction|weight|thrust)\b/i.test(title)) siUnit = 'Newton (N)';
-  else if (/\b(pressure)\b/i.test(title)) siUnit = 'Pascal (Pa) or N/m²';
-  else if (/\b(energy|work)\b/i.test(title)) siUnit = 'Joule (J)';
-  else if (/\b(speed|velocity)\b/i.test(title)) siUnit = 'm/s';
-  else if (/\b(acceleration)\b/i.test(title)) siUnit = 'm/s²';
-  else if (/\b(mass)\b/i.test(title)) siUnit = 'Kilogram (kg)';
-  else if (/\b(area)\b/i.test(title)) siUnit = 'm² or cm²';
-  else if (/\b(volume)\b/i.test(title)) siUnit = 'm³ or Litres';
-
-  // 4. Key exam points (guaranteed at least 2 complete academic statements)
-  let examPoints = Array.isArray(notes?.exam_points) && notes.exam_points.length >= 2 && notes.exam_points.every(p => p.length >= 15)
-    ? notes.exam_points
-    : [definition, mechanism];
-
+  try { notes = buildAcademicNotes(goal || {}, topicContent); } catch (_) {}
+  const examPoints = [...new Set((notes?.exam_points || []).flatMap(factualSourceParts))];
+  const definition = examPoints.find(fact => /\b(?:is|are|defined as|means|refers to)\b|\s=\s/i.test(fact)) || '';
+  const mechanism = examPoints.find(fact => /\b(?:because|binds?|reacts?|reduces?|causes?|converts?|traps?|formed|incomplete|absorbs?|lowers?|removes?|cools?|cooling|smothering)\b/i.test(fact)) || '';
+  const formulas = (notes?.formulas || []).filter(formula => examPoints.includes(formula));
+  const unitFact = examPoints.find(fact => /\b(?:SI units?|units? (?:of|is|are)|measured in)\b/i.test(fact));
   return {
     definition,
     mechanism,
     formulas,
-    si_unit: siUnit,
+    si_unit: unitFact || 'None',
     exam_points: examPoints,
     exam_keywords: notes?.exam_keywords || [],
-    common_mistake: notes?.common_mistake || '',
+    common_mistake: examPoints.includes(notes?.common_mistake) ? notes.common_mistake : '',
+    grounding_status: examPoints.length ? 'source_backed' : 'missing_factual_source',
   };
 }
 
@@ -577,7 +491,7 @@ function getPhaseGuidance(phase, stateInstruction, reportBrief) {
     case 'THEORY':
       return {
         phase_purpose: 'Explicit concept breakdown. Teach the core concept before any assessment question.',
-        bubble_structure: '3-4 micro-bubbles (under 25 words each):\n• Bubble 1: Precise definition / core idea.\n• Bubble 2: Mechanism / logic with familiar everyday analogy.\n• Bubble 3: Concrete observation or real-world application.\n• Bubble 4: Focused check question to begin dialogue.',
+        bubble_structure: 'Up to 3 micro-bubbles (under 25 words each):\n• Bubble 1: Precise definition / core idea.\n• Bubble 2: Mechanism / logic with familiar everyday analogy.\n• Bubble 3: A focused check question, unless the student requested explanation only.',
         rules: 'Teach one concept completely. Each bubble must have 25 words or fewer. Do not cram everything into one bubble.'
       };
 
@@ -651,7 +565,7 @@ function buildTeachingContext(params) {
 
   const gradePedagogy = resolveGradePedagogy(gradeLevel, subjectName);
 
-  // 1. Guaranteed Academic Grounding
+  // 1. Source-backed Academic Grounding
   const academicGrounding = ensureAcademicGrounding(currentGoal, topicTitle, topicContent, subjectName);
   const analogies = resolveAnalogies(topicTitle, currentGoal.title);
   const misconceptions = resolveMisconceptions(akgContext, topicTitle);
@@ -692,6 +606,7 @@ function buildTeachingContext(params) {
         title: currentGoal.title,
         description: currentGoal.description || '',
       },
+      grounding_status: academicGrounding.grounding_status,
       scientific_definition: academicGrounding.definition,
       scientific_mechanism: academicGrounding.mechanism,
       formulas: academicGrounding.formulas,

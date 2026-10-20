@@ -79,20 +79,22 @@ test('T2: Deterministic choice handling for try_again and explain_answer', () =>
   const s2 = advance(s1, { intent: 'ANSWER', correct: false });
   assert.equal(s2.response_mode, 'offer_choice');
 
-  // Choice: try_again -> resets attempt and gives fresh retry directive
+  // Choice: try_again -> preserves struggle history and gives a fresh retry
   const sTryAgain = advance(s2, { requestKind: 'try_again' });
   assert.equal(sTryAgain.response_mode, 'check');
   assert.equal(instructionFor(sTryAgain), 'reteach_new_angle');
   const lpTry = sTryAgain.learning_support[sTryAgain.active_learning_point_id];
   assert.equal(lpTry.awaiting_choice, false);
-  assert.equal(lpTry.attempt_count, 0, 'attempt_count should reset on try_again');
+  assert.equal(lpTry.attempt_count, 2, 'attempt history survives another try');
 
   // Choice: explain_answer -> reveals answer and advances to next question/goal
   const sExplain = advance(s2, { requestKind: 'explain_answer' });
   assert.equal(sExplain.response_mode, 'explain');
   const lpExp = sExplain.learning_support[s2.active_learning_point_id];
   assert.equal(lpExp.awaiting_choice, false);
-  assert.equal(sExplain.active_learning_point_id, null);
+  assert.equal(sExplain.active_learning_point_id, s2.active_learning_point_id);
+  assert.equal(sExplain.phase, 'DIALOGUE');
+  assert.equal(sExplain.pendingAdvanceAfterExplanation, true);
 });
 
 test('T3: Control actions pre-evaluated without scoring or user correction card', async () => {
@@ -102,7 +104,7 @@ test('T3: Control actions pre-evaluated without scoring or user correction card'
   assert.equal(detectRequestKind('another try'), 'try_again');
   assert.equal(detectRequestKind('let me try again'), 'try_again');
   assert.equal(detectRequestKind('move on'), 'move_on');
-  assert.equal(detectRequestKind('what do you mean by goal 1'), 'clarify_task');
+  assert.equal(detectRequestKind('what do you mean by goal 1'), 'clarify_term');
   assert.equal(detectRequestKind('explain the question'), 'clarify_task');
 
   // When awaiting choice, option 1 and 2 work cleanly

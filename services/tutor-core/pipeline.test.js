@@ -255,8 +255,7 @@ test('unavailable grading provides neutral feedback and never creates score evid
   assert.strictEqual(r.nextState.phase, 'ROUNDUP');
   assert.strictEqual(r.nextState.perGoal[0].total, 0);
   assert.strictEqual(r.gradedThisTurn, false);
-  assert.strictEqual(r.userCorrection.feedback.is_correct, null);
-  assert.ok(!('score_percent' in r.userCorrection.feedback));
+  assert.strictEqual(r.userCorrection, null, 'An unavailable verdict does not produce a correction card');
   assert.strictEqual(r.stateInstruction, 'reask_shorter');
   assert.strictEqual(r.nextState.questionAssisted, false);
 });

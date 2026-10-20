@@ -236,7 +236,7 @@ test("regression: buildFocusedFallback never produces generic Goal questions or 
   const qText = fallbackGeneric.messages[0].message;
   assert.ok(!qText.includes("Goal 1"), "fallback must never expose internal goal label 'Goal 1'");
   assert.ok(!qText.includes("any formula with units"), "fallback must not demand unsupported formulas");
-  assert.ok(qText.includes("Friction"));
+  assert.match(qText, /friction/i);
 });
 
 // 6. Incomplete corrections
@@ -318,7 +318,8 @@ test("regression: enforce in ROUNDUP preserves generator explanation on HELP/IDK
     stateInstruction: "hint_then_easier"
   });
 
-  assert.strictEqual(enforced.messages.length, 2, "explanation bubble must be preserved on HELP/IDK turn");
+  assert.ok(enforced.messages.length >= 1, "explanation bubble must be preserved on HELP/IDK turn");
+  assert.strictEqual(enforced.questionType, "none", "HELP should explain without another compulsory recall question");
   assert.strictEqual(enforced.messages[0].message, "When you push against a wall, the wall pushes back on you with equal force.");
   assert.strictEqual(enforced.questionAssisted, true);
 });

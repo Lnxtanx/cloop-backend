@@ -69,21 +69,14 @@ test('caps bubble count to maxAllowedBubbles', () => {
 });
 
 
-test('sanitizes bloated diff_html', () => {
+test('omits bloated diff_html rather than shortening the scientific answer', () => {
   const giantIns = '<del>wrong</del><ins>This is a super ridiculously long explanation that the model wrote instead of a clean short diff tag.</ins>';
-  const res = V.sanitizeDiffHtml(giantIns, 'wrong');
-  assert.ok(res.includes('<del>wrong</del>'), 'Missing del tag');
-  const insWords = V.wordCount(res.match(/<ins>(.*?)<\/ins>/)[1]);
-  assert.ok(insWords <= 15, `insWords exceeded 15 words: ${insWords}`);
+  assert.strictEqual(V.sanitizeDiffHtml(giantIns, 'wrong'), null);
 });
 
-test('sanitizes diff_html without leaving trailing dangling conjunctions', () => {
+test('omits an overlong insertion rather than leaving a dangling conjunction', () => {
   const danglingIns = '<del>Contact</del><ins>Kicking a football with your foot is a contact force, because the foot and ball collide.</ins>';
-  const res = V.sanitizeDiffHtml(danglingIns, 'Contact');
-  assert.ok(res.includes('<del>Contact</del>'));
-  const insText = res.match(/<ins>(.*?)<\/ins>/)[1];
-  assert.ok(!/\b(and|or|but|because|with|the)$/i.test(insText.trim().replace(/[.!?]+$/, '')), `insText should not end with a dangling conjunction: "${insText}"`);
-  assert.ok(V.wordCount(insText) <= 15);
+  assert.strictEqual(V.sanitizeDiffHtml(danglingIns, 'Contact'), null);
 });
 
 test('strips pill narration so the question stands alone', () => {
@@ -153,7 +146,7 @@ test('strict bubble limit is 19 words and preserves whole short questions', () =
   assert.strictEqual(V.wordCount(question), 21);
   const out = V.enforce({ messages: [{ message: question }], lastQuestionRubric: rubric }, goalContext);
   assert.ok(out.questionReplaced);
-  assert.strictEqual(out.messages.at(-1).message, 'In simple terms, what is Effects of force and how does it work?');
+  assert.strictEqual(out.messages.at(-1).message, 'What changes can a force cause?');
   assert.ok(out.messages.every(m => V.wordCount(m.message) < 20));
   assert.strictEqual(out.lastQuestionRubric.criteria.length, 4);
 });

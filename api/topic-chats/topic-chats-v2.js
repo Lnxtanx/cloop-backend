@@ -6,6 +6,7 @@ const { getCachedDiagram } = require('../../services/tutor-core/diagram-cache');
 const { recordTurnLog, recordErrorIfWrong, updateDailyStudyStats, endChatSession, updateCurriculumSummary } = require('../../services/analytics/topic-data-collector');
 const { resolveTopicIntelligence } = require('../../services/academic-graph/akg-service');
 const { filterGoalsForStartingTopic } = require('../../services/topic-chat/topic-chat-helpers');
+const { mediaRequests, finalMediaPlan, mediaAssetId, previouslyShown, shouldDeliverMedia } = require('../../services/tutor-core/media-policy');
 
 /**
  * Convert model options into an array of strings for admin_chat.options String[] column
@@ -243,8 +244,10 @@ async function handleTopicChatMessageV2(req, res) {
       select: { board: true, grade_level: true, name: true }
     });
 
-    // 6b. Detect video requests with typo tolerance
-    const wantsVideo = /\b(video|vidoe|vedio|vids?|youtube|yt|watch|clip|animation)\b/i.test(effectiveMessage || '');
+    // 6b. Explicit requests only: a scientific answer mentioning an image is not
+    // a request to display one. The agent uses the same request detector.
+    const explicitMedia = mediaRequests(effectiveMessage);
+    const wantsVideo = explicitMedia.video;
 
     // 6c. Resolve Academic Knowledge Graph context (JIT cached)
     let akgContext = null;
@@ -654,17 +657,38 @@ async function handleTopicChatMessageV2(req, res) {
       console.warn('[Tutor-Core V2] topic-data-collector non-fatal:', collectorErr.message);
     }
 
-    // 13. Asynchronous / On-Demand Media (YouTube & Diagrams)
+    // 13. On-demand media: respect the final agent plan, then suppress media
+    // already displayed in this session. Do not recreate HELP/IDK triggers here.
     let fetchedVideos = [];
-    // Media follows the state machine's attachment plan. Suppress media during
-    // question clarification, assessment-only ROUNDUP, or a terminal phase.
-    const isClarification = turnResult.evaluatorResult?.help_subtype === 'question_clarification' ||
-      turnResult.stateInstruction === 'clarify_question';
-    const mediaAllowed = !['ROUNDUP', 'WRAP', 'DONE'].includes(turnResult.nextState.phase) && !isClarification;
-
-    const isHelpOrIdk = turnResult.intent === 'HELP' || turnResult.intent === 'IDK' ||
-      Boolean(effectiveMessage && /\b(idk|idnt|i\s*dnt|don['’]?t\s+know|dont\s+know|don['’]?t\s+understand|didn['’]?t\s+understand|explain|explain\s+more|help|confused|samjh|samajh)\b/i.test(effectiveMessage));
-    const wantsDiagram = Boolean(effectiveMessage && /\b(diagram|drawing|picture|visual|chart|figure|image)\b/i.test(effectiveMessage));
+    const mediaPlan = finalMediaPlan({
+      attachments: turnResult.attachments,
+      phase: turnResult.nextState.phase,
+      helpSubtype: turnResult.evaluatorResult?.help_subtype,
+      stateInstruction: turnResult.stateInstruction,
+    });
+    let seenMedia = null;
+    if (mediaPlan.video || mediaPlan.diagram) {
+      try {
+        const session = await prisma.topic_chat_sessions?.findFirst({
+          where: { user_id, topic_id: parseInt(topicId), ended_at: null },
+          orderBy: { started_at: 'desc' },
+          select: { started_at: true },
+        });
+        const priorMedia = await prisma.admin_chat.findMany({
+          where: {
+            user_id,
+            sender: 'ai',
+            message_type: { in: ['mermaid_diagram', 'youtube_video'] },
+            chat_goal_progress: { some: { goal_id: { in: goalIds } } },
+            ...(session?.started_at ? { created_at: { gte: session.started_at } } : {}),
+          },
+          select: { message_type: true, diff_html: true },
+        });
+        seenMedia = previouslyShown(priorMedia);
+      } catch (mediaHistoryErr) {
+        console.warn('[Tutor-Core V2] Media history unavailable; automatic media suppressed:', mediaHistoryErr.message);
+      }
+    }
 
     function cleanSearchQuery(topicTitle, goalTitle) {
       const cleanTopic = String(topicTitle || '').replace(/^(?:Goal|Topic|Chapter)\s+\d+:\s*/i, '').trim();
@@ -689,23 +713,27 @@ async function handleTopicChatMessageV2(req, res) {
       } catch (e) {}
     };
 
-    const shouldFetchVideo = mediaAllowed && (turnResult.attachments?.includes('video') || wantsVideo || isHelpOrIdk);
-    if (shouldFetchVideo) {
+    if (mediaPlan.video) {
       try {
         const query = cleanSearchQuery(topic.title, currentGoalRecord?.title);
-        fetchedVideos = await searchYouTube(query);
+        const candidates = await searchYouTube(query);
+        fetchedVideos = (Array.isArray(candidates) ? candidates : []).filter((video) => shouldDeliverMedia({
+          kind: 'video', asset: video, seen: seenMedia, explicitRequest: explicitMedia.video,
+        })).slice(0, 1);
       } catch (ytErr) {
         console.warn('[Tutor-Core V2] YouTube search failed:', ytErr.message);
       }
     }
 
-    const shouldAttachDiagram = mediaAllowed && (turnResult.attachments?.includes('diagram') || isHelpOrIdk || wantsDiagram);
+    const shouldAttachDiagram = mediaPlan.diagram;
     let mermaidDiagram = shouldAttachDiagram ? turnResult.mermaid_diagram : null;
     if (!mermaidDiagram && shouldAttachDiagram) {
       mermaidDiagram = getCachedDiagram(topic.title, currentGoalRecord?.title || topic.title, currentGoalRecord);
     }
-    if (isHelpOrIdk && mermaidDiagram) {
-      mermaidDiagram = { ...mermaidDiagram, trigger: 'visual_explanation' };
+    if (mermaidDiagram && !shouldDeliverMedia({
+      kind: 'diagram', asset: mermaidDiagram, seen: seenMedia, explicitRequest: explicitMedia.diagram,
+    })) {
+      mermaidDiagram = null;
     }
 
     // Persist Mermaid diagram as turn attachment if present
@@ -718,7 +746,7 @@ async function handleTopicChatMessageV2(req, res) {
             sender: 'ai',
             message: diagram.title || 'Concept Diagram',
             message_type: 'mermaid_diagram',
-            diff_html: JSON.stringify({ code: diagram.code, title: diagram.title, trigger: diagram.trigger || 'teaching' }),
+            diff_html: JSON.stringify({ code: diagram.code, title: diagram.title, trigger: diagram.trigger || 'teaching', asset_id: mediaAssetId('diagram', diagram) }),
             options: [],
             created_at: new Date()
           },
@@ -759,6 +787,7 @@ async function handleTopicChatMessageV2(req, res) {
               message_type: 'youtube_video',
               diff_html: JSON.stringify({
                 video_id: video.id,
+                asset_id: mediaAssetId('video', video),
                 thumbnail: video.thumbnail,
                 url: video.url,
                 embedUrl: video.embedUrl,

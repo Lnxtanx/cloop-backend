@@ -39,6 +39,9 @@ test('IDK-only sessions terminate without mastery or assessment credit', () => {
   assert.equal(result.report.total_questions, 0);
   assert.equal(result.report.mastery_confirmed, false);
   assert.equal(result.report.goals_completed, 0);
+  assert.equal(result.state.endedReason, 'complete');
+  assert.equal(result.report.goals_covered, 0);
+  assert.equal(result.report.not_covered.length, TOPICS[1].goals.length);
   assert.equal(result.report.assessments_skipped, TOPICS[1].goals.length * 3);
 });
 
@@ -81,7 +84,7 @@ test('simulation flags invented credit independently of the state tally implemen
   try {
     S.advance = (state, event) => {
       const next = original(state, event);
-      if (state.phase === 'DIALOGUE' && event.intent === 'IDK') {
+      if (event.intent === 'IDK') {
         next.perGoal[0].correct++;
         next.perGoal[0].total++;
       }
@@ -109,4 +112,32 @@ test('CLI main returns a successful status when independent invariants hold', ()
   const logs = [];
   assert.equal(main(['--sessions', '10', '--seed', '42'], (line) => logs.push(line)), 0);
   assert.ok(logs.some((line) => line.includes('no invariant violated')));
+});
+
+// A candidate answer to the academic task is not scoreable while the visible
+// screen is asking the student to choose support, or while an explanation awaits ACK.
+test('support-choice and explanation-only replies do not enter the independent score oracle', () => {
+  const result = runSession(42, topic, { sequence: [right, right, right, idk, idk, right] });
+  assert.deepEqual(result.violations, []);
+  assert.equal(result.report.correct_answers + result.report.incorrect_answers + result.report.assisted_answers, result.report.total_questions);
+  assert.equal(result.report.mastery_confirmed, false);
+});
+
+test('independent oracle rejects invented credit while a support choice is displayed', () => {
+  const original = S.advance;
+  try {
+    S.advance = (state, event) => {
+      const next = original(state, event);
+      if (state.response_mode === 'offer_choice' && event.intent === 'ANSWER') {
+        next.perGoal[0].total++;
+        next.perGoal[0].correct++;
+      }
+      return next;
+    };
+    const result = runSession(42, topic, { sequence: [right, right, right, idk, idk, right] });
+    assert.ok(result.violations.some(violation => violation.label === 'score disagrees with independent first-response evidence'));
+    assert.ok(result.violations.some(violation => violation.label === 'non-answer or unavailable grading changed score'));
+  } finally {
+    S.advance = original;
+  }
 });
