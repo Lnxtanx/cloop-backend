@@ -1,3 +1,4 @@
+const { recordQuestionRecovery } = require('../../../services/tutor-core/question-recovery');
 const { persistQuestionContract } = require('../../../services/tutor-core/question-contract');
 const { mediaRequests } = require('../../../services/tutor-core/media-policy');
 const { teachingRequest, requestEvaluation } = require('../../../services/tutor-core/learning-requests');
@@ -343,6 +344,7 @@ async function processTurn({
   if (validated.taskRepair && !ending && !nextState.pendingAdvanceAfterExplanation) {
     nextState.response_mode = 'task_repair';
   }
+  const questionRecovery = recordQuestionRecovery(state, nextState, validated, { ending });
   nextState.questionAssisted = (sameAssessment && (state.questionAssisted || ASSISTANCE.has(stateInstruction))) || Boolean(validated.questionAssisted);
 
   const academicNotes = enrichedTeachingContext.academic_grounding;
@@ -434,6 +436,7 @@ async function processTurn({
       reasoning_content: rawTutorOutput._inspector?.reasoning || null,
       raw_response: rawTutorOutput._inspector?.rawJson || null,
       validated_bubbles: validated.messages,
+      question_recovery: questionRecovery,
       next_rubric: validated.lastQuestionRubric,
       question_type: questionType,
       attachments,

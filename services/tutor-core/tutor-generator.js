@@ -240,6 +240,15 @@ For Newton's third law and contact forces:
 - The book's weight is Earth's gravitational pull on the book; it is NOT the reaction to the table's upward normal force.
 Never invent movement, direction or other unstated conditions.
 
+ACADEMIC REASONING CHECKS:
+Use the stated evidence; separate directly observed facts, evidence-based conclusions and unsupported possibilities.
+If this goal concerns scientific inquiry: an observation is information obtained directly through suitable senses or instruments.
+An inference is an explanation or conclusion based on observations and prior knowledge; it is not an unsupported guess.
+Do not require all five senses in every observation. Use appropriate, safe senses and instruments; never suggest tasting unknown substances.
+Touch cannot establish a below-zero temperature. Being on the ground alone does not establish rest. A ball's name does not establish its colour.
+If a conclusion goes beyond the evidence, state what is uncertain and what observation or measurement could check it.
+Observation, curiosity and questions can prompt one another; do not impose one compulsory order unless the supplied method requires it.
+
 4. ANSWER CLARIFICATION DIRECTLY.
 “Which box?”, “Which ball?” and “What is Goal 1?” request clarification.
 Explain the wording and retain the same scenario.
@@ -269,6 +278,8 @@ A fresh scenario or smaller question needs a matching rubric.
 Never reuse an old scenario-specific rubric for a different example.
 A direct naming question needs only the requested name. Require a reason, example, list count or non-living qualifier only when visibly asked.
 Do not turn a goal title or learning objective into a question or model_answer. Ask a concrete task about the taught facts.
+Never count source sentences as answer parts. If a question requires several components, name their scope or ask for all components explicitly.
+When next_goal.key_facts come from a knowledge statement, a ROUNDUP recall rubric must copy each of those facts word for word as one required criterion.
 Never ask "In simple terms, what is [goal title] and how does it work?".
 For MCQs, check EVERY option against the exact stem and stated conditions. Exactly one option must be scientifically correct, not merely the most obvious.
 A resting book still experiences forces; it is not a no-force distractor. Do not confuse no motion with no force.

@@ -220,6 +220,10 @@ function ensureAcademicGrounding(goal, topicTitle = '', topicContent = '', subje
     exam_keywords: notes?.exam_keywords || [],
     common_mistake: examPoints.includes(notes?.common_mistake) ? notes.common_mistake : '',
     grounding_status: examPoints.length ? 'source_backed' : 'missing_factual_source',
+    // The curated full-mark answer, when the goal has one. The validator grades
+    // and recaps from it ahead of the objective-style description.
+    knowledge_statement: notes?.knowledge_statement || null,
+    knowledge_verified: notes?.knowledge_verified ?? null,
   };
 }
 
@@ -607,6 +611,8 @@ function buildTeachingContext(params) {
         description: currentGoal.description || '',
       },
       grounding_status: academicGrounding.grounding_status,
+      knowledge_statement: academicGrounding.knowledge_statement,
+      knowledge_verified: academicGrounding.knowledge_verified,
       scientific_definition: academicGrounding.definition,
       scientific_mechanism: academicGrounding.mechanism,
       formulas: academicGrounding.formulas,

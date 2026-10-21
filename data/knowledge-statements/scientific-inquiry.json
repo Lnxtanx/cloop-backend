@@ -1,0 +1,23 @@
+{
+  "source": "Cloop pilot draft. Goals 1-2 follow NCERT Curiosity Grade 6 Ch 1; goal 3 is not in that chapter. Needs teacher check.",
+  "verified": false,
+  "topics": [
+    {
+      "topic_title": "Introduction to Scientific Inquiry",
+      "goals": [
+        {
+          "goal_title_includes": ["component"],
+          "knowledge_statement": "Scientific inquiry includes observing, asking a question, guessing a possible answer, testing the guess and analysing the results."
+        },
+        {
+          "goal_title_includes": ["curiosity"],
+          "knowledge_statement": "Curiosity sparks questions about how and why things happen."
+        },
+        {
+          "goal_title_includes": ["inference"],
+          "knowledge_statement": "An observation is information gathered directly through the senses or instruments; an inference is a conclusion based on observations and prior knowledge."
+        }
+      ]
+    }
+  ]
+}

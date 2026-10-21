@@ -249,7 +249,7 @@ test('new roundup replaces narrower generated questions and removes answer leaka
 test('roundup retry may teach but preserves the original full question and rubric', () => {
   const original = V.buildFocusedFallback(goalContext);
   const out = V.enforce({ messages: [{ message: 'Force can start or stop motion and change speed, direction, or shape.' }, { message: 'Does force change shape?' }], lastQuestionRubric: rubric }, {
-    ...goalContext, sameAssessment: true, lastQuestionText: original.messages[0].message, lastQuestionRubric: original.lastQuestionRubric
+    ...goalContext, sameAssessment: true, stateInstruction: 'correct_and_reask', lastQuestionText: original.messages[0].message, lastQuestionRubric: original.lastQuestionRubric
   });
   assert.strictEqual(out.messages.length, 2);
   assert.strictEqual(out.messages.at(-1).message, original.messages[0].message);

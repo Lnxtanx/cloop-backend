@@ -1,0 +1,19 @@
+{
+  "source": "Checked by Claude against NCERT Curiosity Grade 6 Ch 1 (The Wonderful World of Science) text; signed off for Ninad, 2026-10-21",
+  "verified": true,
+  "topics": [
+    {
+      "topic_title": "Introduction to Scientific Inquiry",
+      "goals": [
+        {
+          "goal_title_includes": ["component"],
+          "knowledge_statement": "Scientific inquiry includes observing, asking a question, guessing a possible answer, testing the guess and analysing the results."
+        },
+        {
+          "goal_title_includes": ["curiosity"],
+          "knowledge_statement": "Curiosity sparks questions about how and why things happen."
+        }
+      ]
+    }
+  ]
+}

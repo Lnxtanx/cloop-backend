@@ -351,6 +351,7 @@ function factualSourceParts(value) {
   return String(value || '').split(/;|\n+|(?<=[.!?])\s+(?=[A-Z])/)
     .map(cleanProse).filter(text => text &&
       !/^(?:(?:brief|short|basic)\s+)?(?:note|stub|placeholder|tbd|todo|description|summary)[.!?]*$/i.test(text) &&
+      !/^(?:(?:this|the)\s+(?:topic|chapter|lesson|unit|section)\s+(?:introduces|covers|explains|explores|discusses|focuses|describes|highlights|traces|investigates|teaches)|students?\s+(?:learn|explore|discover|study)\b)/i.test(text) &&
       !/^(?:students?\s+(?:will|should|can)|learners?\s+(?:will|should)|learning\s+(?:goal|objective)|(?:identify|describe|explain|define|demonstrate|analy[sz]e|understand|label|draw|list|name|recall|compare|give\s+examples?)(?:\s|:)|examples?(?:\s+such as|\s*:)|for example\b|e\.g\.)/i.test(text));
 }
 
@@ -360,6 +361,10 @@ function isGoalHeadingQuestion(text) {
 
 function sourceFactsFor(context = {}) {
   const notes = context.academicNotes || {};
+  // A goal's knowledge statement is its curated full-mark answer, so it outranks
+  // the description, which usually states an objective ("Students will...").
+  const knowledgeFacts = factualSourceParts(context.currentGoalKnowledge || notes.knowledge_statement);
+  if (knowledgeFacts.length) return [...new Set(knowledgeFacts)];
   // The current goal defines the recall perimeter. Notes fill thin/objective-only goals.
   const goalFacts = factualSourceParts(context.currentGoalDescription);
   if (goalFacts.length) return [...new Set(goalFacts)];
@@ -377,7 +382,8 @@ function topicFactsFor(context = {}) {
   const seen = new Set();
   const sourceGoals = goals.length ? goals : [{ title: context.currentGoalTitle, description: context.currentGoalDescription }];
   return sourceGoals.map(goal => {
-    const facts = sourceFactsFor({ currentGoalDescription: goal?.description || goal?.knowledge_statement || '',
+    const facts = sourceFactsFor({ currentGoalKnowledge: goal?.knowledge_statement || '',
+      currentGoalDescription: goal?.description || '',
       academicNotes: goal?.academicNotes || (goal?.title === context.currentGoalTitle ? context.academicNotes : null) })
       .filter(fact => {
         const key = fact.toLowerCase().replace(/\s+/g, ' ').trim();
@@ -434,13 +440,35 @@ function topicRecapFallback(context) {
 
 function repairFallback(reason = 'missing_factual_source', messages = null) {
   return {
-    messages: messages || [{ message: "I need to check the lesson wording before asking that again.", message_type: 'text' }],
+    messages: messages || [{ message: "Let me find a clearer way to ask this.", message_type: 'text' }],
     lastQuestionRubric: null,
     fallbackQuestionType: 'none',
     taskRepair: true,
     fallbackReason: reason,
     questionAssisted: true
   };
+}
+
+// A sentence may contain several list requirements. Count only a parsed list,
+// never the number of source sentences as if it were a mark/answer count.
+function listedRequirements(facts) {
+  if (facts.length !== 1) return null;
+  const match = facts[0].match(/^(.+?)\s+(?:includes?|comprises?|consists?\s+of|contains?)\s+(.+?)[.!?]*$/i);
+  if (!match) return null;
+  const items = match[2].replace(/[.!?]+$/, '').split(/,\s*|\s+and\s+/i).map(item => item.trim()).filter(Boolean);
+  if (items.length < 2 || items.length > 6 || items.some(item => wordCount(item) > 8)) return null;
+  return { subject: match[1].replace(/^(?:a|an|the)\s+/i, '').trim(), items };
+}
+
+function comparableFact(value) {
+  return cleanProse(value).toLowerCase().replace(/\b(?:a|an|the)\b/g, ' ')
+    .replace(/[^\p{L}\p{N}=]+/gu, ' ').replace(/\s+/g, ' ').trim();
+}
+
+function coversRequiredRecall(candidate, expected) {
+  if (!candidate || !expected) return false;
+  const criteria = candidate.criteria.filter(criterion => criterion.required).map(criterion => comparableFact(criterion.description));
+  return expected.criteria.every(criterion => criteria.some(description => description.includes(comparableFact(criterion.description))));
 }
 
 /** Grounded fallback: factual recall or ungraded repair; never invent an answer from an objective. */
@@ -469,7 +497,7 @@ function buildFocusedFallback(context = {}) {
         const exampleBubbles = splitIntoMicroBubbles(sourceExample, 25);
         if (exampleBubbles.length) return repairFallback('worked_example', exampleBubbles.slice(0, 3).map(message => ({ message, message_type: 'text' })));
       }
-      return repairFallback('example_source_unavailable', [{ message: 'I need to check a suitable worked example before explaining it.', message_type: 'text' }]);
+      return repairFallback('example_source_unavailable', [{ message: 'Let me find a good example for this first.', message_type: 'text' }]);
     }
     const answer = factualSourceParts(context.evaluatorResult?.complete_answer || priorRubric?.model_answer).join(' ') || facts.join(' ');
     if (!answer) return repairFallback();
@@ -488,25 +516,66 @@ function buildFocusedFallback(context = {}) {
   if (!facts.length) return repairFallback();
 
   const firstFact = facts[0];
+  const list = listedRequirements(facts);
   const definitionMatch = firstFact.match(/^(.+?)\s+(?:is defined as|are defined as|is|are|means|refers to)\s+(.+)/i);
   const causeMatch = firstFact.match(/^(.+?)\s+can\s+(.+)/i);
-  const sourceSubject = (definitionMatch?.[1] || causeMatch?.[1] || '').replace(/^(?:the|a|an)\s+/i, '').trim();
+  const sourceSubject = (list?.subject || definitionMatch?.[1] || causeMatch?.[1] || '').replace(/^(?:the|a|an)\s+/i, '').trim();
   const heading = cleanConceptHeading(currentGoalTitle, topicTitle);
   const subject = sourceSubject || heading;
   if (!subject || subject === 'this concept' || wordCount(subject) > 9) return repairFallback();
   let question;
-  if (causeMatch && /\b(?:change|start|stop|speed|slow|turn)\b/i.test(causeMatch[2])) {
+  let requirements = facts;
+  if (list) {
+    question = `Name all ${list.items.length} components of ${subject.toLowerCase()}?`;
+    requirements = list.items.map(item => `${list.subject} includes ${item}.`);
+  } else if (causeMatch && /\b(?:change|start|stop|speed|slow|turn)\b/i.test(causeMatch[2])) {
     question = `What changes can ${/^[aeiou]/i.test(subject) ? 'an' : 'a'} ${subject.toLowerCase()} cause?`;
   } else if (facts.length === 1 && definitionMatch) {
     question = /^What is [^?]+[?]$/i.test(currentGoalTitle) && wordCount(currentGoalTitle) <= MAX_WORDS_PER_BUBBLE
       ? currentGoalTitle : `What is meant by ${subject.toLowerCase()}?`;
+  } else if (facts.length > 1 && facts.every(fact => /^(.+?)\s+(?:is defined as|are defined as|is|are|means|refers to)\s+(.+)/i.test(fact)) &&
+      new Set(facts.map(fact => comparableFact(fact.match(/^(.+?)\s+(?:is defined as|are defined as|is|are|means|refers to)\s+/i)[1]))).size > 1) {
+    const subjects = [...new Set(facts.map(fact => fact.match(/^(.+?)\s+(?:is defined as|are defined as|is|are|means|refers to)\s+/i)[1]
+      .replace(/^(?:a|an|the)\s+/i, '').toLowerCase()))];
+    const joined = subjects.length === 2 ? subjects.join(' and ') : `${subjects.slice(0, -1).join(', ')} and ${subjects.at(-1)}`;
+    question = `Define ${joined}?`;
+  } else if (facts.length > 1) {
+    const labels = [...new Set(facts.map(fact => /\b(?:formula|equation)\b|=/i.test(fact) ? 'formula'
+      : /\b(?:units?|measured in)\b/i.test(fact) ? 'units'
+      : /\b(?:interact|interaction)\b/i.test(fact) ? 'interaction'
+      : /\b(?:is|are|means|defined as|refers to)\b/i.test(fact) ? 'meaning' : null))];
+    if (labels.includes(null) || labels.length < 2) return repairFallback('recall_scope_unavailable');
+    const scope = labels.length === 2 ? labels.join(' and ') : `${labels.slice(0, -1).join(', ')} and ${labels.at(-1)}`;
+    question = `Explain ${subject.toLowerCase()}: its ${scope}?`;
   } else {
-    question = `State the ${facts.length} key facts we learned about ${subject.toLowerCase()}?`;
+    const causal = firstFact.match(/^(.+?)\s+(starts?(?:\s+with)?|begins?(?:\s+with)?|sparks?|prompts?|motivates?|opposes?|produces?|releases?|requires?|changes?|leads?\s+to)\s+(.+)/i);
+    const passive = firstFact.match(/^(.+?)\s+(can|must|should|may)\s+be\s+([\w-]+)\s+(?:by|through|using)\s+(.+)/i);
+    const modal = firstFact.match(/^(.+?)\s+(must|should)\s+(observe|measure|compare|identify|control|test)\b/i);
+    const conditional = firstFact.split(',').length === 2 && firstFact.match(/^When\s+([^,]+),\s+(.+)/i);
+    const pattern = firstFact.match(/^(.+?)\s+(occurs?)\s+in\s+(.+)/i);
+    if (causal) {
+      const singular = /s$/.test(causal[2].split(/\s+/)[0]);
+      const action = causal[2].replace(/^([a-z]+)s\b/i, '$1').toLowerCase();
+      question = `What ${singular ? 'does' : 'do'} ${causal[1].toLowerCase()} ${action}?`;
+    } else if (conditional) {
+      question = `What happens when ${conditional[1].toLowerCase()}?`;
+    } else if (pattern && /\b(?:pairs?|groups?|patterns?)\b/i.test(pattern[3])) {
+      const singular = /s$/.test(pattern[2]);
+      question = `In what pattern ${singular ? 'does' : 'do'} ${pattern[1].toLowerCase()} occur?`;
+    } else if (passive) {
+      question = `How ${passive[2].toLowerCase()} ${passive[1].toLowerCase()} be ${passive[3].toLowerCase()}?`;
+    } else if (modal) {
+      question = `What ${modal[2].toLowerCase()} ${modal[1].toLowerCase()} ${modal[3].toLowerCase()}?`;
+    } else {
+      // A source fragment or objective heading cannot establish a concrete task.
+      // Let the caller perform bounded recovery instead of asking vaguely.
+      return repairFallback('recall_scope_unavailable');
+    }
   }
   if (wordCount(question) > MAX_WORDS_PER_BUBBLE) return repairFallback();
   return {
     messages: [{ message: question, message_type: 'text' }],
-    lastQuestionRubric: { criteria: facts.map((description, index) => ({ id: `fact_${index + 1}`, description, required: true })),
+    lastQuestionRubric: { criteria: requirements.map((description, index) => ({ id: `fact_${index + 1}`, description, required: true })),
       model_answer: facts.join('; ') },
     fallbackQuestionType: 'open'
   };
@@ -529,7 +598,7 @@ function enforce(rawOutput, context = {}) {
   let rubric = explanationOnly ? null : normalizeRubric(rawOutput?.lastQuestionRubric);
   const priorRubric = normalizeRubric(context.lastQuestionRubric);
   let questionReplaced = false;
-  let questionAssisted = Boolean(context.sameAssessment || context.questionAssisted || rawOutput?.questionAssisted);
+  let questionAssisted = Boolean((phase !== 'ROUNDUP' && context.sameAssessment) || context.questionAssisted || rawOutput?.questionAssisted);
   const isHelpOrIdk = Boolean(context.isHelpOrIdk || (studentMessage && /\b(idnt|i\s*dnt|idk|explain|don['’]?t\s+know|dont\s+know|don['’]?t\s+understand|didn['’]?t\s+understand|samjh|samajh)\b/i.test(studentMessage)));
   const isTeachingOrExplanation = explanationOnly || phase === 'THEORY' || response_mode === 'teach' || response_mode === 'explain' || isHelpOrIdk;
   const effectiveMaxBubbles = isTeachingOrExplanation ? 3 : MAX_BUBBLES;
@@ -599,36 +668,53 @@ function enforce(rawOutput, context = {}) {
     };
   }
 
-  // First recall is uncoached and asks for exactly the full stored core-facts rubric.
-  // Assisted retries may explain, but retain that whole question and its original rubric.
-  // Clarifications are handled above and do not trigger unconditional ROUNDUP replacement.
+  // A valid generated recall task must survive formatting, including when
+  // stored goals contain objectives rather than canonical factual sentences.
+  // A source-backed full rubric still cannot be reduced to an easier subset.
   if (phase === 'ROUNDUP' && context.currentGoalDescription) {
-    const isAssistanceDirective = Boolean(context.stateInstruction && ['correct_and_reask', 'reteach_new_angle', 'hint_then_easier', 'explain_differently', 'give_starter', 'reveal_and_move_on'].includes(context.stateInstruction));
-    const isRetryOrAssisted = Boolean(context.sameAssessment || context.isHelpOrIdk || context.questionAssisted || isAssistanceDirective);
-    const recall = buildFocusedFallback(context);
-    if (recall.fallbackQuestionType === 'none') {
-      const explanations = messages.filter(b => !endsWithQuestion(b.message));
-      return enforce({ ...recall, messages: explanations.length ? explanations : recall.messages }, { ...context, questionType: 'none' });
+    const assistanceDirective = ['correct_and_reask', 'reteach_new_angle', 'hint_then_easier',
+      'explain_differently', 'give_starter', 'reveal_and_move_on'].includes(context.stateInstruction);
+    // Re-presenting the same task after an infrastructure failure is not a hint.
+    // Assistance requires actual help/correction or an explicit assisted marker.
+    const recallAssisted = Boolean(context.questionAssisted || rawOutput?.questionAssisted || context.isHelpOrIdk ||
+      (context.sameAssessment && assistanceDirective));
+    const candidate = messages.at(-1);
+    const candidateQuestion = cleanProse(candidate?.message);
+    const candidateValid = endsWithQuestion(candidateQuestion) && wordCount(candidateQuestion) <= MAX_WORDS_PER_BUBBLE &&
+      !isGoalHeadingQuestion(candidateQuestion) && Boolean(rubric);
+    const expected = context.sameAssessment && priorRubric
+      ? priorRubric : buildFocusedFallback({ ...context, sameAssessment: false, isHelpOrIdk: false,
+        evaluatorResult: null, response_mode: 'check', stateInstruction: 'roundup_recall' }).lastQuestionRubric;
+    const sufficientlyScoped = !expected || coversRequiredRecall(rubric, expected);
+    const freshWholeGoal = !expected || expected.criteria.length <= 1 ||
+      /\b(?:all|each|every|effects?|components?|difference|compare|both|and)\b/i.test(candidateQuestion);
+    if (candidateValid && sufficientlyScoped && freshWholeGoal) {
+      const assisted = recallAssisted;
+      if (!assisted) messages = [{ message: candidateQuestion, message_type: 'text' }];
+      // Normal validation below owns question identity and checks scenario consistency.
+      questionAssisted = assisted;
+    } else {
+      const recall = buildFocusedFallback(context);
+      if (recall.fallbackQuestionType === 'none') {
+        const explanations = messages.filter(b => !endsWithQuestion(b.message));
+        return enforce({ ...recall, messages: explanations.length ? explanations : recall.messages }, { ...context, questionType: 'none' });
+      }
+      const explanation = recallAssisted ? messages.find(b => !endsWithQuestion(b.message)) : null;
+      messages = explanation ? [explanation, recall.messages[0]] : recall.messages;
+      messages.forEach(b => delete b.options);
+      const isActuallyAssisted = recallAssisted;
+      const questionRecord = createQuestionRecord({
+        goalId: context.currentGoalId || context.goalIndex || null,
+        scenario: extractScenario(explanation?.message, recall.messages[0]?.message),
+        questionText: recall.messages[0]?.message,
+        options: null, rubric: recall.lastQuestionRubric, modelAnswer: recall.lastQuestionRubric?.model_answer,
+        requiredComponentIds: (recall.lastQuestionRubric?.criteria || []).map(c => c.id),
+        assisted: isActuallyAssisted, sourceVersion: context.sourceVersion || 'v1',
+        learning_point_id: context.learning_point_id || context.activeLearningPointId || null, response_mode
+      });
+      return { messages, diff_html: sanitizeDiffHtml(diffHtml, studentMessage), lastQuestionRubric: recall.lastQuestionRubric,
+        questionType: 'open', questionReplaced: true, questionAssisted: isActuallyAssisted, questionRecord };
     }
-    const explanation = isRetryOrAssisted ? messages.find(b => !endsWithQuestion(b.message)) : null;
-    messages = explanation ? [explanation, recall.messages[0]] : recall.messages;
-    messages.forEach(b => delete b.options);
-    const isActuallyAssisted = Boolean(context.questionAssisted || isAssistanceDirective || context.isHelpOrIdk);
-    const questionRecord = createQuestionRecord({
-      goalId: context.currentGoalId || context.goalIndex || null,
-      scenario: extractScenario(explanation?.message, recall.messages[0]?.message),
-      questionText: recall.messages[0]?.message,
-      options: null,
-      rubric: recall.lastQuestionRubric,
-      modelAnswer: recall.lastQuestionRubric?.model_answer,
-      requiredComponentIds: (recall.lastQuestionRubric?.criteria || []).map(c => c.id),
-      assisted: isActuallyAssisted,
-      sourceVersion: context.sourceVersion || 'v1',
-      learning_point_id: context.learning_point_id || context.activeLearningPointId || null,
-      response_mode
-    });
-    return { messages, diff_html: sanitizeDiffHtml(diffHtml, studentMessage),
-      lastQuestionRubric: recall.lastQuestionRubric, questionType: 'open', questionReplaced: true, questionAssisted: isActuallyAssisted, questionRecord };
   }
 
   // CHECK retries restore the original question, choices and key
@@ -659,7 +745,7 @@ function enforce(rawOutput, context = {}) {
   }
 
   // Open teaching retries (DIALOGUE, THEORY, PROBE): retain valid adaptive question and rubric
-  if (context.sameAssessment && priorRubric) {
+  if (context.sameAssessment && priorRubric && phase !== 'ROUNDUP') {
     const candidateFinal = messages[messages.length - 1];
     const candidateQuestion = cleanProse(candidateFinal?.message);
     const hasAdaptiveQuestion = endsWithQuestion(candidateQuestion) && wordCount(candidateQuestion) <= MAX_WORDS_PER_BUBBLE;

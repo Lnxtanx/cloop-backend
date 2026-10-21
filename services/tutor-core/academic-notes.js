@@ -7,8 +7,12 @@ const words = text => (String(text || '').toLowerCase().match(/[a-z0-9]+/g) || [
 const facts = text => String(text || '').split(/\n+|;\s*|(?<=[.!?])\s+(?=[A-Z])/).map(s => s.trim()).filter(Boolean);
 
 function buildAcademicNotes(goal, topicContent = '') {
-  const primary = facts(goal.description);
-  const tokens = new Set(words(`${goal.title} ${goal.description}`));
+  // A goal's knowledge statement is its curated full-mark answer. When present
+  // it is the primary source; the description is usually a learning objective
+  // ("Students will…"), which says what to learn, not what is true.
+  const knowledge = String(goal.knowledge_statement || '').trim();
+  const primary = facts(knowledge || goal.description);
+  const tokens = new Set(words(`${goal.title} ${knowledge || goal.description}`));
   const source = facts(String(topicContent).slice(0, 32000));
   const relevant = source.map((text, index) => ({ text, index,
     score: [...new Set(words(text))].filter(w => tokens.has(w)).length }))
@@ -21,7 +25,9 @@ function buildAcademicNotes(goal, topicContent = '') {
   const examKeywords = [...new Set((examPoints.join(' ').match(/\b(?:CO2|CO|SO2|NOx|haemoglobin|hemoglobin|incomplete combustion|oxygen transport|sulfur dioxide|sulphur dioxide|nitrogen oxides|carbon monoxide|carbon dioxide|acid rain|greenhouse effect|catalytic converter|ignition temperature|fire triangle|fuel|oxygen|heat|cooling|smothering|water extinguisher|Class A|independent variables?|dependent variables?|controlled variables?|fair test|testable question|hypothesis|measurement|observation|measurable property|experimental object|experimental subject)\b/gi) || []))];
   return { goal: goal.title, definition, mechanism, exam_points: examPoints,
     exam_keywords: examKeywords, model_answer: examPoints.join('; '), formulas,
-    common_mistake: examPoints.find(s => /\b(not|never|less|rather than)\b/i.test(s)) || '' };
+    common_mistake: examPoints.find(s => /\b(not|never|less|rather than)\b/i.test(s)) || '',
+    knowledge_statement: knowledge || null,
+    knowledge_verified: knowledge ? goal.knowledge_verified === true : null };
 }
 
 function notesFingerprint(goals, topicContent) {
@@ -31,7 +37,9 @@ function notesFingerprint(goals, topicContent) {
     schema: NOTE_SCHEMA_VERSION,
     source: String(topicContent || ''),
     goals: goals.map(goal => ({ title: String(goal.title || ''),
-      description: String(goal.description || ''), order: goal.order ?? null }))
+      description: String(goal.description || ''), order: goal.order ?? null,
+      // Adding or correcting a statement must rebuild saved notes.
+      knowledge_statement: String(goal.knowledge_statement || '') }))
   })).digest('hex');
 }
 

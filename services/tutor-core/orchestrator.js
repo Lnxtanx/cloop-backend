@@ -1,3 +1,4 @@
+const { recordQuestionRecovery } = require('./question-recovery');
 const { persistQuestionContract } = require('./question-contract');
 const { mediaRequests } = require('./media-policy');
 const { teachingRequest, requestEvaluation } = require('./learning-requests');
@@ -212,6 +213,7 @@ async function processTutorTurn(params) {
   if (validated.taskRepair && !ending && !nextState.pendingAdvanceAfterExplanation) {
     nextState.response_mode = 'task_repair';
   }
+  const questionRecovery = recordQuestionRecovery(state, nextState, validated, { ending });
   nextState.questionAssisted = (sameAssessment && (state.questionAssisted || ASSISTANCE.has(stateInstruction))) || Boolean(validated.questionAssisted);
 
   // Record delivered teaching coverage by concept component only after validated content is persisted for delivery

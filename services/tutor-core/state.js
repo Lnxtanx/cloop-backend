@@ -1,3 +1,4 @@
+const { teachingRequest, controlRequest } = require('./learning-requests');
 /**
  * Tutor session state — owned by the server, never inferred from model output.
  *
@@ -101,14 +102,10 @@ const RESPONSE_MODES = ["check", "teach", "offer_choice", "explain", "task_repai
 
 /**
  * Checks whether the student explicitly commanded the tutor to end or exit the session.
- * Exit commands are strictly short (<= 8 words) directives. Never matches physics/science answers.
+ * The shared parser matches explicit imperative clauses, not science-answer keywords.
  */
 function isExplicitExitCommand(text) {
-  const clean = String(text || '').trim();
-  if (!clean) return false;
-  const words = clean.split(/\s+/).filter(Boolean);
-  if (words.length > 8) return false;
-  return /^(?:(?:please\s+)?(?:end|finish|close|stop)\s+(?:the\s+)?(?:session|chat|class|lesson)|(?:please\s+)?(?:stop|wrap\s+up|finish|end)\s+(?:here|now)|let['’]?s\s+(?:stop|wrap\s+up|finish|end)(?:\s+(?:here|now))?|wrap\s+up(?:\s+(?:the\s+)?(?:session|chat))?|i\s+(?:want|would\s+like)\s+to\s+(?:stop|quit|leave|exit|end)(?:\s+(?:the\s+)?(?:session|chat|now|here))?|quit|exit|khatam\s+karo)$/i.test(clean);
+  return controlRequest(text) === 'end_session';
 }
 
 function initialState(goalTotal) {
@@ -327,8 +324,8 @@ function advance(state, event = {}) {
   }
 
   // ── Route explicit control requests before academic handling ─────────────
-  const requestKind = event.requestKind || event.request_kind || null;
   const rawStudentText = String(event.answerText || '').trim();
+  const requestKind = teachingRequest(rawStudentText) || event.requestKind || event.request_kind || null;
   if (isExplicitExitCommand(rawStudentText)) {
     s.phase = 'WRAP';
     s.endedReason = 'user_requested';
@@ -403,8 +400,7 @@ function advance(state, event = {}) {
   }
 
   // 4. Move on request: "Teach something else" / "Next question"
-  const isExplicitMoveOn = requestKind === 'move_on' ||
-    (intent !== 'OFF_TOPIC' && !event.offTopic && /^(?:please\s+)?(?:next(?:\s+question|\s+topic)?|move\s+on|proceed|skip(?:\s+this(?:\s+question)?)?)[.!?]*$/i.test(rawStudentText));
+  const isExplicitMoveOn = requestKind === 'move_on';
   if (isExplicitMoveOn) {
     currentPoint.awaiting_learning_choice = false;
     currentPoint.awaiting_choice = false;

@@ -11,3 +11,6 @@ premium-aloe-*.json
 # Logs
 logs/
 
+
+# Draft knowledge statements waiting for teacher review
+data/knowledge-statements/review/

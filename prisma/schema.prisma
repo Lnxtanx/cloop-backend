@@ -286,6 +286,17 @@ model global_topic_goals {
   order              Int                  @default(1)
   created_at         DateTime?            @default(now()) @db.Timestamp(6)
 
+  // The full-mark answer for this goal: 1–3 short factual sentences an
+  // examiner would award marks for. `description` holds the learning objective
+  // ("Students will…"); the tutor teaches, grades and recaps from this instead.
+  // See prisma/sql/20261021_add_goal_knowledge_statement.sql.
+  knowledge_statement  String?   @db.Text
+  // Where the statement came from (textbook chapter, teacher, reference doc).
+  knowledge_source     String?   @db.VarChar(200)
+  // True only once a teacher has checked it against the board syllabus.
+  knowledge_verified   Boolean   @default(false)
+  knowledge_updated_at DateTime? @db.Timestamp(6)
+
   topic              global_topics        @relation(fields: [topic_id], references: [id], onDelete: Cascade)
   chat_goal_progress chat_goal_progress[] @relation("GoalToProgress")
   learning_turns     learning_turns[]
