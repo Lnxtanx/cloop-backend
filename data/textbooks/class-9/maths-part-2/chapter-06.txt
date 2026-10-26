@@ -1,0 +1,874 @@
+# CLASS-9 - MATHS-PART-2 - CHAPTER 06
+# Source: iemh206.pdf
+
+Math of Space: Surface Area and Volume
+
+14
+
+In the previous grade we explored nets of some solids including cubes, cylinders, and cones. We saw that solids have a surface and occupy some space or volume. In this chapter, we will learn how to determine surface areas and volumes of cuboids, cylinders, cones, pyramids, and spheres, and how we can use these to solve some interesting problems.
+
+14.1 Cuboids and Cubes
+
+h
+
+w l
+
+Fig. 14.1A: Cuboid bricks Fig. 14.1B: Rubik’s Cube
+
+Fig. 14.1C: Cuboid
+
+A cuboid has the shape shown in these pictures. A useful way of thinking about a cuboid is that it is a ‘three-dimensional (3D) version’ of a rectangle.
+
+h
+
+h
+
+It has six faces, all rectangles. It is characterised by three quantities: length, width, and height — these are denoted by l, w, h respectively. You can cut out the net of a cuboid given at the end of the textbook, make appropriate folds and join the edges to form the cuboid.
+
+w w
+
+h
+
+l l
+
+What is the total surface area of a cuboid? You may refer to the net of the cuboid given in Fig. 14.2.
+
+h
+
+Fig. 14.2
+
+Considering the faces individually, we see that the total surface area (TSA) of the cuboid is
+
+TSA = 2(wl + hl + hw).
+
+124 Ganita Manjari | Grade 9 | Part II
+
+Volume measures the amount of three-dimensional space an object or a container occupies. It is measured in cubic units, e.g., cubic meters (m3) or cubic centimeters (cm3). We set the volume of a unit cube (i.e., a cuboid measuring one unit in each direction) to be one cubic unit (e.g., 1 m3 or 1 cm3, as the case may be). The volume of a general cuboid is the number of unit cubes that fit into it. Accordingly, the formula for the volume V of a cuboid is length × width × height or
+
+V = lwh.
+
+Compare the formula for the volume of a cuboid with the formula for the area of a rectangle (length × width).
+
+Fig. 14.3
+
+Here is a way of understanding why the formula V = lwh is true: think of a cuboid as a large number of thin rectangular pieces (length l, width w) stacked on top of each other, like a pack of playing cards. (Fig. 14.3).
+
+Think and Reflect
+
+Try to work out for yourself why this model explains the formula for the volume of a cuboid, i.e.,
+
+volume = area of base × height.
+
+Write the formula for the surface area and the volume of a cube.
+
+a
+
+A particular and important case of a cuboid is a cube, whose length, width, and height are the same. This length is the ‘side’ of the cube.
+
+Let the side be a. Then:
+
+a a
+
+• Total surface area of the cube is 6a2.
+
+Fig. 14.4
+
+• Volume of the cube is a3.
+
+Observe how these two formulas are special cases of the formulas 2(wl + hl + hw) and whl, when w = h = l.
+
+125 Math of Space: Surface Area and Volume
+
+Do you remember cube numbers? Cube numbers are the numbers in the sequence 1, 8, 27, 64, … . These numbers represent the number of unit cubes that can fit inside cubes of side lengths 1, 2, 3, 4, … respectively — in other words, they represent the volumes of these cubes. We know that 13 = 1, 23 = 8, 33 = 27, 43 = 64, …; and
+
+1 3 = 1, 8 3 = 2, 27 3 = 3, 64 3 = 4, and so on.
+
+Example 1: Two solid objects are made from the same material: Cube A has side 6 cm and Cuboid B has dimensions 9 cm × 6 cm × 4 cm. Compare their volumes and surface areas and determine which object has a greater surface area. How is this useful in a real-life situation?
+
+For Cube A, side (a) = 6 cm.
+
+Hence its volume is a3 = (6 cm)3 = 216 cm3 and surface area (SA) is 6a2 = 6 × (6 cm)2 = 216 cm2.
+
+For Cuboid B, length (l) = 9 cm; width (w) = 6 cm; height (h) = 4 cm.
+
+Hence its volume is l × w × h = 9 × 6 × 4 = 216 cm3
+
+and surface area (SA) is 2(lw + wh + lh) = 2[(9 × 6) + (6 × 4) + (4 × 9)] = 228 cm2.
+
+Thus, the two objects have the same volume but different surface areas. The cuboid has greater surface area than the cube.
+
+Conclusion: For the same storage capacity: a cube requires less covering material; a cuboid exposes more area to its surroundings.
+
+This concept is important in packaging, heat transfer and engineering.
+
+Exercise Set 14.1
+
+1. The volume of a cube is 64 cm3. What is its total surface area?
+
+2. How many small cubes with side 20 cm can be packed tight in a cubical box with side 2 m?
+
+3. The dimensions of a godown are 40 m × 25 m × 10 m. If it is filled with cuboidal boxes, each of dimensions 2 m × 1.25 m × 1 m, then find the number of boxes.
+
+4. Two cubes each of volume 125 cm3 are joined end to end. Find the surface area of the resulting cuboid.
+
+126 Ganita Manjari | Grade 9 | Part II
+
+5. A cube of side 4 cm is cut into cubes of side 1 cm. What is the ratio of the surface areas of the original cube and all the cut-out cubes? (Note that there is no change in volume but a big change in the surface area. This property has major consequences in the biological world.)
+
+6. The surface areas of the three faces of a cuboid that meet at one of the corners of the cuboid are 6 cm2, 15 cm2, and 10 cm2
+
+respectively. What is the volume of the cuboid?
+
+*7. A cube of side 5 cm is painted on all its faces. If it is sliced into 1 cm3 cubes, how many of these 1 cm3 cubes have
+
+1 cm
+
+1 cm
+
+1 cm
+
+5 cm
+
+1 cm
+
+1 cm
+
+1 cm 1 cm
+
+1 cm
+
+1 cm 1 cm
+
+5 cm
+
+(i) exactly three faces painted? (ii) exactly two faces painted? (iii) exactly one face painted?
+
+(iv) no face painted?
+
+*8. Find a cuboid with edges whose lengths are integers (in cm), given that it has a total surface area of exactly 100 cm2.
+
+(i) Is there more than one such cuboid? (ii) Can you find them all? (iii) Show that you have found them all.
+
+Think and Reflect
+
+Suppose a swimming pool is being built in your school. Two choices are available for the dimensions of the pool: (A) 8 ft (depth) × 50 ft × 20 ft and (B) 6 ft (depth) × 100 ft × 15 ft. Which option would be suitable/appropriate for your school? Why? What parameters/aspects did you consider to make the choice? [1 cubic foot ≈ 28.3 litres]
+
+127 Math of Space: Surface Area and Volume
+
+14.2 Right Circular Cylinder
+
+The following figures show different types of cylinders. What is different in each of these cylinders?
+
+Oblique circular cylinder Right circular cylinder
+
+The first one is a right circular cylinder. The term circular indicates that the cross-section of the cylinder is a circle, while the term right signifies that the axis of the cylinder is perpendicular to its circular base. Many pipes have this shape. It is worth noting that not all cylinders are of this type. Some cylinders may have axes that are inclined rather than perpendicular to the base. The second one is an oblique circular cylinder. We restrict ourselves to the study of the right circular cylinder only. You can cut out the net of a cylinder given at the end of the textbook, make appropriate folds and join the circles to form the cylinder.
+
+We used the word cross-section above. Given a three-dimensional object, suppose we take an extremely thin slice of it. The shape we get is called a ‘cross-section’ of the object. In the case of a cylinder, if the slice is parallel to its base, we get a circular cross-section. But if the slice is parallel to the axis of the cylinder, we get a rectangular cross-section. Generally, we are interested in the cross-section that is parallel to the base.
+
+Examples of cross-sections are shown in the following figure.
+
+Cylinder Papaya Apple
+
+128 Ganita Manjari | Grade 9 | Part II
+
+When doctors take an MRI scan of some part of your body, it is like taking a cross-section because it allows them to look at the inside of your body in slices.
+
+What is the area of the curved surface of a cylinder? Let the radius of the circular base of the cylinder be r; let its height be h. Suppose the cylinder is cut as shown in the figure below. We get a rectangle.
+
+Fig. 14.5A
+
+Therefore, the curved surface area of the cylinder is the area of the rectangle.
+
+• The curved surface area (CSA) of the cylinder is
+
+CSA = circumference × height = 2πrh.
+
+If the cylinder is closed at both ends (top and bottom) like a biscuit tin (see Fig. 14.5B), then the flat circular surfaces at the ends also contribute to the area. Since there are two ends,
+
+total surface area (TSA) = 2πrh + 2πr2 = 2πr(h + r).
+
+Fig. 14.5B
+
+• If the cylinder is closed at one end and open at the other end, like a tumbler, then
+
+surface area = 2πrh + πr2 = πr(2h + r).
+
+• The volume V of the cylinder is
+
+V = cross-sectional area × height = πr2h.
+
+14.2.1 Another Way of Understanding Why the Above Formulas Are True
+
+To understand why the formulas for the surface area (curved part) and the volume of a cylinder hold, it helps to think of the cylinder as a large number of thin circular khakhras stacked on one another.
+
+129 Math of Space: Surface Area and Volume
+
+Example 2: Savitri had to make a model of a cylindrical kaleidoscope for her science project. She wanted to use chart paper to make the curved surface of the kaleidoscope (see Fig. 14.6). What would be the area of chart paper required by her, if she wanted to make a kaleidoscope of length 25 cm with a
+
+3.5 cm radius? You may take π = 22 7 .
+
+Fig. 14.6
+
+Radius of the base of the·cylindrical kaleidoscope (r) = 3.5 cm. Height (length) of kaleidoscope (h) = 25 cm. Area of chart paper required = curved surface area of the kaleidoscope
+
+= 2πrh
+
+= 2 × 22
+
+7 × 3.5 × 25 cm2
+
+= 550 cm2
+
+Exercise Set 14.2
+
+1. Two cylinders, A and B, are given. The radius of cylinder B is twice that of cylinder A, and the height of cylinder B is half that of cylinder A. Find the ratio of the curved surface area of A to the curved surface area of B. Also find the ratio of the volume of A to the volume of B.
+
+2. The radii of two cylinders are in the ratio 2:3, and their heights are in the ratio 3:2. Find (a) the ratio of their volumes, and (b) the ratio of their curved surface areas.
+
+3. The edge of a cube measures r cm. The largest possible right circular cylinder is cut out of the cube. What do you think is the volume of the cylinder (in cm3)?
+
+*4. The radius of the base of a cylinder is increased by 10%. At the same time, the height of the cylinder is decreased by x%. Given that the volume of the cylinder remains unchanged, find the value of x.
+
+5. A solid metallic cube of side 12 cm is melted and recast into solid cylindrical rods, each having radius 2 cm and height 12 cm. Find:
+
+(i) the volume of the cube,
+
+130 Ganita Manjari | Grade 9 | Part II
+
+(ii) the volume of one cylindrical rod, (iii) the approximate number of complete cylindrical rods that
+
+can be formed. (π ≈ 22
+
+7 )
+
+14.3 Cones
+
+Fig. 14.7A Fig. 14.7B Fig: 14.7C
+
+A right circular cone is generated when a right triangle is rotated about one of its legs. The relationship among the slant length l, the height h, the radius r of the base is
+
+l2 = h2 + r2 (using the Baudhāyana–Pythagoras theorem)
+
+h
+
+l l
+
+θ
+
+r
+
+s Right circular cone Unrolled cone
+
+Fig. 14.8
+
+Imagine cutting the cone along a slant edge and ‘opening up’ or unrolling the surface. The unrolled surface has the shape of a sector of a circle. To create the cone again, bring the two straight edges together. You can use the cutout of the net of a cone given at the end of the textbook to make a cone.
+
+What is the curved surface area of a cone? The formula for surface area becomes clear if we imagine cutting the cone along a slant edge, unrolling the surface, and cutting it up into
+
+131 Math of Space: Surface Area and Volume
+
+a large number of very thin sectors, each of which can be regarded as a narrow isosceles triangle of height l (Fig. 14.9).
+
+l
+
+A B
+
+b3 b2 b1 B O
+
+A
+
+(c) (a)
+
+(b)
+
+Fig. 14.9
+
+From Fig. 14.9, it follows that the curved surface area (CSA) of the cone is equal to
+
+CSA = 1
+
+2b1l + 1 2b2l + … + 1 2bnl = 1 2(b1 + b2 + … + bn)l
+
+= 1
+
+2 × circumference of the base × l
+
+= 1
+
+2 (2 πr)l = πrl
+
+Here is another way of working out the formula for the curved surface area. We have, from the formula for area of a sector of a circle,
+
+CSA = πl
+
+2 × θ° 360° = πl × l × θ° 360° .
+
+Let us try to express this formula in terms of r and l. For this, note that from the cone, we have,
+
+arc length = s = 2πr,
+
+and from the sector, we have
+
+arc length = s = θ°
+
+360° × 2πl.
+
+Equating these two, we get
+
+θ° 360° = r l .
+
+From this, we see that the curved surface area is
+
+CSA = πrl,
+
+the same formula as earlier. The formula for the total surface area (TSA) (curved portion plus the flat base) is TSA = πrl + πr2.
+
+132 Ganita Manjari | Grade 9 | Part II
+
+What is the volume of a cone? It turns out that
+
+V = 1
+
+3 πr2h.
+
+The volume formula tells us that the volume of a cone is exactly 1
+
+3 the volume of a cylinder formed on the same circular base and with the same height as the cone. The formula may be expressed in different ways, e.g.,
+
+V = 1
+
+3 × area of base × height.
+
+Students often wonder about the factor of 1
+
+3 in this formula. Why 1 3 ? To explain the reason for this factor requires more advanced methods, e.g., calculus, which you will study when you are in Grade 12.
+
+But it is possible to experimentally verify this relationship. Let us start with a right circular cylindrical tin. Using paper, we make a right circular cone with the same base radius and the same height as the cylinder (see Fig. 14.10).
+
+Fig. 14.10
+
+We are now going to perform an experiment to find the volume of the cone. We need some clean fine-grained salt for this purpose.
+
+Fill the cone to the brim with salt. Empty it into the cylinder. We find that it fills up only part of the cylinder. Fill the cone with salt to the brim again and empty it into the cylinder. We find that the cylinder is still not full. When we fill the cone with salt for the third time and empty it yet again into the cylinder, we find that the cylinder is full to the brim.
+
+We can therefore conclude that the volume of the cylinder is three times the volume of the cone. That is, given a right circular cylinder and
+
+133 Math of Space: Surface Area and Volume
+
+a right circular cone of the same base radius and the same height, the cone has one third the volume of the cylinder. This gives an experimental verification of the formula given above.
+
+Here is another hands-on activity that uses modelling clay (earlier this used to be called ‘plasticine’). Carefully mold the clay into a solid cylinder and measure its radius and height. Then reshape the same portion of clay into identical cones, each having the same radius and the same height as the cylinder. You will find that you are able to make exactly three such cones. This brings out the relationship between the volume of the cylinder and cone quite visibly
+
+V = 1
+
+3 × area of base × height.
+
+The formula for the volume of a cone was first found by the Greek mathematician Archimedes (c. 225 BCE). He also derived formulas for the surface area and volume of a sphere (i.e., ball), which we will study in later sections.
+
+Example 3: A right triangle ABC with sides 5 cm, 12 cm and 13 cm is rotated through 360° about the side with length 12 cm. Find the volume of the solid so obtained.
+
+The triangle has sides 5 cm, 12 cm, 13 cm.
+
+Since 52 + 122 = 25 + 144 = 169 = 132, the triangle is a right-angled triangle with perpendicular sides 5 cm and 12 cm and hypotenuse 13 cm.
+
+The triangle is rotated about the side with length 12 cm. When a right-angled triangle rotates about one of its perpendicular sides, it forms a right circular cone. Here, height of cone h = 12 cm, radius of cone r = 5 cm.
+
+Hence, volume of the cone (V) = 1
+
+3 πr2h = 1 3 π × 5 2 × 12 = 100 πcm 
+3.
+
+Exercise Set 14.3
+
+For π, use one of the following approximations: π ≈ 22
+
+7 or π ≈ 3.14
+
+1. Find the total surface area of a cone, if its slant height is 21 m and diameter of its base is 24 m.
+
+2. Find the curved surface area of a right circular cone whose slant height is 10 cm and base radius is 7 cm.
+
+134 Ganita Manjari | Grade 9 | Part II
+
+3. The height of a cone is 16 cm, and its base radius is 12 cm. Find the curved surface area and the total surface area of the cone.
+
+4. A cone has a height of 15 cm. If its volume is 1570 cm3, find the radius of the base.
+
+5. The curved surface area of a cone is 308 cm2 and its slant height is 14 cm. Find (i) the radius of the base, (ii) the total surface area of the cone.
+
+6. A joker’s cap is in the form of a right circular cone of base radius 7 cm and height 24 cm. Find the area of the sheet required to make 10 such caps.
+
+*7. What length of tarpaulin 3 m wide is required to make a conical tent of height 8 m and base radius 6 m? Assume that the extra length of material that is required for stitching margins and wastage in cutting is 20 cm.
+
+8. A right triangle with sides 6 cm, 8 cm and 10 cm is rotated through 360° about the side of 8 cm. Find the volume and the curved surface area of the solid so formed.
+
+*9. Suppose you have a cup in the shape of a right circular cone. Fill it with water to half the depth of the cone.
+
+What fraction of the volume of the cup is occupied by the water?
+
+14.4 Pyramidal Shapes
+
+A pyramidal shape is of the type shown in the following figures.
+
+Fig. 14.11A Fig. 14.11B
+
+Its base may be a triangle, a square or indeed any closed shape. All points in the base are connected to a single point (the apex) which lies in a different plane. You can make the pyramids by using the cutouts of nets given at the end of the textbook.
+
+135 Math of Space: Surface Area and Volume
+
+The famous pyramids in Egypt have square bases. The puzzle in Fig. 14.11B (made by the Hungarian architect Erno Rubik) has a triangular base.
+
+Some mountains have pyramidal peaks (formed by glacier erosion over many millennia). In India, there is the Shivling Peak in the state of Uttarakhand. An example from the Alps is the Matterhorn.
+
+Shivling Peak (Uttarakhand) The Matterhorn (Switzerland)
+
+The volume V of a pyramidal shape is found by using the formula
+
+V = 1
+
+3 × area of base × height.
+
+The same formula is applicable whether the base is triangular, square or any other shaped flat surface.
+
+Note that the formula is the same as the one used for the volume of a cone. Indeed, we may think of a cone as a pyramid with a circular base.
+
+The surface area of a pyramidal shape is found by adding up the areas of all the polygonal faces. So, we do not need a separate formula for the surface area.
+
+14.5 Spheres and Hemispheres
+
+r O
+
+Volleyball Football (Soccer) Sphere
+
+Lastly, we consider a familiar object in daily life: a ball or a sphere.
+
+136 Ganita Manjari | Grade 9 | Part II
+
+This is the three-dimensional (3D) equivalent of a circle. Whereas a circle is the collection of all points in a plane that are at some given distance from some given point, a sphere is the collection of all points in 3D space that are at some given distance r (the radius of the sphere) from a given point O, the centre of the sphere. If we rotate the circle about any diameter, we obtain a hollow sphere.
+
+Archimedes showed that the surface area A of a sphere with radius r is equal to 4πr2. He did this by showing that the surface area of a sphere is exactly equal to the curved surface area of a cylinder with radius r and height h = 2r that fits tightly over the sphere, Fig. 14.12.
+
+Fig. 14.12
+
+The curved surface area of such a cylinder is equal to
+
+2πrh = 2πr × 2r = 4πr2,
+
+This is the formula obtained by Archimedes.
+
+137 Math of Space: Surface Area and Volume
+
+Fig. 14.13: Rectangular map projection Source: https://en.wikipedia.org/wiki/Equirectangular_projection#/media/
+
+File:Equirectangular_projection_SW.jpg
+
+In passing, we note that this result is used in cartography (map-making), when making a rectangular map projection of the earth. Imagine a cylinder tightly wrapped around the earth, touching it at the equator, as described above. By drawing radial lines from the central north pole–south pole axis, we project horizontally from the earth’s surface to the surface of the cylinder. Then, we unwrap the cylinder and obtain the desired map. The resulting world map is rectangular in shape which is easy and convenient to use. But it suffers from an important defect: there is great distortion in shapes at high latitudes (close to the poles). For locations close to the equator, the distortion is negligible.
+
+Archimedes also found the formula for the volume V of a sphere:
+
+V = 4
+
+3 πr3.
+
+You will study the derivations of these formulas in later grades, using calculus.
+
+But you may be able to find your own derivation of the formula by connecting it with the formula for volume of a cone; namely, by writing it as
+
+V = 1
+
+3 × (4πr2) × r ,
+
+i.e., Volume of sphere = 1
+
+3 × surface area of sphere × radius of sphere.
+
+Try to work out the connecting links on your own.
+
+138 Ganita Manjari | Grade 9 | Part II
+
+*Visualising Volume Formula
+
+Here is a way to see the link between the formulas for volume of a cone, surface area of a sphere and volume of a sphere. Recall that
+
+Volume of cone = 1
+
+3 area of base × height of cone.
+
+Imagine that the entire surface of the sphere is divided into tiny regions. The shapes of these regions do not matter; what matters is that they are very tiny. Now connect all these regions to the centre of the sphere. This creates a large number of thin cones. They all have the same height, namely r. The volume of the sphere is equal to the sum of the volumes of all the cones. Using the fact that the cones all have the same height, we may write:
+
+Volume of sphere = r
+
+3 × sum of base areas of all the thin cones
+
+= r
+
+3 × surface area of sphere = r 3 × 4πr2 = 4 3 πr3.
+
+14.5.1 Hands-on Activity to Verify the Formula for Surface Area of a Sphere
+
+Have you ever played with a top? You must know how a string is wound around it. Take a rubber ball and drive a nail into it. Using the nail for support, wind a string tightly around the ball. When you have reached the ‘fullest’ part of the ball, use pins to keep the string in place, and continue to wind the string around the remaining part of the ball, till you have completely
+
+139 Math of Space: Surface Area and Volume
+
+covered it; see Fig. 14.14. Mark the starting and finishing points on the string, and unwind the string from the surface of the ball. Now, measure the diameter of the ball and get its radius. On a sheet of paper, draw four circles with a radius equal to the radius of the ball. Fill the circles with the string you had wound around the ball (as shown in the figure).
+
+Fig. 14.14
+
+The string, which had completely covered the surface of the sphere, has now been used to fill the four circles, all with the same radius as the sphere. So, the surface area of a sphere of radius r is equal to 4 times the area of a circle of radius r, i.e., equal to 4πr2. Hence, surface area of a sphere = 4πr2 where r is the radius of the sphere. This experimentally verifies the stated formula.
+
+14.5.2 Hemisphere
+
+A hemisphere is a three-dimensional solid formed when a sphere is cut into two equal halves by a plane passing through its centre. The flat circular region formed after cutting the sphere is called the base of the hemisphere. A hemisphere has one curved surface and one circular base. See Fig. 14.15.
+
+Fig. 14.15: Hemispheres
+
+You may also recall encountering the term hemisphere in the context of the Northern Hemispheres and the Southern Hemispheres in Geography.
+
+Examples: Bowls, serving dishes, dome-shaped covers, planetariums and igloos.
+
+140 Ganita Manjari | Grade 9 | Part II
+
+Let the radius of the sphere be r. The surface area of the complete sphere is 4πr2. Therefore, the curved surface area of a hemisphere, which is half of the sphere, is 2πr2.
+
+The total surface area (TSA) includes the curved surface and circular base. The area of the circular base = πr2.
+
+Hence TSA = 2πr2 + πr2 = 3πr2.
+
+Volume of the hemisphere = 2
+
+3 πr3.
+
+Example 4: A hemispherical bowl has a radius of 3.5 cm. What would be the volume of water it would contain?
+
+The volume of water the bowl can contain
+
+= 2
+
+3 πr3
+
+= 2
+
+3 × 22 7 × 3.5 × 3.5 × 3.5cm 3 = 89.8cm 
+3.
+
+Exercise Set 14.4
+
+1. A ball bearing has a radius of 0.7 cm. Find its surface area.
+
+*2. Two solid spheres made of the same metal have weights 5920 g and 740 g. Determine the radius of the larger sphere, if the diameter of the smaller one is 5 cm.
+
+3. The diameter of the moon is approximately one fourth the diameter of the earth. Given that the moon and earth are both roughly spherical, find the ratio of their surface areas.
+
+4. Find (i) the curved surface area and (ii) the total surface area of a hemisphere of radius 21 cm.
+
+5. Metal spheres, each of radius 2 cm, are packed into a rectangular box of internal dimensions 16 cm × 8 cm × 8 cm. When 16 spheres are packed, the box is filled with preservative liquid. Find the volume of this liquid. Round your answer to the nearest integer.
+
+6. The radius of a sphere is increased by 10%. Show that the volume increases by approximately 33.1%.
+
+141 Math of Space: Surface Area and Volume
+
+*7. The radius of a sphere is increased by x%. The volume of the sphere increases by 72.8%. Find the value of x.
+
+8. The hemispherical dome of a building needs to be painted (see Fig. 14.16). If the circumference of the base of the dome is 35.2 m, find the cost of painting it, given the cost of painting is ₹ 10 per 100 cm2.
+
+Fig. 14.16
+
+14.6 Areas and Volumes Around Us
+
+We learned about different 3D solids. Identify and list objects or structures around you that are cubical, cuboidal, cylindrical, conical, spherical, or pyramidal in shape, or closely resemble these shapes.
+
+Activity: Find the approximate volumes of a gas cylinder, a bucket, any cylindrical vessel, a cupboard, a water tank that you can find near you (use 1000 cm3 = 1 litre).
+
+14.6.1 Guesstimates: Did You Ever Wonder?
+
+Guesstimate questions are problems in which you make a reasonable estimate for a quantity when exact data are not available. Instead of finding a perfectly accurate answer, you use assumptions, approximations, logic, and everyday knowledge to model a given situation and arrive at a sensible estimate. Do you remember solving such questions in earlier grades?
+
+Example 5: Lallan’s golgappa (a small hollow ball made of wheat) stall has a cylindrical vessel with pani (spiced water) in it. The vessel is of radius 10 cm and it has pani up to a height of 50 cm. Estimate the number of golgappas he can serve assuming all golgappas are spheres. Before calculating, make a guess.
+
+Can you guess what number this could be — is it in the hundreds, thousands, or more?
+
+The number of golgappas that can be served is
+
+Total pani in the vessel Volume of pani in each golgappa .
+
+142 Ganita Manjari | Grade 9 | Part II
+
+The amount of paani in the cylindrical vessel is given by V = area of base × height.
+
+V = π (10)(10) × 50 = 5000π cm3.
+
+To estimate the number of golgappas, two students went about in different ways:
+
+Student 1’s calculation Student 2’s calculation
+
+Estimated radius of an average golgappa is 1.5 cm.
+
+Estimated radius of an average golgappa is 1.75 cm.
+
+Volume of a golgappa = 4
+
+Volume of a golgappa = 4
+
+3 × π (1.5)3
+
+3 × π (1.75)3
+
+≈ 14.14 cm3. (neglecting the thickness of the golgappa)
+
+≈ 22.43 cm3. (neglecting the thickness of the golgappa)
+
+Assuming each golgappa is filled with 80% pani on an average, the volume of pani in a golgappa = 22.43 × 0.8 ≈ 18 cm3.
+
+Assuming each golgappa is filled with 60% pani on an average, the volume of pani in a golgappa = 14.14 × 0.6 ≈ 8.5 cm3.
+
+The number of golgappas that can be
+
+The number of golgappas that can be
+
+served is = 5000π
+
+served is = 5000π
+
+8.5 ≈ 1848.
+
+18 ≈ 873.
+
+Lallan can serve about 1850 golgappas with the pani he has.
+
+Lallan can serve about 870 golgappas with the pani he has.
+
+We see that the final answer depends upon the assumptions, estimations, and approximations done in the process.
+
+Example 6: Anirban saw a few tennis balls lying around. He wondered, “How many tennis balls can fit in an empty classroom?”. The classroom is of dimensions 30 ft × 30 ft × 15 ft. Estimate how many tennis balls of radius 3 cm fit in this classroom. Before calculating, make a guess.
+
+The volume of the tennis ball is
+
+4
+
+3 × π ×3 3 ≈ 113 cm3.
+
+143 Math of Space: Surface Area and Volume
+
+The volume of the classroom is
+
+30 × 30 × 15 = 13,500 ft3 ≈ 37,80,00,000 cm3.
+
+1 ft = 30.48 cm
+
+1 ft3 ≈ 28317 cm3
+
+Can we find the number of tennis balls that can fit in the classroom by dividing the volume of the classroom by the volume of a tennis ball?
+
+1 ft ≈ 30 cm
+
+37,80,00,000
+
+1 ft3 ≈ 28000 cm3
+
+113 ≈ 33,45,132.
+
+No, the balls cannot fit in the room without leaving gaps in between. Hence this operation will only give an upper bound value, i.e., we can say for sure that we cannot fit more balls than this.
+
+Accounting for these gaps can give a better estimate.
+
+A B C
+
+Fig. 14.17: These are some of the ordered ways of packing
+
+spheres in a cuboidal structure
+
+Using the first configuration: Along each side of the room, the number of balls that can be placed side-by-side along the length is dimension of the room
+
+diameter of the ball ≈ 900
+
+6 = 150. The same number can be placed
+
+along the width. Along the height, it is 75 balls.
+
+Therefore, 150 × 150 × 75 = 16,87,500 denotes the approximate number of balls that can fill the room.
+
+Using the other configurations, we might be able to fit more balls because of higher packing efficiency.
+
+Make an estimate based on the second and third configurations.
+
+Note: This is why spheres are not used as basic units to measure volumes as they leave gaps unlike cubes.
+
+144 Ganita Manjari | Grade 9 | Part II
+
+As we have seen in guesstimate problems, different people may get different answers, but the reasoning they use matters the most. For these problems, you can start with a quick intuitive guess, model the situation by identifying the relationships among the quantities, make reasonable assumptions, and then calculate an answer by making suitable approximations. Look back to see how close your intuitive guess is to your estimate.
+
+End-of-Chapter Exercises
+
+For guesstimate problems, make a guess first before solving.
+
+1. Estimate how many scoops of ice cream can be obtained from a cuboidal container of dimensions 10 cm × 15 cm × 20 cm.
+
+2. A cube of integer side length a is made of unit cubes. Write an expression giving the number of unit cubes to be added to make a cube of side length a + 1.
+
+*3. Solve the following:
+
+(i) Could a person drink enough water in a
+
+lifetime to fill an entire room the size of your classroom? (ii) Estimate the number of bricks used to build
+
+the walls of your classroom.
+
+4. You are given two options: (A) one chocolate cube of side 50 mm, (B) hundred chocolate cubes of side 10 mm. Which option gives you more chocolate?
+
+5. If all the people in the world are crowded together in one location, how much area would it cover?
+
+6. A school provides milk to its students in cylindrical glasses, each with a diameter of 7 cm. If each glass is filled with milk to a height of 12 cm, how many litres of milk are needed to serve 1600 students? Use 1000 cm3 = 1 litre.
+
+7. The surface area of a sphere of radius 5 cm is five times the area of the curved surface of a cone of radius 4 cm. Find the height and the volume of the cone.
+
+145 Math of Space: Surface Area and Volume
+
+8. Take Earth to be a perfect sphere with radius 6370 km. Take Jupiter to be a perfect sphere with radius 69,900 km. Take the Sun to be a perfect sphere with radius 6,95,700 km. Compute approximately:
+
+(i) the ratio of the volume of Jupiter to the volume of the Earth; (ii) the ratio of the volume of the Sun to the volume of the Earth.
+
+(Calculator can be used.)
+
+9. Show that the volume of a sphere is equal to 2
+
+3 of the volume of the smallest cylinder which encloses it.
+
+*10. Suppose the Earth is perfectly spherical. A string is wrapped tightly around the equator of the Earth. Another string, 1 metre longer, is placed around the Earth so that it forms a larger circle, staying the same distance above the ground everywhere.
+
+How high above the ground is the second string? Repeat this for: (i) the Moon (ii) Jupiter (iii) a volleyball. Are you surprised by the three answers? Why or why not?
+
+*11. We have a cylinder with a base radius of r cm and height h cm. A square pyramid is fitted inside it. The square base of the pyramid lies on the base of the cylinder, its corners on the boundary of the cylinder. The apex of the pyramid lies on the top of the cylinder. Find the ratio of the volume of this pyramid to the volume of the cylinder.
+
+12. What is the change in volume when:
+
+(i) the length of a cuboid with dimensions l, w, h is increased
+
+by 1 unit?
+
+(a) 1 cubic unit (b) (lwh + 1) cubic unit (c) wh cubic units (d) lw cubic units (e) lh cubic units
+
+(ii) the radius of a cylinder with dimensions r, h is increased by
+
+1 unit? (a) 1 cubic unit (b) πr2h cubic units (c) πr2 cubic units (d) 2πrh + 2πh cubic units (e) 2πrh + πh cubic units
+
+*(iii) the radius of a sphere is decreased by 1 unit?
+
+*13. Given a cube with volume V, express its total surface area S in terms of V.
+
+146 Ganita Manjari | Grade 9 | Part II
+
+*14. Given a cube with total surface area S, express its volume V in terms of S.
+
+15. A cylindrical glass of height 25 cm and radius 4 cm has water up to a height of 16 cm. A crow wants to drink water from this glass. The water must be at a height of 20 cm for the crow to reach it. There are some marbles lying around. How many marbles of radius 1 cm should the crow drop into the glass to make the water reach the required height?
+
+16. Find the volume of ink in a new ball point pen. Take the necessary measurements and make approximations, as needed.
+
+17. Solve:
+
+(i) A ball of chapati dough of radius
+
+6 cm is prepared. Estimate how many chapatis can be made from it? *(ii) Cut a coconut/muskmelon in half and find out the approximate volume of edible coconut flesh/fruit by taking the necessary measurements.
+
+18. Looking at the Ganita Manjari, Grade 9, Part 2 textbook, Sheela wonders:
+
+(i) If all the pages of this textbook were laid out side-by-side on
+
+the floor would they cover the entire classroom floor? (ii) What is the maximum number of textbooks that can fit in an
+
+empty storeroom of dimensions 15 ft × 20 ft × 30 ft?
+
+*19. If the entire human population decided to climb into one giant cube, how long would the side have to be?
+
+*20. The Earth’s surface has an estimated volume of 1.38 billion km3 of water. Suppose the Earth is a perfect sphere and all this water forms a uniform layer completely covering the Earth’s surface, like a thin water bubble. Estimate the thickness of this water layer. The Earth’s radius is ~6371 km.
+
+147 Math of Space: Surface Area and Volume
+
+(i) Write an expression that gives the thickness of this water
+
+layer. (ii) Simplify the expression in (i) using a calculator.
+
+*21. Give the dimension of a cuboid whose volume is halved when its surface area is doubled.
+
+22. Project: Find the volume of your house making necessary approximations. Present how you solved it.
+
+Chapter Summary
+
+In this chapter, we have studied the following formulas for the surface areas and volumes of various fundamental shapes.
+
+3D Shape Surface Area Volume
+
+1. Cuboid
+
+2(wl + hw + lh) whl
+
+h
+
+w l
+
+πr2h
+
+2. Right Circular Cylinder
+
+Curved surface area: 2πrh Total Surface Area of a cylinder covered at one end:
+
+r
+
+h
+
+2πrh + πr2 = πr(2h + r) Total Surface Area of a cylinder covered at both ends:
+
+2πrh + 2πr2 = 2πr(h + r)
+
+Curved surface area: πrl
+
+3. Right Circular Cone
+
+1 3 πr2h
+
+Total surface area: πr(l + r)
+
+h l
+
+r
+
+148 Ganita Manjari | Grade 9 | Part II
+
+4. Sphere
+
+4πr2 4 3 πr3
+
+r
+
+5. Hemisphere
+
+Curved surface area: 2πr2
+
+2 3 πr3
+
+Total surface area: 2πr2 + πr2
+
+= 3πr2
+
+r
+
+Learning Material
+
+Graph Paper
+
+Graph Paper
+
+Graph Paper
+
+Graph Paper
+
+Net of a Cuboid
+
+Net of a Cube
+
+Nets of a Cylinder
+
+Nets of a Cone
+
+Net of a Triangular Pyramid
+
+Net of a Square Pyramid

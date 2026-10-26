@@ -1,0 +1,977 @@
+# CLASS-9 - MATHS - CHAPTER 08
+# Source: iemh108.pdf
+
+Predicting What Comes Next: Exploring Sequences and Progressions
+
+8
+
+8.1 Introduction to Sequences
+
+We see patterns around us everywhere, be it in nature, in art, in music, in finance and in many other contexts in everyday life. Patterns help us make sense of the world and predict what comes next. In mathematics, sequences are special kinds of patterns formed by numbers or other objects arranged in a particular order. By understanding sequences, we can explore fascinating ideas about how numbers grow, shrink, or repeat and even use these ideas to solve real-life problems.
+
+In this chapter, we shall explore patterns in sequences of numbers. We will then find rules to help us predict more numbers of the sequence. Let us begin by looking at some number sequences that you have already seen in Grades 6, 7 and 8.
+
+1, 2, 3, 4, 5, 6, … (Natural Numbers) 1, 3, 5, 7, 9, 11, ... (Odd Numbers) 1, 3, 6, 10, 15, 21, ... (Triangular Numbers) 1, 4, 9, 16, 25, 36, ... (Square Numbers)
+
+The three dots … indicate that the sequence continues indefinitely.
+
+Think and Reflect
+
+Can you describe the pattern in each of the above sequences? Can you predict the next few numbers in these sequences?
+
+Before we proceed, let us define a sequence as an ordered list of numbers where each number is a term of the sequence. Thus, in the sequence of square numbers, 1 is the first term, 4 is the second term, 25 is the fifth term and so on. Also, sequences may be finite or infinite. The sequences mentioned above are infinite. But the sequence 6, 12, 24, 48, 96 is a finite sequence of five terms. Can you think of other finite sequences that you see in your daily life?
+
+175 Predicting What Comes Next: Exploring Sequences and Progressions
+
+As you already know, in the sequence of natural numbers, every number (or term) is one more than the previous number. In the sequence consisting of all the odd numbers, there is a difference of 2 between any two consecutive terms. In the sequence of triangular numbers, the difference between consecutive terms (among the first six terms) are 2, 3, 4, 5 and 6. We may rewrite the triangular numbers in the form of sums of natural numbers as 1 = 1, 3 = 1 + 2, 6 = 1 + 2 + 3, 10 = 1 + 2 + 3 + 4, and so on. Thus, each term of the triangular number sequence is the sum of the natural numbers up to that term. For example, 15, the fifth triangular number, is equal to 1 + 2 + 3 + 4 + 5. This is represented by the diagram in Fig. 8.1, where each triangular number is represented by a triangular array of dots. Can you draw the patterns for the next two terms of the sequence?
+
+Fig. 8.1: The first five triangular numbers
+
+Let us now shift our attention to the sequence of square numbers, 1, 4, 9, 16, 25, 36, ... Note that the differences between consecutive terms (for the first six terms) are 3, 5, 7, 9 and 11. Also 1 = 1, 4 = 1 + 3, 9 = 1 + 3 + 5, 16 = 1 + 3 + 5 + 7, and so on. Each term in the square number sequence is the sum of the odd numbers up to that term.
+
+This interesting relationship between the odd numbers and square numbers can be represented by the diagram in Fig. 8.2. Can you explain the relationship? You may recall some of these ideas from Grade 6, Chapter 1!
+
+Fig. 8.2: Square numbers and
+
+odd numbers
+
+176 Ganita Manjari | Grade 9 | Part I
+
+Exercise: Consider the sequence 1, 4, 7, 10, 13, … Can you predict the next four terms? Can you derive the first 10 terms of the sequence obtained by adding all the terms up to a given term of this sequence? (Hint: The first term is 1. The second term is 1 + 4 = 5, the third term is 1 + 4 + 7 = 12, and so on.) In some sequences (like the ones described till now), the terms follow a certain pattern, a rule or order. To describe these rules it is helpful to have a convenient notation to describe a sequence. We can use t1 to represent the first term of a sequence, t2 to represent the second term, and so on. In this notation, the subscripts match the term numbers. Thus, for the sequence of odd numbers, t1 = 1, t2 = 3, t3 = 5, t4 = 7 and so on. This notation helps to connect the position of the term to the actual term. For example, t4 = 7 tells us that the term in the fourth position is 7. We may need to talk about more than one sequence at a time. We can use different letters for these. Hence, we can use t1, t2, t3 , … for one sequence, s1, s2, s3 , … for another one, u1, u2, u3 , … for a third sequence, and so on.
+
+Exercise: Can you write t5, t6, t7 and t8 for the sequence of triangular numbers?
+
+There can be many kinds of sequences. For example, the terms could be fractions or negative integers. The ones we have discussed so far have terms that are increasing. But there could be sequences such
+
+as 1, 1
+
+2, 1 3, 1 4, … where t1 = 1 and the following terms are unit fractions
+
+occurring in decreasing order. We can also have sequences such as 
+–7, –3, 1, 5, 9, … where s1 = –7, and consecutive terms have a difference of 4. Note that when we use the notation tn for describing a term, n is always a non-negative integer but the term itself can be negative, or in fact any real number.
+
+Think and Reflect
+
+Can you think of any other kinds of sequences? List out five different types of sequences and discuss their properties with your friends.
+
+8.2 Explicit Rule for a Sequence
+
+Using the notation tn (or sn or un) we can write an explicit rule for the term in the nth position of a sequence, that is, the nth term. An explicit formula uses the term’s position number, n, to calculate its value.
+
+177 Predicting What Comes Next: Exploring Sequences and Progressions
+
+Example 1: Consider the expression un = 2n – 1. This states that the nth term of the sequence is given by the rule 2n – 1. When we substitute 1, 2, 3, ... for n in the expression 2n – 1, we get u1 = 2 × 1 – 1 = 1, u2 = 2 × 2 – 1 = 3, u3 = 2 × 3 – 1 = 5, etc.
+
+Thus, un = 2n – 1 is the explicit rule for the nth term of the sequence of odd numbers.
+
+Think and Reflect
+
+Why is it useful to have an explicit formula for the nth term of a sequence?
+
+Using an explicit formula, we can find the 20th term, the 53rd term, the 300th term or any term of the sequence directly by just substituting the appropriate value of n. If we have an explicit formula, we can find the value of a term without having to know the value of previous terms!
+
+Exercise: Using the explicit rule un = 2n – 1, find the 53rd term, the 108th term, and the 1170th term of the odd number sequence. The explicit rule is useful in other ways too. We can use it to check if a certain number is a term of a sequence and also find the position of the term. For example, consider the odd number 137. To find which position it occupies in the odd number sequence, we need to solve the equation un = 137. This means 2n – 1 = 137 or n = 69. Thus 137 is the 69th
+
+term of the odd number sequence.
+
+Example 2: As another example, consider the sequence that is generated by the explicit formula sn = 5n – 2. Can you write the first 6 terms of this sequence? What is the 100th term? The 1000th term? Let us check if the numbers 308 and 473 are terms of this sequence. We solve sn = 308, that is, 5n – 2 = 308. This leads to 5n = 310 or n = 62. Thus 308 is the 62nd term of the sequence. Similarly solving 5n – 2 = 471 leads to 5n = 473, n = 94.6. Since 94.6 is not a natural number, we can conclude that 471 is not a term of the sequence. Can you explain why we need n to be a natural number?
+
+Think and Reflect
+
+Can you find the rule describing the nth term of the sequence of square numbers?
+
+Here is the sequence of the first ten prime numbers: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29. Do you see any pattern in this sequence? Can you think of
+
+178 Ganita Manjari | Grade 9 | Part I
+
+a rule that can predict the next few prime numbers?
+
+Exercise: Consider the expression tn = 3n – 7. (i) Find its first, second, third, 12th, 18th and 50th terms. (ii) Which term of the sequence is 332? (iii) Is 557 a term of this sequence? Why or why not?
+
+8.3 Recursive Rule for a Sequence
+
+So far, we have used a formula in terms of n for the nth term as the explicit rule for a sequence. There is another way of writing the rule for a sequence. Consider the sequence 1, 4, 7, 10, 13, … . The nth term is tn = 3n – 2 (verify this for yourself). Note that each term is 3 more than its previous term. Thus, t2 = t1 + 3, t3 = t2 + 3, t4 = t3 + 3 and so on. In general, we can say tn = tn–1 + 3 for n ≥ 2. Or we can describe the sequence as t1 = 1, tn = tn–1 + 3, where n can take the values 2, 3, 4, … This way of describing a sequence by relating terms to previous terms is known as a recursive rule or recursive formula. If you know earlier terms of the sequence, then you can find the next terms using the rule. Note that the earlier terms need to be known to us to use the recursive rule to find the next terms.
+
+Example 3: Find the first four terms of the sequence given by the recursive rule
+
+u1 = 1, un = 2un–1 + 3 for n ≥ 2. Is 133 a term of this sequence? We successively insert the values of n as 2, 3, 4, etc., and compute the values of each term.
+
+u2 = 2u1 + 3 = 2 × 1 + 3 = 5
+
+u3 = 2u2 + 3 = 2 × 5 + 3 = 13
+
+u4 = 2u3 + 3 = 2 × 13 + 3 = 29
+
+Thus, the first four terms of the sequence are 1, 5, 13, 29. Calculating subsequent terms, we can check if 133 is a term of this sequence.
+
+Example 4: Find the first four terms of the sequence given by the recursive rule s1 = 3, sn = sn–1 (sn–1 – 1) for n ≥ 2.
+
+Substitute the values of n as 2, 3, 4, etc., and compute the values of each term as follows.
+
+s2 = s1 (s1 – 1) = 3 × (3 – 1) = 3 × 2 = 6
+
+s3 = s2 (s2 – 1) = 6 × (6 – 1) = 6 × 5 = 30 s4 = s3 (s3 – 1) = 30 × (30 – 1) = 30 × 29 = 870
+
+179 Predicting What Comes Next: Exploring Sequences and Progressions
+
+Thus, the first four terms of the sequence are 3, 6, 30, 870.
+
+Virahānka–Fibonacci sequence
+
+A recursive rule or formula does not only have to involve the previous term — it could involve the previous two or more terms.
+
+The most famous example of such a sequence is V1, V2, V3, … where V1 = 1, V2 = 2, and Vn = Vn–1 + Vn–2 for n ≥ 3. We compute:
+
+V3 = V2 + V1 = 2 + 1 = 3
+
+V4 = V3 + V2 = 3 + 2 = 5
+
+V5 = V4 + V3 = 5 + 3 = 8 So we get the sequence
+
+1, 2, 3, 5, 8, 13, 21, 34, …
+
+where each term is obtained by adding the previous two.
+
+Can you write the next two terms of this sequence? Do you recognise this sequence from previous grades? That’s right, it is the Virahānka–Fibonacci sequence! It was first written down explicitly and studied by Virahānka in his work Vṛttajātisamuchaya in the 7th century CE. He discovered it in the context of Prakrit meter and poetry! It was further studied by the linguist-mathematicians Gopāla (c. 1135 CE) and Hemachandra (c. 1150 CE). The sequence was later also studied by the Italian mathematician Fibonacci (c. 1200 CE).
+
+The Virahānka sequence plays an important role throughout mathematics and science. We will encounter it again many times in later grades.
+
+Exercise Set 8.1
+
+1. Find the first five terms of the sequence in which the nth term is given
+
+by (i) tn = 3n – 4, (ii) tn = 2 – 5n, and (iii) tn = n2 – 2n + 3 for n ≥ 1. 
+2. Find the 10th and 15th terms of the sequence tn = 5n – 3 for n ≥ 1. 
+3. Determine whether 97 and 172 are terms of the sequence tn = 5n – 3
+
+for n ≥ 1. 
+4. Which term of the sequence tn = 5n – 3 for n ≥ 1 is 607? 
+5. A sequence is given by the recursive rule t1 = – 5, tn+1 = tn + 3 for
+
+n ≥ 1. Find the first five terms of the sequence. Is 52 a term of this sequence? If so, which term is it?
+
+180 Ganita Manjari | Grade 9 | Part I
+
+6. Let T1 = 1, T2 = 2, T3 = 4, and Tn = Tn–1 + Tn–2 + Tn–3 for n ≥ 4.
+
+Find T4, T5, T6, T7, and T8 .
+
+8.4 Arithmetic Progressions
+
+So far we have learnt that a sequence is an ordered list of numbers that may follow a particular rule. However, there may be sequences, such as the sequence of prime numbers, where there is no clear regularity in the rule.
+
+In this section, we explore a special kind of sequence called an arithmetic progression.
+
+Let us look at the growing pattern of squares given in Fig. 8.3. The first four stages of the pattern are shown.
+
+Stage 1 Stage 2 Stage 3 Stage 4
+
+Fig. 8.3: Growing pattern of squares
+
+If we count the number of tiny squares at each stage, we get sequence 1, 5, 9, 13.
+
+Think and Reflect
+
+Can you predict the number of squares in Stages 5 and 6 of the sequence? In Stages 10, 11 and 12? In Stage 20? At any stage?
+
+We observe that at each stage, 4 squares get added to the corners of the pattern in the earlier stage. The number of squares at successive stages can be written as
+
+1, 1 + 4, 1 + 4 + 4, 1 + 4 + 4 + 4, …
+
+181 Predicting What Comes Next: Exploring Sequences and Progressions
+
+This may be rewritten as
+
+1, 1 + 1 × 4, 1 + 2 × 4, 1 + 3 × 4, … If we treat these expressions as the terms of a sequence, we get
+
+t1 = 1, t2 = 1 + 1 × 4, t3 = 1 + 2 × 4, t4 = 1 + 3 × 4 and so on. We may therefore write the nth term as tn = 1 + (n – 1) × 4, which simplifies to tn = 4n – 3.
+
+The first six terms of the sequence representing the number of squares in Fig. 8.3 are 1, 5, 9, 13, 17, 21. We note that the difference between successive terms is the constant value 4. Such sequences, in which the difference between consecutive terms is constant, are known as arithmetic progressions. We will refer to them as APs.
+
+Think and Reflect
+
+Consider all the sequences we have discussed so far in this chapter. Which ones are arithmetic progressions and which ones are not? Can you justify your claim?
+
+Note that in the nth term tn = 1 + (n – 1) × 4 of the sequence above, 1 is the first term of the sequence and 4 is the ‘common difference’. Similarly, the nth term of the sequence 1, 4, 7, 10, … is tn = 1+ (n – 1) × 3, where 1 is the first term and 3 is the common difference. In the sequence 11, 7, 3, –1, – 5, … the numbers decrease by 4. This is also an arithmetic progression, where the first term is 11 and the common difference is – 4.
+
+In general, an arithmetic progression (AP) can be described as
+
+a, a + d, a + 2d, a + 3d, …, a + (n – 1) × d, where ‘a’ is the first term and ‘d’ is the common difference. Thus tn = a + (n – 1) × d is an expression for the nth term of any arithmetic progression, for some fixed values of a and d.
+
+8.4.1 Visualising an AP
+
+Let us return to the growing pattern of squares in Fig. 8.3 and prepare a table that shows the number of tiny squares at each stage.
+
+Stage Number 1 2 3 4 5 … n
+
+Number of squares 1 5 9 13 17 … 4n – 3
+
+182 Ganita Manjari | Grade 9 | Part I
+
+Let us form a pair of numbers (x, y) using the information in the table above where x represents the stage number and y the corresponding number of squares. When we plot the ordered pairs emerging from the table, that is, (1, 1), (2, 5), (3, 9), (4, 13), (5, 17), we observe that they lie on a straight line! This is shown in Fig. 8.4.
+
+y-axis
+
+22
+
+20
+
+18
+
+(5, 17)
+
+16
+
+14
+
+(4, 13)
+
+12
+
+10
+
+(3, 9)
+
+8
+
+6
+
+(2, 5)
+
+4
+
+(1, 1) 2
+
+x-axis
+
+6 0 2
+
+8 10 4
+
+–2
+
+Fig. 8.4: Growing pattern of squares represented by a linear pattern
+
+Exercise: Verify that the following sequences are arithmetic progressions and write their nth terms. What do you observe when you plot the ordered pairs emerging from them? (i) 2, 5, 8, 11, … (ii) –5, –1, 3, 7, …
+
+Exercise: Using the formula tn = a + (n – 1) × d, find the nth term of the following arithmetic progressions.
+
+(i) 1
+
+2, 5 2, 9 2, 13 2 , … (ii) 1.5, 3.5, 5.5, 7.5, …
+
+Note that tn = a + (n – 1) × d is the explicit rule for finding the nth
+
+183 Predicting What Comes Next: Exploring Sequences and Progressions
+
+term of an AP. Can we also find the recursive rule? Yes. It is t1 = a, tn = tn–1 + d for n ≥ 2.
+
+Consider once again the AP: 1, 5, 9, 13, 17, … Since every term is 4 more than the previous term, another way of writing this sequence is t1 = 1, tn = tn–1 + 4 for n ≥ 2. Verify for yourself that this recursive rule leads to the terms of the sequence.
+
+Exercise: Find recursive rules for the APs in the previous exercises.
+
+Example 5: A person books a taxi to travel in the city. The taxi company charges a fixed booking fee of `200 plus `40 per kilometre travelled. Let us write the sequence representing the total fare after travelling 1 km, 2 km, 3 km, and so on. If the person travels 10 km, what will be the total fare? Since the fixed amount is `200, after 1 km the fare will be `200 + `40 = `240, after 2 km it will be `200 + `80 = `280 and after 3 km it will be `200 + `120 = `320. The sequence 240, 280, 320, … is an AP with first term 240 and common difference 40. The nth term of the sequence is 240 + (n – 1) × 40 = 240 + 40n – 40 = 200 + 40n where n represents the distance travelled in km.
+
+8.5 Sum of the First n Natural Numbers
+
+In this section, we derive a simple yet important rule for the sum of the first n natural numbers. To begin with, can you find the sum of the first ten natural numbers without actually adding all of them?
+
+Let us try a unique approach. Let S denote the sum of the first ten natural numbers. Thus S = 1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9 + 10. We can also write it as S = 10 + 9 + 8 + 7 + 6 + 5 + 4 + 3 + 2 + 1. If we place these two equations, one below the other, we notice something interesting.
+
+S = 1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9 + 10 S = 10 + 9 + 8 + 7 + 6 + 5 + 4 + 3 + 2 + 1
+
+Each pair of corresponding numbers, 1 + 10, 2 + 9, 3 + 8, … , 10 + 1, in the two equations add up to 11.
+
+Adding the two equations for S, we get
+
+2S = 11 + 11 + 11 + … + 11 (that is, 11 added 10 times).
+
+This leads to 2S = 110 or S = 55. The sum of the first 10 natural numbers is indeed 55.
+
+184 Ganita Manjari | Grade 9 | Part I
+
+Think and Reflect
+
+Can the same approach be used to find the sum of 1 + 2 + 3 + … + 100?
+
+This method of writing the sum from 1 to any number, reversing the sum and then adding the two expressions can be used to arrive at the formula for the sum of the first n natural numbers for any value of n.
+
+Let S = 1 + 2 + … + n.
+
+Then S = n + (n – 1) + … + 1.
+
+So, 2S = n(n + 1). We conclude S = n(n + 1)
+
+2 .
+
+We can also think of this argument pictorially.
+
+The diagram in Fig. 8.5 represents the method to find the sum 1 + 2 + 3 + 4 + 5 + 6. Note that the figure comprises two sets of circles that represent the sum 1 + 2 + 3 + 4 + 5 + 6 above and below of the zigzag partition. The total number of circles forms a 7 × 6 rectangular array.
+
+2 × (1 + 2 + 3 + 4 + 5 + 6) = 7 × 6
+
+Fig. 8.5
+
+Thus, Fig. 8.5 represents the fact 2 × (1 + 2 + 3 + 4 + 5 + 6) = 7 × 6.
+
+This can similarly be extended to find the sum
+
+1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9 + 10.
+
+Namely, 2 × (1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9 + 10) = 10 × 11.
+
+In general, 2 × (1 + 2 + 3 + 4 + … + n) = n × (n + 1).
+
+Therefore, 1 + 2 + 3 + 4 + … + n = n(n + 1)
+
+2 .
+
+If we use the notation Sn to represent the sum of the first n natural
+
+numbers, then Sn = n(n + 1)
+
+2 .
+
+185 Predicting What Comes Next: Exploring Sequences and Progressions
+
+The first known written mention of this result can be found in Āryabhaṭa’s Āryabhaṭīya, Chapter 2, Verse 19. The verse provides two ways to calculate the sum, with the second part describing that the sum can be calculated by taking the sum of the first and last terms, divided by two (the average), and multiplied by the number of terms.
+
+Think and Reflect
+
+Can you use this formula to find S20, S50 or S1000 ?
+
+Also, this formula can be used to find the sum of consecutive numbers such as 25 + 26 + 27 + … + 58.
+
+Note that 25 + 26 + 27 + … + 58 = (1 + 2 + 3 + … + 58) – (1 + 2 + 3 + … +24)
+
+= S58 – S24 = 58 59
+
+2 24 25 2 × − × = 29 × 59 – 12 × 25 = 1711 – 300 = 1411.
+
+Think and Reflect
+
+Let us revisit the sequence tn of triangular numbers 1, 3, 6, 10, 15, … shown in Fig. 8.1. Note that the nth term of this sequence is the sum of the first n
+
+n n + ( ) 1
+
+natural numbers. Thus tn =
+
+2 .
+
+Can you use this to find the 10th, 17th and 80th triangular numbers?
+
+Exercise Set 8.2
+
+1. Find the 10th and 26th terms of the AP: 3, 8, 13, 18, ….
+
+2. Which term of the AP : 21, 18, 15, … is – 81? Also, is 0 a term of this
+
+AP? Give reasons for your answer.
+
+3. Find the nth term of the AP: 11, 8, 5, 2 … Write the recursive rule for
+
+this AP.
+
+4. An AP consists of 50 terms in which the 3rd term is 12 and the
+
+last term is 106. Find the 29th term. (Hint: If ‘a’ is the first term and ‘d’ the common difference,
+
+then we arrive at the equations a + 2d = 12 and a + 49d = 106. Solve this pair of linear equations for ‘a’ and ‘d’.)
+
+186 Ganita Manjari | Grade 9 | Part I
+
+5. How many 2-digit numbers are divisible by 3? What is the sum of
+
+all these 2-digit numbers?
+
+6. Harish started work at an annual salary of `5,00,000 and received
+
+an increment of `20,000 each year. After how many years did his income reach `7,00,000?
+
+7. A child arranges marbles in rows so that the first row has 1 marble,
+
+the second has 2 marbles, the third has 3, and so on up to 25 rows. How many marbles does the child use in all?
+
+8.6 Geometric Progressions
+
+In this section, we explore yet another special kind of sequence called a geometric progression (GP). Consider the growing pattern of squares shown in Fig. 8.6. The first four stages of the pattern are shown.
+
+Stage 1
+
+Stage 2
+
+Stage 3
+
+Stage 4
+
+Fig. 8.6: A growing pattern of squares
+
+If we count the total number of green squares in the four stages of the pattern, we get the sequence 3, 6, 12, 24.
+
+Think and Reflect
+
+Can you predict the number of squares in Stages 5 and 6 of the pattern? In Stages 10, 11 and 12? In Stage 20? At any stage? How is this different from the growing pattern in Fig. 8.3?
+
+We observe that at each stage, the number of green squares is doubled or is twice the number of squares in the previous stage. The number of squares at successive stages is 3, 3 + 3 = 6, 6 + 6 = 12, 12 + 12 = 24, …
+
+187 Predicting What Comes Next: Exploring Sequences and Progressions
+
+These may be rewritten as
+
+3, 3 × 2, 3 × 4, 3 × 8, … or as 3, 3 × 2, 3 × 22, 3 × 23, … If we treat these expressions as the terms of a sequence, we get
+
+t1 = 3, t2 = 3 × 2, t3 = 3 × 22, t4 = 3 × 23
+
+and so on. We can write the nth term as tn = 3 × 2n–1. As a recursive formula, we can write t1 = 3 and tn = 2tn–1 for n ≥ 2.
+
+The first six terms of the sequence are 3, 6, 12, 24, 48, 96. Each term of the sequence is obtained by multiplying the previous term by 2. This constant multiplier is also known as the common ratio of the sequence. We see that the ratios of consecutive pairs of terms are all the same.
+
+6
+
+3 = 12 6 = 24 12 = 48 24 = 96 48 = 2.
+
+Such a sequence with a common ratio is known as a Geometric Progression or GP. In general, a GP may be described in the form of a sequence as a, ar, ar2, ar3, … , arn–1, where ‘a’ is the first term, ‘r’ is the common ratio and tn = arn–1 is the nth term.
+
+Example 6: Is 1, 2, 4, 8, 16, … a geometric progression? If so, what is the common ratio?
+
+Example 7: Is 1, 3, 9, 27, 81, … a geometric progression? If so, what is the common ratio?
+
+Example 8: Is 1, –1, 1, –1, 1, … a geometric progression? If so, what is the common ratio?
+
+Example 9: Check whether the sequence 5, 15
+
+4 , 45 16 , 135 64 , … is a geometric progression and find its nth term.
+
+In the given sequence t1 = 5, t2 = 15
+
+4 , t3 = 45 16 , t4 = 135 64
+
+Let us evaluate the ratios of consecutive pairs of terms.
+
+2
+
+4 5 15 4 1 5 3 4 ÷ = × = .
+
+1 = 15
+
+t t
+
+3
+
+16 15 4 45 16 4 15 3 4 ÷ = × = .
+
+2 = 45
+
+t t
+
+4
+
+135 64 45 16 135 64 16 45 3 4 ÷ = × = .
+
+3 =
+
+t t
+
+The ratio of consecutive pairs of terms is a constant 3
+
+4. Hence the
+
+188 Ganita Manjari | Grade 9 | Part I
+
+given sequence is a GP with a = 5 and r = 3
+
+4. The nth term = a × r (n–1)
+
+= 5 ×
+
+. Substitute n = 1, 2, 3, … in this expression to check if you get
+
+1 3 4
+
+n−      
+
+the terms of the given sequence.
+
+Exercise: Check whether the following sequences are geometric progressions and find their nth terms. (i) 2, 10, 50, 250, …
+
+(ii) 4, 8
+
+3 16 9 32 27 , , , …
+
+(iii) 3 3 2 3 4 3 8 , , , − −, …
+
+Exercise: Can you find a recursive rule for the formula tn = 3 × 10n–1 that generates the geometric progression 3, 30, 300, 3000, … ?
+
+8.6.1 Fun with Fractals
+
+Recall from Grade 8 another interesting pattern as shown in Fig. 8.7. Stage 0 represents a piece of paper cut in the shape of an equilateral triangle. Let us join the midpoints of the three sides of the triangle leading to four smaller equilateral triangles. Now remove the central triangle. You will get the figure in Stage 1 with a triangular hole in the centre. Repeat the process on all three black triangles in Stage 1. This will lead to the figure in Stage 2. In a similar manner, we arrive at Stage 3 from Stage 2. The process can be continued forever! This fascinating pattern is known as the Sierpiński triangle. This is actually a fractal. We will learn more about fractals in a later grade.
+
+Stage 0 Stage 1 Stage 2 Stage 3
+
+Fig. 8.7
+
+Wacław Sierpiński (1882 – 1969) was a Polish mathematician known for his numerous contributions to mathematics, including the Sierpiński gasket, one of the earliest and most famous examples of a fractal.
+
+189 Predicting What Comes Next: Exploring Sequences and Progressions
+
+Think and Reflect
+
+Observe the Sierpiński triangle and try to answer the following questions
+
+(a) How many black triangles are there in Stages 0 to 3 of Fig. 8.7?
+
+(b) Can you predict the number of black triangles at Stages 4 and 5?
+
+(c) Can you find a rule for the number of black triangles at the nth stage?
+
+(d) Suppose the area of the triangle (that is, the black region) in Stage 0 is
+
+1 square unit. What is the area of the black region in Stages 1, 2 and 3? What will be the area of the black region in Stages 4 and 5? Find a rule for the area of the black region at the nth stage. What happens to this area as n, the number of stages, goes on increasing?
+
+We observe that the number of black triangles is 1, 3, 9 and 27 in Stages 0, 1, 2 and 3 respectively. In fact, in every stage, each black triangle is replaced with three smaller triangles at the next stage. Thus, the number of black triangles at every stage is three times the number at the previous stage.
+
+At Stages 4 and 5 the number of black triangles will be 81 and 243.
+
+Note that the sequence 1, 3, 9, 27, 81, 243, … is a GP since every successive term of the sequence can be obtained by multiplying the previous term by 3. Also, all the terms of this sequence are powers of 3: 1 = 30, 3 = 31, 9 = 32 and so on. Continuing in this manner we observe that the exponent of 3 matches the stage number, as shown in Table 1. Thus, the number of black triangles at the nth stage of the Sierpiński triangle is given by 3n. The number of black triangles increases very quickly as the stage numbers increase. Can you explain why?
+
+What about the area of the black region? In Stage 1, the equilateral triangle at Stage 0 is divided into 4 equal parts and the central part is removed. This means that, if the black region at Stage 0 is 1 square unit,
+
+then then the black region at Stage 1 is 3
+
+4 square units. This process is
+
+repeated on Stage 1 to arrive at Stage 2. Hence, the black region at Stage
+
+2 × = 
+
+2 will be 3 4 of the black region of Stage 1, which is equal to 3 4 3 4 3 4
+
+  .
+
+n
+
+
+
+?
+
+Can you explain why the area of the black region at Stage n will be 3
+
+4 
+
+
+
+
+
+The area of the black region at each stage also leads to a geometric progression where every successive term of the sequence is obtained
+
+190 Ganita Manjari | Grade 9 | Part I
+
+by multiplying the previous term by 3
+
+4. Thus, while the number of black
+
+triangles increases rapidly, the total area of the triangles decreases.
+
+Table 1
+
+Stage (n) 0 1 2 3 4 5 … n
+
+Number of black triangles (tn) 1 = 30 3 = 31 9 = 32 27 = 33 81 = 34 243 = 35 … 3n
+
+n
+
+3
+
+3
+
+3
+
+3
+
+3
+
+5 
+
+
+
+2 
+
+
+
+3 
+
+
+
+
+
+4 
+
+
+
+Shaded area (sn) 1 3
+
+4
+
+4
+
+4
+
+4 
+
+4
+
+4
+
+
+
+ …
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+The explicit formula for the number of black triangles and the
+
+n
+
+
+
+area of the black region at any stage is given by tn = 3n and sn = 3 4 
+
+
+
+
+
+respectively. The recursive rules for the same are
+
+t1 = 1, tn = 3 × tn-1 for n ≥ 2 and s1 = 1, sn = 3
+
+4 × sn–1 for n ≥ 2.
+
+Fig. 8.8
+
+Fractals are shapes or patterns that repeat themselves at different scales. This means that if you zoom in on a small part of a fractal, it looks similar to the whole! Fractals are found throughout nature — like in the branching of trees, in vegetables, such as cauliflower or broccoli, in the shape of snowflakes, or in the patterns of coastlines. They can be created using simple rules but can form very complex and beautiful designs. Fractals help us understand patterns in nature, and also lead us to important concepts in mathematics.
+
+8.6.2 Visualising a GP
+
+Let us revisit the growing pattern of squares in Fig. 8.6 and prepare a table that shows the number of green squares at each stage.
+
+191 Predicting What Comes Next: Exploring Sequences and Progressions
+
+Stage number 1 2 3 4 5 … n
+
+Number of squares 3 6 12 24 48 … 3 × 2n–1
+
+Let us consider the pairs of numbers (x, y) where x represents the stage number and y the corresponding number of squares. When we plot the ordered pairs emerging from the above table, that is, (1, 3), (2, 6), (3, 12), (4, 24), (5, 48), we observe that they do not lie on a straight line! This is shown in Fig. 8.9.
+
+Similarly, when we plot the pairs of numbers (x, y) where x represents stage number and y the number of black triangles in the Sierpiński triangle we get the graph in Fig. 8.10 A. Fig. 8.10 B shows the graph where stage numbers are represented on the x-axis and the area of the black region of the stages on the y-axis. The graphs tell us that as the stage numbers increase, the number of shaded triangles increases very quickly whereas the area of black region diminishes, getting closer and closer to 0.
+
+y-axis
+
+50
+
+(5, 48)
+
+45
+
+35
+
+30
+
+25
+
+(4, 24)
+
+20
+
+15
+
+(3, 12)
+
+10
+
+(2, 6)
+
+5
+
+(1, 3)
+
+x-axis
+
+3 0 1
+
+4 5 2
+
+Fig. 8.9: Points emerging from a GP do not lie on a straight line
+
+192 Ganita Manjari | Grade 9 | Part I
+
+y-axis
+
+(4, 81)
+
+80
+
+y-axis
+
+70
+
+60
+
+1.2
+
+(0, 1)
+
+50
+
+1
+
+40
+
+0.8
+
+(1, 0.75)
+
+30
+
+0.6
+
+(3, 27)
+
+20
+
+0.4
+
+(4, 0.32) (3, 0.42) (2, 0.56)
+
+0.2
+
+x-axis
+
+x-axis
+
+(0, 1) (1, 3) (2, 9) 10
+
+5
+
+3 0 1
+
+4 2
+
+3 0 1
+
+4 2
+
+–2
+
+(A) (B)
+
+Fig. 8.10: Points emerging from a GP arising out of the
+
+stages of the Sierpiński Triangle
+
+Here is another example in which a GP arises.
+
+Example 10: A ball is dropped from a height of 24 feet above the
+
+th of its previous height.
+
+ground. Each time the ball bounces up to (
+
+3 4)
+
+(a) Can you write the sequence of numbers obtained from the heights
+
+attained by the ball in five successive bounces? (b) How many bounces are required for the ball to remain below a
+
+height of 1
+
+6 of the original height from which it was dropped?
+
+The sequence of maximum heights attained by the ball after each bounce is: First bounce: 24 × 0.75 = 18 feet Second bounce: 18 × 0.75 = 13.5 feet Third bounce: 13.5 × 0.75 = 10.125 feet Fourth bounce: 10.125 × 0.75 = 7.59375 feet Fifth bounce: 7.59375 × 0.75 = 5.695 feet Sixth bounce: 5.695 × 0.75 = 4.27125 feet Seventh bounce: 4.27125 × 0.75 = 3.2034375 feet
+
+193 Predicting What Comes Next: Exploring Sequences and Progressions
+
+y-axis
+
+Bouncing Ball Heights
+
+25 24.00 ft
+
+18.00 ft
+
+20
+
+13.50 ft
+
+15
+
+10.12 ft
+
+Height (ft)
+
+10
+
+5
+
+7.9 ft 
+5.70 ft 
+4.27 ft 
+3.20 ft
+
+4 2
+
+x-axis 5 6 7
+
+3 Number of bounces 1 0
+
+Fig. 8.11
+
+The sequence of heights forms a GP with a = 18 and r = 0.75 (or 3
+
+4 ),
+
+that is, 18, 13.5, 10.125, 7.594, 5.695, 4.27125, 3.2034375, … . We see
+
+that after the seventh bounce the ball remains below 1
+
+6 of the height at which it started.
+
+Exercise Set 8.3
+
+1. Find the 12th term of a GP with common ratio 2, whose 8th term is
+
+192. 
+2. Find the 10th and nth terms of the GP: 5, 25, 125, … . *3. A sequence is given by the recursive rule t1 = 2, tn+1 = 3tn – 2 for
+
+n ≥ 1. Which term of the sequence is 730? 
+4. Which term of the GP: 2, 6, 18, … is 4374? Write the explicit formula
+
+as well as the recursive formula for the nth term. 
+5. A ball is dropped from a height of 80 metres. After hitting the
+
+ground, it bounces back to 60% of the height from which it fell. It continues bouncing in this way — each time rising to 60% of the previous height.
+
+(i) What height does the ball reach after the 5th bounce?
+
+(ii) What is the total vertical distance the ball has travelled by the time it hits the ground for the 6th time?
+
+194 Ganita Manjari | Grade 9 | Part I
+
+6. Which term of the sequence 2 2 2 4 , , , … is 128? 
+7. Fig. 8.12 shows Stages 0 to 3 of the Sierpiński square carpet.
+
+Stage 0 of this fractal is a square sheet of paper. To construct Stage 1, each side of the square is trisected and the points of trisection of opposite sides are joined to obtain nine smaller squares. The centre square is then removed and the 8 smaller squares are retained, leaving a square hole in the centre. The same process is repeated on the eight smaller shaded squares to obtain Stage 2 and so on.
+
+Stage 0 Stage 1 Stage 2 Stage 3
+
+Fig. 8.12: Stages 0, 1, 2 and 3 of the Sierpiński square carpet
+
+Look at Fig. 8.12 and try to answer the following questions.
+
+(i) How many red squares are there in Stages 0 to 3?
+
+(ii) Can you predict the number of red squares in Stages 4 and 5?
+
+(iii) Can you find a rule for the number of red squares at the nth stage? Write the explicit formula as well as the recursive formula for the number of red squares at any stage.
+
+(iv) Suppose the area of the square in Stage 0 is 1 square unit. What is the area of the red region in Stages 1, 2 and 3? What will be the area of the red region in Stages 4 and 5? Find the explicit as well as the recursive formula for the area of the red region at the nth stage. What happens to this area as n, the number of stages, goes on increasing?
+
+End-of-Chapter Exercises
+
+1. Find the 31st term of an AP whose 11th term is 38 and 16th term
+
+is 73. 
+2. Determine the AP whose third term is 16 and whose 7th term
+
+exceeds the 5th term by 12.
+
+195 Predicting What Comes Next: Exploring Sequences and Progressions
+
+*3. How many three-digit numbers are divisible by 7? (Hint: All three-digit numbers divisible by 7 form an AP. Find the smallest and largest such three-digit numbers.) *4. How many multiples of 4 lie between 10 and 250? (Hint: All multiples of 4 form an AP. Find the smallest and largest multiples of 4 between 10 and 250.)
+
+*5. Find a GP for which the sum of the first two terms is – 4 and the
+
+fifth term is 4 times the third term. *6. Find all possible ways of expressing 100 as the sum of consecutive
+
+natural numbers.
+
+*7. The number of bacteria in a certain culture doubles every hour. If
+
+there were 30 bacteria present in the culture originally, how many bacteria will be present at the end of the 2nd hour, 4th hour and nth hour?
+
+*8. The sum of the 4th and 8th terms of an AP is 24 and the sum of the
+
+6th and 10th terms is 44. Find the first three terms of the AP. *9. Find the smallest value of n such that the sum of the first n natural
+
+formula as well as the recursive formula for the nth term.
+
+numbers is greater than 1,000. *10. Which term of the GP: 2, 8, 32, … is 131072? Write the explicit
+
+12 and their
+
+product is –1. Find the common ratio and the terms.
+
+*11. The sum of the first three terms of a GP is 13
+
+prove that x, y, z are in GP.
+
+*12. If the 4th, 10th and 16th terms of a GP are x, y and z respectively,
+
+*13. The sum of the first three terms of a geometric progression is 26,
+
+and the sum of their squares is 364. Find the terms of the GP. *14. Suppose P1 = 1, P2 = 2 and for n > 2, Pn = P1 + P2 + … + Pn–1
+
++ 1. Find the values of P1, P2, …, P8. Can you find a simpler recursive formula for Pn? Can you give an explicit formula?
+
+*15. Suppose W1 = 1, W2 = 2 and for n > 2, Wn = W1 + W2 + … +
+
+Wn–2 + 2. Find the values of W1, W2, …, W8. Do you recognise this sequence?
+
+196 Ganita Manjari | Grade 9 | Part I
+
+Chapter Summary
+
+• A sequence is an ordered list of numbers. Each number in the list is called a term.
+
+• A general formula or rule for a sequence is a rule that can be used to generate each term. An explicit formula is a rule that uses the term’s position number, n, to calculate the term’s value.
+
+• A recursive formula is a rule that gives the value of a given term using the values of previous terms.
+
+• The triangular number sequence is given by 1, 3, 6, 10, 15, … . Each term is the sum of the natural numbers up to the position
+
+of that term. The nth term is given by tn = n(n + 1)
+
+2 which is also the
+
+formula for the sum of the first n natural numbers.
+
+• An arithmetic progression (AP) is a list of numbers in which each term after the first term is obtained by adding a fixed number d to the previous term. The fixed number d is called the common difference.
+
+• The nth term of an AP is given by tn = a + (n – 1) d, where a is the first term and d is the common difference. The general form of an AP is a, a + d, a + 2d, a + 3d, …, a + (n – 1) d.
+
+• A geometric progression (GP) is a list of numbers in which each term after the first term is obtained by multiplying the previous term by a fixed number. This constant factor r is called the common ratio.
+
+• The nth term of a GP is given by tn = arn–1, where ‘a’ is the first term and ‘r’ is the common ratio. The general form of a GP is a, ar, ar2, ar3, ..., ar n–1.
+
+• Many attributes of fractals, such as the Sierpiński triangle and the Sierpiński square carpet, lead to geometric progressions.
+
+Graph Paper
+
+Graph Paper
+
+Graph Paper
+
+Graph Paper

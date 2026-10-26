@@ -1,0 +1,803 @@
+# CLASS-9 - SOCIAL-SCIENCE - CHAPTER 07
+# Source: iest107.pdf
+
+Chapter 7
+
+Elections
+
+The Big Questions
+
+1. Why are elections essential to a democratic system?
+
+2. How do electoral systems and rules shape political representation and fairness?
+
+3. What role do institutions and laws play in ensuring free and fair elections?
+
+4. What challenges do elections face in practice, and how can these challenges affect democracy?
+
+Why do Elections Matter?
+
+Direct Elections: Elections in which citizens vote directly to choose their representatives or leaders.
+
+Elections are one of the most important processes for exercising democratic rights. Regular and periodic elections lie at the core of democracy. Representatives to public offices can be chosen through either direct or indirect elections. In India, members of the Lok Sabha at the central level, members of the Vidhan Sabha (Legislative Assembly) at the state level, and members of local bodies (like Panchayats, municipal corporations, etc.) are elected through direct elections every five years. In contrast, the President, Vice President, and members of the Rajya Sabha are elected through indirect elections.
+
+Indirect Elections: Elections in which citizens vote for representatives who then choose/elect the leaders.
+
+You read about a case in Grade 8 where Gurmat was elected as class representative (CR). Can we allow her to continue as the CR in Grade 9 without facing a fresh election? Similarly, can the government continue beyond the prescribed term without seeking the people’s mandate again? And can we exercise our choice if only one political party is contesting the election? The answer to all these questions is No, because one of the most crucial elements of democracy is participating in the periodic election of those who will make decisions on our behalf. Elected representatives are accountable to the people. The right to elect our representatives and holding them accountable is ensured through periodic elections, and our vote is the principal means by which we exercise this right.
+
+An election is a process through which we exercise the right to vote and fulfil our responsibility as citizens.
+
+Representation Accountability
+
+Legitimacy
+
+Elections Equality
+
+Fig. 7.1. Importance of elections in a democracy. (Fill in the two empty boxes to indicate why elections are important for democratic functioning,
+
+and discuss how each one of them is ensured through elections.)
+
+DON’T MISS OUT
+
+Have you heard the term ‘psephology’? It refers to the scientific study of elections. The term is derived from the Greek word psēphos, meaning ‘pebble,’ and logy, meaning ‘systematic study.’ In ancient Greece, pebbles were used for voting, leading to the origin of the term ‘psephology.’
+
+Inside India’s Election Machinery
+
+For democracy to be realised, elections must be conducted in a free, fair, and transparent manner. The electoral process in a vast and diverse country like India, where millions of people vote across thousands of constituencies, requires laws, a well-organised and coordinated system at all levels—national, state, and local—and a robust machinery to manage it. This is where the electoral system and the various stakeholders, like the Election Commission of India (ECI), various political parties, civil society, media, and the voters, come to play their roles. Our Constitution and various parliamentary laws provide for the functions and powers of all these stakeholders.
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 – Part 1
+
+Fig. 7.2. Indian elections— a festival of democracy
+
+The Electoral System
+
+The first step towards successfully conducting elections is deciding on the method of converting the votes cast into seats in the legislature. The way an electoral system allocates seats is what distinguishes it from other systems. The framers of our Constitution discussed the two most common electoral systems and ultimately chose the plurality system, also known as the ‘First-Past-The-Post’ (FPTP) system.
+
+We elect members of the Lok Sabha and the Vidhan Sabha using the FPTP, and the elections to the Rajya Sabha and those of the President and the Vice President are conducted using the system of proportional representation (Fig. 7.3).
+
+The Vidhan Sabhas are directly elected bodies that make laws for their respective States and some Union Territories. Elections to the Vidhan Sabha are conducted in the same manner as those to the Lok Sabha, using the FPTP electoral system. In six states—Andhra Pradesh, Bihar, Karnataka, Maharashtra, Telangana, and Uttar Pradesh—the legislature has a bicameral structure. This means it has two houses—the Upper House, known as the Vidhan Parishad (Legislative Council), and the Lower House, known as the Vidhan Sabha (Legislative Assembly). The Vidhan Parishad consists of representatives elected by the members of the Vidhan Sabha and local bodies, and also by graduates and teachers in the State having such a Parishad. In addition, the Governor of the State nominates some members to represent fields, such as art, science, social service,
+
+7– Elections
+
+literature, and co-operatives. The elections to the Vidhan Parishad are held under the system of proportional representation by means of a single transferable vote (Fig. 7.3).
+
+Electoral Systems
+
+Feature First Past The
+
+Proportional Representation
+
+Post (FPTP) Majority System
+
+(PR)
+
+Haritbhumi Ratnadweep Swarnalok
+
+Name of the Country
+
+(Imaginary)
+
+25 seats 25 seats 100 seats (nationwide list)
+
+Seats in the
+
+Parliament
+
+Party M
+
+Party A
+
+Party X
+
+Party N
+
+Party B
+
+Party Y
+
+Main Political
+
+Party O
+
+Party C
+
+Party Z
+
+Parties
+
+Party P
+
+Voters vote for
+
+Each voter votes for one candidate in their
+
+Each voter votes for one candidate. To win,
+
+constituency. The
+
+a party, not a person. Seats in
+
+candidate with
+
+a candidate must receive more than
+
+the Parliament
+
+How Voting
+
+Works?
+
+the most votes wins, even if the votes are less than
+
+are allotted in proportion to the total votes received
+
+by each party.
+
+50% of total votes polled.
+
+50% of the votes. If not, the top two candidates compete again in the second round.
+
+Party M: 40%
+
+Party N: 35% Party O: 15%
+
+Party A: 40% Party B: 35% Party C: 25%
+
+Party X: 45% Party Y: 40% Party Z: 15%
+
+Party P: 10%
+
+Sample Results (Vote Percentage)
+
+No one got 50%
+
+Seats distributed:
+
+M: 40; N: 35;
+
+Party A forms the
+
+in Round 1. In Round 2, Party Y
+
+O: 15; P: 10
+
+government.
+
+wins with 55%,
+
+Who forms the
+
+and forms the
+
+Government?
+
+Power is shared proportionately.
+
+government.
+
+Total valid votes
+
+Seats to be filled +1 Quota = Minimum votes to win +1 =
+
+Counting and Transfer of Votes
+
+1. Voters mark their preference. 
+2. First preference votes are counted for all candidates. Those who receive the minimum votes required to win (quota) are declared elected. 
+3. The candidate who receives the lowest votes is eliminated. Their votes are transferred to those who are mentioned as second preference on those ballot papers. 
+4. Process continues till the required number of candidates are elected.
+
+Fig. 7.3. Single transferable vote system
+
+LET’S EXPLORE
+
+Different democracies use different electoral systems. Make groups of 5–6 students. Each group will select six countries from different continents. Prepare and present a case study on the type of electoral system(s) operating in those countries, and discuss their latest election results of those countries.
+
+The Laws
+
+Let us now briefly examine the major legislations that govern the conduct of elections in India—The Representation of the People Act, 1950 (RPA, 1950), and the Representation of the People Act, 1951 (RPA, 1951). There also exists ‘The Presidential and Vice- Presidential Elections Act, 1952’. The Representation of the People Act, 1950 deals mainly with the allocation of seats and delimitation of constituencies, the preparation and revision of electoral rolls, and ensuring that every citizen above 18 years of age and above has the right to vote without discrimination. The Representation of the People Act, 1951 deals with all the other aspects of the conduct of elections and post-election disputes. It lays down rules for nomination of candidates, election campaigns, voting procedures, and resolution of disputes. Together, these Acts ensure the integrity, transparency, and accountability of India’s electoral process.
+
+7– Elections
+
+The Representation of the People Act, 1951 also lists out the electoral offences and corrupt practices. For example:
+
+Any gift, offer, or promise made by a candidate (or with their consent) to a person in order to make them contest, withdraw, vote, or refrain from voting.
+
+Appealing people to vote or refrain from voting on the basis of religion, caste, race, community, or language.
+
+Candidates or any other person on their behalf are prohibited from taking any assistance in favour of the candidate from government-related personnel. This includes gazetted officers, judges and magistrates, armed forces personnel, police personnel, and excise officers.
+
+Delimitation Commission
+
+Did you know that the boundaries of your parliamentary and assembly constituencies are not permanently fixed? The boundaries of the constituencies change over time depending on shifts in the population density. Without delimitation, one Member of Parliament (MP) might represent five lakh people, while another might represent twenty-five lakh, defeating the objective of equal representation. Delimitation is the process of determining the number of seats and fixing the territorial boundaries in each state for elections to the Lok Sabha and the Vidhan Sabha. It aims to ensure that the ratio of seats to population is as close to equal as possible across all constituencies.
+
+DON’T MISS OUT
+
+Article 82 of the Constitution of India mandates the establishment of a Delimitation Commission. India has had four Delimitation Commissions—in 1952, 1963, 1973, and 2002. Can you find out the reason for the long interval between 1973 and 2002 with the help of your teacher?
+
+Election Commission of India (ECI)
+
+The Constitution of India has vested in the Election Commission of India (ECI) the superintendence, direction, and control of the entire process for the conduct of elections.
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 – Part 1
+
+LET’S RECALL
+
+The ECI is an autonomous permanent constitutional body that was established on 25 January 1950. It conducts elections to the Lok Sabha, the Rajya Sabha, the Vidhan Sabha, the Vidhan Parishad, the President, and the Vice President of India. Articles 324 to 329 of the Constitution provide for the establishment of an ECI and define its powers and duties.
+
+At the State level, election work is supervised by the Chief Electoral Officer of the State, who is appointed by the ECI from among the civil servants in consultation with the concerned State Government. Various State Government officers, such as District Magistrates, Sub-Divisional Magistrates, and Tahsildars, etc., are also assigned election duties by designating them as District Election Officers, Returning Officers, Electoral Registration Officers, and so on.
+
+Let us look at what the ECI actually does. Remember, you have already studied a few of its functions in Grade 8; let us now understand them in detail.
+
+Fig. 7.4. An officer on election duty verifying
+
+ECI creates the electoral roll: The ECI sends official enumerators to every household to collect data about the eligible electors. As you have studied, only citizens who meet the eligibility criteria can vote. Based on the collected information, electoral rolls are prepared for each constituency, organised polling station-wise. Only those whose names appear on the roll are allowed to vote. The ECI also conducts Special Intensive Revision (SIR), which involves updating, verifying, and correcting the electoral rolls. Through SIR, it ensures that no eligible citizen is left out and no ineligible person is included in the electoral roll. This exercise ensures the addition of all voters, especially the young voters who have just turned 18 and may be left out due to a lack of awareness or any other reason. The SIR also deletes the names of the voters on the basis of death of the voter, change of residence, duplicate enrolment, and being
+
+voter’s name from electoral roll
+
+7– Elections
+
+permanently untraceable. The ECI also gives time to raise claims or objections against the revised electoral roll and settles the claims and objections before publishing the final electoral roll.
+
+THINK ABOUT IT
+
+You will turn 18 in a few years. As a responsible citizen, you should register yourself as a voter. Find out the various steps of the procedure for registration and the list of required documents for the same. Discuss, with anyone who has just turned 18 and has registered as a voter, the ease or difficulty faced in the voter registration process.
+
+LET’S EXPLORE
+
+Æ Do you know what ETPBS is?
+
+ETPBS stands for Electronically Transmitted Postal Ballot System. It enables service voters to cast their vote on an electronically received postal ballot from their preferred location, which is outside their originally assigned voting constituency.
+
+Æ Find out who are classified as service voters and who can vote using ETPBS?
+
+ECI decides the schedule and date for the election: When the constitutionally mandated term of the Legislature ends, which is five years or when the Legislature is dissolved before the completion of its term, the ECI activates the machinery needed to conduct an election. While deciding the election schedule for a country as large and diverse as India, the ECI must consider several factors, such as weather conditions, agricultural cycle, school and university examination schedules, festivals, etc.
+
+ECI registers political parties and allocates symbols: Only political parties registered with the ECI can contest elections. Apart from the candidates affiliated to the political parties, independent candidates (who are not affiliated to any political party) can also contest elections. The ECI ensures inner party democracy by insisting upon the political parties to hold their organisational elections periodically. The ECI also classifies political parties as recognised national or state/regional parties or registered-unrecognised parties. National and state parties,
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 – Part 1
+
+are allotted election symbols. The ECI also acts as a quasi-judicial body in addressing disputes regarding the recognition of political parties and the allotment of symbols.
+
+DON’T MISS OUT
+
+Every year, 25 January is celebrated as National Voters’ Day, and there is a voters’ pledge that goes as follows —
+
+“We, the citizens of India, having abiding faith in democracy, hereby
+
+pledge to uphold the democratic traditions of our country and
+
+the dignity of free, fair and peaceful elections, and to vote in every
+
+election fearlessly and without being influenced by considerations
+
+of religion, race, caste, community, language or any inducement”.
+
+Fig. 7.5. Voters’ Pledge https://ecisveep.nic.in/pledge/englishpledge.php
+
+Ensuring free and fair elections: For elections to be meaningful, the entire process must be conducted in a fair and transparent manner. If fairness is not ensured, public confidence in electoral institutions may gradually weaken. Consider situations in which candidates are influenced by personal favours, votes are not counted accurately, or some participants face difficulties in exercising their right to vote due to accessibility issues. In such cases, although elections may be held, their democratic value is reduced. This shows that democracy is not only limited to conducting elections, but also in ensuring that the electoral process is inclusive, impartial, and trustworthy.
+
+The ECI has taken several initiatives to make the process of elections more inclusive (see Fig. 7.7 and Fig. 7.8). These initiatives focus on infrastructure accessibility as well as technology-assisted inclusion, particularly for Persons with Disabilities (PwDs), Senior Citizens, transgender persons, and Particularly Vulnerable Tribal Groups (PVTGs). Voting from home for senior citizens above 85 years of age and persons with disabilities (PwDs) with a benchmark disability of 40% was extended across India for the first time during the 2024 General Elections.
+
+7– Elections
+
+ETPBS (Electronically Transmitted Postal Ballot System): Developed for ‘Service Voters’, allowing them to receive and cast their postal ballots electronically from anywhere outside their constituency.
+
+Suvidha: An exclusive app for contesting candidates and political parties. Here, candidates can get all the nomination-related forms and updates. They can also use the app to apply for permissions (meetings, rallies, vehicles, loudspeakers, etc.) and check the real-time permission status through the app.
+
+S
+
+E
+
+Voter Helpline App: This is a multipurpose app, which can be used for various voter services including registration,
+
+T
+
+A
+
+D
+
+I
+
+transposition, verification,
+
+D
+
+N
+
+etc. With the help of this
+
+A
+
+C
+
+V
+
+app, voters can also get all
+
+O
+
+T
+
+E
+
+S
+
+R
+
+L
+
+S
+
+A
+
+I
+
+C
+
+the information related to election and related news and updates, too.
+
+I
+
+F
+
+F
+
+O
+
+N
+
+O
+
+I
+
+T
+
+E
+
+L
+
+C
+
+E
+
+ERONET: Brings in seamless processing of forms and easy handling of the databases. It facilitates efficient form-processing, simplified dashboards, role-based access, and maintenance of E-Rolls.
+
+Saksham App: The ECI has taken into consideration the need for easing the voter identification and registration process for persons with disabilities (PwDs) by offering customised services. The Saksham App provides a number of features to help PwDs in registration for voting, finding polling station, etc.
+
+cVIGIL App: With this app, voters can report any Model Code of Conduct violations and election misconducts within minutes of witnessing them. The flying squads will navigate to the spot of incidence with the help of auto location to take prompt action.
+
+Sugam: A web-based application for managing vehicles diverted/ requisitioned from other departments for election work. All details of the departments, vehicle registration numbers, driver contacts, and periodical fuel allotment to the vehicles are uploaded on this app.
+
+Understanding Society:
+
+Fig. 7.6. Digital ecosystem for electoral services and voter engagement
+
+India and Beyond
+
+Grade 9 – Part 1
+
+No Voter to Be Left Behind
+
+Fig. 7.7. EVM with Braille
+
+Fig. 7.8. Voting from home for senior citizens
+
+India’s electoral exercise is unparalleled, and distinct from those in other parts of the world, with over 96.8 crore eligible voters spread across diverse regions and terrains. The ECI manages this exercise autonomously, ensuring free and fair elections nationwide. To carry out its functions, such as updating electoral rolls, candidate nominations, regulating campaigns, law enforcement, coordination among states, extensive security arrangements, counting of votes, declaration of election results, and dispute resolution, the ECI makes extensive use of information and communication technologies, and e-governance. The ECI has also taken several initiatives to make the process of elections more inclusive.
+
+7– Elections
+
+DON’T MISS OUT
+
+The International Election Visitors’ Programme (IEVP) is a flagship programme of the ECI for international cooperation and engagement with Election Management Bodies (EMBs) of other countries and international organisations. The ECI has signed Memorandums of Understanding (MoUs) with 28 EMBs and three international organisations, namely, the International Foundation for Electoral Systems (IFES), International Institute for Democracy and Electoral Assistance (International IDEA), and the United Nations.
+
+Political Parties
+
+How do we learn about various issues that affect citizens in their daily lives? How do voters get to know about the candidates contesting elections? How is the election agenda set? What role do political parties play in elections? There are often dozens of contestants for each constituency. Most candidates belong to a political party, though some contest independently. Voters learn about candidates, their policies, their vision for development, and their positions on various social, economic, cultural, and political issues primarily through the political parties.
+
+Organise public opinion.
+
+They help ensure that the democracy functions effectively by providing governance, accountability, representation, and public engagement.
+
+Campaign on specific issues.
+
+Political parties are essential to a democratic system, as they work directly
+
+at the grassroots
+
+level.
+
+Offer voters meaningful choices.
+
+Enable voters to make informed decisions during elections.
+
+Fig. 7.9. Importance of Political Parties
+
+You will become eligible to vote in another four or five years; however, you must have heard or read about various promises that political parties make during the election campaigns. They present their agenda, elaborate on their promises in election rallies, and discuss and debate on issues of local, state, national, and international concern through various media platforms.
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 – Part 1
+
+LET'S MAP
+
+1. Choose any three states (including yours). Find the symbols of state parties belonging to those states and plot them on the given map of India. List down their major agenda, as mentioned in their manifesto in the latest Lok Sabha/Vidhan Sabha/Local Body Elections.
+
+Fig. 7.10
+
+7– Elections
+
+2. Form groups of 4–6 students. Identify and compare the policy preferences on the following parameters for two political parties in the last Lok Sabha Elections using credible sources like party manifestos, newspapers, etc. Present the points of comparison in a poster using bullet points, symbols, colour coding, etc.
+
+Any policy/law that aligns with
+
+Source
+
+the party’s
+
+Policy area Party’s viewpoint
+
+viewpoint
+
+Education
+
+National
+
+security
+
+Social welfare
+
+Environment
+
+Economy
+
+Health
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 – Part 1
+
+Citizens
+
+India has a multi-party system, which means that many political parties exist and compete in elections. This system reflects the country’s rich diversity of languages, cultures, religions, and regions.
+
+Political Parties (Organise Public Opinion)
+
+Contest Elections (Plan Campaigns and Prepare
+
+Manifestos)
+
+Winning Party Opposition
+
+Party
+
+Forms Government
+
+Ensures Accountability
+
+Formulates and
+
+Participation
+
+Implements
+
+Policies
+
+in Debates, Committees
+
+Fig. 7.11. Role of Political Parties
+
+If there are so many political parties, can someone simply leave one party and join another whenever they wish? Yes, they can. However, once a person has been elected on a particular party’s ticket, leaving that party is considered as Defection. Defection refers to abandoning or switching from the political party under whose banner the candidate was elected. This may involve joining another party or choosing to act independently of the party’s decisions, particularly in matters such as voting in the legislature. Such actions, if understood in the context of party discipline and political stability, are considered as political opportunism. On the contrary, defection can also be viewed as a way to uphold conscience or respond to changing public expectations.
+
+DON’T MISS OUT
+
+The Anti-Defection Law in India was passed in 1985 through the 52nd Constitutional Amendment Act. The purpose of the law is to prevent defection, thereby providing stability to the elected government. According to this law, if a member of the Parliament or a State Assembly voluntarily gives up their party membership or votes against the party’s instructions (whip), the member can be disqualified from the respective House. The Speaker or Chairman of the House decides what needs to be done in such cases.
+
+You have already read that the Election Commission registers and recognises political parties. It does so based on specific criteria.
+
+7– Elections
+
+Criteria for National and
+
+State Party Recognition
+
+Criteria for National Party Recognition
+
+Criteria for State Party Recognition (Any one condition should
+
+(Any one condition should be
+
+be fulfilled)
+
+fulfilled)
+
+Secures not less than 6% of the valid votes polled at a general election to the Legislative Assembly of the State concerned and, in addition, wins at least two seats in the Legislative Assembly of that State.
+
+Secures not less than 6% of valid votes polled in any four or more states in a General Election to the Lok Sabha or to the Legislative Assembly, and in addition, it wins four seats in the Lok Sabha from a single or more states.
+
+Wins at least 2% of seats in the Lok Sabha, and the candidates are elected from at least three states.
+
+It is recognised as a State Party at least in four states.
+
+Secures not less than 6% of the valid votes polled at a general election to the Lok Sabha from the State concerned, and in addition, wins at least one seat in the Lok Sabha from the State concerned.
+
+Registered Unrecognised Political
+
+Parties (RUPP)
+
+Wins at least 3% of the seats at the General Election to the Legislative Assembly of the State concerned or at least three seats in the Legislative Assembly, whichever is more.
+
+The parties that have not secured enough percentage of votes in the Legislative Assembly or the General Elections.
+
+Wins at least 1 seat in the Lok Sabha for every 25 seats or any fraction thereof allotted to the State at a General Election to the Lok Sabha from the State concerned.
+
+Parties that have never contested elections since their registration.
+
+Secures not less than 8% of the valid votes polled in the State at a General Election to the Lok Sabha from the State or to the Legislative Assembly of the State.
+
+Fig. 7.12
+
+LET’S EXPLORE
+
+Find out the number of State parties and Registered Unrecognised Political Parties (RUPP). You may visit the website of ECI.
+
+LET’S EXPLORE
+
+The year 1967 witnessed an end to the era of single-party dominated elections in India and an era of alliances began. Even though various states witnessed politics of alliance starting from 1967, it was in 1977 that various political parties formed an alliance as the Janata Party against the backdrop of the National Emergency (1975–1977). The Janata Party formed the first coalition government at the national level, which was popularly known as the Janata Government. Since the late 1990s, the National Democratic Alliance (NDA), led by the Bharatiya Janata Party (BJP), and the United Progressive Alliance (UPA), led by the Indian National Congress (INC) until the UPA's dissolution in 2023 and subsequent reconstitution as the Indian National Developmental Inclusive Alliance, have been the major political alliances in Indian elections.
+
+Find out the name and the composition (number and name of the national and state parties) of the alliances that won in the following elections to the Lok Sabha.
+
+Year Alliance Won National parties State parties
+
+1977
+
+1999
+
+2004
+
+2009
+
+2014
+
+2019
+
+2024
+
+Challenges to Free and Fair Elections
+
+In India, conducting elections for over 96.8 crore (in 2024) voters with thousands of polling stations and hundreds of political parties, spread across diverse regions and socio-economic realities, is a challenging task. For challenges such as misinformation, fake news, intimidation, etc., the ECI addresses them through RPA 1950 and
+
+7– Elections
+
+d
+
+i
+
+a
+
+m
+
+t
+
+i
+
+ti
+
+o
+
+In
+
+n
+
+nf
+
+o
+
+r
+
+si
+
+m
+
+Mi
+
+a
+
+t
+
+i
+
+o
+
+n
+
+a
+
+F
+
+ke
+
+N
+
+e
+
+w
+
+s
+
+Fig. 7.13. Challenges to free and fair elections
+
+1951, the Model Code of Conduct, EVMs, Voter Verifiable Paper Audit Trail (VVPAT), voters’ awareness campaigns, and other measures. With constant vigilance and active citizen participation, elections can become more representative and the democracy more robust.
+
+LET’S ANALYSE
+
+Look at the road to free and fair elections above (Fig. 7.13). Fill in the empty potholes with some more challenges after discussing them with your teachers and parents. How can we overcome these challenges?
+
+Before we move on...
+
+Æ Casting a vote is a constitutional right as well as a duty of every citizen.
+
+Æ Elections are the soul of democracy as they give every citizen an equal voice in the formation of a government.
+
+Understanding Society:
+
+Æ The various laws, such as the Representation of the People Act of 1950 and 1951, and bodies like the Delimitation Commission and the ECI, ensure that the entire process of elections remains free, fair, and transparent.
+
+India and Beyond
+
+Grade 9 – Part 1
+
+Æ Political parties play a fundamental role by presenting diverse view points in terms of programmes and policies, thus helping voters make informed choices.
+
+Æ Despite numerous challenges to conducting free and fair elections, the ECI tries to ensure that elections at multiple levels are carried out impartially.
+
+Questions and activities
+
+1. What reforms have been introduced by the ECI to make voting more inclusive for the following groups?
+
+a. People with Disabilities
+
+b. Service Voters
+
+c. Senior Citizens— above 85 years of age
+
+d. Prisoners
+
+e. Persons in preventive detention
+
+2. What are the various functions of the Election Commission of India? Which of these functions is most important for the conduct of free and fair elections? Explain.
+
+3. Elections are the soul of a democracy. Do you agree? Why or why not?
+
+4. Explain at least three differences between the national and state/regional political parties.
+
+5. Why should you vote? Arrange the following in the descending order of your choice. Discuss the reasons for your choice.
+
+a. Opportunity to choose my representative
+
+b. Makes me a responsible person
+
+c. Opportunity to change the non-performing representative
+
+d. Strengthens democracy
+
+6. What is the Special Intensive Revision (SIR) initiative of the ECI? Explain the objectives and the necessity of conducting SIR.
+
+7– Elections
+
+7. Match the political party name with its symbol.
+
+Political Parties Name Symbol
+
+Aam Aadmi Party (AAP)
+
+Bharatiya Janata Party (BJP)
+
+Bahujan Samaj Party (BSP)
+
+Communist Party of India (Marxist) [CPI (M)]
+
+Indian National Congress (INC)
+
+National People’s Party (NPP)
+
+8. Read the case study below and answer the following questions.
+
+Ishani and her mother were in the local market, day before the state assembly elections. She noticed wall writing and campaign posters pasted everywhere. Large groups of campaigners were distributing pamphlets and raising slogans in support of the respective candidates. Ishani has turned 18 and will be voting for the first time. She had registered to vote through the ECI’s online portal. The next morning, she, along with her mother and her disabled elder brother, went to the polling station, which was well guarded by the police personnel. A wheelchair was made available to them, and volunteers guided them to the polling booth. Inside the polling booth, there were only three people who were performing all duties. Ishani had forgotten her voter ID card and Aadhaar card, but her identity was verified with an alternative document. After casting her vote, she was also able to see the VVPAT slip. While leaving, she wondered how the police personnel vote, as they must be on duty from early morning till late evening. When she went home, she narrated her entire experience to her 89-year-old grandmother, who cast her vote from home.
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 – Part 1
+
+a. What initiatives were taken by the ECI to enable the voters
+
+to cast their vote?
+
+b. If Ishani was allowed to vote even without carrying her
+
+Voter ID card or Aadhaar card, which other document might she be carrying that is valid for voting?
+
+c. Cite the examples of violations of the Model Code of Conduct.
+
+d. Give a suitable title to the passage.
+
+e. Find out how the police and army personnel cast their votes.
+
+9. A comparative chart of three countries is given below. Based on the information given in the chart, answer the questions.
+
+Country A Country B Country C
+
+Political Dimension
+
+Written constitution, monarchy, no voting rights, no political party.
+
+Written constitution, periodic elections, voting rights, one political party.
+
+Written constitution, periodic elections, voting rights, party system varies from two-party to multi-party.
+
+High standard of living.
+
+Economic Dimension
+
+Average standard of living.
+
+Above-average standard of living.
+
+a. What is the difference between having a voting right in
+
+a country with a multi-party system and another with a single-party system?
+
+b. In which of the above countries would you like to stay and
+
+why?
+
+10. What are the challenges to conducting free and fair elections?
+
+11. On the Stage.
+
+Elections are to be held in your school for the posts of Head Girl, Head Boy, and Sports Captain. Assume the roles of an Election Commissioner, Returning Officer, Polling Agent, Candidate, Campaigner, Polling Officer, Police Personnel, and a Journalist, and perform their roles while ensuring free, fair, and transparent elections.
+
+7– Elections
+
+12. Try and make videos or audios on topics like: My Vote My Nation; No Voter to be Left Behind; How to Eliminate the Ill of Money Power, etc.
+
+13. Select one national or state political party. Using authentic and reliable sources such as the Election Commission of India (ECI) website, the official website of the selected political party, and newspapers. Prepare a comparative chart of the last two State Legislative Assembly elections. The chart should include the following details for the chosen party:
+
+a. Some promises made in the Election manifesto
+
+b. Percentage of votes polled
+
+c. Number of seats won
+
+d. Number of women who contested
+
+e. Number of women candidates elected
+
+Present the data for both elections in a clear and comparative format, citing all sources used.
+
+14. Do you think ‘One Nation, One Election’ can improve the efficiency of the electoral process? Divide the class and discuss into two groups—one to examine its potential advantages and the other to analyse its limitations.
+
+Notes
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 – Part 1

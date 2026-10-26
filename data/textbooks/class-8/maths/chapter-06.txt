@@ -1,0 +1,1594 @@
+# CLASS-8 - MATHS - CHAPTER 06
+# Source: hegp106.pdf
+
+6 WE DISTRIBUTE,
+
+YET THINGS
+
+MULTIPLY
+
+We have seen how algebra makes use of letter symbols to write general statements about patterns and relations in a compact manner. Algebra can also be used to justify or prove claims and conjectures (like the many properties you saw in the previous chapter) and to solve problems of various kinds.
+
+Distributivity is a property relating multiplication and addition that is captured concisely using algebra. In this chapter, we explore different types of multiplication patterns and show how they can be described in the language of algebra by making use of distributivity.
+
+6.1 Some Properties of Multiplication
+
+Increments in Products
+
+Consider the multiplication of two numbers, say, 23 × 27.
+
+1. By how much does the product increase if the first number (23) is increased by 1?
+
+2. What if the second number (27) is increased by 1?
+
+3. How about when both numbers are increased by 1?
+
+Do you see a pattern that could help generalise our observations to the product of any two numbers?
+
+Let us first consider a simpler problem — find the increase in the product when 27 is increased by 1. From the definition of multiplication (and the commutative property), it is clear that the product increases by 23. This can be seen from the distributive property of multiplication as well. If a, b and c are three numbers, then —
+
+We Distribute, Yet Things Multiply
+
+a (b + c) = ab + ac
+
+This property can be visualised nicely using a diagram:
+
+b columns c columns
+
+a rows
+
+ab ac
+
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+a (b + c)
+
+This is called the distributive property of multiplication over addition. Using the identity a (b + c) = ab + ac with a = 23, b = 27, and c = 1, we have
+
+Increase 23 ( 27 + 1) = 23 × 27 + 23
+
+Remember that here, a (b + c) and 23 (27 + 1) mean a × (b + c), and 23 × (27 + 1), respectively. We usually skip writing the ‘×’ symbol before or after brackets, just as in the case of expressions like 5a, xy, etc.
+
+We can also similarly expand (a + b) c using the distributive property as follows — (a + b) c = c (a + b) (commutativity of multiplication) = ca + cb (distributivity) = ac + bc (commutativity of multiplication)
+
+We can use the distributive property to find, in general, how much a product increases if one or both the numbers in the product are increased by 1. Suppose the initial two numbers are a and b. If one of the numbers, say b, is increased by 1, then we have —
+
+Increase a ( b + 1) = ab × a
+
+Now let us see what happens if both numbers in a product are increased by 1. If in a product ab, both a and b are increased by 1, then we obtain (a + 1) (b + 1).
+
+How do we expand this?
+
+Let us consider (a + 1) as a single term. Then, by the distributive property, we have
+
+If a = 23, and, b = 27, we get
+
+(a + 1) (b + 1) = (a + 1) b + (a + 1) 1 Again applying the distributive property, we obtain
+
+(23 + 1) (27 + 1) = (23 + 1) 27 + (23 + 1) 1 = 23 × 27 + (27 + 23 + 1)
+
+(a + 1) (b + 1) = (a + 1) b + (a + 1) 1 = ab + (b + a + 1)
+
+Increase
+
+Thus, the product ab increases by a + b + 1 when each of a and b are increased by 1.
+
+What would we get if we had expanded (a + 1) (b + 1) by first taking (b + 1) as a single term? Try it?
+
+What happens when one of the numbers in a product is increased by 1 and the other is decreased by 1? Will there be any change in the product?
+
+Let us again take the product ab of two numbers a and b. If a is increased by 1 and b is decreased by 1, then their product will be (a + 1) (b – 1). Expanding this, we get
+
+If a = 23, and b = 27, we get
+
+(23 + 1) (27 – 1) = (23 + 1) 27 – (23 + 1) 1 = 23 × 27 + 27 – (23 + 1) = 23 × 27 + 27 – 23 – 1
+
+(a + 1) (b – 1) = (a + 1) b – (a + 1) 1 = ab + b – (a + 1) = ab + b – a – 1
+
+Increase
+
+Will the product always increase? Find 3 examples where the product decreases.
+
+What happens when a and b are negative integers?
+
+Check by substituting different values for a and b in each of the above cases. For example, a = –5, b = 8; a = –4, b = –5; etc.
+
+We have seen that integers also satisfy the distributive property, that is, if x, y and z are any three integers, then x (y + z) = xy + xz.
+
+Thus, the expressions we have for increase of products hold when the letter-numbers take on negative integer values as well.
+
+Recall that two algebraic expressions are equal if they take on the same values when their letter-numbers are replaced by numbers. These
+
+We Distribute, Yet Things Multiply
+
+numbers could be any integers. Mathematical statements that express the equality of two algebraic expressions, such as
+
+a (b + 8) = ab + 8a,
+
+(a + 1) (b – 1) = ab + b – a – 1, etc.,
+
+are called identities.
+
+By how much will the product of two numbers change if one of the numbers is increased by m and the other by n?
+
+If a and b are the initial numbers being multiplied, they become a + m and b + n.
+
+(a + m) (b + n) = (a + m)b + (a + m)n
+
+= ab + mb + an + mn
+
+The increase is an + bm + mn.
+
+Notice that the product is the sum of the product of each term of (a + m) with each term of (b + n).
+
+(a + m) (b + n) = ab + mb + an + mn Identity 1
+
+This identity can be visualised as follows —
+
+b columns 
+• columns
+
+a rows
+
+ab
+
+an
+
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+m rows
+
+mb
+
+mn
+
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+(a + m) (b + n)
+
+This identity can be used to find how products change when the numbers being multiplied are increased or decreased by any amount. Can you see how this identity can be used when one or both numbers are decreased?
+
+For example, let us reconsider the case when one number is increased by 1 and the other decreased by 1. Let us write the product (a + 1) (b – 1) as (a + 1) (b + (–1). Taking m = 1 and n = –1 in Identity 1, we have
+
+ab + (1) × b + a × (–1) + (1) × (–1) = ab + b – a – 1,
+
+which is the same expression that we obtain earlier. Use Identity 1 to find how the product changes when
+
+(i) one number is decreased by 2 and the other increased by 3;
+
+(ii) both numbers are decreased, one by 3 and the other by 4.
+
+Verify the answers by finding the products without converting the subtractions to additions.
+
+Generalising this, we can find the product (a + u) (b – v) as follows.
+
+(a + u) (b – v) = (a + u) b – (a + u) v
+
+= ab + ub – (av + uv)
+
+= ab + ub – av – uv.
+
+Check that this is the same as taking m = u and n = –v in Identity 1.
+
+As in Identity 1, the product (a + u) (b – v) is the sum of the product of each term of a + u (a and u) with each term of b – v (b and (–v)). Notice that the signs of the terms in the products can be determined using the usual rules of integer multiplication.
+
+See how the rules of integer multiplication allows us to handle multiple cases using a single identity!
+
+Expand (i) (a – u) (b + v), (ii) (a – u) (b – v).
+
+We get
+
+(a – u) (b + v) = ab – ub + av – uv, and
+
+(a – u) (b – v) = ab – ub – av + uv.
+
+The distributive property is not restricted to two terms within a bracket.
+
+Example 1: Expand 3a
+
+2 (a – b + 1 5).
+
+3a 2 (a – b + 1 5) = (3a 2 × a) – (3a 2 × b) + (3a 2 × 1 5 ).
+
+The terms can be simplified as follows —
+
+3a 2 × a = 3 2 × (a × a).
+
+We Distribute, Yet Things Multiply
+
+Using exponent notation, we can write 3
+
+2 × (a × a) = 3 2 a2.
+
+3a 2 × b = 3 2 × (a × b) = 3 2 ab.
+
+3a 2 × 1 5 = (3 2 × 1 5) a = 3 10 a
+
+So we get
+
+3a 2 (a – b + 1 5) = 3 2a2 – 3 2 ab + 3 10 a.
+
+Can any two terms be added to get a single term?
+
+For example, can 3
+
+2 a2 and 3 10 a be added to get a single term?
+
+We see that no two terms have exactly the same letter-numbers, which would have allowed them to be simplified into a single term. So, a further simplification of the expression is not possible. Recall that we call terms having the same letter-numbers like terms.
+
+Example 2: Expand (a + b) (a + b).
+
+We have (a + b) (a + b) = (a+b) a + (a + b)b = a × a + b × a + ab + b × b
+
+= a2 + ba + ab + b2
+
+Since ba = ab, we have two terms having the same letter-numbers ab (or, that are like terms), and so can be added —
+
+ba + ab = ab + ab = 2ab
+
+So we get
+
+(a + b) (a + b) = a2 + 2ab + b2.
+
+Example 3: Expand (a + b) (a2 + 2ab + b2).
+
+(a + b) (a2 + 2ab + b2) = (a + b)a2 + (a + b) × 2ab + (a + b)b2
+
+= (a × a2) + ba2 + (a × 2ab) + (b × 2ab) + ab2 + (b × b2) The terms can be simplified as follows —
+
+a × a2 = a3 (why?)
+
+ba2 = a2b
+
+a × 2ab = 2 × a × a × b = 2a2b
+
+b × 2ab = 2 × a × b × b = 2ab2
+
+b × b2 = b3
+
+So, (a + b)(a2 + 2ab + b2) = a3 + a2b + 2a2b + 2ab2 + ab2 + b3.
+
+We see that a2b and 2a2b have the same letter-numbers (or, are like terms) and so can be added —
+
+a2b + 2a2b = (1 + 2) a2 b = 3a2 b.
+
+Similarly, ab2 and 2ab2 are like terms and so can be added —
+
+ab2 + 2ab2 = (1 + 2)ab2 = 3ab2.
+
+Thus, we have
+
+(a + b) × (a2 + 2ab +b2 ) = a3 + 3a2b + 3ab2 + b3.
+
+A Pinch of History
+
+The distributive property of multiplication over addition was implicit in the calculations of mathematicians in many ancient civilisations, particularly in ancient Egypt, Mesopotamia, Greece, China, and India. For example, the mathematicians Euclid (in geometric form) and Āryabhaṭa (in algebraic form) used the distributive law in an implicit manner extensively in their mathematical and scientific works. The first explicit statement of the distributive property was given by Brahmagupta in his work Brahmasphuṭasiddhānta (Verse 12.55), who referred to the use of the property for multiplication as khaṇḍa-guṇanam (multiplication by parts). His verse states, “The multiplier is broken up into two or more parts whose sum is equal to it; the multiplicand is then multiplied by each of these and the results added”. That is, if there are two parts, then using letter symbols this is equivalent to the identity (a + b) c = ac + bc. In the next verse (Verse 12.56), Brahmagupta further describes a method for doing fast multiplication using this distributive property, which we explore further in the next section.
+
+Figure it Out
+
+1. Observe the multiplication grid below. Each number inside the grid is formed by multiplying two numbers. If the middle number of a 3 × 3 frame is given by the expression pq, as shown in the figure, write the expressions for the other numbers in the grid.
+
+x 1 2 3 4 5 6 7 8 9 10
+
+3 × 5 3 × 6 3 × 7
+
+1 1 2 3 4 5 6 7 8 9 10
+
+2 2 4 6 8 10 12 14 16 18 20
+
+4 × 5 4 × 6 4 × 7
+
+3 3 6 9 12 15 18 21 24 27 30
+
+5 × 5 5 × 6 5 × 7
+
+4 4 8 12 16 20 24 28 32 36 40
+
+5 5 10 15 20 25 30 35 40 45 50
+
+6 6 12 18 24 30 36 42 48 54 60
+
+7 7 14 21 28 35 42 49 56 63 70
+
+pq
+
+8 8 16 24 32 40 48 56 64 72 80
+
+9 9 18 27 36 45 54 63 72 81 90
+
+10 10 20 30 40 50 60 70 80 90 100
+
+We Distribute, Yet Things Multiply
+
+2. Expand the following products.
+
+(i) (3 + u) (v – 3) (ii) 2 3 (15 + 6a)
+
+(iii) (10a + b) (10c + d) (iv) (3 – x) (x – 6)
+
+(v) (–5a + b) (c + d) (vi) (5 + z) (y + 9)
+
+Math
+
+Talk
+
+3. Find 3 examples where the product of two numbers remains unchanged when one of them is increased by 2 and the other is decreased by 4.
+
+4. Expand (i) (a + ab – 3b2) (4 + b), and (ii) (4y + 7) (y + 11z – 3).
+
+5. Expand (i) (a – b) (a + b), (ii) (a – b) (a2 + ab + b2) and (iii) (a – b)(a3 + a2b + ab2 + b3), Do you see a pattern? What would be the next identity in the pattern that you see? Can you check it by expanding?
+
+Fast Multiplications Using the Distributive Property
+
+The distributive property can be used to come up with quick methods of multiplication when certain types of numbers are multiplied.
+
+When one of the numbers is 11, 101, 1001, ...
+
+Use the following multiplications to find the product of a number with 11 in a single step.
+
+(a) 3874 × 11 (b) 5678 × 11
+
+Let us take the first multiplication.
+
+3874 × 11 = 3874 (10 + 1) = 38740 + 3874
+
+38740 + 3874
+
+Notice how the digits are getting added. Let us take a 4-digit number dcba, that is, the number that has d in the thousands place, c in the hundreds place, b in the tens place and a in the units place.
+
+dcba × (10 + 1) = dcba × 10 + dcba.
+
+This becomes
+
+d  c    b    a    o +    d      c      b      a
+
+d (c + d)  (b + c)  (a + b)  a
+
+This can be used to obtain the product in one line.
+
+Step 1 Step 3
+
+Step 2
+
+1
+
+1 1
+
++
+
+3874 × 11 14
+
+3874 × 11 614
+
+3874 × 11 4
+
+Step 4 Step 5
+
+1 1 1 1 1 1
+
++
+
+3874 × 11 2614
+
+3874 × 11 42614
+
+Describe a general rule to multiply a number (of any number of digits) by 11 and write the product in one line.
+
+Math
+
+Evaluate (i) 94 × 11,  (ii) 495 × 11,  (iii) 3279 × 11,  (iv) 4791256 × 11.
+
+Talk
+
+Can we come up with a similar rule for multiplying a number by 101?
+
+Multiply 3874 by 101.
+
+Let us take a 4-digit number dcba.
+
+dcba × 101 = dcba × (100 + 1) = dcba × 100 + dcba.
+
+This becomes
+
+d  c    b    a    o    o +           d      c      b      a
+
+d  c     (b + d)  (a + c)  b      a
+
+Use this to multiply 3874 × 101 in one line.
+
+What could be a general rule to multiply a number by 101 and write the product in one line? Extend this rule for multiplication by 1001, 10001, …
+
+Math
+
+Talk
+
+Use this to find (i) 89 × 101, (ii) 949 × 101, (iii) 265831 × 1001, (iv) 1111 × 1001, (v) 9734 × 99 and (vi) 23478 × 999.
+
+Such methods of applying the distributive property to easily multiply two numbers were discussed extensively in the ancient mathematical works of Brahmagupta (628 CE), Sridharacharya (750 CE) and Bhaskaracharya (Lilavati, 1150 CE). In his work Brahmasphuṭasiddhānta (Verse 12.56), Brahmagupta refers to such methods for fast multiplication using the distributive property as ista-gunana.
+
+We Distribute, Yet Things Multiply
+
+6.2 Special Cases of the Distributive Property
+
+Square of the Sum/Difference of Two Numbers
+
+The area of a square of sidelength 60 units is 3600 sq. units (602) and that of a square of sidelength 5 units is 25 sq. units (52). Can we use this to find the area of a square of sidelength 65 units?
+
+60 5
+
+602
+
+60
+
+A square of sidelength 65 can be split into 4 regions as shown in the figure — a square of sidelength 60, a square of sidelength 5, and two rectangles of sidelengths 60 and 5. The area of the square of sidelength 65 is the sum of the areas of all its constituent parts. Can you find the areas of the four parts in the figure above? We get 652 = (60 + 5)2 = 602 + 52 + 2 × (60 × 5). = 3600 + 25 + 600 = 4225 sq. units. Let us multiply (60 + 5) × (60 + 5) using the distributive property.
+
+60 × 5
+
+(60 + 5) × (60 + 5) = 60 × 60 + 5 × 60 + 60 × 5 + 5 × 5
+
+= 602 + 2 × (60 × 5) + 52.
+
+52 5 × 60
+
+5
+
+What if we write 652 as (30 + 35)2 or (52 + 13)2? Draw the figures and check the area that you get.
+
+Let us look at the general expression for the square of sum of two numbers, (a + b)2.
+
+a b
+
+Using the distributive property, (a+b)2 can be expanded as
+
+(a+b) × (a+b) = a×a + a×b + b×a + b×b
+
+a2
+
+a
+
+a × b
+
+= a2 + 2ab + b2, as we had already seen in Example 2.
+
+Identity 1A (a+b)2 = a2 + 2ab + b2
+
+b2 b × a
+
+b
+
+Math
+
+If a and b are any two integers, is (a + b)2 always greater than
+
+Talk
+
+a2 + b2? If not, when is it greater?
+
+Use Identity 1A to find the values of 1042, 372. (Hint: Decompose 104 and 37 into sums or differences of numbers whose squares are easy to compute.)
+
+Use Identity 1A to write the expressions for the following.
+
+(i) (m + 3)2 (ii) (6 + p)2
+
+Expand (6x + 5)2.
+
+Using the Distributive Property Using the Identity
+
+(6x + 5)2 = (6x)2 + 52 + 2 × (6x × 5) = 36x2 + 25 + 60x.
+
+(6x + 5)2 = (6x + 5) (6x + 5) = (6x × 6x) + (5 × 6x) +(6x × 5) + 5 × 5 = (6x)2 + 2 (6x × 5) + 52
+
+= 36x2 + 60x + 25.
+
+If you have difficulty remembering or using the general rule, you can just apply the distributive property to multiply and get the desired result.
+
+Expand (3j + 2k)2 using both the identity and by applying the distributive property.
+
+Can we use 602 (=3600) and 52 (=25) to find the value of (60 – 5)2 or 552? Let us approach this through geometry by drawing a square of side length 55 sitting inside a square of sidelength 60.
+
+Area of a square of sidelength 55 is (60 – 5)2 = 552.
+
+55 5
+
+55 60
+
+– 60 × 5
+
+We can get the area of the square of sidelength 55 by taking the area of the square of sidelength 60 and removing the areas of the two rectangles of sidelengths 60 and 5, i.e., 602 – (60 × 5) – (5 × 60). By doing this, we remove the area of the small square of sidelength 5 twice. What can we do with this expression to get the actual area?
+
+60 × 60 
+– 5 × 60
+
++5 × 5
+
+We can add back the area of the square of sidelength 5 to this expression. That way, we are only subtracting this area once.
+
+We Distribute, Yet Things Multiply
+
+So,
+
+(60 – 5)2 = 602 – (60 × 5) – (5 × 60) + 52
+
+= 3600 – 300 – 300 + 25 = 3025.
+
+The area of the square of sidelength 55 is 3025 sq. units.
+
+We have seen what (a + b)2 gives when expanded. What is the expansion of (a – b)2?
+
+Using the distributive property,
+
+(a – b)2 = (a – b) × (a – b)
+
+2
+
+= (a)2 – ba – ab + (b)
+
+= a2 – 2ab + b2.
+
+We can also use the expansion of (a + b)2 to find the expansion of (a – b)2. Think how.
+
+Hint: (a – b)2 = (a + (–b))2. We can now directly use the expansion of (a + b)2.
+
+(a + (–b)2 = (a)2 + (–b)2 + 2 × (a) × (–b)
+
+Identity 1B (a – b)2 = a2 + b2 – 2ab
+
+Find the general expansion of (a – b)2 using geometry, as we did for 552.
+
+Use the identity (a – b)2 to find the values of (a) 992 and (b) 582.
+
+Expand the following using both Identity 1B and by applying the distributive property
+
+(i) (b – 6)2 (ii) (–2a + 3)2 (iii) (7y – 3
+
+4z) 2
+
+Investigating Patterns
+
+Pattern 1
+
+Look at the following pattern.
+
+2 (22 + 12) = 32 + 12
+
+2 (32 + 12) = 42 + 22
+
+2 (62 + 52) = 112 + 12
+
+2 (52 + 32) = 82 + 22.
+
+Take a pair of natural numbers. Calculate the sum of their squares. Can you write twice this sum as a sum of two squares?
+
+Try this with other pairs of numbers. Have you figured out a pattern?
+
+Notice that 2 (52 + 62) = (6 + 5)2 + (6 – 5)2. Do the identities below help in explaining the observed pattern?
+
+(a + b)2 = a2 + 2ab + b2
+
+(a – b)2 = a2 – 2ab + b2
+
+(a + b)2 + (a – b)2 = (a2 + 2ab + b2) + (a2 – 2ab + b2)
+
+Adding the like terms a2 + a2 = 2a2 , b2 + b2 = 2b2 and 2ab – 2ab = 0, we get
+
+2 (a2 + b2) = (a + b)2 + (a – b)2.
+
+Pattern 2
+
+Here is a related pattern. Try to describe the pattern using algebra to determine if the pattern always holds.
+
+9 × 9 – 1 × 1= 10 × 8
+
+8 × 8 – 6 × 6 = 14 × 2
+
+7 × 7 – 2 × 2 = 9 × 5
+
+10 × 10 – 4 × 4 = 14 × 6
+
+The pattern here appears to be a2 – b2 = (a + b) × (a – b).
+
+Is this a true identity? Using the distributive property, we get
+
+(a + b) × (a – b) = a2 – ab + ba – a2.
+
+Adding the like terms, ab + (–ab) = 0, we see that indeed
+
+Identity 1C (a + b) × (a – b) = a2 – b2.
+
+You had seen this identity earlier in Figure it Out 5 (i).
+
+Use Identity 1C to calculate 98 × 102, and 45 × 55.
+
+Show that (a + b) × (a – b) = a2 – b2 geometrically.
+
+Try This
+
+We Distribute, Yet Things Multiply
+
+Hint:
+
+a b
+
+a
+
+b
+
+What do we get when this piece is moved?
+
+Sridharacharya (750 CE) gave an interesting method to quickly compute the squares of numbers using Identity 1C! Consider the following modified form of this identity —
+
+a2 = (a + b) (a – b) + b2
+
+Why is this identity true?
+
+Now, for example, 312 can be found by taking a = 31 and b = 1.
+
+312 = (31 + 1) (31 – 1) + 12
+
+= 32 × 30 + 1
+
+= 961.
+
+1972 can be found by taking a = 197, and b = 3.
+
+1972 = (197 + 3) (197 – 3) + 32
+
+= 200 × 194 + 9
+
+= 38809.
+
+Figure it Out
+
+1. Which is greater: (a – b)2 or (b – a)2? Justify your answer.
+
+2. Express 100 as the difference of two squares.
+
+Math
+
+Talk
+
+3. Find 4062, 722, 1452, 10972, and 1242 using the identities you have learnt so far.
+
+4. Do Patterns 1 and 2 hold only for counting numbers? Do they hold for negative integers as well? What about fractions? Justify your answer.
+
+6.3 Mind the Mistake, Mend the Mistake
+
+We have expanded and simplified some algebraic expressions below to their simplest forms.
+
+(i) Check each of the simplifications and see if there is a mistake.
+
+(ii) If there is a mistake, try to explain what could have gone
+
+wrong.
+
+(iii) Then write the correct expression.
+
+1
+
+2
+
+3
+
+y + 2 (y + 2) = (y + 2)2
+
+= y2 + 4y + 4
+
+2(x – 1) + 3 (x + 4) = 2x – 1 + 3x + 4 = 5x + 3
+
+–3p (–5p + 2q) = –3p + 5p – 2q = p – 2q
+
+4
+
+5
+
+6
+
+(5m + 6n)2
+
+(– q + 2)2
+
+= 25m2 + 36n2
+
+= q2 – 4q + 4
+
+3a (2b × 3c) = 6ab × 9ac = 54a2bc
+
+7
+
+8
+
+9
+
+1
+
+2 (10s – 6) + 3
+
+2a3 + 3a3 + 6a2b + 6ab2
+
+5w2 + 6w = 11w2
+
+= 5a3 + 12a2b2
+
+= 5s – 3 + 3 = 5s
+
+10 11 12
+
+ab2 + a2b + a2b2
+
+= ab (a + b + ab)
+
+(a + 2) (b + 4) = ab + 8
+
+(x + 2)(x + 5) = (x + 2)x + (x + 2)5 = x2 + 2x + 5x +10 = x2 + 7x + 10
+
+6.4 This Way or That Way, All Ways Lead to the Bay
+
+Math
+
+Talk
+
+Observe the pattern in the figure below. Draw the next figure in the sequence. How many circles does it have? How many total circles are there in Step 10? Write an expression for the number of circles in Step k.
+
+1 2 3
+
+. . . . . .
+
+There are many ways of interpreting this pattern. Here are some possibilities:
+
+We Distribute, Yet Things Multiply
+
+Method 1
+
+Step 1 Step 2 Step 3 Step 4 . . . Step k
+
+. . .
+
+52 – 1 = (4 + 1)2 – 1 (k + 1)2 – 1 . . .
+
+42 – 1 = (3 + 1)2 – 1
+
+32 – 1 = (2 + 1)2 – 1
+
+22 – 1 = (1 + 1)2 – 1
+
+Method 2
+
+Step 1 Step 2 Step 3 Step 4 . . . Step k
+
+. . .
+
+1 + 2 × 1 = 12 + 2 × 1
+
+22 + 2 × 2 = 22 + 2 × 2 . . .
+
+32 + 2 × 3 = 32 + 2 × 3
+
+42 + 2 × 4 = 42 + 2 × 4 k2 + 2 × k
+
+Method 3
+
+Step 1 Step 2 Step 3 Step 4 . . . Step k
+
+. . .
+
+k × (k + 1) + k
+
+2 × 3 + 2 = 2 × (2 + 1) + 2
+
+3 × 4 + 3 = 3 × (3 + 1) + 3
+
+4 × 5 + 4 = 4 × (4 + 1) + 4
+
+1 × 2 + 1 = 1 × (1 + 1) + 1
+
+Method 4
+
+Step 1 Step 2 Step 3 Step 4 . . . Step k
+
+. . .
+
+1 × 3 = 1 × (1 + 2) . . .
+
+2 × 4 = 2 × (2 + 2)
+
+3 × 5 = 3 × (3 + 2)
+
+4 × 6 = 4 × (4 + 2) k × (k+2)
+
+Does your method match any of these, or is it different? Each expression that we have identified appears different, but are they really different? Since they describe the same pattern, they should all be the same. Let us simplify each expression and find out.
+
+k2 + 2 × k
+
+k × (k + 1) + k
+
+k × (k + 2)
+
+(k + 1)2 – 1 = k2 + 1 + 2k – 1
+
+= k2 + 2k
+
+= k2 + k + k = k2 + 2k
+
+When carried out correctly, all methods lead to the same answer; k2 + 2k. The expression k2 + 2k gives the number of circles at Step k of this pattern.
+
+In Mathematics, there are often multiple ways of looking at a pattern, and different ways of approaching and solving the same problem. Finding such ways often requires a great deal of creativity and imagination! While one or two of the ways might be your favourite(s), it can be amusing and enriching to explore other ways as well.
+
+Use this formula to find the number of circles in Step 15.
+
+Consider the pattern made of square tiles in the picture below.
+
+1 2 3
+
+. . . . . .
+
+We Distribute, Yet Things Multiply
+
+How many square tiles are there in each figure?
+
+How many are there in Step 4 of the sequence? What about Step 10?
+
+Math
+
+Talk
+
+Write an algebraic expression for the number of tiles in Step n. Share your methods with the class. Can you find more than one method to arrive at the answer?
+
+m
+
+Find the area of the (interior) shaded region in the figure below. All four rectangles have the same dimensions.
+
+Tadang’s method: The total region is a square of side (m + n) with an area (m + n)2.
+
+n
+
+Subtracting the area of four rectangles from the total area will give the area of the interior shaded region. That is, (m + n)2 – 4mn .
+
+x
+
+Yusuf’s method: The shaded region is a square with sidelength (n – m). So, its area is (n – m)2.
+
+y
+
+By expanding both expressions,
+
+check that (m + n)2– 4mn = (n – m)2.
+
+Find out the area of the region with slanting lines in the figure. All three rectangles have the same dimensions (Fig. 1).
+
+Fig. 1
+
+Anusha’s method: Required area = Area (ABCD) – Area (EFGH) Area of ABCD = x2. Area of EFGH = xy. Required area = x2 – xy.
+
+Vaishnavi’s method:
+
+QS = y + x + y = x + 2y. Area of PQSR = x (x + 2y) Required area = Area of PQSR – (area of the three rectangles) = x (x + 2y) – 3xy.
+
+Aditya’s method: The required area is 2 times the area of JKLM.
+
+x – y
+
+JK =
+
+2 , KM = x
+
+x – y
+
+Area (JKML) = x (
+
+2 )
+
+Required area = 2 × Area of JKML
+
+x – y
+
+= 2x (
+
+2 )
+
+= x (x – y).
+
+By expanding the expressions, verify that all three expressions are equivalent. If x = 8 and y = 3, find the area of the shaded region.
+
+Math
+
+Talk
+
+Write an expression for the area of the dashed region in the figure below. Use more than one method to arrive at the answer. Substitute p = 6, r = 3.5, and s = 9, and calculate the area.
+
+r
+
+p
+
+r
+
+s
+
+Figure it Out
+
+1. Compute these products using the suggested identity.
+
+(i) 462 using Identity 1A for (a + b)2
+
+(ii) 397 × 403 using Identity 1C for (a + b) (a – b)
+
+(iii) 912 using Identity 1B for (a – b)2
+
+(iv) 43 × 45 using Identity 1C for (a + b) (a – b)
+
+2. Use either a suitable identity or the distributive property to find each of the following products.
+
+(i) (p – 1) (p + 11)
+
+(ii) (3a – 9b) (3a + 9b)
+
+(iii) –(2y + 5) (3y + 4)
+
+(iv) (6x + 5y)2
+
+(v) (2x – 1
+
+2)2
+
+(vi) (7p) × (3r) × (p + 2)
+
+We Distribute, Yet Things Multiply
+
+3. For each statement identify the appropriate algebraic expression(s).
+
+(i) Two more than a square number.
+
+2 + s      (s + 2)2      s2 + 2      s2 + 4      2s2      22s
+
+(ii) The sum of the squares of two consecutive numbers
+
+m2 + n2 (m + n)2 m2 + 1 m2 + (m + 1)2
+
+m2 + (m – 1)2   (m + (m + 1))2 (2m)2 + (2m + 1)2
+
+4. Consider any 2 by 2 square of numbers in a calendar, as shown in the figure.
+
+February
+
+Su M Tu W Th F Sa
+
+1
+
+2 3 4 5 6 7 8
+
+9 10 11 12 13 14 15
+
+16 17 18 19 20 21 22
+
+23 24 25 26 27 28
+
+Math
+
+Find products of numbers lying along each diagonal — 4 × 12 = 48, 5 × 11 = 55. Do this for the other 2 by 2 squares. What do you observe about the diagonal products? Explain why this happens.
+
+Talk
+
+Hint: Label the numbers in each 2 by 2 square as
+
+a (a + 1)
+
+a + 7 (a + 8)
+
+5. Verify which of the following statements are true.
+
+(i) (k + 1) (k + 2) – (k + 3) is always 2.
+
+(ii) (2q + 1) (2q – 3) is a multiple of 4.
+
+(iii) Squares of even numbers are multiples of 4, and squares of
+
+odd numbers are 1 more than multiples of 8.
+
+(iv) (6n + 2)2 – (4n + 3)2 is 5 less than a square number.
+
+6. A number leaves a remainder of 3 when divided by 7, and another number leaves a remainder of 5 when divided by 7. What is the remainder when their sum, difference, and product are divided by 7?
+
+7. Choose three consecutive numbers, square the middle one, and subtract the product of the other two. Repeat the same with other
+
+sets of numbers. What pattern do you notice? How do we write this
+
+as an algebraic equation? Expand both sides of the equation to check that it is a true identity.
+
+8. What is the algebraic expression describing the following
+
+steps — add any two numbers. Multiply this by half of the sum of the two numbers? Prove that this result will be half of the square of the sum of the two numbers.
+
+9. Which is larger? Find out without fully computing the product.
+
+(i) 14 × 26 or 16 × 24
+
+(ii) 25 × 75 or 26 × 74
+
+10. A tiny park is coming up in Dhauli.
+
+w ft.
+
+g2 sq. ft. g2 sq. ft.
+
+w ft.
+
+The plan is shown in the figure. The two square plots, each of area g2 sq. ft., will have a green cover. All the remaining area is a walking path w ft. wide that needs to be tiled. Write an expression for the area that needs to be tiled.
+
+11. For each pattern shown below,
+
+(i) Draw the next figure in the sequence.
+
+(ii) How many basic units are there in Step 10?
+
+(iii) Write an expression to describe the number of basic units in
+
+Step y.
+
+Step 1 Step 2 Step 3 Step 1 Step 2 Step 3
+
+We Distribute, Yet Things Multiply
+
+SUMMARY
+
+We extended the distributive property to find the product of
+
+two expressions each of which has two terms. The general form for the same is (a + b) × (c + d) = ac + ad + bc + bd.
+
+We saw some special cases of this identity.
+
+y (a + b)2 = a2 + 2ab + b2
+
+y (a – b)2 = a2 – 2ab + b2
+
+y (a + b) (a – b) = a2 – b2.
+
+We considered different patterns, and explored how to
+
+understand them using algebra. We saw that, often, there are multiple ways to solve a problem and arrive at the same correct answer. Finding different methods to approach and solve the same problem is a creative process.
+
+Coin Conjoin
+
+Arrange 10 coins in a triangle as shown in the figure below on the left. The task is to turn the triangle upside down by moving one coin at a time. How many moves are needed? What is the minimum number of moves?
+
+A triangle of 3 coins can be inverted (turned upside down) with a single move, and a triangle of 6 coins can be inverted by moving 2 coins.
+
+The 10-coin triangle can be flipped with just 3 moves; did you figure out how? Find out the minimum possible moves needed to flip the next bigger triangle having 15 coins. Try the same for bigger triangular numbers.
+
+Is there a simple way to calculate the minimum number of coin moves needed for any such triangular arrangement?
+
+6 WE DISTRIUTE, YET
+
+THINGS MULTIPLY
+
+Page No. 138
+
+Will the product always increase? Find 3 examples where the product decreases.
+
+Ans. The product will not always increase.
+
+For a = 10, b = 3; ab = 30 a – 1 = 9, b – 1 = 2; (a – 1)(b – 1) = 18 Thus, (a – 1) (b – 1) < ab Try for more examples.
+
+Page No. 140
+
+Use Identity 1 to find how the product changes when
+
+(i) one number is decreased by 2 and the other increased by 3;
+
+(ii) both numbers are decreased, one by 3 and the other by 4. Ans.
+
+(i) (a – 2) (b + 3) = ab + 3a – 2b – 6
+
+(ii) (a – 3) (b – 4) = ab – 4a – 3b + 12
+
+Page No. 142
+
+Figure it Out
+
+1. Observe the multiplication grid below. Each number inside the grid is formed by multiplying two numbers. If the middle number of a 3 × 3 frame is given by the expression pq, as shown in the figure, write the expressions for the other numbers in the grid.
+
+x 1 2 3 4 5 6 7 8 9 10
+
+3 × 5 3 × 6 3 × 7
+
+1 1 2 3 4 5 6 7 8 9 10
+
+2 2 4 6 8 10 12 14 16 18 20
+
+4 × 5 4 × 6 4 × 7
+
+3 3 6 9 12 15 18 21 24 27 30
+
+5 × 5 5 × 6 5 × 7
+
+4 4 8 12 16 20 24 28 32 36 40
+
+5 5 10 15 20 25 30 35 40 45 50
+
+6 6 12 18 24 30 36 42 48 54 60
+
+7 7 14 21 28 35 42 49 56 63 70
+
+pq
+
+8 8 16 24 32 40 48 56 64 72 80
+
+9 9 18 27 36 45 54 63 72 81 90
+
+10 10 20 30 40 50 60 70 80 90 100
+
+Ans. Observe grid.
+
+(p – 1)(q – 1) (p – 1)q (p – 1)(q + 1)
+
+p(q – 1) pq p(q + 1)
+
+(p + 1)(q – 1) (p + 1)q (p + 1)(q + 1)
+
+2. Expand the following products.
+
+(i) (3 + u) (v – 3) (ii) 2
+
+3 (15 + 6a)
+
+(iii) (10a + b) (10c + d) (iv) (3 – x) (x – 6)
+
+(v) (– 5a + b) (c + d) (vi) (5 + z) (y + 9)
+
+Ans.
+
+(i) 3v – 3u + uv – 9
+
+(ii) 10 + 4a
+
+(iii) 100ac + 10ad + 10bc + bd
+
+(iv) – x2 + 9x – 18
+
+(v) – 5ac –5ad + bc + bd
+
+(vi) 5y + yz + 9z + 45
+
+3. Find 3 examples where the product of two numbers remains unchanged when one of them is increased by 2 and the other is decreased by 4.
+
+Ans. Let numbers be a and b.
+
+Then (a + 2) (b – 4) = ab So, b = 2a + 4 Hence 3 examples are (a = 1, b = 6), (a = 2, b = 8), (a = 3, b = 10)
+
+4. Expand (i) (a + ab – 3b2) (4 + b), and (ii) (4y + 7) (y + 11z – 3).
+
+Ans. (i) (a + ab – 3b2) (4 + b) = 4(a + ab – 3b2) + b(a + ab – 3b2)
+
+= 4a + 4ab – 12b2 + ab + ab2 – 3b3
+
+= 4a + 5ab + ab2 – 12b2 – 3b3
+
+(ii) (4y + 7) (y + 11z – 3) = 4y (y + 11z – 3) + 7 (y + 11z – 3)
+
+= 4y2 + 44yz – 12y + 7y + 77z – 21 = 4y2 + 44yz + 77z – 5y – 21
+
+5. Expand (i) (a – b) (a + b), (ii) (a – b) (a2 + ab + b2) and (iii) (a – b)(a3 + a2b + ab2 + b3), Do you see a pattern? What would be the next identity in the pattern that you see? Can you check it by expanding?
+
+Ans.
+
+(i) a2 – b2
+
+(ii) a3 – b3
+
+(iii) a4 – b4
+
+Yes, a pattern is seen. Next identity in the pattern is (a – b) (a4 + a3b + a2b2 + ab3 + b4) = a5 – b5
+
+Page No. 144
+
+Evaluate (i) 94 × 11,  (ii) 495 × 11,  (iii) 3279 × 11,  (iv) 4791256 × 11.
+
+Ans. (ii)
+
+1 1
+
++
+
+5 + 9 = 1 4 9 + 4 = 13 + 1 = 14
+
+4 9 5 × 1 1 (4 + 1) 4 4 5 = 5445
+
+Try other parts.
+
+What could be a general rule to multiply a number by 101 and write the product in one line? Extend this rule for multiplication by 1001, 10001, …
+
+Ans. dcba × 101 = dcba (100 + 1) = dcba00 + dcba
+
+d    c      b      a      0      0 +               d      c      b      a
+
+d    c     (b + d)  (a + c)  b      a
+
+dcba × 1001 = dcba (1000 + 1) = dcba000 + dcba
+
+d    c      b      a        0    0      0 +                     d      c      b      a
+
+d c      b    (a + d)  c      b      a
+
+dcba × 10001 = dcba (10000 + 1) = dcba0000 + dcba
+
+d      c      b      a      0    0      0      0 +                           d      c      b      a
+
+d      c      b      a      d      c      b      a
+
+Try for other such numbers.
+
+Use this to find (i) 89 × 101, (ii) 949 × 101, (iii) 265831 × 1001, (iv) 1111 × 1001, (v) 9734 × 99 and (vi) 23478 × 999.
+
+Ans. (iii) 265831 × 1001
+
+= 265831000 + 265831 = 266096831
+
+(v) 9734 × 99
+
+= 9734 ( 100 – 1) = 973400 – 9734 = 963666
+
+Page No. 147
+
+Expand the following using both Identity 1B and by applying the distributive property
+
+2
+
+(i) (b – 6)2 (ii) (–2a + 3)2 (iii) (7y – 3
+
+4z)
+
+Ans.
+
+(i) b2 – 12b+36 (ii) 4a2 – 12a+9 (iii) 49y2 – 21y
+
+2z + 9 16z2
+
+Page No. 148
+
+Use Identity 1C to calculate 98 × 102, and 45 × 55.
+
+Ans. 45 × 55
+
+= (50 – 5) (50 + 5) = 502 – 52
+
+= 2475 Try the other part for yourself.
+
+Page No. 149
+
+Figure it Out
+
+1. Which is greater: (a – b)2 or (b – a)2? Justify your answer.
+
+Ans. Both are equal.
+
+2. Express 100 as the difference of two squares.
+
+Ans. Try to find square numbers with a difference of 100.
+
+a b Difference
+
+25 125 Not a square
+
+36 136 Not a square
+
+49 149 Not a square
+
+. . .
+
+676 576 Square
+
+676 – 576 = 100 or 262 – 242 = 100 Check for more such numbers.
+
+3. Find 4062, 722, 1452, 10972, and 1242 using the identities you have learnt so far.
+
+Ans.
+
+(i) 164836
+
+(ii) 5184
+
+(iii) 21025
+
+(iv) 1203409
+
+(v) 15376
+
+4. Do Patterns 1 and 2 hold only for counting numbers? Do they hold for negative integers as well? What about fractions? Justify your answer.
+
+Ans. Pattern 1 and Pattern 2 hold for all numbers. Verify it by taking
+
+different values for a and b.
+
+Page No. 153
+
+How many square tiles are there in each figure?
+
+Ans.
+
+Pattern
+
+Fig. No. Number of square
+
+32 – 12
+
+42 – 22
+
+52 – 32
+
+8 12 16 . . .
+
+. . .
+
+1 2 3 . . . .
+
+How many are there in Step 4 of the sequence? What about Step 10?
+
+Ans. Step 4 → Number of squares →62 – 42
+
+Step 10 → Number of squares → 122 – 102
+
+Write an algebraic expression for the number of tiles in Step n. Share your methods with the class. Can you find more than one method to arrive at the answer?
+
+Ans. (n + 2)2 – n2
+
+Page No. 154
+
+Write an expression for the area of the dashed region in the figure below. Use more than one method to arrive at the answer. Substitute p = 6, r = 3.5, and s = 9, and calculate the area.
+
+r
+
+p
+
+r
+
+s
+
+Ans.
+
+(i) ps – pr – sr + r2
+
+(ii) 13.75 sq. units
+
+Figure it Out
+
+1. Compute these products using the suggested identity.
+
+(i) 462 using Identity 1A for (a + b)2
+
+(ii) 397 × 403 using Identity 1C for (a + b) (a – b)
+
+(iii) 912 using Identity 1B for (a – b)2
+
+(iv) 43 × 45 using Identity 1C for (a + b) (a – b)
+
+Ans. (i) 462 = (40 + 6)2
+
+= 2116
+
+(ii) 397 × 403 = (400 – 3)(400 + 3)
+
+= 159991
+
+(iii) 912 = (100 – 9)2
+
+= 8281
+
+(iv) 43 × 45 = (44 – 1) (44 + 1)
+
+= 1935
+
+2. Use either a suitable identity or the distributive property to find each of the following products.
+
+(i) (p – 1) (p + 11)
+
+(ii) (3a – 9b) (3a + 9b)
+
+(iii) – (2y + 5) (3y + 4)
+
+(iv) (6x + 5y)2
+
+2
+
+(v) (2x – 1
+
+2)
+
+(vi) (7p) × (3r) × (p + 2)
+
+Ans.
+
+(i) p2 + 10p – 11
+
+(ii) 9a2 – 81b2
+
+(iii) – 6y2 – 23y – 20
+
+(iv) 36x2 + 60xy + 25y2
+
+(v) 4x2 – 2x + 1
+
+4 (vi) 21p2r + 42pr
+
+3. For each statement identify the appropriate algebraic expression(s).
+
+(i) Two more than a square number.
+
+2 + s      (s + 2)2      s2 + 2      s2 + 4      2s2      22s
+
+(ii) The sum of the squares of two consecutive numbers
+
+m2 + n2 (m + n)2 m2 + 1 m2 + (m + 1)2
+
+m2 + (m – 1)2 (m + (m + 1))2 (2m)2 + (2m + 1)2
+
+Ans.
+
+(i) Two more than a square numbers is s2 + 2.
+
+(ii) The sum of the squares of two consecutive numbers is
+
+m2 + (m + 1)2.
+
+4. Consider any 2 by 2 square of numbers in a calendar, as shown in the figure.
+
+February
+
+Su M Tu W Th F Sa
+
+1
+
+2 3 4 5 6 7 8
+
+9 10 11 12 13 14 15
+
+16 17 18 19 20 21 22
+
+23 24 25 26 27 28
+
+Find products of numbers lying along each diagonal — 4 × 12 = 48, 5 × 11 = 55. Do this for the other 2 by 2 squares. What do you observe about the diagonal products? Explain why this happens. Hint: Label the numbers in each 2 by 2 square as
+
+Ans. Take, 3 4
+
+10 11
+
+Here, 3 × 11 = 33 4 × 10 = 40 We observe that difference of diagonal products = 7 Reason:
+
+a (a + 1)
+
+a + 7 (a + 8)
+
+We have diagonal difference = (a + 7) (a + 1) – (a + 8) = 7
+
+5. Verify which of the following statements are true.
+
+(i) (k + 1) (k + 2) – (k + 3) is always 2.
+
+(ii) (2q + 1) (2q – 3) is a multiple of 4.
+
+(iii) Squares of even numbers are multiples of 4, and squares of
+
+odd numbers are 1 more than multiples of 8.
+
+(iv) (6n + 2)2 – (4n + 3)2 is 5 less than a square number.
+
+Ans.
+
+(i) False
+
+(ii) False
+
+(iii) True
+
+(iv) False
+
+6. A number leaves a remainder of 3 when divided by 7, and another number leaves a remainder of 5 when divided by 7. What is the remainder when their sum, difference, and product are divided by 7?
+
+Ans. Let n1 = 7a + 3 and n2 = 7b + 5
+
+(i) When adding both, the remainder is 1.
+
+(ii) When taking difference, the remainder is 2.
+
+(iii) When taking product, the remainder is 1.
+
+7. Choose three consecutive numbers, square the middle one, and subtract the product of the other two. Repeat the same with other sets of numbers. What pattern do you notice? How do we write this as an algebraic equation? Expand both sides of the equation to check that it is a true identity.
+
+Ans. Let (n – 1), n and (n + 1) be the consecutive numbers,
+
+Then n2 – (n – 1) (n + 1) = n2 – (n2 – 1) = 1 Hence, the result is always ‘1’. Check for different sets of consecutive numbers.
+
+8. What is the algebraic expression describing the following steps — add any two numbers. Multiply this by half of the sum of the two numbers? Prove that this result will be half of the square of the sum of the two numbers.
+
+Ans. Let a and b be two numbers.
+
+Adding both = a + b Now multiplying this by half of the sum of two numbers.
+
+Then we get, (a + b) × 1
+
+2(a + b) = 1 2(a + b)2
+
+9. Which is larger? Find out without fully computing the product.
+
+(i) 14 × 26 or 16 × 24
+
+(ii) 25 × 75 or 26 × 74
+
+Ans.
+
+(i) Let a = 14 × 26 and b = 16 × 24
+
+Now a = (16 – 2) (24 + 2)
+
+= 16 × 24 + 16 × 2 – 2 × 24 – 2 × 2 = b + (32 – 48 – 4) = b – 20 Hence, b > a or 16 × 24 > 14 × 26
+
+(ii) Let a = 25 × 75 and b = 26 × 74
+
+Now a = (26 – 1) (74 + 1) = 26 × 74 + 26 – 74 – 1
+
+= b – 49 Hence b > a or 26 × 74 > 25 × 75
+
+w ft.
+
+g2 sq. ft. g2 sq. ft.
+
+w ft.
+
+10. A tiny park is coming up in Dhauli. The plan is shown in the figure. The two square plots, each of area g2 sq. ft., will have a green cover. All the remaining area is a walking path w ft. wide that needs to be tiled. Write an expression for the area that needs to be tiled.
+
+Ans. Length of rectangular park = w + g + 2w + g + w = (2g + 4w) ft.
+
+Breadth of rectangular park = w + w + g = (g + 2w) ft. Area of park = (2g + 4w) (g + 2w) sq. ft.
+
+= 2g2 + 8w2 + 8wg sq. ft.
+
+Area of the two squares = 2g2 sq. ft.
+
+So, Area to be tiled = (2g + 4w) (g + 2w) – 2g2
+
+= 8w (w + g) sq. ft.
+
+11. For each pattern shown below,
+
+(i) Draw the next figure in the sequence.
+
+(ii) How many basic units are there in Step 10?
+
+(iii) Write an expression to describe the number of basic units in
+
+Step y.
+
+Step 1 Step 2 Step 3
+
+(b)
+
+(a)
+
+Ans.
+
+(i) (a) Draw yourself
+
+Here Step 1, Total units = (2 + 1)2 = (3)2 = 9 Step 2, Total units = (2 + 2)2 = (4)2 = 16 Step 3, Total units = (2 + 3)2 = (5)2 = 25 Then next figure
+
+Step 4
+
+Total = (2 + 4)2 = (6)2 = 36
+
+(b) Step 1, we have 22 + 1 = 5
+
+Step 2, we have 32 + 2 = 11 Step 3, we have 42 + 3 = 19 Then next Step, we have 52 + 4 = 29.
+
+Step 4
+
+(ii) In figure (a)
+
+Basic units in Step 10 = (2 +10)2 = (12)2 = 144 In figure (b) Basic units in Step 10 = (11)2 + 10 = 121 + 10 = 131
+
+(iii) In figure (a)
+
+Number of basic units in Step y = (y + 2)2
+
+In figure (b) Number of basic units in Step y = (y + 1)2 + y

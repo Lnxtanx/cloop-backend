@@ -1,0 +1,1050 @@
+# CLASS-7 - MATHS-PART-2 - CHAPTER 02
+# Source: gegp202.pdf
+
+OPERATIONS WITH INTEGERS 2
+
+2.1 A Quick Recap of Integers
+
+Rakesh’s Puzzle: A Number Game
+
+Rakesh gives you a challenge.
+
+“I have thought of two numbers”, he says.
+
+“Their sum is 25, and their difference is 11.”
+
+Can you tell me the two numbers?
+
+You don’t need to use any formulas. Just try different pairs of numbers and then check:
+
+1. Do the two numbers add up to 25? 
+2. Is the difference between them 11? (Remember: the difference means first number – second number.) Write your guesses like this:
+
+First Number Second Number Sum Difference
+
+10 15 25 
+–5
+
+20 5 25 15
+
+19 6 25 13
+
+18 7 25 11
+
+Did you find the right pair?
+
+Now that you’ve found the correct pair, Rakesh gives you a second challenge:
+
+“Think of two numbers whose sum is 25, but their difference is –11.”
+
+Use the same method. Try different pairs of numbers and fill in the table again. You will notice that if you swap the numbers from the first
+
+Operations with Integers
+
+puzzle, you get the answer to Rakesh’s second puzzle. That is, the first number is 7 and the second is 18!
+
+Figure it Out
+
+Let us try to find a few more pairs of numbers from their sums and differences:
+
+(a) Sum = 27, Difference = 9 (b) Sum = 4, Difference = 12
+
+(c) Sum = 0, Difference = 10 (d) Sum = 0, Difference = – 10
+
+(e) Sum = – 7, Difference = – 1 (f) Sum = – 7, Difference = – 13
+
+Choose a partner and take turns to play this game. In each turn, one of you can think of two integers, and give their sum and difference; the other person must then figure out the integers. After some practice, you can perform this magic trick for your family members and surprise them!
+
+Carrom Coin Integers
+
+A carrom coin is struck to move it to the right. Each strike moves the coin a certain number of units of distance rightwards based on the force of the strike.
+
+0 1 2 3 4 5 6 7 8 9 10 11 12
+
+To begin with, the coin is at point 0. If the coin is struck twice, with the first strike moving it by 4 units and the second strike moving it by 3 units, what will be the final position of the coin?
+
+It is clear that the coin will be 4 + 3 = 7 units from 0.
+
+If the coin is struck twice, and if the two movements are known, can you give a formula for the final position of the coin?
+
+P = a + b
+
+b a
+
+0 P
+
+If the first strike moves the coin ‘a’ units to the right and if the second strike moves the coin ‘b’ units to the right, then the final position is P = a + b, where P is the distance of the coin from the starting point 0.
+
+Now, suppose the coin can be struck to move it in either direction — left or right.
+
+0 
+–ve +ve
+
+The coin is at 0. If it is struck twice (the direction of the two strikes may be the same or different) can you give a formula for the final position of the coin?
+
+One way to do this is to consider different cases of the directions of the strikes
+
+• both are rightward,
+
+• both are leftward,
+
+• the first one is rightward and the second one is leftward, and
+
+• the first one is leftward and the second one is rightward.
+
+An efficient way to model this situation is to use positive and negative integers. First, let us model the line on which the coin moves as a number line.
+
+–5 
+–4 
+–3 
+–2 
+–1 0 1 2 3 4 5 6 . . . . . . +ve 
+–ve
+
+Let us consider the rightward movement positive and the leftward movement negative.
+
+Suppose the first strike moves the coin rightward by 5 units from 0, and the second strike leftward by 7 units, then we take the
+
+First Movement = 5 units. Second Movement = – 7 units.
+
+What is the final position of the coin?
+
+This can be found by simply adding the two movements: 5 + (– 7) = – 2.
+
+So the coin is at –2, or it is 2 units to the left of 0.
+
+In general, if the first strike moves the coin ‘a’ units (which is positive if the strike is to the right and negative if the strike is to the left), and the second strike ‘b’ units (which is positive if the strike is to the right and negative if the strike is to the left), then the final position ‘P’, after the two strikes, is again P = a + b.
+
+Based on this new model, answer the following questions:
+
+1. If the first movement is – 4 and the final position is 5, what is the second movement?
+
+Operations with Integers
+
+2. If there are multiple strikes causing movements in the order 1, – 2, 3, 
+– 4, …, – 10, what is the final position of the coin?
+
+By modeling the movements as numbers, both positive and negative, we are able to capture two pieces of information — the distance (magnitude) and the direction (rightwards or leftwards). For example, when we say the movement is – 4, the magnitude is 4 and the direction is leftward.
+
+Try This
+
+From the figures below, what can you conclude about the magnitudes of a and b compared to each other, and what are their directions? Remember to start from 0.
+
+1.
+
+b
+
+a
+
+P 0 +ve 
+–ve
+
+2.
+
+a
+
+b
+
+P 0 +ve 
+–ve
+
+3.
+
+a
+
+b
+
+P 0 +ve 
+–ve
+
+In addition to the number line, we used the token model to understand integers. We used this model to perform addition and subtraction in Grade 6. Let us do a quick recall. We used green ( ) token to represent positive 1 and red ( ) token to represent negative 1, that is –1. Together they make zero, as they cancel each other out.
+
+Find (+7) – (+18).
+
+To subtract 18 from 7, i.e., (+7) – (+18), we need to remove 18 positives from 7 positives.
+
+But there are not enough tokens to remove 18 positives! We put in enough zero pairs so that we can remove 18 positives.
+
+How many?
+
+We have 7 positives and we need 11 more. So we need to put in 11 zero pairs:
+
+We can now remove 18 positives.
+
+What is left? There are 11 negatives, meaning –11.
+
+So, 7 – 18 = –11.
+
+We had also seen that subtracting a number is the same as adding its additive inverse.
+
+Using tokens, argue out the following statements.
+
+Math
+
+Talk
+
+(a) 7 – 18 = 7 + (– 18) (additive inverse of 18 is – 18)
+
+(b) 4 – (– 12) = 4 + 12 (additive inverse of – 12 is 12)
+
+Note to the Teacher: Tokens of different shapes may be used for positive and negative numbers for visually challanged students.
+
+Operations with Integers
+
+Additive inverse of an integer a is represented as – a. So the additive inverse of 18 is represented as – (18) = – 18, and the additive inverse of 
+– 18 is represented as – (– 18) = 18.
+
+2.2 Multiplication of Integers
+
+We used the token model to represent addition and subtraction of integers. We now explore how to model multiplication of integers using tokens.
+
+Suppose we put some positive tokens into an empty bag as shown in the figure.
+
+How many positives are in the bag now?
+
+Two green tokens 4 times = 8
+
+4 × 2 = 8
+
+There are 8 positives in the bag. We can see this as adding 2 positives to the bag 4 times. Thus, the operation is, 4 × 2 = 8. We have seen this kind of multiplication of positive integers before. Can we use tokens to give meaning to multiplications like 4 × (– 2)? Let us see how.
+
+For every new operation, we start with an empty bag.
+
+Two red tokens 4 times = – 8
+
+4 × (–2) can be interpreted as placing 2 negatives into an empty bag 4 times. We use red tokens for negatives, so we place 2 negatives into an empty bag 4 times.
+
+4 × (– 2) = – 8
+
+Multiplier
+
+Multiplicand Product
+
+There are now 8 red tokens or 8 negatives in the bag, meaning – 8. 4 × (– 2) = (– 8).
+
+Similarly find the values of 4 × (– 6) and 9 × (– 7)? How can we interpret (– 4) × 2?
+
+When the multiplier is positive, we place tokens into the bag. When the multiplier is negative, we remove tokens from the bag.
+
+So, for (– 4) × 2, we need to remove two positives or two green tokens from the bag 4 times.
+
+Math
+
+Why are we trying to remove green tokens and not red tokens?
+
+Talk
+
+But there are no tokens in the bag, because we start with an empty bag. Just as in the case of subtraction, to remove 2 positives from an empty bag, we need to first place 2 zero pairs inside and then remove the 2 positives. We need to do this 4 times.
+
+Remove 2 green tokens from the zero pairs, 4 times
+
+(–  4) × 2 = –  8
+
+After removing the positives, 8 negatives are left in the bag. This is – 8. This shows that (– 4) × 2 = – 8.
+
+What happens when both the integers in the multiplication are negative? How do we model (–4) × (–2) with tokens?
+
+For (– 4) × (– 2), we need to remove 2 negatives from the bag 4 times. Since there are no red tokens in the bag, we need to place 2 zero pairs and remove 2 negatives, and we need to do this 4 times.
+
+Remove 2 red tokens from the zero pairs, 4 times
+
+(– 4) × (– 2) = 8
+
+8 positives are left in the bag. This is + 8. So,
+
+– 4 × – 2 = + 8.
+
+So far, we have established the following results by using tokens:
+
+4 × 2 = 8,
+
+4 × (– 2) = – 8,
+
+(– 4) × 2 = – 8, and
+
+(– 4) × (– 2) = 8.
+
+Operations with Integers
+
+Figure it Out
+
+1. Using the token interpretation, find the values of:
+
+(a) 3 × (– 2) (b) (– 5) × (– 2)
+
+(c) (– 4) × (– 1) (d) (– 7) × 3
+
+2. If 123 × 456 = 56088, without calculating, find the value of:
+
+(a) (– 123) × 456 (b) (– 123) × (– 456)
+
+(c) (123) × (– 456)
+
+Math
+
+3. Try to frame a simple rule to multiply two integers.
+
+Talk
+
+Consider the numbers represented by the following tokens:
+
+(a)
+
+(b)
+
+(c)
+
+We can see that all of them represent the number (– 2). Now, take 4 times each of these token sets. That is, place each set into the empty bag 4 times.
+
+Math
+
+Talk
+
+What integer do we get as the final answer in each case? Do we get different answers because the sets look different, or the same answer because they all represent – 2?
+
+Check this for 5 × 4, by taking different token sets corresponding to 4.
+
+We have seen that – 4 × 2 is the number obtained by removing 2 positive tokens from the empty bag 4 times.
+
+We know that removing or subtracting a number is the same as adding its inverse.
+
+Math
+
+Talk
+
+Using this, can – 4 × 2 be defined through a process of addition of tokens instead of removal of tokens?
+
+(– 4) × 2
+
+Since removing 2 positive tokens is the same as adding 2 negative tokens, – 4 × 2 can also be obtained by adding 2 negative tokens to the empty bag 4 times.
+
+Patterns in Integer Multiplication
+
+We have explored the multiplication of integers in cases where the multiplier is positive, when it is negative, when the multiplicand is positive and when it is negative. Using this understanding, let us construct a sequence of multiplications and observe the patterns.
+
+4 × 3 = 12
+
+–3
+
+3 × 3 = 9
+
+What do you notice in this pattern? Can you describe it?
+
+–3
+
+2 × 3 = 6
+
+–3
+
+1 × 3 = 3
+
+We can see that, when the multiplicand is positive, for every unit decrease in the multiplier the product decreases by the multiplicand.
+
+–3
+
+0 × 3 = 0
+
+4 × 3 = 12
+
+–3
+
+Will this pattern continue when the multiplier goes below zero and becomes a negative number?
+
+3 × 3 = 9
+
+–3
+
+2 × 3 = 6
+
+Yes indeed! The same pattern continues when the multiplier becomes a negative number.
+
+–3
+
+1 × 3 = 3
+
+–3
+
+0 × 3 = 0
+
+What is the pattern when the multiplicand is a negative integer?
+
+–3
+
+4 × (–3) = –12
+
+–1 × 3 = –3
+
++3
+
+–3
+
+3 × (–3) = –9
+
+–2 × 3 = –6
+
++3
+
+–3
+
+2 × (–3) = –6
+
++3
+
+–3 × 3 = –9
+
+1 × (–3) = –3
+
++3
+
+0 × (–3) = 0
+
+This is the inverse of the previous pattern. When the multiplicand is negative, for every unit decrease of the multiplier, the product increases by the multiplicand.
+
+Will this pattern continue when the multiplier goes below zero and becomes a negative integer?
+
+Yes!
+
+Operations with Integers
+
+4 × (–3) = –12
+
++3
+
+3 × (–3) = –9
+
++3
+
+2 × (–3) = –6
+
++3
+
+Even when the multiplier is negative, the same pattern is observed. When the multiplicand is negative, for every unit decrease in the multiplier, the product increases by the multiplicand.
+
+1 × (–3) = –3
+
++3
+
+0 × (–3) = 0
+
++3
+
+(–1) × (–3) = 3
+
+We can see from these patterns that, what is true for multiplication when the integers are positive, is also true when the integers are negative.
+
++3
+
+(–2) × (–3) = 6
+
++3
+
+(–3) × (–3) = 9
+
+With this understanding of multiplication of integers, let us look at the times 3 tables when the multipliers and multiplicands are positive, and when they are negative.
+
+–1 × 3 = –3 
+– 2 × 3 = –6
+
+1 × 3 = 3 2 × 3 = 6 3 × 3 = 9 4 × 3 = 12 5 × 3 = 15 6 × 3 = 18 7 × 3 = 21 8 × 3 = 24 9 × 3 = 27 10 × 3 = 30
+
+–3 × 3 = –9 
+–4 × 3 = –12 
+–5 × 3 = –15 
+–6 × 3 = –18 
+–7 × 3 = –21 
+–8 × 3 = –24 
+–9 × 3 = –27 
+–10 × 3 = –30
+
+1 × –3 = –3 2 × –3 = –6 3 × –3 = –9 4 × –3 = –12 5 × –3 = –15 6 × –3 = –18 7 × –3 = –21 8 × –3 = –24 9 × –3 = –27 10 × –3 = –30
+
+–1 × –3 = 3 
+–2 × –3 = 6 
+–3 × –3 = 9 
+–4 × –3 = 12 
+–5 × –3 = 15 
+–6 × –3 = 18 
+–7 × –3 = 21 
+–8 × –3 = 24 
+–9 × –3 = 27 
+–10 × –3 = 30
+
+We observe the following:
+
+• The magnitude of the product does not change with the change in the signs of the multiplier and the multiplicand.
+
+• When both the multiplier and the multiplicand are positive, the product is positive.
+
+• When both the multiplier and the multiplicand are negative, the product is positive.
+
+• When one of the multiplier or the multiplicand is positive and the other is negative, their product is negative.
+
+Figure it Out
+
+Find the following products.
+
+(a) 4 × (– 3) (b) (– 6) × (– 3)
+
+(c) (– 5) × (– 1) (d) (– 8) × 4
+
+(e) (– 9) × 10 (f) 10 × (– 17)
+
+Consider the expression 1 × a. We know that the value of this expression is ‘a’ for all positive integers.
+
+Is this true for all negative integers too?
+
+Using the token model, we put ‘a’ negatives into the bag just once. After this, the bag contains ‘a’ negatives. For example, if ‘a’ is – 5 (5 negatives), then the bag contains 5 negatives, i.e., –5. So,
+
+1 × a = a (for all integers a, both positive and negative).
+
+What is the value of the expression – 1 × a?
+
+When ‘a’ is positive, then from our observations on integer multiplication, the product has the same magnitude as ‘a’ but is negative.
+
+When ‘a’ is negative, then the product has the same magnitude as ‘a’ but is positive.
+
+In each case, we notice that the product is the additive inverse of the multiplicand ‘a’. Thus,
+
+– 1 × a = – a (for all integers a).
+
+In the case of integers, is the product the same when we swap the multiplier and the multiplicand? Try this for some numbers.
+
+Observe the following pairs of multiplications (fill in the blanks where needed):
+
+3 × – 4 = –12 
+– 4 × 3 = –12
+
+– 30 × 12 = _______ 12 × – 30 = _______
+
+–15 × – 8 = 120 
+– 8 × –15 = 120
+
+14 × – 5 = –70 
+– 5 × _____ = – 70
+
+What do you notice in these pairs of multiplication statements?
+
+The product is the same when we ‘swap’ the multiplier and multiplicand. Earlier, we have seen a similar property with addition.
+
+Will this always happen?
+
+The magnitude of the product does not change when the multiplier and the multiplicand are swapped. This is because the magnitude of the product depends only on the magnitudes of the multiplier and the multiplicand, and we know that the product of two positive integers does not change when the numbers being multiplied are swapped.
+
+Operations with Integers
+
+Does the sign of the product change if we swap the multiplier and multiplicand?
+
+If both are positive or both are negative, the product is positive before and after swapping. So the sign does not change in this case.
+
+If one is positive and the other negative, the product is negative before and after swapping. So the sign does not change in this case either.
+
+Hence, the product does not change when the multiplier and multiplicand are swapped, whatever their signs may be. Thus, multiplication is commutative for integers. In general, for any two integers, a and b, we can say that
+
+a × b = b × a.
+
+Brahmagupta’s Rules for Multiplication and Division of Positive and Negative Numbers Just like for addition and subtraction of integers, Brahmagupta in his Brāhmasphuṭasiddhānta (628 CE) also articulated explicit rules for integer multiplication and division. He used the notions of fortune (dhana) for positive values and debt (ṛṇa) for negative values. In his Brāhmasphuṭasiddhānta (18.30-32), Brahmagupta wrote:
+
+“The product or quotient of two fortunes is a fortune. The product or quotient of two debts is a fortune. The product or quotient of a debt and a fortune is a debt. The product or quotient of a fortune and a debt is a debt.” This represented the first time that rules for multiplication and division of positive and negative numbers were articulated, and was an important step in the development of arithmetic and algebra!
+
+Example 1: An exam has 50 multiple choice questions. 5 marks are given for every correct answer and 2 negative marks for every wrong answer. What are Mala’s total marks if she had 30 correct answers and 20 wrong answers? Solution: We use positive and negative integers. The mark for each correct answer is a positive integer 5 and for each wrong answer is a negative integer – 2. Marks for 30 correct answers = 30 × 5. Marks for 20 wrong answers = 20 × (– 2).
+
+Thus the arithmetic expression for 30 correct answers and 20 wrong answers is:
+
+30 × 5 + 20 × (– 2) = 150 + (– 40)
+
+= 110. Mala got 110 marks in the exam.
+
+What are the maximum possible marks in the exam? What are the minimum possible marks?
+
+Example 2: There is an elevator in a mining shaft that moves above and below the ground. The elevator’s positions above the ground are represented as positive integers and positions below the ground are represented as negative integers.
+
+(a) The elevator moves 3 metres
+
+per minute. If it descends into the shaft from the ground level (0), what will be its position after one hour?
+
+(b) If it begins to descend from
+
+15 m above the ground, what will be its position after 45 minutes?
+
+Solution:
+
+Solution to part (a) of the question:
+
+Method 1: We can model this using subtraction.
+
+The elevator moves at 3 metres per minute. So in one hour it moves 180 metres (60 × 3). If it started at ground level (0 metres) and descended, we should subtract 180 from 0.
+
+0 – 180 = (–180).
+
+So, it will reach the (–180) metre position, which is 180 metres below the ground.
+
+Method 2: Let us say that the speed and direction of the elevator are represented by an integer (metres per minute). It is +3 when it is moving up and it is (–3) when moving down.
+
+Since the elevator is moving down, the speed is (–3) metres per minute. It moves for 60 minutes. So it goes
+
+60 × (–3) = (–180).
+
+Operations with Integers
+
+The position of the elevator after 60 minutes is 180 metres below the ground level.
+
+Find the solution to part (b) using Method 1 described above.
+
+Solution to part (b) using Method 2:
+
+Starting Position = 15. Distance Travelled = The elevator moves down at the speed of 3 metres per minute for 45 minutes, that is, (45 × (–3)). So, Ending Position = 15 + (45 × (–3))
+
+= 15 + (–(45×3)) = 15 + (–135) = (–120).
+
+The elevator will be 120 metres below the ground.
+
+A Magic Grid of Integers
+
+A grid containing some numbers is given below. Follow the steps as shown until no number is left.
+
+Circle any number
+
+8 
+–4 12 
+–6
+
+–28 14 
+–42 21
+
+Strike out the row and the coloumn
+
+containing that number
+
+12 
+–6 18 
+–9
+
+Circle any unstruck number
+
+20 
+–10 30 
+–15
+
+When there are no more unstruck numbers, stop. Multiply the circled numbers. An example is shown below.
+
+Round 1
+
+Round 2
+
+Round 3
+
+Round 4
+
+8 
+–4 12 
+–6
+
+8 
+–4 12 
+–6
+
+8 
+–4 12 
+–6
+
+8 
+–4 12 
+–6
+
+–28 14 –42 21
+
+–28 14 –42 21
+
+–28 14 –42 21
+
+–28 14 –42 21
+
+12 
+–6 18 
+–9
+
+12 
+–6 18 
+–9
+
+12 
+–6 18 
+–9
+
+12 
+–6 18 
+–9
+
+20 –10 30 –15
+
+20 –10 30 –15
+
+20 –10 30 –15
+
+20 –10 30 –15
+
+Try again , and choose different numbers this time. What product did you get? Was it different from the first time? Try a few more times with different numbers! Play the same game with the grid below. What answer do you get?
+
+8 
+–4 12 
+–6
+
+–28 14 
+–42 21
+
+Try This
+
+12 
+–6 18 
+–9
+
+What is so special about these grids? Is the magic in the numbers or the way they are arranged or both? Can you make more such grids?
+
+20 
+–10 30 
+–15
+
+Division of Integers
+
+We have earlier seen how division can be converted into multiplication. For example, (– 100) ÷ 25 can be reframed as, ‘what should be multiplied to 25 to get (– 100)?’. That is,
+
+25 × ? = (– 100).
+
+We know that
+
+25 × (– 4) = (– 100).
+
+Therefore,
+
+(– 100) ÷ 25 = (– 4).
+
+Similarly, (– 100) ÷ (– 4) can be reframed as, ‘What should be multiplied to (– 4) to get (– 100)?’
+
+(– 4) × ? = (– 100).
+
+We know that
+
+(– 4) × 25 = (– 100).
+
+Therefore,
+
+(– 100) ÷ (– 4) = 25.
+
+Similarly, we know that
+
+(– 25) × (– 2) = 50.
+
+Therefore,
+
+50 ÷ (– 25) = (– 2).
+
+Operations with Integers
+
+Can you summarise the rules for integer division looking at the above pattern?
+
+In general, for any two positive integers a and b, where b ≠ 0, we can say that
+
+a ÷ – b = – (a ÷ b),
+
+– a ÷ b = – (a ÷ b), and
+
+– a ÷ – b = a ÷ b.
+
+Figure it Out
+
+1. Find the values of:
+
+(a) 14 × (– 15) (b) – 16 × (– 5)
+
+(c) 36 ÷ (– 18) (d) (– 46) ÷ (– 23)
+
+2. A freezing process requires that the room temperature be lowered from 32°C at the rate of 5°C every hour. What will be the room temperature 10 hours after the process begins?
+
+3. A cement company earns a profit of ₹8 per bag of white cement sold and a loss of ₹5 per bag of grey cement sold. [Represent the profit/ loss as integers.]
+
+(a) The company sells 3,000 bags of white cement and 5,000 bags of
+
+grey cement in a month. What is its profit or loss?
+
+(b) If the number of bags of grey cement sold is 6,400 bags, what is
+
+the number of bags of white cement the company must sell to have neither profit nor loss.
+
+4. Replace the blank with an integer to make a true statement.
+
+(a) (– 3) × _____ = 27 (b) 5 × _____ = (– 35)
+
+(c) _____ × (– 8) = (– 56) (d) _____ × (– 12) = 132
+
+(e) _____ ÷ (– 8) = 7 (f) _____ ÷ 12 = – 11
+
+Expressions Using Integers
+
+What is the value of the expression 5 × – 3 × 4? Does it matter whether we multiply 5 × – 3 and then multiply the product with 4, or if we multiply 
+– 3 × 4 first and then multiply the product with 5?
+
+(5 × – 3) × 4
+
+5 × (– 3 × 4)
+
+= – 15 × 4
+
+= 5 × – 12
+
+= – 60.
+
+= – 60.
+
+Take a few more examples of multiplication of 3 integers and check this property. What do you observe?
+
+We can see that the product is the same when we ‘group’ the multiplications in these two ways. So, integer multiplication is associative, just like integer addition.
+
+In general, for any three integers a, b, and c,
+
+a × (b × c) = (a × b) × c. In the expression 5 × – 3 × 4, try to multiply 5 and 4 first and then multiply the product with – 3: (5 × 4) × – 3.
+
+5 × 4 = 20, and 20 × – 3 = – 60. This also gives the same product.
+
+Are there orders in which 5 × – 3 × 4 can be evaluated? Will the product be the same in all these cases?
+
+Multiply the expression 25 × – 6 × 12 in all the different orders and check if the product is the same in all cases.
+
+The product remains the same when 3 or more numbers are multiplied in any order.
+
+Look at the following series of multiplications:
+
+– 1 × – 1 = 1 
+– 1 × – 1 × – 1 = – 1 
+– 1 × – 1 × – 1 × – 1 = 1 
+– 1 × – 1 × – 1 × – 1 × – 1 = 1
+
+When –1 is multiplied 2 or 4 times the product is positive. When it is multiplied 3 or 5 times the product is negative. Can you generalise these statements further?
+
+Math
+
+Talk
+
+Using this understanding of multiplication of many integers, can you give a simple rule to find the sign of the product of many integers?
+
+Now, consider the expression 5 × (4 + (– 2)). As in the case of positive integers, is this expression equal to 5 × 4 + 5 × (– 2)?
+
+We see that it does. Recall that we call this property the distributive property.
+
+Check if the distributive property holds for (– 2) × (4 + (– 3)) (that is, if this expression equals (– 2) × 4 + (– 2) × (– 3)), and for a few other such expressions of your choice.
+
+What do you observe? We see that the distributive property seems to hold for integers, as well. Will this always happen?
+
+Operations with Integers
+
+4 × (2 + (– 3))
+
+In the case of positive integers, we used a rectangular arrangement of objects to visually understand why the distributive property holds. We can use the same setup even in the case of integers by using green tokens for positive numbers and red tokens for negative numbers. For example, consider the following rectangular arrangement of tokens —
+
+4 × 2 4 × (– 3)
+
+We see that the overall arrangement represents 4 × (2 + (– 3)), and it is clear that this also equals the sum of 4 × 2 and 4 × (–3).
+
+Try This
+
+Can you visually show the distributive property for an expression like –4 × (2 + (–3))? [Hint: Use the fact that multiplying a number by 
+–4 is adding the inverse of the number 4 times.]
+
+Thus, for any integers a, b, and c, we have
+
+a × (b + c) = (a × b) + (a × c).
+
+Pick the Pattern Two pattern machines are given below. Each machine takes 3 numbers, does some operations and gives out the result.
+
+Find the operations being done by Machine 1.
+
+The operation done by Machine 1 is
+
+(first number) + (second number) – (third number).
+
+Written as an expression, this will be a + b – c, where a is the first number, b is the second number, and c is the third number.
+
+For example, 5 + 8 – 3 = 10, and (– 4) + (– 1) – (– 6) = 1.
+
+So, the result of the last group will be, (– 10) + (– 12) – (– 9) = _______.
+
+Find the operations being done by Machine 2 and fill in the blank.
+
+Math
+
+Talk
+
+Make your own machine and challenge your peers in finding its operations.
+
+Figure it Out
+
+1. Find the values of the following expressions:
+
+(a) (– 5) × (18 + (– 3)) (b) (– 7) × 4 × (– 1)
+
+(c) (– 2) × (– 1) × (– 5) × (– 3)
+
+2. Find the values of the following expressions:
+
+(a) (– 27) ÷ 9 (b) 84 ÷ (– 4)
+
+(c) (– 56) ÷ (– 2)
+
+3. Find the integer whose product with (– 1) is:
+
+(a) 27 (b) – 31
+
+(c) – 1 (d) 1
+
+(e) 0
+
+4. If 47 – 56 + 14 – 8 + 2 – 8 + 5 = – 4, then find the value of – 47 + 56 – 14 + 8 – 2 + 8 – 5 without calculating the full expression.
+
+5. Do you remember the Collatz Conjecture from last year? Try a modified version with integers. The rule is — start with any number; if the number is even, take half of it; if the number is odd, multiply it by – 3 and add 1; repeat. An example sequence is shown below.
+
+–7 22 11 32 
+–16 
+–8 
+–4
+
+–2 
+–1 4 2 1
+
+Operations with Integers
+
+Math
+
+Talk
+
+Try this with different starting numbers: (– 21), (– 6), and so on. Describe the patterns you observe.
+
+6. In a test, (+ 4) marks are given for every correct answer and (– 2) marks are given for every incorrect answer.
+
+(a) Anita answered all the questions in the test. She scored 40
+
+marks even though 15 of her answers were correct. How many of her answers were incorrect? How many questions are in the test?
+
+(b) Anil scored (– 10) marks even though he had 5 correct answers.
+
+How many of his answers were incorrect? Did he leave any questions unanswered?
+
+7. Pick the pattern — find the operations done by the machine shown below.
+
+8. Imagine you’re in a place where the temperature drops by 5°C each hour. If the temperature is currently at 8°C, write an expression which denotes the temperature after 4 hours.
+
+9. Find 3 consecutive numbers with a product of (a) – 6, (b) 120.
+
+10. An alien society uses a peculiar currency called ‘pibs’ with just two denominations of coins — a+13 pibs coin and a – 9 pibs coin. You have several of these coins. Is it possible to purchase an item that costs + 85 pibs?
+
+Yes, we can use 10 coins of +13 pibs and 5 coins of – 9 pibs to make
+
+a total of + 85. Using the two denominations, try to get the following totals:
+
+(a) + 20 (b) + 40
+
+(c) – 50 (d) + 8
+
+(e) + 10 (f) – 2
+
+(g) + 1
+
+[Hint: Writing down a few multiples of 13 and 9 can help.]
+
+(h) Is it possible to purchase an item that costs 1568 pibs?
+
+Try This
+
+11. Find the values of:
+
+(a) (32 × (– 18)) ÷ ((– 36)) (b) (32 ) ÷ ((– 36) × (– 18))
+
+(c) (25 × (– 12)) ÷ ((45) × (– 27)) (d) (280 × (– 7)) ÷ ((– 8) × (– 35))
+
+12. Arrange the expressions given below in increasing order.
+
+(a) (– 348) + (– 1064) (b) (– 348) – (– 1064)
+
+(c) 348 – (– 1064) (d) (– 348) × (– 1064)
+
+(e) 348 × (– 1064) (f) 348 × 964
+
+13. Given that (– 548) × 972 = – 532656, write the values of:
+
+(a) (– 547) × 972 (b) (– 548) × 971
+
+(c) (– 547) × 971
+
+14. Given that 207 × (– 33 + 7) = – 5382, write the value of – 207 × (33 – 7) = _________.
+
+15. Use the numbers 3, – 2, 5, – 6 exactly once and the operations ‘+’, ‘–’, and ‘×’ exactly once and brackets as necessary to write an expression such that —
+
+(a) the result is the maximum possible (b) the result is the minimum possible
+
+16. Fill in the blanks in at least 5 different ways with integers:
+
+(a) + × = –36 (b) ( 
+– ) × = 12
+
+(c) ( 
+– ( 
+– )) = –1
+
+Operations with Integers
+
+SUMMARY
+
+– 9 
+– 6 
+– 3 3 3 6 9
+
+– 6 
+– 4 
+– 2 2 2 4 6
+
+– 3 
+– 2 
+– 1 1 1 2 3
+
+– 3 
+– 2 
+– 1 × 1 2 3
+
+3 2 1 1 
+– 1 
+– 2 
+– 3
+
+6 4 2 2 
+– 2 
+– 4 
+– 6
+
+9 6 3 3 
+– 3 
+– 6 
+– 9
+
+• When two integers are multiplied, the product is positive when both the multiplier and multiplicand are positive, or when both are negative. The product is negative if one of them is positive and the other is negative. 
+• When two integers are divided, the quotient is positive when both the dividend and divisor are positive, or both are negative. The quotient is negative when one of them is positive and the other is negative. 
+• Integer multiplication is commutative, i.e., for any two integers a and b, a × b = b × a. 
+• Integer multiplication is associative, i.e., for any three integers, a, b, and c,
+
+a × (b × c) = (a × b) × c. 
+• Integer multiplication is distributive over addition, i.e., for any three integers, a, b, and c,
+
+a × (b + c) = (a × b) + (a × c).
+
+Terhüchü
+
+Terhüchü is a game played in Assam and Nagaland. The board has 16 squares and diagonals are marked as shown in the following figure. This is usually roughly scratched on a large piece of stone or just drawn on mud. There are 2 players, and each player has a set of 9 coins placed as shown. The coins in one set look different from those in the other set.
+
+Objective The goal is to capture all the opponent’s coins. The first player to do so is the winner. A player may also win by blocking any legal move by their opponent. If a draw seems unavoidable, the player with more coins wins.
+
+Gameplay
+
+• The starting position of the game is as shown above.
+
+• Players take turns. In each turn, they can move a single coin along a line, in any direction, to a neighbouring vacant intersection. Or, if an opponent’s coin is at a neighbouring intersection, and there is a vacant intersection just beyond it, they can jump over the opponent’s coin and land in the vacant intersection.
+
+• If a player jumps over an opponent’s coin, it is considered captured and is removed from the board. Multiple captures in one move are allowed, and the direction can change after each jump.
+
+• Inside the triangular corners, which are outside the main square, a coin may skip an intersection and move straight to the next one. That is, it can jump over an empty intersection and go to the one beyond it.

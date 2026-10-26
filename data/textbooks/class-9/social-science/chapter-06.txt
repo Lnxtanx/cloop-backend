@@ -1,0 +1,931 @@
+# CLASS-9 - SOCIAL-SCIENCE - CHAPTER 06
+# Source: iest106.pdf
+
+Chapter 6
+
+Democracy
+
+The Big Questions
+
+1. How has the idea of democracy evolved over time and shaped our understanding of it today?
+
+2. What are the different forms of democracy, and how are they practised in India and other parts of the world?
+
+3. What are the essential features of a democracy and how do they extend beyond government institutions?
+
+4. What are the challenges faced by Indian democracy?
+
+LET’S RECALL
+
+We have learnt in previous grades that democracy is a form of government in which the source of power and authority lies with the citizens of the country, who elect their representatives through free and fair elections. Democracy is founded on the principles of freedom, equality, justice, rights and duties, ensuring that citizens have the right to vote, express their opinions, and participate in the decision-making processes.
+
+India is the world’s largest democracy. With a population of over 140 crore and a voter base of over 96.8 crore (in 2024), India, that is, Bharat, represents the largest participatory democracy, where people choose their government by electing their representatives. Our democracy serves as a beacon of hope and an example for the rest of the world. However, like all democracies, India also faces certain challenges, some of which we will examine later in this chapter.
+
+A constitution plays a crucial role in safeguarding the rights of the people in a democracy. In India, democratic principles are guided by the Constitution of India, which was adopted on 26 November 1949 and came into force on 26 January 1950. The Constitution not only guarantees but also protects the Fundamental Rights of all citizens. It ensures that no citizen is discriminated against on the basis of religion, race, caste, sex, or place of birth. It also encourages active citizen participation in democratic processes at the national, state, and local levels through elections.
+
+However, it is important to understand that the democratic ethos in India did not emerge suddenly; rather, it evolved through a long historical process. In this chapter, we will explore the genesis and development of democratic ideas in India. We will also deepen our understanding of democracy by examining its meaning, key features, and various practices associated with it in India and around the world.
+
+Tracing Democratic Traditions from Early Times
+
+The idea of democracy has been a part of the Indian ethos since early times. In the previous chapter, we read about Assemblies of
+
+Samāno mantraḥ samitiḥ samānī samānaṁ manaḥ saha chittam eṣhām |
+
+Samānaṁ mantram abhimantraye vaḥ
+
+samānena vo haviṣhā juhomi ||
+
+Their counsel is one and the same; their assembly is one.
+
+Their mind is one, and their intention together is one. I invoke for you this same guiding resolve; with a common
+
+offering, on your behalf, I make the oblation. (I make the
+
+oblation on your behalf.)
+
+– Ṛigveda, 10.191.3
+
+Understanding Society:
+
+Fig. 6.1. A verse from the Aikyamatya Sūktam of the Ṛigveda
+
+India and Beyond
+
+Grade 9 – Part 1
+
+Fig. 6.2. Members of the Constituent Assembly
+
+the Vedic period such as Sabha, Samiti, and Vidhata that involved collective decision-making. We also read about the functioning of the early republican states (gaṇas or saṁghas). Thus, from the earliest times, the king was not an independent ruler but rather worked in consultation with assemblies, ministers, and officers of various capacities.
+
+A verse (Fig. 6.1) from the Aikyamatya Sūktam of the Ṛig Veda emphasises the importance of collective thinking, shared discussion, and unity of purpose. The values expressed in this verse help us understand that democratic principles, such as consultation, consensus, and shared responsibility have deep roots in India’s intellectual and cultural traditions.
+
+The functioning of the Bauddha Saṁghas—a monastic community established by Gautama Buddha—also reflects India’s democratic traditions. The Saṁgha encouraged debate and discussion, and its members could choose their leader and make decisions through voting, demonstrating collective decision-making.
+
+Over the long passage of time, invasions by foreign invaders disrupted the political and social fabric of some parts of the country. By the 19th century, the British had colonised most parts of the Indian subcontinent. Foreign rule altered political structures and limited people’s participation in their governance. However, the long struggle for independence from British colonial rule revived and strengthened democratic ideas among the people.
+
+Before India attained independence in 1947, the Constituent Assembly was formed in 1946 to draft a constitution for the country. As studied in earlier grades, it took the Assembly 2 years, 11 months,
+
+6 – Democracy
+
+and 18 days to draft the world’s longest written Constitution. Apart from the indigenous democratic traditions, the global spread of democratic values also influenced the Constituent Assembly’s Debates (CAD), contributing to the creation of a robust, flexible, transformative, and responsive constitution.
+
+Fig. 6.3. Dr. B.R. Ambedkar, Chairman of
+
+the Drafting Committee
+
+of the Constitution
+
+of India
+
+The CAD reflects the members’ belief that the constitution should not be a rigid legal code, but a dynamic document capable of evolving through lawful amendments without compromising its fundamental values. Accordingly, while making provisions for establishing democratic institutions and processes that uphold liberty, equality, justice, and fraternity, the Constitution also provides for amendments under Article 368. This ensures that the Constitution remains flexible and responsive to the changing socio-political needs.
+
+Principles of Democracy
+
+A thriving democracy rests on certain non-negotiable principles. Let us study the essential principles of democracy that are upheld in India through various provisions of the Constitution.
+
+Popular Sovereignty
+
+In a democracy, the ultimate source of power lies with the people. Thus, the idea of popular sovereignty means that the state derives its authority from the people. A government elected through free and fair elections formulates policies and implements laws. Every citizen, 18 years of age and above has the right to vote through a secret ballot. This right is known as the Universal Adult Franchise. Citizens exercise their right to vote to elect governments and representatives. You will read more about elections in the next chapter.
+
+THINK ABOUT IT
+
+Why is it important that the ultimate source of power rests with the people in a democracy?
+
+How does people’s participation through voting strengthen popular sovereignty?
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 – Part 1
+
+Rule of Law
+
+The Rule of Law is a fundamental principle of any democratic society. It ensures equality before the law and equal protection of the law, and establishes that no one is above the law. When laws are violated, disputes are resolved in a court of law through procedures established by law, not by force or personal influence. This prevents misuse of power and protects people’s rights. No citizen can be punished without following the procedure established by law, and everyone is provided a fair opportunity to defend their rights against arbitrary action. In this way, the rule of law promotes justice, accountability, and trust in the democratic system.
+
+Fundamental Rights
+
+Procedure established by law: It refers to a legal principle that stresses on strict adherence to duly enacted and valid laws. This principle is enshrined in Article 21 of the Constitution of India which states, “no persons shall be deprived of life or personal liberty except according to procedure established by law.”
+
+The Fundamental Rights enshrined in the Indian Constitution play a crucial role in safeguarding the rights, freedom, and dignity of citizens. There are six Fundamental Rights—the Right to Equality (Articles 14–18); the Right to Freedom (Articles 19–22); the Right Against Exploitation (Articles 23–24); the Right to Freedom of Religion (Articles 25–28); Cultural and Educational Rights (Articles 29–30); and the Right to Constitutional Remedies (Article 32). Any violation of these can lead to appropriate legal action, and citizens can seek constitutional remedies under Articles 32 and 226 for the protection and reinforcement of their fundamental rights. These rights are enforceable in courts of law and are indivisible and inalienable, subject to reasonable restrictions in accordance with the procedure established by law.
+
+LET’S EXPLORE
+
+Æ The Constitution not only guarantees Fundamental Rights to citizens but also outlines their Fundamental Duties and the Directive Principles of State Policy. Discuss their significance and identify the differences among them.
+
+Æ The Right to Education (Article 21A) was added in 2009, ensuring free and compulsory education for children aged 6 to 14. Discuss its significance.
+
+Equality before law: Every individual irrespective of status, identity, or rank is treated equally by the law.
+
+Equal protection of law: All persons in similar circumstances shall be treated equally by law without arbitrary discrimination.
+
+6 – Democracy
+
+Separation of Powers
+
+The separation of powers among the legislature, executive, and judiciary—each with distinct responsibilities—enables democratic institutions to function effectively and responsibly. The legislature makes laws, the executive implements them, and the judiciary interprets them, thereby preventing the concentration of power in any one organ. This separation is essential for maintaining checks and balances among the three organs of the government. For example, while parliament has the power to amend the Constitution, the judiciary can review such amendments to ensure they are consistent with the spirit of the Constitution. Similarly, the executive power of enforcement agencies is regulated by laws and rules framed by the Parliament and can also be reviewed by competent courts. If a law is inconsistent with the constitutional provisions, the judiciary has the power to declare it unconstitutional.
+
+Public Interest Litigation: A
+
+legal action
+
+initiated in
+
+a court of law for the enforcement
+
+of public
+
+interest.
+
+The judiciary upholds the Constitution and plays a vital role in protecting and promoting democratic values and the rights of all sections of the society. It ensures the laws enacted by the Parliament of India and the State Legislative Assemblies are in accordance with the Constitution. The judiciary is an impartial and independent institution that safeguards citizens’ rights and upholds the spirit of the Constitution. Important initiatives, such as Public Interest Litigation (PIL), have also been taken by the judiciary from time to time to ensure access to justice for all.
+
+THINK ABOUT IT
+
+What do you think would happen if the same organ of the government made laws, implemented them, and enforced them? Share your thoughts with your classmates.
+
+Accountability and Transparency
+
+Democratic governments are accountable to citizens. Through elections, public debates, and engagement with civil society, citizens can evaluate the actions of the government. This continuous public involvement strengthens democracy and builds trust between the government and the people. Several institutional and policy frameworks ensure accountability and transparency in the Indian
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 – Part 1
+
+democratic system. For example, the Right to Information (RTI) Act, 2005, allows citizens to seek information from government agencies. You will learn more about this later in this chapter.
+
+Multi-Party System
+
+In a multi-party system, several political parties contest elections, representing diverse voices and interests. This gives people the power to choose those they consider most suitable. Each political party is guided by certain ideas, values, and principles that shape its policies and actions. In elections to the Parliament or State Assemblies, the party—or a coalition of parties—that secures more than 50 per cent of the seats forms the government, while the largest opposing group becomes the opposition. Political parties represent a wide range of socio-cultural, political, ideological, and regional interests, reflecting the diversity of Indian society. They function within the framework of rules and regulations laid down by the Representation of the People Act, 1951.
+
+Safeguarding the Rights of Vulnerable Groups
+
+It is the duty of the government to protect all communities, regardless of caste, gender, religion, or regional background. Given historical factors that have led to an unequal distribution of opportunities and resources, it is essential for the government to ensure that resources are distributed equitably, especially to the most vulnerable sections of society, without discrimination. For example, Article 46 of the Constitution states that “the State shall promote with special care the educational and economic interests of the weaker sections of the people, and, in particular, of the Scheduled Castes and the Scheduled Tribes, and shall protect them from social injustice and all forms of exploitation.”
+
+DON’T MISS OUT
+
+The real strength of democracy lies in its citizens—their participation, awareness of duties and rights, and commitment to honesty and fairness. Without these, no democratic process or institution can function effectively or deliver meaningful outcomes. The table on the next page highlights how different democratic processes are supported by specific institutions and the values they promote:
+
+6 – Democracy
+
+Process Institutions Democratic values
+
+Legislative Process
+
+Representation, Deliberation, Dissent
+
+Legislature (Parliament, State legislature, and Local bodies)
+
+Electoral Process Election Commission of India
+
+Participation, Equality
+
+Civil Society:
+
+Refers to the
+
+Judicial Process Courts Rule of law, Equality, Justice
+
+voluntary groups, NGOs and community
+
+associations that function interdependently
+
+Participatory Processes
+
+within society.
+
+Media, Civil Society Debate and discussion, freedom of expression
+
+Transparency
+
+Accountability Mechanisms
+
+Comptroller and Auditor General (CAG), Central Information Commission (CIC), Lokpal, Central Vigilance Commission (CVC)
+
+Decentralisation Rural and Urban local bodies
+
+People’s participation at grassroots level
+
+Devolution of power
+
+Federalism Division of powers between the centre and the states is guaranteed through a written constitution
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 – Part 1
+
+LET’S EXPLORE
+
+The first column of the table below lists some key features of democracy in India. Fill in the second column with suitable examples from your state, town, or village. One row has been completed for you.
+
+Features of Democracy Examples
+
+Popular Sovereignty
+
+Rule of Law
+
+Separation of Powers
+
+Fundamental Rights
+
+Accountability and Transparency
+
+Parliamentary procedures such as Question Hour and the auditing of government accounts ensure accountability. Laws like the Right to Information provide transparency.
+
+Question Hour: The first hour of a parliamentary session when members ask questions to the government. This helps check the government’s work and hold it accountable.
+
+Multi-Party System
+
+6 – Democracy
+
+Role of Media in Democracy
+
+In present times, the media has become an integral part of our lives. In addition to keeping people informed about developments around the world, it serves as a voice of the masses. Newspapers, news channels, and social media platforms raise issues concerning the public and contribute to their resolution through appropriate mechanisms. Owing to its critical role in safeguarding people’s voices and upholding democratic principles, media is often referred to as the ‘fourth pillar of democracy’.
+
+Types of Democracy
+
+Democracy
+
+Direct Democracy 
+• Citizens directly participate in most decision-making processes. 
+• Some features of representative democracy exist. 
+• Difficult to follow in large countries. 
+• e.g. Switzerland.
+
+Representative Democracy (Indirect Democracy) 
+• People elect their representatives. 
+• People do not directly govern. 
+• Periodic elections. 
+• Government is accountable to the people. 
+• e.g. India.
+
+Presidential Democracy 
+• The Executive is independent of the legislature. 
+• President is elected by the people. 
+• President is accountable to the people. 
+• e.g. United States of America.
+
+Parliamentary Democracy 
+• Members of the Executive are also part of the legislature. 
+• The Executive is accountable to the legislature. 
+• People elect the legislature but not the executive. 
+• e.g. India and Canada.
+
+Fig. 6.4. Types of Democracy
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 – Part 1
+
+You must have understood by now that though there are some fundamental principles of any democracy, like freedom, equality, participation, rule of law, rights, and duties, yet democracy does not offer a single model of government. The characteristics and features of democracy vary from country to country. Different societies institutionalise democracy in diverse ways, depending on how citizens participate in decision-making and how political power is structured. As you have learnt in previous grades, there are different forms of democracy—some involve direct citizen participation, while others function through elected representatives.
+
+Imagine your school is celebrating a ‘Youth for Democracy’ festival. Students’ Councils from different countries are visiting your school. Each follows its own model of functioning, similar to how countries around the world practise democracy. Let us see what we can learn from them.
+
+These examples show that systems may differ in how power is shared, who participates in decision-making, and whether checks and balances are in place.
+
+Team A
+
+Team B
+
+The school holds elections every year. Every class elects
+
+All students gather in one place and elect their president once a year. However, the president has
+
+a representative, who then participates in the election of the
+
+Students’ Council President. The President and the representatives
+
+together make decisions.
+
+very limited powers. For major decisions, such as the canteen menu, they gather at a designated place and vote using ballot papers.
+
+Team D
+
+Team C
+
+Students directly vote for the School President as well as for
+
+Elections are held, but only selected candidates are allowed to contest. The School President
+
+holds most of the power. The Student Council exists but has very
+
+members of the Council. The President acts as both the head of the Students’ Council and the chief
+
+limited authority, and opposition
+
+decision-maker.
+
+voices are weak or discouraged.
+
+Fig. 6.5
+
+6 – Democracy
+
+LET’S EXPLORE
+
+Select your ideal team from Fig. 6.5 and give reasons for your selection.
+
+Having understood the different types of democratic systems, let us now look at how democracies function across the world:
+
+Federalism:
+
+Head of State
+
+Key Features
+
+A system of government
+
+Country Type of Democracy
+
+System of Government
+
+/ Head of Government
+
+President (Head
+
+Multi-party
+
+India Representative
+
+Executive
+
+in which power and responsibilities
+
+of State), Prime
+
+democracy,
+
+Democracy
+
+power lies with
+
+Minister (Head of
+
+Written
+
+(Parliamentary
+
+the council
+
+are shared between the
+
+Government)
+
+constitution,
+
+Democracy)
+
+of ministers
+
+union and
+
+Fundamental
+
+headed by the
+
+the state governments
+
+Rights and
+
+Prime Minister
+
+as expressed
+
+Duties,
+
+in the union,
+
+Federalism
+
+state and concurrent
+
+Federalism,
+
+Governor-General
+
+Executive
+
+Canada Representative
+
+multi-party
+
+appointed by
+
+power lies
+
+Democracy
+
+system
+
+the Monarch
+
+with the Prime
+
+(Parliamentary
+
+list of the Constitution of India, and
+
+(Head of State)
+
+Minister
+
+Democracy)
+
+the residual power remains
+
+on the advice
+
+of the Prime
+
+with union government.
+
+Minister (Head of
+
+Government)
+
+Unwritten
+
+Monarch (Head
+
+In a
+
+United
+
+Representative
+
+Sovereignty:
+
+constitution,
+
+of State), Prime
+
+Constitutional
+
+Kingdom
+
+Democracy
+
+parliamentary
+
+Minister (Head of
+
+Monarchy,
+
+(Parliamentary
+
+Derived from the Latin word
+
+Government)
+
+the executive
+
+Democracy
+
+Sovereignty,
+
+superanus,
+
+multi-party
+
+power lies
+
+with
+
+system.
+
+with the Prime
+
+Constitutional
+
+meaning ‘supreme’. It refers to the
+
+Minister
+
+Monarchy)
+
+supreme,
+
+The President is
+
+Written
+
+Switzerland Direct
+
+Executive
+
+the Head of the
+
+constitution
+
+Democracy
+
+Power lies with
+
+final, and independent legal authority
+
+the Federal
+
+Government
+
+with multiple
+
+of a State over
+
+parties
+
+Council
+
+United
+
+Representative
+
+Executive
+
+The President is
+
+Written
+
+its territory and citizens.
+
+States of
+
+Democracy
+
+power lies with
+
+the Head of the
+
+constitution,
+
+America
+
+(Presidential
+
+the President
+
+Government
+
+with two major
+
+Democracy)
+
+parties
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 – Part 1
+
+LET’S EXPLORE
+
+Work in pairs or small groups. Choose any two of India’s neighbouring countries (Afghanistan, Bangladesh, Bhutan, China, Maldives, Myanmar, Nepal, Pakistan, or Sri Lanka) and find out the following:
+
+Æ Does the country hold regular elections?
+
+Æ Who chooses the Head of the Government?
+
+Æ Is there more than one political party?
+
+Æ How much freedom do citizens have to express their opinions and criticise the government?
+
+How would you describe this system? Give reasons for your answer.
+
+Æ Democratic or Partially democratic or Non-democratic
+
+Democracy in Practice: India’s Living Democracy
+
+DON’T MISS OUT
+
+India is the world’s largest democracy, and more people vote in Indian elections than the total population of many countries.
+
+In 2024, India had over 96.8 crore registered voters.
+
+Huge representation: On average, a Member of Parliament represents about 25 lakh people (2019). This shows the enormous scale at which democratic representation operates in India. Many languages, one election: Elections in India are conducted in 22 scheduled languages, along with several other languages. Election symbols are used so that every citizen, including those who cannot read, can vote independently. Over one million polling stations: More than one million polling stations, including those in remote areas, such as mountains, forests, deserts, and islands, are set up. In some cases, polling stations are created even for a single voter. Thousands of political parties: India has over 2,800 registered political parties, reflecting the country’s social and regional diversity and allowing many viewpoints to compete peacefully.
+
+6 – Democracy
+
+Fig. 6.6. Unique Polling Stations
+
+Based on the given facts and figures, imagine the strength of Indian democracy.
+
+India’s democracy stands out for its scale, depth, and inclusiveness. With nearly a hundred crore voters, it represents an unparalleled exercise in public participation. This vast electorate reflects not only the size of the population but also the extensive reach of its democratic institutions. The ability to conduct regular, nationwide elections for such a large and diverse population highlights the institutional strength and organisational capacity of Indian democracy.
+
+What makes Indian democracy truly “living” is its diversity and citizens’ active engagement in the electoral process. The Indian electorate includes people from varied linguistic, religious, and socio-economic backgrounds, all participating within a single democratic framework. Hence, elections become a collective national exercise in which voices from different regions and communities are expressed through the ballot. This continuous and widespread public participation reinforces India’s position as the world’s largest democracy—not merely in terms of numbers, but through the sustained involvement of its people in shaping governance and public life. One of the most widely recognised features of a democratic system is the conduct of periodic elections, which enable people to choose their representatives. You will study this feature in detail in the next chapter on ‘Elections’.
+
+Understanding Society:
+
+India and Beyond
+
+A deeper understanding of democracy also requires an appreciation of citizens’ broader role in democratic processes. Participatory democracy emphasises greater involvement of citizens not only through elections but also through active engagement in shaping policies and governance. Such participation takes place through mechanisms, such as local councils, public consultations, and community-driven initiatives.
+
+Grade 9 – Part 1
+
+India’s constitutional framework operates through a three-tier system comprising the Union, State, and Local governments, facilitating administrative efficiency and democratic participation. You have learnt about them in your Grades 6 to 8 Social Science textbooks. Beyond the Panchayati Raj and Municipalities, the Constitution also provides provisions to protect tribal heritage. In specific north-eastern regions, Autonomous District Councils (ADCs) are established, granting them legislative and judicial authority to preserve tribal customs. Complementing this, the PESA Act (Panchayats Extension to Scheduled Areas) of 1996 applies to tribal areas in other states, empowering the Gram Sabha as the primary decision-making body. By balancing these levels of authority, the Constitution of India provides a unified national framework that draws its strength from the diverse traditions of every community.
+
+Case Study: Democracy at the Grassroots in India
+
+Across India, several villages demonstrate how democracy functions beyond elections through active participation in local self-government. The following examples show how local bodies of democratic institutions at the grassroots in India can play a vital role in improving people’s lives.
+
+1. Jethipura Gram Panchayat (Block Idar, Sabarkantha, Gujarat)
+
+Development Through People’s Participation
+
+Jethipura Gram Panchayat of Gujarat was awarded Nanaji Deshmukh Rashtriya Gaurav Gram Sabha Puraskar (NDRGGSP) in 2019 for its exemplary performance. It not only ensured the effective conduct of Gram Sabhas and proper maintenance of records, but also went a step further by organising Special Gram Sabhas. Other initiatives included timely and appropriate action on issues related to education, sanitation, and welfare of
+
+Fig. 6.7. Gram Panchayat meeting (Representative image)
+
+6 – Democracy
+
+Quorum: The
+
+presence of the minimum
+
+women and children. It also conducted Mahila Sabhas and ensured adequate quorum in Gram Sabhas, with active participation from marginalised sections of the society, including Scheduled Castes, Scheduled Tribes, and women.
+
+2. South Manubankul Gram Panchayat, Rupaichari Block, Tripura Tribal Areas Autonomous District Council, Tripura
+
+number of members in the meetings of an assembly
+
+Women-Friendly Panchayat
+
+to make the proceedings
+
+valid.
+
+Cooperatives: Groups formed
+
+The South Manubankul Gram Panchayat in Tripura functions as an active local government focused on improving people’s lives, especially those of women. It promotes women’s participation in decision-making and provides facilities related to health, sanitation, and livelihoods. The Panchayat organises community programmes, supports self-help groups, and ensures the effective implementation of government schemes for village development. It also works towards improving cleanliness, education, and social awareness. Owing to its strong focus on women’s welfare and inclusive development, it has been recognised as a “women- friendly panchayat” at the national level by the Ministry of Panchayati Raj.
+
+by people to work together
+
+for a common
+
+benefit; members share
+
+Cases like these show that democracy in India is not limited to voting during elections. When citizens actively participate in grassroots and Panchayati Raj institutions, democracy becomes more responsive, inclusive, and effective at all levels.
+
+profits and responsibilities
+
+equally.
+
+LET’S EXPLORE
+
+A democratic system seeks to promote participation, ensure fairness, limit the concentration of power, and resolve disagreements peacefully. Identify examples from the above case study that reflect these features.
+
+Democracy, however, is not limited to formal institutions of the government. The spirit of democratic functioning also extends into everyday social life. Civil society organisations, socio-religious and community institutions, cooperatives, and trade unions often adopt democratic decision-making methods.
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 – Part 1
+
+Women and the Right to Vote: The Indian Experience
+
+In a number of countries, women had to wage a long and difficult struggle to secure the right to vote. In Britain, women received full voting rights only in 1928, while in the United States of America, this occurred in 1920, after decades of protests and movements. These developments show that democracy in these societies expanded gradually.
+
+Fig. 6.8
+
+In contrast, women in India were granted the right to vote. When the Constitution of India came into force in 1950, Universal Adult Franchise was extended to all citizens—men and women alike—without discrimination, and Indian women did not have to engage in prolonged legal battles or protest to secure voting rights. However, the right to vote does not automatically ensure equal participation. Social prejudices continue to act as barriers and affect women’s adequate representation in politics.
+
+Women’s Reservation in Local Bodies
+
+Empowerment of women starts with their active participation in institutions of decision-making. Article 243(d) of the Constitution of India provides not less than one-third reservation for women out of total number of seats to be filled by direct election in every Panchayat. However, 21 States and 2 Union Territories have gone even further and have made provisions of 50% reservation for women in Panchayati Raj Institutions in their respective State Panchayati Raj Acts.
+
+Similarly, Article 243(t) of the Constitution of India provides not less than one-third reservation for women out of the total number of seats to be filled by direct election in every Municipality. As of 2023, 17 States and 1 Union Territory have given 50% reservation for women in Urban Local Bodies.
+
+LET’S EXPLORE
+
+India continues to work towards more inclusive institutions. Discuss in class about the advantages of increased representation of women in the legislature.
+
+6 – Democracy
+
+DON’T MISS OUT
+
+Legislation:
+
+Laws made
+
+by the government.
+
+These laws help maintain
+
+order and
+
+regulate
+
+society.
+
+The Right to Information (RTI) Act, 2005, was enacted in India through democratic processes of representation and legislation. Over time, concerns raised by citizens, journalists, civil society groups, and elected representatives regarding transparency and accountability were examined by parliamentary committees and addressed within government institutions. These discussions highlighted the need for a law that would enable citizens to access information held by public authorities. The proposal for an RTI Act was reviewed by expert groups, debated in the Parliament, and refined through consultations with various stakeholders.
+
+Elected representatives played a key role in shaping the final legislation by incorporating safeguards related to national security and administrative efficiency. After being passed by the Parliament, the RTI Act came into force in 2005. This Act empowers citizens to seek information from government departments, thereby strengthening accountability and democratic governance.
+
+These examples show how civil society and community institutions act as bridges between citizens and the State. Through Public Interest Litigation (PIL), campaigns, and community organisations, they help make democracy more inclusive and responsive.
+
+THINK ABOUT IT
+
+As we studied in earlier grades, the village serves as a unit of grassroots democracy in India, empowering rural communities to participate in decision-making processes. Many Indian leaders, such as Chaudhary Charan Singh and Babu Jagjivan Ram, who emerged from these rural backgrounds, advocated for the rights of the rural poor and other marginalised sections of society.
+
+Explore and discuss the contributions of eminent Indian leaders who worked towards strengthening grassroots democracy.
+
+Challenges to Democratic Practices in India
+
+Democracy requires constant care, awareness, and active participation from both institutions and citizens. While the Constitution guarantees valuable rights to all citizens, it also expects individuals to exercise these rights responsibly. In this sense, democracy is not limited to elections—it is reflected in everyday
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 – Part 1
+
+behaviour, decision-making, and civic responsibility. Actions, such as damaging public property, spreading misinformation, or violating public rules weaken democratic values. Similarly, indifference towards public issues can adversely affect the health of a democracy.
+
+India has made significant progress in ensuring representation and participation. However, it continues to face several challenges, such as illiteracy, misinformation, and inequality. In recent times, the spread of fake news, especially through social media and other digital platforms, has emerged as a major concern. Such misinformation can influence public opinion, create confusion, and sometimes even lead to conflict. Issues like poverty, regionalism, gender inequality, and social discrimination also create barriers to equal participation. In addition, gaps in the effective implementation of laws and policies may reduce public trust in institutions.
+
+LET’S EXPLORE
+
+In small groups, identify two or three examples of information shared on social media that you believe may be misleading or false. Discuss what made you question their reliability and how such information can influence people’s opinions. Reflect on why access to accurate and authentic information is important in a democracy.
+
+Emergency
+
+One of the major challenges to democracy in India was recorded when an Emergency was imposed in 1975–77. In the early 1970s, public dissatisfaction with the government led by Indira Gandhi was growing. Rising unemployment, inflation, and allegations of misgovernance led to widespread protests. In June 1975, a National Emergency was imposed by the government on the grounds of internal disturbance. During this period, a majority of Fundamental Rights were suspended, the press was censored, and numerous political leaders and activists were arrested. Democratic institutions came under severe strain, and citizens’ freedom was restricted. Mass movements led by Jayaprakash Narayan—a political leader and socialist thinker, popularly known as Lok Nayak—mobilised students and citizens, especially in Bihar and Gujarat.
+
+Emergency: Articles 352, 356, and 360 of the Constitution of India deal with the provisions for declaration of National Emergency, President’s Rule, and Financial Emergency, respectively.
+
+The Emergency was lifted in 1977, and general elections were held, allowing people to express their will through the ballot. The defeat of the ruling government demonstrated the strength of Indian democracy and highlighted the importance of
+
+6 – Democracy
+
+Civic responsibility:
+
+Civic responsibility
+
+constitutional safeguards, civil liberties, and active citizen participation in protecting democratic values. This period highlighted both the vulnerabilities and the resilience of democratic institutions in India.
+
+also includes
+
+respecting
+
+others’ rights, using
+
+Democracy and You
+
+social media
+
+responsibly,
+
+abiding by laws and rules,
+
+appreciating the country’s diversity, and participating in
+
+activities that
+
+strengthen
+
+unity.
+
+Being well-informed is one of the vital responsibilities of a young citizen. Reading newspapers, watching news programmes, and using the internet responsibly help us stay aware of national and international events. Access to authentic information enables us to form informed opinions on public issues, understand how democracy operates in practice, and contribute positively to society. Programmes like the National Service Scheme (NSS) and the National Cadet Corps (NCC) are designed to instil civic responsibility, social awareness, and respect for democratic ideals. Through community service, teamwork, and organised activities, you can learn the importance of participation, responsibility, and service to the nation.
+
+LET’S EXPLORE
+
+Observe Fig 6.9 and explore the various other digital and non-digital ways through which you can participate in a democracy.
+
+Understand the
+
+Constitution
+
+Participate in nation-building
+
+activities (NCC, NSS, Bharat Scouts
+
+& Guides)
+
+Follow fundamental duties
+
+Be media
+
+literate
+
+Take leadership in school and community
+
+Fig. 6.9. Youth and Democracy
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 – Part 1
+
+THINK, DISCUSS, ACT
+
+Think: How do your actions as a student contribute to your school community and to democracy in a larger context?
+
+Discuss: Talk to your classmates about a social or community issue that you care about. How can you, as a student, make a difference?
+
+Act: Choose one activity to fulfil your civic responsibility this month. Reflect on how your actions contribute to strengthening democracy and community spirit.
+
+Democracy is not merely a system of government but a continuous process shaped by institutions and active citizenship. From early ideas of collective decision-making to the constitutional framework of the modern Republic, democratic principles have evolved to ensure authority is exercised with accountability. India’s democracy stands out for its scale, diversity, and resilience. It functions through elections, constitutional values, and everyday civic practices. While challenges remain, sustained public participation and respect for democratic norms keep it vibrant. Ultimately, the strength of a democracy depends not only on its institutions and laws but also on informed and responsible citizens who actively participate in shaping their society.
+
+Before we move on...
+
+Æ Democracy is a system of self-governance that involves institutions, rules, and practices enabling people to participate in decision-making at the local, state, and national levels; it is not limited to elections alone.
+
+Æ Democratic processes are guided by principles, such as transparency, participation, inclusion, fairness, equality, accountability, and respect for diverse opinions.
+
+Æ Democratic ideas in India have deep roots in ancient traditions, such as the Sabhā and Samiti mentioned in Vedic texts, which emphasised consultation and collective decision-making. Such ideas and values, along with later developments from around the world, shaped the modern democratic system.
+
+Æ India’s democracy is based on its Constitution, which provides for popular sovereignty, universal adult franchise, fundamental rights and duties, the rule of law, and the separation of powers.
+
+6 – Democracy
+
+Æ India is considered the world’s largest democracy due to the scale of citizen participation, particularly the number of registered voters, although challenges remain in ensuring deeper inclusion and representation.
+
+Æ Democracies across the world follow different systems but share common democratic values and principles.
+
+Æ Citizens contribute to democracy through civic awareness, responsible use of media, participation in community activities, and respect for democratic values in everyday life.
+
+Questions and activities
+
+1. Read the passage and answer the questions that follow:
+
+A school cabinet was responsible for planning a Republic Day celebration, and members had different opinions on which activities to include. After a discussion, they decided to vote, and the activities supported by the majority were selected.
+
+a. Which democratic values are reflected in this situation?
+
+b. How does voting help resolve differences of opinion?
+
+c. Why is the majority decision important in a democracy?
+
+d. Mention responsibilities of elected representatives after a
+
+decision is made.
+
+2. How would democracy be affected if citizens stopped following laws and civic responsibilities? Explain with an example.
+
+3. Which situation best reflects the idea of popular sovereignty and why?
+
+a. A law is passed without public discussion
+
+b. Citizens vote to choose their representatives
+
+c. A court gives a final judgment
+
+d. A minister takes an independent decision
+
+4. The Rule of Law is violated when:
+
+a. Laws are applied equally to all
+
+b. Courts review government actions
+
+c. Powerful individuals are treated above the law
+
+d. Citizens challenge laws through legal means
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 – Part 1
+
+5. Why is the Rule of Law essential for protecting democracy?
+
+6. Is voting alone enough to make a country democratic? Support your answer with examples from the chapter.
+
+7. Social media allows people to express opinions freely.
+
+a. How can this strengthen democracy?
+
+b. How can it weaken democracy if used irresponsibly?
+
+8. Write a paragraph on what democracy means to you as a young citizen.
+
+9. Conduct a model parliament session or Gram Sabha in class on local issues—cleanliness, responsibilities towards public property, or school safety.
+
+10. Choose any one democratic institution in India (such as Parliament, Election Commission, Judiciary, or Panchayat).
+
+Prepare a short note explaining:
+
+a. Its role in democracy
+
+b. How it ensures accountability and participation.
+
+11. What role does the Constitution play in strengthening democracy in India?
+
+12. What challenges do you think democracy in India faces today?
+
+6 – Democracy
+
+Notes
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 – Part 1

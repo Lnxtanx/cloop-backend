@@ -1,0 +1,1127 @@
+# CLASS-8 - MATHS - CHAPTER 07
+# Source: hegp107.pdf
+
+PROPORTIONAL
+
+REASONING-1 7
+
+7.1 Observing Similarity in Change
+
+We are all familiar with digital images. We often change the size and orientation of these images to suit our needs. Observe the set of images below —
+
+Image A
+
+Image B Image C
+
+Image D Image E
+
+We can see that all the images are of different sizes.
+
+Which images look similar and which ones look different?
+
+Images (A, C, and D) look similar, even though they have different sizes.
+
+Do images B and E look like the other three images?
+
+No, they are slightly distorted. The tiger appears elongated in B, and compressed and fatter in E!
+
+Why?
+
+Math
+
+You may notice that images A, C, and D are rectangular, but E is square. Maybe that is why E looks different. But B is also a rectangle! Why does it look different from the other rectangular images?
+
+Talk
+
+Can we observe any pattern to answer this question? Perhaps by measuring the rectangles?
+
+Image Width (in mm) Height (in mm)
+
+Image A 60 40
+
+Image B 40 20
+
+Image C 30 20
+
+Image D 90 60
+
+Image E 60 60
+
+What makes images A, C, and D appear similar, and B and E different?
+
+When we compare image A with C, we notice that the width of C is half that of A. The height is also half of A. Both the width and height have changed by the same factor (through multiplication), 1
+
+2 in this case. Since the widths and heights have changed by the same factor, the images look similar.
+
+When we compare image A with image B, we notice that the width of B is 20 millimetre (mm) less than that of A. The height too is 20 mm less than the height of A. Even though the difference (through subtraction) is the same, the images look different. Have the width and height changed by the same factor? The height of B is half the height of A. But the width of B is not half the width of A. Since the width and height have not changed by the same factor, the images look different.
+
+Can you check by what factors the width and height of image D change as compared to image A? Are the factors the same?
+
+Images A, C, and D look similar because their widths and heights have changed by the same factor. We say that the changes to their widths and heights are proportional.
+
+Proportional Reasoning-1
+
+7.2 Ratios
+
+We use the notion of a ratio to represent such proportional relationships in mathematics.
+
+We can say that the ratio of width to height of image A is
+
+60 : 40.
+
+The numbers 60 and 40 are called the terms of the ratio.
+
+The ratio of width to height of image C is 30 : 20, and that of image D is 90 : 60.
+
+In a ratio of the form a : b, we can say that for every ‘a’ units of the first quantity, there are ‘b’ units of the second quantity.
+
+So, in image A, we can say that for every 60 mm of width, there are 40 mm of height.
+
+We can say that the ratios of width to height of images A, C, and D are proportional because the terms of these ratios change by the same factor. Let us see how.
+
+Image A — 60 : 40
+
+Multiplying both the terms by 1
+
+2, we get
+
+60 × 1 2 : 40 × 1 2
+
+which is 30 : 20, the ratio of width to height in image C.
+
+By what factor should we multiply the ratio 60 : 40 (image A) to get 90 : 60 (image D)?
+
+A more systematic way to compare whether the ratios are proportional is to reduce them to their simplest form and see if these simplest forms are the same.
+
+7.3 Ratios in their Simplest Form
+
+We can reduce ratios to their simplest form by dividing the terms by their HCF.
+
+In image A, the terms are 60 and 40. What is the HCF of 60 and 40? It is 20. Dividing the terms by 20, we get the ratio of image A to be 3 : 2 in its simplest form.
+
+The ratio of image D is 90 : 60. Dividing both terms by 30 (HCF of 90 and 60), we get the simplest form to be 3 : 2. So the ratios of images A and D are proportional as well. What is the simplest form of the ratios of images B and E? The ratio of image B is 40 : 20; in its simplest form, it is 2 : 1. The ratio of image E is 60 : 60; in its simplest form, it is 1 : 1.
+
+These ratios are not the same as 3 : 2. So, we can say that the ratios of width to height of images B and E are not proportional to the ratios of images A, C, and D.
+
+When two ratios are the same in their simplest forms, we say that the ratios are in proportion, or that the ratios are proportional. We use the ‘::’ symbol to indicate that they are proportional. So a : b :: c : d indicates that the ratios a : b and c : d are proportional.
+
+Thus,
+
+60 : 40 :: 30 : 20 and 60 : 40 :: 90 : 60.
+
+7.4 Problem Solving with Proportional Reasoning
+
+Example 1: Are the ratios 3 : 4 and 72 : 96 proportional?
+
+3 : 4 is already in its simplest form. To find the simplest form of 72 : 96, we need to divide both terms by their HCF.
+
+What is the HCF of 72 and 96?
+
+The HCF of 72 and 96 is 24. Dividing both terms by 24, we get 3 : 4. Since both ratios in their simplest form are the same, they are proportional.
+
+Example 2: Kesang wanted to make lemonade for a celebration. She made 6 glasses of lemonade in a vessel and added 10 spoons of sugar to the drink. Her father expected more people to join the celebration. So he asked her to make 18 more glasses of lemonade.
+
+To make the lemonade with the same sweetness, how many spoons of sugar should she add?
+
+To maintain the same sweetness, the ratio of the number of glasses of lemonade to the number of spoons of sugar should be proportional. For 6 glasses of lemonade, she added 10 spoons of sugar.
+
+The ratio of glasses of lemonade to spoons of sugar is 6 : 10. If she needs to make 18 more glasses of lemonade, how many spoons of sugar should she use? We can model this problem as —
+
+6 : 10 :: 18 : ?
+
+We know that each term in the ratio must change by the same factor, for the ratios to be proportional.
+
+How can we find the factor of change in the ratio?
+
+The first term has increased from 6 to 18. To find the factor of change, we can divide 18 by 6 to get 3.
+
+Proportional Reasoning-1
+
+The second term should also change by the same factor. When 10 increases by a factor of 3, it becomes 30. Thus,
+
+6 : 10 :: 18 : 30.
+
+So, she should use 30 spoons of sugar to make 18 glasses of lemonade with the same sweetness as earlier.
+
+Example 3: Nitin and Hari were constructing a compound wall around their house. Nitin was building the longer side, 60 ft in length, and Hari was building the shorter side, 40 ft in length. Nitin used 3 bags of cement but Hari used only 2 bags of cement. Nitin was worried that the wall Hari built would not be as strong as the wall he built because she used less cement.
+
+Is Nitin correct in his thinking?
+
+In Nitin and Hari’s case, we should compare the ratio of the length of the wall to the bags of cement used by each of them and see whether they are proportional. The ratio in Nitin’s case is 60 : 3, i.e., 20 : 1 (in its simplest form). The ratio in Hari’s case is 40 : 2, i.e., 20 : 1 (in its simplest form).
+
+Since both ratios are proportional, the walls are equally strong. Nitin should not worry!
+
+Example 4: In my school, there are 5 teachers and 170 students. The ratio of teachers to students in my school is 5 : 170. Count the number of teachers and students in your school. What is the ratio of teachers to students in your school? Write it below.
+
+______ : ______
+
+Is the teacher-to-student ratio in your school proportional to the one in my school?
+
+Example 5: Measure the width and height (to the nearest cm) of the blackboard in your classroom. What is the ratio of width to height of the blackboard?
+
+______ : ______
+
+Can you draw a rectangle in your notebook whose width and height are proportional to the ratio of the blackboard?
+
+Math
+
+Talk
+
+Compare the rectangle you have drawn to those drawn by your classmates. Do they all look the same?
+
+Note to the Teacher: Give more such examples that students can relate to and ask them to give reasons why they think they are correct. Engaging with these problems and finding solutions through a process of proportional reasoning should go along with learning procedures and methods to solve the problems.
+
+Example 6: When Neelima was 3 years old, her mother’s age was 10 times her age. What is the ratio of Neelima’s age to her mother’s age? What would be the ratio of their ages when Neelima is 12 years old? Would it remain the same?
+
+The ratio of Neelima’s age to her mother’s age when Neelima is 3 years old is 3 : 30 (her mother’s age is 10 times Neelima’s age). In the simplest form, it is 1 : 10.
+
+When Neelima is 12 years old (i.e., 9 years later), the ratio of their ages will be 12 : 39 (9 years later, her mother would be 39 years old). In the simplest form, it is 4 : 13.
+
+When we add (or subtract) the same number from the terms of a ratio, the ratio changes and is not necessarily proportional to the original ratio.
+
+Example 7: Fill in the missing numbers for the following ratios that are proportional to 14 : 21.
+
+______ : 42      6 : ______       2 : ______
+
+14:21
+
+× 2
+
+× 2=?
+
+In the first ratio, we don’t know the first term. But the second term is 42. It is 2 times the second term of the ratio 14 : 21. So, the first term should also be 2 times 14 (the first term). Hence the proportional ratio is 28 : 42. For the second ratio, the first term is 6.
+
+:42 ______
+
+What factor should we multiply 14 by to get 6? Can it be an integer? Or should it be a fraction?
+
+We can model this as 14y = 6. So, y = 6
+
+14 = 3 
+7.
+
+So, we need to multiply 21 (the second term of 14 : 21) also by the same factor 3
+
+7.
+
+21 × 3 7 is 9. So, the ratio is 6 : 9.
+
+In the third ratio, the first term is 2.
+
+We can see that when we divide 14 (the first term of 14 : 21) by 7 (HCF of 14 and 21) we get 2. If we divide 21 also by 7, we get 3. So, the ratio is 2 : 3.
+
+Filter Coffee!
+
+Filter coffee is a beverage made by mixing coffee decoction with milk. Manjunath usually mixes 15 mL of coffee decoction with 35 mL of milk to make one cup of filter coffee in his coffee shop.
+
+In this case, we can say that the ratio of coffee decoction to milk is 15 : 35.
+
+If customers want ‘stronger’ filter coffee, Manjunath mixes 20 mL of decoction with 30 mL of milk. The ratio here is 20 : 30.
+
+Proportional Reasoning-1
+
+Why is this coffee stronger?
+
+Math
+
+Talk
+
+And when they want ‘lighter’ filter coffee, he mixes 10 mL of coffee and 40 mL of milk, making the ratio 10 : 40.
+
+Why is this coffee lighter?
+
+Math
+
+Talk
+
+The following table shows the different ratios in which Manjunath mixes coffee decoction with milk. Write in the last column if the coffee is stronger or lighter than the regular coffee.
+
+Coffee Decoction
+
+Milk (in mL) Regular/Strong/
+
+(in mL)
+
+Light
+
+300 600
+
+150 500
+
+200 400
+
+24 56
+
+100 300
+
+Figure it Out
+
+1. Circle the following statements of proportion that are true.
+
+(i) 4 : 7 :: 12 : 21 (ii) 8 : 3 :: 24 : 6
+
+(iii) 7 : 12 :: 12 : 7 (iv) 21 : 6 :: 35 : 10
+
+(v) 12 : 18 :: 28 : 12 (vi) 24 : 8 :: 9 : 3
+
+2. Give 3 ratios that are proportional to 4 : 9.
+
+______ : ______     ______ : ______     ______ : ______
+
+3. Fill in the missing numbers for these ratios that are proportional to 18 : 24.
+
+3 : ______    12 : ______    20 : ______    27 : ______
+
+4. Look at the following rectangles. Which rectangles are similar to each other? You can verify this by measuring the width and height using a scale and comparing their ratios.
+
+B
+
+D
+
+C
+
+A
+
+E
+
+5. Look at the following rectangle. Can you draw a smaller rectangle and a bigger rectangle with the same width to height ratio in your notebooks? Compare your rectangles with your classmates’ drawings.
+
+Math
+
+Are all of them the same? If they are different from yours, can you think why? Are they wrong?
+
+Talk
+
+6. The following figure shows a small portion of a long brick wall with patterns made using coloured bricks. Each wall continues this pattern throughout the wall. What is the ratio of grey bricks to coloured bricks? Try to give the ratios in their simplest form.
+
+(a)
+
+(b)
+
+Proportional Reasoning-1
+
+7. Let us draw some human figures. Measure your friend’s body — the lengths of their head, torso, arms, and legs. Write the ratios as mentioned below—
+
+head : torso
+
+______ : ______
+
+torso : arms
+
+______ : ______
+
+torso : legs
+
+______ : ______
+
+Now, draw a figure with head, torso, arms, and legs with equivalent ratios as above.
+
+Math
+
+Talk
+
+Does the drawing look more realistic if the ratios are proportional? Why? Why not?
+
+Note to the Teacher: In all these activities, encourage students to reason why their drawings are proportional.
+
+Trairasika — The Rule of Three
+
+Example 8: For the mid-day meal in a school with 120 students, the cook usually makes 15 kg of rice. On a rainy day, only 80 students came to school. How many kilograms of rice should the cook make so that the food is not wasted?
+
+The ratio of the number of students to the amount of rice needs to be proportional.
+
+So, 120 : 15 :: 80 : ?
+
+What is the factor of change in the first term?
+
+We can find that by dividing the terms 80
+
+120 = 2 
+3.
+
+The number of students is reduced by a factor of 2
+
+3.
+
+On multiplying the weight of rice by the same factor, we get,
+
+15 × 2 3 = 10.
+
+So, the cook should make 10 kg of rice on that day.
+
+The situation above is a typical example of a problem where we need to use proportional reasoning to find a solution. Four quantities are
+
+linked proportionally, out of which three are known and we must find the fourth, unknown, quantity.
+
+To solve such problems, we can model two proportional ratios using algebraic notation as —
+
+a : b :: c : d.
+
+For these two ratios to be proportional, we know that term c should be a multiple of term a by a factor, say f, and term d should be a multiple of term b by the same factor f. So,
+
+c = f a ...(1)
+
+d = f b ...(2)
+
+From (1) and (2), we can say that,
+
+f = c
+
+a and f = d
+
+b .
+
+Therefore, c
+
+a = d
+
+b.
+
+Multiplying both sides by ab, we get,
+
+ab × c
+
+a = ab × d
+
+b
+
+ab × c
+
+a = ab × d
+
+b
+
+bc = ad or ad = bc Thus, when a : b :: c : d, then ad = bc. This is known as cross multiplication of terms.
+
+Since ad = bc, we can show that
+
+d = bc
+
+a .
+
+Two ratios are proportional if their terms are equal when cross multiplied. The fourth unknown quantity can be found through such cross multiplication.
+
+In ancient India, Āryabhaṭa (199 CE) and others called such problems of proportionality Rule of Three problems. There were 3 numbers given — the pramāṇa (measure — ‘a’ in our case), the phala (fruit — ‘b’ in our case), and the ichchhā (requisition — ‘c’ in our case). To find the ichchhāphala (yield — ‘d’ in our case), Āryabhaṭa says,
+
+“Multiply the phala by the ichchhā and divide the resulting product by the pramāṇa.”
+
+In other words, Āryabhaṭa says,
+
+“pramāṇa : phala :: ichchhā : ichchhāphala,” therefore,
+
+pramāṇa × ichchhāphala = phala × ichchhā.
+
+Proportional Reasoning-1
+
+Thus,
+
+ichchhāphala = phala × ichchhā
+
+pramāṇa .
+
+Using the cross multiplication method proposed by Āryabhaṭa, ancient Indians solved complex problems that involved proportionality.
+
+Example 9: A car travels 90 km in 150 minutes. If it continues at the same speed, what distance will it cover in 4 hours?
+
+If it continues at the same speed, the ratio of the time taken should be proportional to the ratio of the distance covered.
+
+150 : 90 :: 4 : ?
+
+Is this the right way to formulate the question?
+
+No, because 150 is in minutes, but 4 is in hours. The second ratio should use the same units for time as the first ratio. Since 4 hours is 240 minutes, the right form is
+
+150 : 90 :: 240 : ?
+
+How can you find the distance covered in 240 minutes?
+
+Discuss with your classmates and find the answer using different strategies.
+
+Note to the Teacher: Instead of giving one ‘method’ to solve the problem of the distance, encourage students to reason out the answer through different strategies. They can use their understanding of equivalent fractions and equivalent ratios to find the answer.
+
+We can model this proportion as
+
+150 : 90 :: 240 : x.
+
+By cross multiplication, we get
+
+150 × x = 240 × 90
+
+Therefore, x = 240 × 90
+
+150 .
+
+48 3 = 240 × 90
+
+150 = 144.
+
+5 1
+
+The distance covered by the car in 4 hours is 144 km.
+
+Example 10: A small farmer in Himachal Pradesh sells each 200 g packet of tea for ₹200. A large estate in Meghalaya sells each 1 kg packet of tea for ₹800. Are the weight-to-price ratios in both places proportional? Which tea is more expensive?
+
+The ratio of weight to price of the Himachal tea is 200 : 200.
+
+What is the weight to price ratio of the Meghalaya tea? Is it 1 : 800? This would not be appropriate, because we considered the weight in grams in the case of Himachal. So, the weight to price ratio is 1000 : 800 in Meghalaya after we convert the weight to grams.
+
+To check if the ratios are proportional, we need to see if both ratios are the same in their simplest forms. The Himachal tea ratio in its simplest form is 1 : 1. The Meghalaya tea ratio in its simplest form is 5 : 4. So, the ratios are not proportional.
+
+Which tea is more expensive? Why?
+
+Note to the Teacher: Encourage a discussion on the more expensive tea, how they came to their conclusions and what the reasons for that tea being more expensive could be.
+
+To answer the question as to which tea is more expensive, we should compare the price of tea for the same weight in both places. What is the price of 1 kg of tea from Meghalaya? It is ₹800.
+
+In Himachal, if 200 g of tea costs rupees 200, what is the cost of 1 kg of tea? Let us say that the price of 1 kg of tea is x rupees. 200 g is 1
+
+5 of 1 kg. So, 1 5 × x = 200. Multiplying both sides by 5, we get
+
+1 5 × x × 5 = 200 × 5
+
+1 5 × x × 5 = 1000
+
+x = 1000.
+
+So, the cost of 1 kg of tea is ₹800 in Meghalaya and ₹1,000 in Himachal Pradesh. Therefore, the tea from Himachal Pradesh is more expensive.
+
+Activity 1: Take your favourite dish. Find out all the ingredients and their respective quantities needed to make the dish for your family. Suppose you are celebrating a festival and you want to invite 15 guests. Find out the quantities of the ingredients required to cook the same dish for them.
+
+Figure it Out
+
+1. The Earth travels approximately 940 million kilometres around the Sun in a year. How many kilometres will it travel in a week?
+
+2. A mason is building a house in the shape shown in the diagram. He needs to construct both the outer walls and the inner wall that
+
+Proportional Reasoning-1
+
+separates two rooms. To build a wall of 10-feet, he requires approximately 1450 bricks. How many bricks would he need to build the house? Assume all walls are of the same height and thickness.
+
+15 ft
+
+12 ft
+
+9 ft
+
+6 ft
+
+Math
+
+Talk
+
+Puneeth’s father went from Lucknow to Kanpur in 2 hours by riding his motorcycle at a speed of 50 km/h. If he drives at 75 km/h, how long will it take him to reach Kanpur? Can we form this problem as a proportion —
+
+50 : 2 :: 75 : __
+
+Would it take Puneeth’s father more time or less time to reach Kanpur? Think about it. Even though this problem looks similar to the previous problems, it cannot be solved using the Rule of Three! The time of travel would actually decrease when the speed increases. So this problem cannot be modelled as 50 : 2 :: 75 : __.
+
+Activity 2: Go to the market and collect the prices of different sizes of shampoo containers of the same shampoo and create a table like the one given below. See if the volume of shampoo is proportional to the price.
+
+Container Volume Price
+
+Sachet 6 mL ₹2
+
+Small Bottle 180 mL ₹154
+
+Medium Bottle 340 mL ₹276
+
+Large Bottle 1000 mL ₹540
+
+Let us compare the ratios for the sample table above.
+
+The ratio of the volume of a sachet to a small bottle is 6 : 180. The ratio of their prices is 2 : 154. Are these ratios proportional?
+
+Why do you think that the ratio of the prices is not proportional to the ratio of the volumes?
+
+Math
+
+Talk
+
+Discuss the pros and cons of different size bottles for the company and for customers. For reducing ecological footprint, what would you recommend to the company and to the customer? Does the same occur for other products?
+
+Make similar tables for other products in the market, capturing different prices for different measures of the same product, e.g., rice or atta (flour).
+
+Observe the products for which the prices are proportional to the different measures.
+
+Discuss in class the proportionality of prices to measures of the same product.
+
+Note to the Teacher: Give a project to students. Start by dividing the class into groups. Each group should go to one shop and collect prices for different measures of the same product. For example, they should note down the prices of 500 g of rice, 1 kg of rice, and 10 kg of rice. They should make tables with measure sizes and prices, and present them to the rest of the class. They should discuss if the prices are proportional or not, and why.
+
+7.5 Sharing, but Not Equally!
+
+Activity 3: Form a pair. Collect 12 countable objects or counters (it can be coins, seeds, or pebbles). Now, share them between the two of you in different ways.
+
+If you divide them equally, what is the ratio of the number of counters with each of you?
+
+Each of you will get 6 counters. So, the ratio is 6 : 6, or 1 : 1 in its simplest form. Now let us not share equally.
+
+If your partner gets 5 counters, how many objects will you get? What is the ratio of the counters?
+
+Proportional Reasoning-1
+
+The ratio of the counters of your partner to yours is 5 : 7.
+
+Now, if you want to share the counters between the two of you in the ratio of 3 : 1, how many counters would each of you get?
+
+Share the counters in different ways and see which combination is in the ratio 3 : 1.
+
+One way to share the counters in the ratio of 3 : 1 is as follows —
+
+1. Your partner takes 3 counters and you take 1 counter. There are now 8 counters left.
+
+2. Your partner takes 3 more counters and you take 1 more counter. There are now 4 counters left.
+
+3. Your partner takes 3 more counters and you take 1 more counter. There are no more counters left.
+
+So, your partner gets 9 counters in total and you get 3 counters.
+
+When we divide 12 counters in the ratio of 3 : 1 between two people, one gets 9 counters and the other gets 3 counters.
+
+12
+
+The ‛whole’ is 12
+
+The ‛whole’ is 4 (= 3 + 1)
+
+3 1 :
+
+and 12 is 3 times 4
+
+Sharing 12 in the ratio 3 : 1
+
+× 3 × 3
+
+: 9 3
+
+The ‛parts’ are 3 times the ratio 3 : 1
+
+Now, if you want to share 42 counters between the two of you in the ratio of 4 : 3, how will you do it?
+
+Using the same procedure would take a long time! There is a simpler way to share the whole with parts in a specified ratio.
+
+You need to divide 42 into groups such that your partner gets 4 groups and you get 3 groups.
+
+What is the size of each group?
+
+If your partner gets 4 groups and you get 3 groups, the total number of groups is 7. So, the size of each group is 42 ÷ 7 = 6.
+
+Multiplying the number of groups by the size of each group, your partner gets 24 counters and you get 18 counters, when you share 42 counters in the ratio of 4 : 3.
+
+42
+
+The ‛whole’ is 42
+
+The ‛whole’ is 7 (= 4 + 3)
+
+4 3 :
+
+and 42 is 6 times 7
+
+Sharing 42 in the ratio 4 : 3
+
+× 6 × 6
+
+: 24 18
+
+The ‛parts’ are 6 times the ratio 4 : 3
+
+In general, when we want to divide a quantity, say x, in the ratio m: n, we do the following:
+
+1. We need to split x into groups such that it can be divided into two parts where the first part has m groups and the second part has 
+• groups.
+
+2. But what is the size of each group? This can be found out by dividing x by the number of groups. The number of groups are m + n. So, the size of each group is x m + n .
+
+3. So, the first part has m × x m + n objects and the second part has n × x m + n objects.
+
+Thus, if we want to divide a quantity x in the ratio of m: n, then the parts will be m × x m + n and n × x m + n. We see that
+
+m × x m + n : n × x m + n :: m : n.
+
+Example 11: Prashanti and Bhuvan started a food cart business near their school. Prashanti invested ₹75,000 and Bhuvan invested ₹25,000. At the end of the first month, they gained a profit of ₹4,000. They decided that they would share the profit in the same ratio as that of their investment. What is each person’s share of the profit?
+
+The ratio of their investment is 75000 : 25000. Reducing this ratio to its simplest form, we get 3 : 1. 3 + 1 is 4 and dividing the profit of 4000 by 4, we get 1000. So, Prashanti’s share is 3 × 1000 and Bhuvan’s share is 1 × 1000. So, Prashanti would get ₹3,000 and Bhuvan would get ₹1,000 of the profit.
+
+Example 12: A mixture of 40 kg contains sand and cement in the ratio of 3 : 1. How much cement should be added to the mixture to make the ratio of sand to cement 5 : 2?
+
+Proportional Reasoning-1
+
+Let us find the quantity of sand and cement in the original mixture. The ratio is 3 : 1 and the total weight is 40 kg.
+
+So, the weight of sand is 3 (3 + 1) × 40 = 30 kg.
+
+The weight of cement is 1 (3 + 1) × 40 = 10 kg.
+
+The weight of sand is the same in the new mixture. It remains 30. But the new ratio of sand to cement is 5 : 2. So the question is,
+
+5 : 2 :: 30 : ?
+
+If the ratio is 5 : 2, then the second term is 2
+
+5 times the first term. Since the new ratio is equivalent to 5 : 2, the second term in the new ratio
+
+should also be 2
+
+5 times of 30.
+
+2
+
+5 × 30 = 12.
+
+The new mixture should have 12 kg of cement if the ratio of sand to cement is to be 5 : 2.
+
+There is 10 kg of cement already. So, we need to add 2 kg of cement to the original mixture.
+
+Figure it Out
+
+1. Divide ₹4,500 into two parts in the ratio 2 : 3.
+
+2. In a science lab, acid and water are mixed in the ratio of 1 : 5 to make a solution. In a bottle that has 240 mL of the solution, how much acid and water does the solution contain?
+
+3. Blue and yellow paints are mixed in the ratio of 3 : 5 to produce green paint. To produce 40 mL of green paint, how much of these two colours are needed? To make the paint a lighter shade of green, I added 20 mL of yellow to the mixture. What is the new ratio of blue and yellow in the paint?
+
+4. To make soft idlis, you need to mix rice and urad dal in the ratio of 2 : 1. If you need 6 cups of this mixture to make idlis tomorrow morning, how many cups of rice and urad dal will you need?
+
+5. I have one bucket of orange paint that I made by mixing red and yellow paints in the ratio of 3 : 5. I added another bucket of yellow paint to this mixture. What is the ratio of red paint to yellow paint in the new mixture?
+
+7.6 Unit Conversions
+
+We have noticed earlier that solving problems with proportionality often requires us to convert units from one system to another. Here are
+
+a few important unit conversions for your reference.
+
+Length
+
+1 metre = 3.281 feet
+
+Area
+
+1 square metre = 10.764 square feet
+
+1 acre = 43,560 square feet
+
+1 hectare = 10,000 square metres
+
+1 hectare = 2.471 acres Volume
+
+1 millilitre (mL) = 1 cubic centimetre (cc)
+
+1 litre = 1,000 mL or 1,000 cc
+
+oC = 32
+
+oF, and
+
+Temperature Temperature conversion between Fahrenheit and Celsius is a bit more complicated. 0
+
+Fahrenheit = 9
+
+5 × Celsius + 32
+
+and
+
+Celsius = 5
+
+9 × (Fahrenheit–32)
+
+For example, 25
+
+oC is 77
+
+oF.
+
+Figure it Out
+
+1. Anagh mixes 600 mL of orange juice with 900 mL of apple juice to
+
+make a fruit drink. Write the ratio of orange juice to apple juice in its simplest form.
+
+2. Last year, we hired 3 buses for the school trip. We had a total of
+
+162 students and teachers who went on that trip and all the buses were full. This year we have 204 students. How many buses will we need? Will all the buses be full?
+
+3. The area of Delhi is 1,484 sq. km and the area of Mumbai
+
+is 550 sq. km. The population of Delhi is approximately 30 million and that of Mumbai is 20 million people. Which city is more crowded? Why do you say so?
+
+4. A crane of height 155 cm has its neck and the rest of
+
+its body in the ratio 4 : 6. For your height, if your neck and the rest of the body also had this ratio, how tall would your neck be?
+
+5. Let us try an ancient problem from Lilavati. At that
+
+time weights were measured in a unit named palas and niskas was a unit of money. “If 2 1
+
+2 palas of saffron
+
+Proportional Reasoning-1
+
+costs 3
+
+7 niskas, O expert businessman! tell me quickly what quantity of saffron can be bought for 9 niskas?”
+
+6. Harmain is a 1-year-old girl. Her elder brother is 5 years old. What
+
+will be Harmain’s age when the ratio of her age to her brother’s age is 1 : 2?
+
+7. The mass of equal volumes of gold and water are in the ratio 37 : 2.
+
+If 1 litre of water is 1 kg in mass, what is the mass of 1 litre of gold?
+
+8. It is good farming practice to apply 10 tonnes of cow manure for 1
+
+acre of land. A farmer is planning to grow tomatoes in a plot of size 200 ft by 500 ft. How much manure should he buy? (Please refer to the section on Unit Conversions earlier in this chapter).
+
+9. A tap takes 15 seconds to fill a mug of water. The volume of the mug
+
+is 500 mL. How much time does the same tap take to fill a bucket of water if the bucket has a 10-litre capacity?
+
+10. One acre of land costs ₹15,00,000. What is the cost of 2,400 square
+
+feet of the same land?
+
+11. A tractor can plough the same area of a field 4 times faster than a
+
+pair of oxen. A farmer wants to plough his 20-acre field. A pair of oxen takes 6 hours to plough an acre of land. How much time would it take if the farmer used a pair of oxen to plough the field? How much time would it take him if he decides to use a tractor instead?
+
+12. The ₹10 coin is an alloy of copper and nickel called ‘cupro-nickel’.
+
+Try This
+
+Copper and nickel are mixed in a 3 : 1 ratio to get this alloy. The mass of the coin is 7.74 grams. If the cost of copper is ₹906 per kg and the cost of nickel is ₹1,341 per kg, what is the cost of these metals in a ₹10 coin?
+
+SUMMARY
+
+Ratios in the form of a : b indicate that for every ‘a’ unit of the first
+
+quantity, there are ‘b’ units of the second quantity. ‘a’ and ‘b’ are the terms in the ratio.
+
+Two ratios — a : b and c : d — are proportional (written a : b :: c : d) if
+
+their terms change by the same factor, i.e., if ad = bc.
+
+If x is divided into two parts in the ratio m : n, then the quantity of the
+
+first part is m × x m + n and the quantity of the second part is n × x m + n.
+
+Binairo
+
+Binairo, also known as Takuzu, is a logic puzzle with simple rules. Binairo is generally played on a square grid with no particular size. Some cells start out filled with two symbols: here horizontal and vertical lines. The rest of the cells are empty. The task is to fill cells in such a way that:
+
+1. Each row and each column must contain an equal number of horizontal and vertical lines.
+
+2. More than two horizontal or vertical lines can’t be adjacent.
+
+3. Each row is unique. Each column is unique.
+
+Puzzle Solution
+
+Solve the following Binairo puzzles:
+
+Dot Grid
+
+7 PROPORTIONAL
+
+REASONING-1
+
+Page No. 165
+
+Figure it Out
+
+1. Circle the following statements of proportion that are true.
+
+(i) 4 : 7 :: 12 : 21 (ii) 8 : 3 :: 24 : 6
+
+(iii) 7 : 12 :: 12 : 7 (iv) 21 : 6 :: 35 : 10
+
+(v) 12 : 18 :: 28 : 12 (vi) 24 : 8 :: 9 : 3
+
+Ans. (i), (iv) and (vi) are true.
+
+2. Give 3 ratios that are proportional to 4 : 9.
+
+______ : ______     ______ : ______     ______ : ______
+
+Ans. Given ratio is 4 : 9
+
+3 ratios that are proportional of 4 : 9 are 4 9 × 2 2, 4 9 × 3 3 and 4
+
+9 × 4 4
+
+Or, 8 : 18, 12 : 27 and 16 : 36 Try for more.
+
+3. Fill in the missing numbers for these ratios that are proportional to 18 : 24.
+
+3 : ______    12 : ______    20 : ______    27 : ______
+
+Ans.
+
+(i) 3 : 4
+
+(ii) 12 : 16
+
+(iii) 20 : 80 3 (iv) 27 : 36
+
+4. Look at the following rectangles. Which rectangles are similar to each other? You can verify this by measuring the width and height using a scale and comparing their ratios.
+
+B
+
+D
+
+C
+
+A
+
+E
+
+Ans. Rectangles are similar if the ratio of their corresponding sides is
+
+same. First measure length and width of each rectangle (A, B, C, D, E) using scale. Calculate the ratio of length and width of each rectangle. Compare the ratios. If ratios are same then the rectangles are similar.
+
+5. Look at the following rectangle. Can you draw a smaller rectangle and a bigger rectangle with the same width to height ratio in your notebooks? Compare your rectangles with your classmates’ drawings.
+
+Are all of them the same? If they are different from yours, can you think why? Are they wrong?
+
+Ans. Yes, we shall draw smaller and bigger rectangles with the same
+
+width to height ratio. We know that rectangles are similar, if they have same shape but can be different in sizes. May be all of them are different in shape. They are different in shape but have same ratio means they satisfy the condition of the proportion. So they are not wrong.
+
+6. The following figure shows a small portion of a long brick wall with patterns made using coloured bricks. Each wall continues this pattern throughout the wall. What is the ratio of grey bricks to coloured bricks? Try to give the ratios in their simplest form.
+
+(a)
+
+(b)
+
+Ans.
+
+(a) No. of grey bricks in a block of the pattern = 2 + 3 + 4 = 9
+
+No. of coloured bricks in a block of the pattern = 3 + 2 + 1 = 6 Ratio of grey bricks to coloured bricks in a block of the pattern = 9 : 6 = 3 : 2
+
+(b) No. of grey bricks in one block of pattern = 16
+
+No. of coloured bricks in one block of pattern = 12 Ratio is 16 : 12 = 4 : 3
+
+7. Let us draw some human figures. Measure your friend’s body — the lengths of their head, torso, arms, and legs. Write the ratios as mentioned below —
+
+head : torso
+
+______ : ______
+
+torso : arms
+
+______ : ______
+
+torso : legs
+
+______ : ______
+
+Now, draw a figure with head, torso, arms, and legs with equivalent ratios as above.
+
+Ans. Try yourself.
+
+Page No. 170
+
+Figure it Out
+
+1. The Earth travels approximately 940 million kilometres around the Sun in a year. How many kilometres will it travel in a week?
+
+Ans. We have 52 weeks in a year.
+
+We know that 1 million = 10 lakh So 940 million km = 940,000,000 km So, 940000000 : 52 Let x be the number of kilometers it travels in a week then
+
+940000000
+
+1
+
+52 = x
+
+or x = 18076923 Hence the Earth travels 18076923 km in a week.
+
+15 ft
+
+12 ft
+
+9 ft 9 ft 6 ft
+
+2. A mason is building a house in the shape shown in the diagram. He needs to construct both the outer walls and the inner wall that separates two rooms. To build a wall of 10-feet, he requires approximately 1450 bricks. How many bricks would he need to build the house? Assume all walls are of the same height and thickness.
+
+Ans. Bricks required for 10 ft wall = 1450
+
+Than ratio is 10:1450 Now total length of walls = 12 + 12 + 12 + 15 + 9 + 15 + 9 + 9 + 9 + 6
+
+= 108 ft. Let no. of bricks required be x, Now 10 : 1450 :: 108 : x
+
+Or, x = 1450 × 108
+
+10 = 15660
+
+Number of bricks required are 15660.
+
+Page No. 175
+
+Figure it Out
+
+1. Divide ₹4,500 into two parts in the ratio 2 : 3.
+
+Ans. Two parts are ₹ 1800 and ₹ 2700
+
+2. In a science lab, acid and water are mixed in the ratio of 1 : 5 to make a solution. In a bottle that has 240 mL of the solution, how much acid and water does the solution contain?
+
+Ans. In solution, acid is 40 mL and water is 200 mL.
+
+3. Blue and yellow paints are mixed in the ratio of 3 : 5 to produce green paint. To produce 40 mL of green paint, how much of these two colours are needed? To make the paint a lighter shade of green, I added 20 mL of yellow to the mixture. What is the new ratio of blue and yellow in the paint? Ans. Blue paint used = 15 mL
+
+Yellow paint used = 25 mL
+
+Ratio of blue to yellow is 1 : 3.
+
+4. To make soft idlis, you need to mix rice and urad dal in the ratio of 2 : 1. If you need 6 cups of this mixture to make idlis tomorrow morning, how many cups of rice and urad dal will you need?
+
+Ans. Rice needed = 4 cups
+
+And urad dal needed = 2 cups
+
+5. I have one bucket of orange paint that I made by mixing red and yellow paints in the ratio of 3 : 5. I added another bucket of yellow paint to this mixture. What is the ratio of red paint to yellow paint in the new mixture?
+
+Ans. Ratio of red paint to yellow paint = 3 : 5
+
+Part of red paint in the bucket is = 3
+
+8
+
+Part of yellow paint in the bucket is = 5
+
+8
+
+Since, one bucket of yellow paint is added.
+
+So, quantity of yellow paint = 5
+
+8 + 1 = 13 8
+
+Thus ratio of red paint to yellow paint = 3
+
+8 : 13 8 = 3 : 13.
+
+Page No. 176
+
+Figure it Out
+
+1. Anagh mixes 600 mL of orange juice with 900 mL of apple juice to make a fruit drink. Write the ratio of orange juice to apple juice in its simplest form.
+
+Ans. Ratio of orange juice to apple juice is 600 : 900
+
+Simplest form is 2 : 3
+
+2. Last year, we hired 3 buses for the school trip. We had a total of 162 students and teachers who went on that trip and all the buses were full. This year we have 204 students and teachers. How many buses will we need? Will all the buses be full?
+
+Ans. 3 buses carried 162 students and teacher.
+
+All the buses are full so capacity of one bus = 162
+
+3 = 54
+
+Let there be x number of buses for 204 student. Now, 3 : 162 :: x : 204
+
+So, x = 34
+
+9
+
+We need 4 buses. Number of seats in 4 buses = 4 × 54 = 216 Total number of students and teachers = 204 So, 216 – 204 = 12 seats will remain vacant.
+
+3. The area of Delhi is 1,484 sq. km and the area of Mumbai is 550 sq. km. The population of Delhi is approximately 30 million and that of Mumbai is 20 million people. Which city is more crowded? Why do you say so?
+
+Ans. Calculate the number of persons in 1sq. km of both Delhi and
+
+Mumbai
+
+Number of persons per sq. km in Delhi = 30000000
+
+1484 ≈ 20216
+
+Number of persons per sq. km in Mumbai = 20000000
+
+550 ≈ 36,364
+
+Since, Number of persons per sq. km in Mumbai is more than in Delhi so, Mumbai is more crowded.
+
+4. A crane of height 155 cm has its neck and the rest of its body in the ratio 4 : 6. For your height, if your neck and the rest of the body also had this ratio, how tall would your neck be?
+
+Ans. The ratio of the neck and rest body of crane is 4:6.
+
+Measure your height.
+
+Neck height =
+
+4 10 × your height
+
+5. Let us try an ancient problem from Līlāvatī. At that time weights were measured in a unit named palas and niskas was a unit of
+
+money. “If 2 1
+
+2 palas of saffron costs 3 7 niskas, O expert businessman! tell me quickly what quantity of saffron can be bought for 9 niskas?”
+
+Ans. 52.5 palas
+
+Hence 52.5 palas of saffron can be bought for 9 niskas
+
+6. Harmain is a 1-year-old girl. Her elder brother is 5 years old. What will be Harmain’s age when the ratio of her age to her brother’s age is 1 : 2?
+
+Ans. Given the age of Harmain is 1 and her brother is 5.
+
+Let after x years, ratio of Harmain’s age to the brother be 1 : 2 x + 1 : x + 5 = 1 : 2
+
+x + 1 x + 5 = 1
+
+2
+
+2x + 2 = x + 5 x = 3 Hence after 3 years Harmain’s age will be 4 years.
+
+7. The mass of equal volumes of gold and water are in the ratio 37 : 2. If 1 litre of water is 1 kg in mass, what is the mass of 1 litre of gold?
+
+Ans. Given 1lt of water = 1 kg of its mass
+
+Let 1 lt of gold = x kg of its mass Given the ratio of mass of equal volume of gold to water is 37 : 2 So 37 : 2 :: x : 1
+
+Or x = 37 1
+
+2 × = 18.5 kg
+
+Hence mass of 1 litre of gold is 18.5 kg.
+
+8. It is good farming practice to apply 10 tonnes of cow manure for 1 acre of land. A farmer is planning to grow tomatoes in a plot of size 200 ft by 500 ft. How much manure should he buy? (Please refer to the section on Unit Conversions earlier in this chapter).
+
+Ans. We know that 1 ton = 1000 kg, then 10 tonnes = 10,000 kg
+
+And 1 acre = 43560 sq.ft Ratio of cow manure to area of land is 10,000 : 43560 Size of plot = 200 × 500 = 100,000 sq ft. Let cow manure required be x kg Then x : 100,000 :: 10,000 : 43560
+
+So x = 100,000 × 10,000
+
+43560 ≈ 22956.8 kg
+
+Hence the farmer should buy 22956.8 kg or 22.9568 tonnes of cow manure.
+
+9. A tap takes 15 seconds to fill a mug of water. The volume of the mug is 500 mL. How much time does the same tap take to fill a bucket of water if the bucket has a 10-litre capacity? Ans. 1 L = 1,000 mL.
+
+Hence time taken to fill a 10 L bucket is 300 seconds or 5 minutes.
+
+10. One acre of land costs ₹15,00,000. What is the cost of 2,400 square feet of the same land?
+
+Ans. 1 acre = 43560 sq. ft.
+
+Cost is ₹82645 approx.
+
+11. A tractor can plough the same area of a field 4 times faster than a pair of oxen. A farmer wants to plough his 20-acre field. A pair of oxen takes 6 hours to plough an acre of land. How much time would it take if the farmer used a pair of oxen to plough the field? How much time would it take him if he decides to use a tractor instead?
+
+Ans. Ratio of the time taken to plough by tractor and oxen = 1 : 4
+
+Time taken by a pair of oxen to plough 1 acre = 6 hours Time taken by a tractor to plough 1 acre = 6
+
+4 = 1.5 hours Time taken by a pair of oxen to plough 20-acre of land = 20 × 6 = 120 hours Time taken by tractor to plough 20-acre of land = 20 × 1.5 = 30 hours
+
+12. The ₹10 coin is an alloy of copper and nickel called ‘cupro-nickel’. Copper and nickel are mixed in a 3 : 1 ratio to get this alloy. The mass of the coin is 7.74 grams. If the cost of copper is ₹906 per kg and the cost of nickel is ₹1,341 per kg, what is the cost of these metals in a ₹10 coin?
+
+Ans. Cost of 5.805 gm copper is ₹5.26
+
+Cost of 1000 gm nickel = ₹1341 Cost of 1.935 gm nickel = ₹2.59

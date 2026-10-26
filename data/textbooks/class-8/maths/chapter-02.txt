@@ -1,0 +1,1697 @@
+# CLASS-8 - MATHS - CHAPTER 02
+# Source: hegp102.pdf
+
+2 POWER PLAY
+
+2.1 Experiencing the Power Play ...
+
+An Impossible Venture!
+
+Take a sheet of paper, as large a sheet as you can find. Fold it once. Fold it again, and again.
+
+How many times can you fold it over and over?
+
+Estu says “I heard that a sheet of paper can’t be folded more than 7 times”. Roxie replies “What if we use a thinner paper, like a newspaper or a tissue paper?”
+
+Try it with different types of paper and see what happens.
+
+If you can fold a paper 46 times, it will be so thick that it can reach the Moon!
+
+What! That’s crazy! Just 46 times!? You must have ignored several zeros after 46.
+
+Well, why don’t you find out yourselves.
+
+Say you can fold a sheet of paper as many times as you wish. What would its thickness be after 30 folds? Make a guess.
+
+Let us find out how thick a sheet of paper will be after 46 folds. Assume that the thickness of the sheet is 0.001 cm.
+
+The following table lists the thickness after each fold. Observe that the thickness doubles after each fold.
+
+Fold Thickness Fold Thickness Fold Thickness
+
+1 0.002 cm 7 0.128 cm 13 
+8.192 cm
+
+2 0.004 cm 8 0.256 cm 14 16.384 cm
+
+3 0.008 cm 9 0.512 cm 15 32.768 cm
+
+4 0.016 cm 10 
+1.024 cm 16 65.536 cm
+
+5 0.032 cm 11 
+2.048 cm 17 ≈ 131 cm
+
+6 0.064 cm 12 
+4.096 cm
+
+(We use the sign ‘≈’ to indicate ‘approximately equal to’.) After 10 folds, the thickness is just above 1 cm (1.024 cm). After 17 folds, the thickness is about 131 cm (a little more than 4 feet).
+
+Math
+
+Talk
+
+Now, what do you think the thickness would be after 30 folds? 45 folds? Make a guess.
+
+Fill the table below.
+
+Fold Thickness Fold Thickness Fold Thickness
+
+18 ≈ 262 cm 21 24
+
+19 ≈ 524 cm 22 25
+
+20 ≈ 10.4 m 23 26
+
+After 26 folds, the thickness is approximately 670 m. Burj Khalifa in Dubai, the tallest building in the world, is 830 m tall.
+
+Fold Thickness Fold Thickness
+
+27 ≈ 1.3 km 29
+
+28 30
+
+After 30 folds, the thickness of the paper is about 10.7 km, the typical height at which planes fly. The deepest point discovered in the oceans is the Mariana Trench, with a depth of 11 km.
+
+Fold Thickness Fold Thickness Fold Thickness
+
+31 36 41
+
+32 37 42
+
+33 38 43
+
+34 39 44
+
+35 40 45
+
+Power Play
+
+It might be hard to digest the fact that after just 46 folds, the thickness is more than 7,00,000 km. This is the power of multiplicative growth, also called exponential growth. Let us analyse the growth. We have seen that the thickness doubles after every fold.
+
+Fold 9 0.512 cm
+
+Fold 4 0.016 cm
+
+Fold 10 
+1.024 cm
+
+Fold 5 0.032 cm
+
+Fold 4 0.016 cm
+
+Notice the change in thickness after two folds. By how much does it increase?
+
+Fold 6 0.064 cm
+
+After any 3 folds, the thickness increases 8 times (= 2 × 2 × 2). Check if that is true. Similarly, from any point, the thickness after 10 folds increases by 1024 times (= 2 multiplied by itself 10 times), as shown in the table below.
+
+Fold Thickness Times increased by
+
+0 to 10 
+1.024 cm – 0.001 cm = 1.023 cm
+
+1.024 ÷ 0.001 = 1024
+
+10 to 20 
+10.485 m – 1.024 cm ≈ 10.474 m
+
+10.485 m ÷ 1.024 cm = 1024
+
+20 to 30 
+10.737 km – 10.485 m ≈ 10.726 km
+
+10.737 km ÷ 10.485 m = 1024
+
+30 to 40 10995 km – 10.737 km ≈ 10984.2 km
+
+10995 km ÷ 
+10.737 km = 1024
+
+2.2 Exponential Notation and Operations
+
+The initial thickness of the paper was 0.001 cm. Upon folding once, its thickness became 0.001 cm × 2 = 0.002 cm.
+
+Folding it twice, its thickness became — 0.001 cm × 2 × 2 = 0.004 cm, or 0.001 cm × 22 = 0.004 cm (in shorthand). Upon folding it thrice, its thickness became — 0.001 cm × 2 × 2 × 2, or 0.001 cm × 23 = 0.008 cm. When folded four times, its thickness became — 0.001 cm × 2 × 2 × 2 × 2, or 0.001 cm × 24 = 0.016 cm. Similarly, the expression for the thickness of the paper when folded 7 times will be 0.001 cm × 2 × 2 × 2 × 2 × 2 × 2 × 2, or 0.001 cm × 27 = 0.128 cm.
+
+We have seen that square numbers can be expressed as n2 and cube numbers as n3. 
+• × n = n2 (read as ‘n squared’ or ‘n raised to the power 2’)
+
+• × n × n = n3 (read as ‘n cubed’ or ‘n raised to the power 3’) 
+• × n × n × n = n4 (read as ‘n raised to the power 4’ or ‘the 4th power of n’) 
+• × n × n × n × n × n × n = n7 (read as ‘n raised to the power 7’ or ‘the 7th power of n’) and so on.
+
+54 is read as ‘5 raised to the power 4’ or ‘5 to the power 4’ or ‘5 power 4’ or ‘4th power of 5’
+
+In general, we write na to denote n multiplied by itself a times. 54 = 5 × 5 × 5 × 5 = 625. 54 is the exponential form of 625. Here, 4 is the exponent/power, and 5 is the base. Exponents of the form 5n are called powers of 5: 51, 52, 53, 54, etc. 2 × 2 × 2 × 2 × 2 × 2 × 2 × 2 × 2 × 2 = 210 = 1024. Remember the 1024 from earlier? There, it meant that after every 10 folds, the thickness increased 1024 times.
+
+Which expression describes the thickness of a sheet of paper after it is folded 10 times? The initial thickness is represented by the letter-number v.
+
+(i) 10v (ii) 10 + v (iii) 2 × 10 × v (iv) 210 (v) 210v (vi) 102v
+
+Some more examples of exponential notation: 4 × 4 × 4 = 43 = 64. (– 4) × (– 4) × (– 4) = (– 4)3= – 64. Similarly,
+
+a × a × a × b × b can be expressed as a3b2 (read as a cubed b squared). a × a × b × b × b × b can be expressed as a2b4 (read as a squared b raised to the power 4). Remember that 4 + 4 + 4 = 3 × 4 = 12, whereas 4 × 4 × 4 = 43 = 64.
+
+Express the number 32400 as a product of its prime factors and represent the prime factors in their exponential form.
+
+32400 = 2 × 2 × 2 × 2 × 5 × 5 × 3 × 3 × 3 × 3.
+
+In exponential form, this would be
+
+32400 = 24 × 52 × 34.
+
+What is (– 1)5 ? Is it positive or negative? What about (– 1)56 ?
+
+Is (– 2)4 = 16? Verify.
+
+What is 02, 05 ? What is 0n ?
+
+32400 2 16200 2 8100 2 4050 2 2025 5 405 5 81 3 27 3 9 3
+
+Figure it Out
+
+1. Express the following in exponential form:
+
+3 3 1
+
+(i) 6 × 6 × 6 × 6 (ii) y × y (iii) b × b × b × b (iv) 5 × 5 × 7 × 7 × 7 (v) 2 × 2 × a × a (vi) a × a × a × c × c × c × c × d
+
+Power Play
+
+2. Express each of the following as a product of powers of their prime factors in exponential form.
+
+(i) 648      (ii) 405      (iii) 540      (iv) 3600
+
+3. Write the numerical value of each of the following:
+
+(i) 2 × 103 (ii) 72 × 23 (iii) 3 × 44
+
+(iv) (– 3)2 × (– 5)2 (v) 32 × 104 (vi) (– 2)5 × (– 10)6
+
+The Stones that Shine ...
+
+Three daughters with curious eyes, Each got three baskets — a kingly prize. Each basket had three silver keys, Each opens three big rooms with ease. Each room had tables — one, two, three, With three bright necklaces on each, you see. Each necklace had three diamonds so fine… Can you count these stones that shine?
+
+Hint: Find out the number of baskets and rooms.
+
+How many rooms were there altogether?
+
+The information given can be visualised as shown below.
+
+King
+
+daughters
+
+baskets
+
+keys
+
+rooms
+
+From the diagram, the number of rooms is 34. This can be computed by repeatedly multiplying 3 by itself,
+
+3 × 3 = 9. 9 × 3 = 27. 27 × 3 = 81. 81 × 3 = 243.
+
+How many diamonds were there in total? Can we find out by just one multiplication using the products above?
+
+The number of diamonds is 3 × 3 × 3 × 3 × 3 × 3 × 3 = 37.
+
+We can write
+
+37 = (3 × 3 × 3 × 3) × (3 × 3 × 3)
+
+3 × 3 × 3 × 3 × 3 × 3 × 3
+
+We had computed till 34. To find 37, we can just multiply 34 (= 81) with 33 (= 27). = 34 × 33
+
+= 81 × 27 = 2187
+
+34 33
+
+37 can also be written as 32 × 35. Can you reason out why?
+
+This can be easily extended to products where exponents are the same letter-numbers.
+
+Write the product p4 × p6 in exponential form.
+
+p4 × p6 = (p × p × p × p) × (p × p × p × p × p × p) = p10.
+
+We can generalise this to —
+
+na × nb = na+b, where a and b are counting numbers.
+
+Use this observation to compute the following.
+
+Math
+
+Talk
+
+(i) 29 (ii) 57 (iii) 46
+
+46 can be evaluated in these two ways,
+
+(4 × 4 × 4) × (4 × 4 × 4) = 43 × 43
+
+(4 × 4) × (4 × 4) × (4 × 4) = 42 × 42 × 42
+
+= 16 × 16 × 16 = 4096. 42 × 42 × 42 is the cube of 42, i.e., 42 × 42 × 42 can also be written as (42) 
+3.
+
+= 64 × 64 = 4096. 43 × 43 is the square of 43, i.e., 43 × 43 can also be written as (43)
+
+2.
+
+Similarly, 74 = (7 × 7) × (7 × 7) = 72 × 72 = (72)
+
+2, and 210 = (2 × 2) × (2 × 2) × (2 × 2) × (2 × 2) × (2 × 2) = (22) × (22) × (22) × (22) × (22) = (22)
+
+5.
+
+Is 2
+
+10 also equal to (25) 2? Write it as a product.
+
+2 10 = (2 × 2 × 2 × 2 × 2) × (2 × 2 × 2 × 2 × 2) = (25) × (25) = (25)2.
+
+In general,
+
+(na)
+
+b =(nb)
+
+a = n
+
+a × b=n
+
+ab, where a and b are counting numbers.
+
+Write the following expressions as a power of a power in at least two different ways:
+
+(i) 86      (ii) 715      (iii) 914      (iv) 58
+
+Power Play
+
+Magical Pond
+
+In the middle of a beautiful, magical pond lies a bright pink lotus. The number of lotuses doubles every day in this pond. After 30 days, the pond is completely covered with lotuses. On which day was the pond half full?
+
+If the pond is completely covered by lotuses on the 30th day, how much of it is covered by lotuses on the 29th day?
+
+Since the number of lotuses doubles every day, the pond should be half covered on the 29th day.
+
+Write the number of lotuses (in exponential form) when the pond was —
+
+(i) fully covered (ii) half covered
+
+There is another pond in which the number of lotuses triples every day. When both the ponds had no flowers, Damayanti placed a lotus in the doubling pond. After 4 days, she took all the lotuses from there and put them in the tripling pond. How many lotuses will be in the tripling pond after 4 more days?
+
+After the first 4 days, the number of lotuses is 1 × 2 × 2 × 2 × 2 = 24. After the next 4 days, the number of lotuses is 24 × 3 × 3 × 3 × 3 = 24 × 34.
+
+What if Damayanti had changed the order in which she placed the flowers in the lakes? How many lotuses would be there?
+
+1 × 34 × 24 = (3 × 3 × 3 × 3) × (2 × 2 × 2 × 2).
+
+Can this product be expressed as an exponent mn, where m and n are some counting numbers?
+
+By regrouping the numbers, = (3 × 2) × (3 × 2) × (3 × 2) × (3 × 2) = (3 × 2)4 = 64. In general form,
+
+ma × na = (mn)a , where a is a counting number.
+
+Use this observation to compute the value of 25 × 55.
+
+Simplify 104
+
+54 and write it in exponential form.
+
+a
+
+In general, we can show that ma
+
+.
+
+na = (m
+
+n)
+
+How Many Combinations
+
+Estu has 4 dresses and 3 caps. How many different ways can Estu combine the dresses and caps?
+
+For each cap, he can choose any of the 4 dresses, so for 3 caps, 4 + 4 + 4 = 4 × 3 = 12 combinations are possible. We can also look at it as — for each dress, Estu can choose any of the 3 caps, so for 4 outfits, 3 + 3 + 3 + 3 = 3 × 4 = 12 combinations are possible.
+
+Roxie has 7 dresses, 2 hats, and 3 pairs of shoes. How many different ways can Roxie dress up?
+
+Hint: Try drawing a diagram like the one above.
+
+Estu and Roxie came across a safe containing old stamps and coins that their great-grandfather had collected. It was secured with a 5-digit password. Since nobody knew the password, they had no option except to try every password until it opened. They were unlucky and the lock only opened with the last password, after they had tried all possible combinations. How many passwords did they end up checking?
+
+If you can’t solve a problem, try to find a simpler version of the problem that you can solve. This technique can come in handy many times.
+
+Instead of a 5-digit lock, let us assume we have a 2-digit lock and try to find out how many passwords are possible.
+
+There are 10 options for the first digit (0 to 9). For each of these, there are 10 options for the second digit (If 0 is the first digit then 00, 01, 02, 03, …, 09 are possible). Therefore the total number of combinations for a 2-digit lock is 10 × 10 = 100.
+
+Now, suppose we have a 3-digit lock. For each of the earlier 100 (2-digit) passwords there are 10 choices for the third digit. So, there are 100 × 10 = 1000 combinations for a 3-digit lock. You can list them all: 000, 001, 002, ….., 997, 997, 999.
+
+Power Play
+
+0
+
+How many 5-digit passwords are possible?
+
+1
+
+2
+
+3
+
+Oh no! Maybe my entire vacation will be gone trying to unlock this…
+
+4
+
+5
+
+Each digit has 10 choices, so a 5-digit lock will have: 10 × 10 × 10 × 10 × 10 = 105 = 1,00,000 passwords. This is the same as writing numbers till 99,999 with all 5 digits, i.e., 00000, 00001, 00002, …00010, 00011, …, 00100, 00101, …, 00999, …, 30456, …, 99998, 99999.
+
+6
+
+7
+
+Estu says, “Next time, I will buy a lock that has 6 slots with the letters A to Z. I feel it is safer.”
+
+8
+
+How many passwords are possible with such a lock?
+
+9
+
+Try This
+
+Think about how many combinations are possible in different contexts. Some examples are —
+
+(i) Pincodes of places in India — The Pincode of Vidisha in
+
+Madhya Pradesh is 464001. The Pincode of Zemabawk in Mizoram is 796017. (ii) Mobile numbers. (iii) Vehicle registration numbers.
+
+Try to find out how these numbers or codes are allotted/generated.
+
+2.3 The Other Side of Powers
+
+Imagine a line of length 16 units. Erasing half of it would result in
+
+24 ÷ 2 = 2 × 2 × 2 × 2 2 = 2 × 2 × 2 = 23 = 8 units.
+
+Erasing half one more time would result in,
+
+(24 ÷ 2) ÷ 2 = 24 ÷ 22 = 2 × 2 × 2 × 2
+
+2 × 2 = 2 × 2 = 22 = 4 units.
+
+Halving 16 cm three times may be written as,
+
+24 ÷ 23 = 2 × 2 × 2 × 2 2 × 2 × 2 = 2 = 21 = 2 units.
+
+From this we can see that
+
+24 ÷ 23 = 24 – 3 = 21.
+
+What is 2100 ÷ 225 in powers of 2?
+
+In a generalised form,
+
+na ÷ nb = na – b,
+
+where n ≠ 0 and a and b are counting numbers and a > b.
+
+Why can’t n be 0?
+
+Math
+
+Talk
+
+We have not covered the case when the exponent is 0; for example, what is 20?
+
+Let us define 20 in a way that the generalised form above holds true.
+
+20 = 24 – 4 = 24 ÷ 24 = 2 × 2 × 2 × 2 2 × 2 × 2 × 2 = 1.
+
+In fact for any letter number a
+
+20 = 2a – a = 2a ÷ 2a = 1.
+
+In general,
+
+xa ÷ xa = xa – a = x0, and so
+
+1 = x0 ,
+
+where x ≠ 0 and a is a counting number.
+
+When Zero is in Power!
+
+When a line of length 24 units is halved 5 times,
+
+24 ÷ 25 = 2 × 2 × 2 × 2 2 × 2 × 2 × 2 × 2 = 1 2 units.
+
+Using the generalised form, we get 24 ÷ 25= 2(4 – 5) = 2– 1.
+
+So, 2– 1 = 1
+
+2 .
+
+When a line of length 24 units is halved 10 times, we get 24 ÷ 210= 2(4 – 10) = 2– 6 units.
+
+When expanded, 24 ÷ 210 = 2 × 2 × 2 × 2 2 × 2 × 2 × 2 × 2 × 2 × 2 × 2 × 2 × 2 = 1 26 = 1 64, which is also written as 2– 6.
+
+Power Play
+
+Similarly, 10–3 = 1
+
+103, 7–2 = 1 72 , etc.
+
+Can we write 103 = 1
+
+10–3 ?
+
+We can write,
+
+1 10–3 = 1 1/103 = 1 ÷ 1 10 3 = 1×103 = 103.
+
+Similarly, 72 =
+
+1 7– 2 and 4a = 1 4– a.
+
+In a generalised form,
+
+Math
+
+Talk
+
+n– a = 1
+
+n–a , where n ≠ 0.
+
+na and na = 1
+
+Consider the following general forms we have identified.
+
+na × nb = na + b (na)b = (nb)a = na × b na ÷ nb = na – b
+
+We had required a and b to be counting numbers. Can a and b be any integers? Will the generalised forms still hold true?
+
+Write equivalent forms of the following.
+
+(i) 2– 4 (ii) 10– 5 (iii) (– 7)–2 (iv) (– 5)– 3 (v) 10– 100
+
+Simplify and write the answers in exponential form.
+
+(i) 2– 4 × 27 (ii) 32 × 3– 5 × 36 (iii) p3 × p–10
+
+q
+
+(iv) 24 × (– 4)
+
+– 2 (v) 8
+
+p × 8
+
+Power Lines
+
+Let us arrange the powers of 4 along a line.
+
+48
+
+65536
+
+÷ 4
+
+47
+
+16384
+
+× 16
+
+65536 ÷ 64
+
+48 ÷ 43
+
+46
+
+4096
+
+64 × 16
+
+45
+
+1024
+
+43 × 42
+
+47 × 4–2
+
+16384 ×
+
+44
+
+256
+
+1 16
+
+64
+
+43
+
+42
+
+16
+
+÷ 16
+
+× 4
+
+41
+
+4
+
+40
+
+1
+
+4–1
+
+4–2
+
+1 4 1 16
+
+Can we say that 16384 (47) is 16 (42) times larger than 1,024 (45)?
+
+Yes, since 47 ÷ 45 = 42.
+
+How many times larger than 4–2 is 42?
+
+Use the power line for 7 to answer the following questions.
+
+823543
+
+2,401 × 49 =
+
+77
+
+117649
+
+76
+
+493 =
+
+16807
+
+75
+
+343 × 2,401 =
+
+2401
+
+74
+
+343
+
+73
+
+16,807 49 =
+
+49
+
+72
+
+7 343 =
+
+7
+
+71
+
+1
+
+16,807 8,23,543 =
+
+70
+
+7–1
+
+1 7
+
+1,17,649 × 1 343 =
+
+7–2
+
+1 49
+
+1 343 × 1 343 =
+
+7–3
+
+7–4
+
+1 343 1 2401
+
+2.4 Powers of 10
+
+We have used numbers like 10, 100, 1000, and so on when writing Indian numerals in an expanded form. For example,
+
+47561 = (4 × 10000) + (7 × 1000) + (5 × 100) + (6 × 10) + 1.
+
+This can be written using powers of 10 as
+
+(4 × 104) + (7 × 103) + (5 × 102) + (6 × 101) + (1 × 100).
+
+Write these numbers in the same way: (i) 172, (ii) 5642, (iii) 6374.
+
+How can we write 561.903?
+
+561.903 = (5 × 100) + (6 × 10) + 1 + (9 × 1 10) + (0 × 1 100) + (3 × 1 1000).
+
+Writing it using powers of 10, we have
+
+561.903 = (5 × 102) + (6 × 101) + (1 × 100) + (9 × 10–1) + (0 × 10–2) + (3 × 10–3).
+
+Power Play
+
+Scientific Notation
+
+Let’s look at some facts involving large numbers —
+
+(i) The Sun is located 30,00,00,00,00,00,00,00,00,000 m from the
+
+centre of our Milky Way galaxy. (ii) The number of stars in our galaxy is 1,00,00,00,00,000. (iii) The mass of the Earth is 59,76,00,00,00,00,00,00,00,00,00,000 kg.
+
+As the number of digits increases, it becomes difficult to read the numbers correctly. We may miscount the number of zeroes or place commas incorrectly. We will then read the wrong value. It is like getting ₹5,000 when you were supposed to get ₹50,000. The number of zeroes is more important than the initial digits in several cases.
+
+Can we use the exponential notation to simplify and read these very large numbers correctly?
+
+For example, the number 5900 can be expressed as —
+
+5900 = 590 × 10 = 590 × 101 = 59 × 100 = 59 × 102
+
+= 5.9 × 1000 = 5.9 × 103
+
+= 0.59 × 10000 = 0.59 × 104. Any number can be written as the product of a number between 1 and 10 and a power of 10. For example,
+
+5900 = 5.9 × 103 20800 = 2.08 × 104 80,00,000 = 8 × 106
+
+Write the large-number facts we read just before in this form.
+
+In scientific notation or scientific form (also called standard form), we write numbers as x × 10 y, where x ≥ 1 and x < 10 is the coefficient and y, the exponent, is any integer. Often, the exponent y is more important than the coefficient x. When we write the 2 crore population of Mumbai as 2 × 107, the 7 is more important than the 2. Indeed, if the 2 is changed to 3, the population increases by one-half, i.e., 2 crore to 3 crore, whereas if the 7 is changed to 8, the change in population is 10 times, i.e., 2 crores to 20 crores. Therefore, the standard form explicitly mentions the exponent, which indicates the number of digits.
+
+If we say that the population of Kohima is 1,42,395, then it gives the impression that we are quite sure about this number up to the units place. When we use large numbers, in most cases, we are more concerned about how big a quantity or measure is, rather than the exact value. If we are only sure that the population is around 1 lakh 42 thousand, we can write it as 1.42 × 105. If we can only be certain that it is around 1 lakh 40 thousand, we write it as 1.4 × 105. The number of digits in the coefficient reflects how well we know the number. The most important part of any
+
+number written in scientific form is the exponent, and then the first digit of the coefficient. The digits following the coefficient are small corrections to the first digit.
+
+...when I started working here, it
+
+It is 70 million and 15 years old…
+
+was 70 million
+
+How old is this dinosaur’s
+
+years old.
+
+skeleton?
+
+These values are rounded-off estimates, averages, or approximations; most of the time, they serve the purpose at hand.
+
+The distance between the Sun and Saturn is 14,33,50,00,00,000 m = 1.4335 × 1012 m.
+
+The distance between Saturn and Uranus is 14,39,00,00,00,000 m = 1.439 × 1012 m. The distance between the Sun and Earth is 1,49,60,00,00,000 m = 1.496 × 1011 m.
+
+Can you say which of the three distances is the smallest?
+
+The number line below shows the distance between the Sun and Saturn (1.4335 × 1012 m). On the number line below, mark the relative position of the Earth. The distance between the Sun and the Earth is 1.496 × 1011 m.
+
+Sun Saturn
+
+Express the following numbers in standard form.
+
+(i) 59,853 (ii) 65,950 (iii) 34,30,000 (iv) 70,04,00,00,000
+
+Power Play
+
+2.5 Did You Ever Wonder?
+
+Last year, we looked at interesting thought experiments in the chapter on Large Numbers. Let us continue this journey.
+
+Nanjundappa wants to donate jaggery equal to Roxie’s weight and wheat equal to Estu’s weight. He is wondering how much it would cost.
+
+What would be the worth (in rupees) of the donated jaggery? What would be the worth (in rupees) of the donated wheat?
+
+In order to find out, let us first describe the relationships among the quantities present. Worth of jaggery (in rupees) = Roxie’s weight in kg × cost of 1 kg jaggery. Worth of wheat (in rupees) = Estu’s weight in kg × cost of 1 kg wheat.
+
+Make necessary and reasonable assumptions for the unknowns and find the answers. Remember, Roxie is 13 years old and Estu is 11 years old.
+
+Assuming Roxie’s weight to be 45 kg and the cost of 1 kg of jaggery to be ₹70, the worth of donated jaggery is 45 × 70 = ₹3150. Assuming Estu’s weight to be 50 kg and the cost of 1 kg of wheat to be ₹50, the worth of donated wheat is 50 × 50 = ₹2500.
+
+The practice of offering goods equal to the weight of a person, called Tulābhāra or Tulābhāram, is quite old and is still followed in many places in Southern India. It is a symbol of bhakti (surrendering oneself), a token of gratitude; it also supports the community.
+
+Roxie wonders, “Instead of jaggery if we use 1-rupee coins, how many coins are needed to equal my weight?”. How can we find out?
+
+For questions like these, you can consider following the steps suggested below.
+
+1. Guessing: Make an instinctive (quick) guess of what the answer could be, without any calculations.
+
+2. Calculating using estimation and approximation —
+
+(i) Describe the relationships among the quantities that are needed
+
+to find the answer. (ii) Make reasonable assumptions and approximations if the required
+
+information is not available. (iii) Compute and find the answer (and check how close your guess
+
+was).
+
+Would the number of coins be in hundreds, thousands, lakhs, crores, or even more? Make an instinctive guess.
+
+How about measuring to find out the weight of a 1-rupee coin?
+
+Find the answer by making necessary and reasonable assumptions and approximations for the unknowns. Remember, we are not looking for an exact answer but a reasonably close estimate.
+
+Initially, your guesses may be very far off from the answer and it is perfectly fine! You will get better at it like as you do it often and in different situations. Guessing and estimating can build intuition about numbers and various quantities.
+
+Estu asks, “What if we use 5-rupee coins or 10-rupee notes instead? How much money could it be?”
+
+Make an instinctive guess first. Then find out (make necessary and reasonable assumptions about the unknown details and find the answers).
+
+Estu says, “When I become an adult, I would like to donate notebooks worth my weight every year”. Roxie says, “When I grow up, I would like to do annadāna (offering grains or meals) worth my weight every year”.
+
+Math
+
+Talk
+
+How many people might benefit from each of these offerings in a year? Again, guess first before finding out.
+
+Roxie and Estu overheard someone saying — “We did pādayātra for about 400 km to reach this place! We arrived early this morning.”
+
+How long ago would they have started their journey?
+
+Find answers by making necessary assumptions and approximations. Do guess first before calculating to check how close your guess was!
+
+Note to the Teacher: Assumptions can vary greatly at times, and as a result the answers computed using these you can also vary. This is perfectly alright. Modelling the situation properly is crucial, which can also be done in different ways sometimes. The accuracy of the assumed numbers or quantities can get better with exposure and practice.
+
+Power Play
+
+Pādayātra, is the traditional practice of walking long distances as part of a religious or spiritual pursuit. People across religions in our country observe similar forms of pilgrimage or spiritual walking, although they may have different names or purposes.
+
+Some of the pilgrimages are Ajmer Sharif Dargah Ziyarat, Pandharpur Wari, Kānwar Yatra, Sabarimala Yatra, Sammed Shikharji Yatra, Lumbini to Sarnath Yatra.
+
+Before the rise of modern transport, people moved from one place to another by walking — sometimes merchants, sages, and scholars walked thousands of kilometres to different parts of the world across deserts, mountains, and rivers.
+
+How many times can a person circumnavigate (go around the world) the Earth in their lifetime if they walk non-stop? Consider the distance around the Earth as 40,000 km.
+
+Linear Growth vs. Exponential Growth
+
+Roxie tells Estu about a science-fiction novel she is reading where they build a ladder to reach the moon, “... I wonder if we actually had a ladder like that, how many steps would it have?”.
+
+What do you think? Make an instinctive guess first.
+
+Would the number of steps be in thousands, lakhs, crores, or even more?
+
+To find out, we would need to know the gap between consecutive steps of the ladder. Let’s assume a reasonable distance of 20 cm. Visualising the problem as shown,
+
+We have to find out how many 20 cm make 3,84,400 km.
+
+If we calculate the value, we get the result as 1,92,20,00,000 steps, which is 192 crore and 20 lakh steps or 1 billion 922 million steps. The fixed increase in the distance from the earth with each step (a 20 cm gain after each step) is called linear growth.
+
+To cover the distance between the Earth and the Moon, it takes 1,92,20,00,000 steps with linear growth whereas it takes just 46 folds of a piece of paper with exponential growth! Linear growth is additive, whereas exponential growth is multiplicative.
+
+0.001 × 2 × 2 × 2 ……….
+
+20 + 20 + 20 + …………
+
+46 times
+
+1,92,20,00,000 times
+
+Some examples of exponential growth we have seen earlier in this chapter are ‘The Stones that Shine’, ‘Magical Pond’, ‘How Many Combinations’. We shall explore more such interesting examples in a later chapter and also in the next grade.
+
+Can you come up with some examples of linear growth and of exponential growth?
+
+Getting a Sense for Large Numbers
+
+Last year, we learnt about lakhs and crores, as well as millions and billions. A lakh is 105 (1,00,000), a crore is 107 (1,00,00,000), and an arab is 109 (1,00,00,00,000), whereas a million is 106 (1,000,000) and a billion is 109 (1,000,000,000).
+
+You might know the size of the world’s human population. Have you ever wondered how many ants there might be in the world or how long ago humans emerged? In this section, we shall explore numbers significantly larger than arabs and billions. We shall use powers of 10 to represent and compare these numbers in each case.
+
+100 As of mid-2025, there are only two northern white rhinos remaining in the world, both females, and they reside at the Ol Pejeta Conservancy in Kenya (= 2 × 100).
+
+Power Play
+
+101 As of early 2024, the total population of Hainan gibbons is a meagre 42 ( ≈ 4 × 101).
+
+102 There are just 242 Kakapo alive as of mid-2025 (≈ 2 × 102).
+
+103 There are fewer than 3000 Komodo dragons in the world, all based in Indonesia (≈ 3 × 103).
+
+104 A 2005 estimate of the maned wolf population showed that there are more than 17000 of them; most are located in Brazil (1.7 × 104).
+
+105 As of 2018, there are around 4.15 lakh African elephants (≈ 4 × 105).
+
+106 There are an estimated 50 lakh / 5 million American alligators as of 2025 (5 × 106).
+
+107 The global camel population is estimated to be over 3.5 crore/ 35 million (3.5 × 107). India has only about 2.5 lakhs of them. The global horse population is around 5.8 crore / 58 million (5.8 × 107), with about half of them in America.
+
+108 More than 20 crore / 200 million (2 × 108) water buffaloes are estimated worldwide, with a vast majority of them in Asia.
+
+109 The estimated global population of starlings is around 1.3 arab/1.3 billion (_________). The global human population as of 2025 is 8.2 arab/8.2 billion (8.2 × 109).
+
+A picture of a starling murmuration over a farm in the UK. Starling murmuration is a
+
+mesmerising aerial display of thousands of starlings flying in synchronised, swirling
+
+patterns. It is often described as a ‘choreographed dance’.
+
+With a global human population of about 8 × 109 and about 4 × 105 African elephants, can we say that there are nearly 20,000 people for every African elephant?
+
+1010 The global chicken population living at any time is estimated at ≈ 33 billion (3.3 × 1010).
+
+1012 The estimated number of trees (2023) globally stands at 30 kharab/3 trillion (3 × 1012). One kharab is 100 arab, and one trillion is 1000 billion.
+
+1014 The estimated mosquito population worldwide (2023) is 11 neel/110 trillion (________). A derived estimate of the population of the Antarctic krill stands at 50 neel/500 trillion (5 × 1014).
+
+1015 An estimate of the beetle population stands at 1 padma/1 quadrillion (1 × 1015). The estimate of the earthworm population is also at 1 padma/1 quadrillion.
+
+1016 The estimated population of ants globally is 20 padma/20 quadrillion (2 × 1016). Ants alone outweigh all wild birds and wild mammals combined.
+
+1021 is supposed to be the number of grains of sand on all beaches and deserts on Earth. This is enough sand to give every ant 10 little sand castles to live in.
+
+1023 The estimated number of stars in the observable universe is 2 × 1023. 1025 There are an estimated 2 × 1025 drops of water on Earth (assuming 16 drops per millilitre).
+
+Calculate and write the answer using scientific notation:
+
+(i) How many ants are there for every human in the world? (ii) If a flock of starlings contains 10,000 birds, how many flocks
+
+could there be in the world?
+
+Power Play
+
+(iii) If each tree had about 104 leaves, find the total number of leaves
+
+on all the trees in the world. (iv) If you stacked sheets of paper on top of each other, how many
+
+I am 69,70,710 … old
+
+would you need to reach the Moon? A different way to say your age! “How old are you?” asked Estu. “I completed 13 years a few weeks ago!” said Roxie. “How old are you?” asked Estu again. “I’m 4840 days old today!” said Roxie. “How old are you?” asked Estu again. “I’m ______ hours old!” said Roxie. Make an estimate before finding this number. Estu: “I am 4070 days old today. Can you find out my date of birth?”
+
+What could this number mean?
+
+Find out!
+
+If you have lived for a million seconds, how old would you be?
+
+We shall look at approximate times and timelines of some events and phenomena, and use powers of 10 to represent and compare these quantities.
+
+Time in seconds Comparison to real-world events/phenomena
+
+100 = 1 second 
+- Time taken for a ball thrown up to fall back on the ground (typically a few seconds).
+
+101 = 10 seconds 
+- Time blood takes to complete one full circulation through the body: 10 – 20 seconds (1 × 101 – 2 × 101
+
+seconds).
+
+- Typical waiting time at a traffic signal.
+
+Isn’t it quite amazing how someone is able to estimate things like the number of ants in the world or the time blood takes to fully circulate? You may carry this wonder whenever you encounter such facts. You will come across such facts in subjects like Science and Social Science, where such estimates are made frequently.
+
+- Time needed to make a cup of tea: 5 – 10 minutes (≈ 4 × 102 – 8 × 102 seconds).
+
+102 seconds ≈1.6 minutes
+
+- Time for light to reach the Earth from the Sun: about 8 minutes (≈ 5 × 102 seconds).
+
+These liars!! It never gets cooked before 10 minutes…
+
+They should approximate it as order of 102 seconds noodles — that way whether it takes 120 seconds or 900 seconds, the claim will be true.
+
+103 seconds ≈ 16.6 minutes
+
+- Satellites in low Earth orbits take between 90 minutes (≈ 5.5 × 103 seconds) to 2 hours to complete one full revolution around the Earth.
+
+104 seconds ≈ 2.7 hours
+
+- The time needed to digest a meal: about 2 – 4 hours to pass through the stomach.
+
+- Lifespan of an adult mayfly: about a day (≈ 9 × 104 seconds).
+
+105 seconds ≈ 1.16 days and 106 seconds ≈ 11.57 days. Think of some events or phenomena whose time is of the order of (i) 105 seconds and (ii) 106 seconds. Write them in scientific notation.
+
+-
+
+Time spent sleeping in a year: about 4 months.
+
+-
+
+107 seconds ≈ 115.7 days / ≈ 3.8 months
+
+Time taken by Mangalyaan mission to reach Mars: 298 days (≈ 2.65 × 107 seconds).
+
+- Time taken by Mars for one full revolution around the Sun: 687 Earth-days/1.88 Earth-years (≈ 6 × 107 seconds).
+
+- The typical lifespan of most dogs is 3 to 15 years.
+
+108 seconds ≈ 3.17 years
+
+109 seconds ≈ 31.7 years
+
+- The orbital period of Halley’s comet is 75 – 79 years; the next expected return is in the year 2061 (≈ 2.4 × 109 seconds).
+
+- Duration of one full revolution of Neptune around the Sun: 60,190 Earth-days/~165 Earth-years or 89,666 Neptunian days/1 Neptunian-year (≈ 5.2 × 109 seconds). A day on Neptune is about 16.1 hours
+
+Power Play
+
+Notice how rapid exponential growth is — 106 seconds is less than a fortnight, but 109 seconds is a whopping 31 years (about half the life expectancy of a human)!
+
+1010 seconds ≈ 317 years
+
+- The Chola dynasty ruled for more than 900 years (≈ 3 × 1010 seconds) between the 3rd Century BCE and 12th Century CE.
+
+1011 seconds ≈ 3,170 years
+
+- Age of the oldest known living tree: about 5000 years (≈ 1.57 × 1011 seconds).
+
+- Time since the last peak ice age: 19,000 – 26,000 years ago (≈ 6 × 1011 seconds – 8.2 × 1011 seconds).
+
+1012 seconds ≈ 31,700 years
+
+- Early Homo sapiens first appeared 2 – 3 lakh years ago (≈7 × 1012 – 9 × 1012 seconds). The entire population around that time could fit in a large cricket stadium.
+
+1013 seconds ≈ 3.17 lakh years
+
+- The Steppe Mammoth is estimated to have appeared around 8 – 18 lakh years ago.
+
+1014 seconds ≈ 3.17 million years
+
+- A fossil of Kelenken Guillermoi, a type of terror bird, is dated to 15 million years ago ( ≈_______________ seconds).
+
+1015 seconds ≈ 3.17 crore years
+
+- Age of Himalayas: 5.5 crore years/55 million years (≈ 1.7 × 1015 seconds); they continue to grow a few mm every year.
+
+- Dinosaurs went extinct 6.6 crore years ago/66 million years ago (≈ 2 × 1015 seconds).
+
+- Dinosaurs first appeared more than 20 crore/200 million years ago (≈ 6 × 1015 seconds).
+
+- It takes about 23 crore years for the Sun to make one complete trip around the Milky Way (≈ 7 × 1015 seconds).
+
+1016 seconds ≈ 31.7 crore years
+
+- Plants on land started 47 crore/470 million years ago ( ≈ _______________ seconds).
+
+1017 seconds ≈ 3.17 billion years
+
+The oldest fossil evidence suggests that bacteria first appeared about 3.7 billion years ago.
+
+- The Earth is 4.5 billion years old.
+
+- The Milky Way galaxy was formed 13.6 billion years ago, and the Universe was formed 13.8 billion years ago.
+
+Notice that 109 seconds is of the order of the lifespan of a human, whereas 1018 seconds ago the universe did not exist according to modern physics!! The exponential notation can capture very large quantities in a concise manner.
+
+Calculate and write the answer using scientific notation:
+
+(i) If one star is counted every second, how long would it take to
+
+count all the stars in the universe? Answer in terms of the number of seconds using scientific notation. (ii) If one could drink a glass of water (200 ml) every 10 seconds,
+
+Try This
+
+how long would it take to finish the entire volume of water on Earth?
+
+Very large quantities are often beyond our experience and comprehension. To put them into perspective, we can relate and compare them with quantities we are familiar with. This can give an essence of how large a number or a measure is!
+
+2.5 A Pinch of History
+
+In the Lalitavistara, a Buddhist treatise from the first century BCE, we see number - names for odd powers of ten up to 1053. The following occurs as part of the dialogue between the mathematician Arjuna and Prince Gautama, the Bodhisattva.
+
+“Hundred kotis are called an ayuta (109), hundred ayutas a niyuta (1011), hundred niyutas a kankara (1013), …, hundred sarva-balas a visamjna- gati (1047), hundred visamjna-gatis a sarvajna (1049), hundred sarvajnas a vibhutangama (1051), a hundred vibhutangamas is a tallakshana (1053).”
+
+Mahaviracharya gives a list of 24 terms (i.e., up to 1023) in his treatise Ganita-sara-sangraha. An anonymous Jaina treatise Amalasiddhi gives a list with a name for each power of ten up to 1096 (dasha-ananta). A Pali grammar treatise of Kāccāyana lists number-names up to 10140, named asaṅkhyeya.
+
+Power Play
+
+For expressing high powers of ten, Jaina and Buddhist texts use bases like sahassa (thousand) and koṭi (ten million); for instance, prayuta (106) would be dasa sata sahassa (ten hundred thousand).
+
+The modern naming is similar to this, where we say,
+
+100 × 1000 = 1,00,000 102 × 103 = 105
+
+A hundred thousand is a lakh
+
+A hundred lakhs
+
+100 × 1,00,000 = 1,00,00,000 102 × 105 = 107
+
+is a crore
+
+A hundred crores
+
+100 × 1,00,00,000 = 1,00,00,00,000 102 × 107 = 109
+
+is an arab
+
+A hundred arab is
+
+102 × 109 = 1011
+
+a kharab
+
+100 × 1,00,00,00,000 = 1,00,00,00,00,000
+
+Continuing this, a hundred kharab is a neel (1013), a hundred neel is a padma (1015), a hundred padma is a shankh (1017) and a hundred shankh is a maha shankh (1019).
+
+In the American/International system, we say
+
+A thousand thousand
+
+1000 × 1000 = 1,000,000 103 × 103 = 106
+
+is a million
+
+A thousand million is
+
+1000 × 1,000,000 = 1,000,000,000 103 × 106 = 109
+
+a billion
+
+A thousand billion is
+
+103 × 109 = 1012
+
+an trillion
+
+1000 × 1,000,000,000 = 1,00,000,000,000
+
+Continuing this, a thousand trillion is a quadrillion (1015). This pattern continues. Observe the names million (106), billion (109), trillion (1012), quadrillion (1015), quintillion (1018), sextillion (1021), septillion (1024), octillion (1027), nonillion (1030), decillion (1033).
+
+What does the first part of each name denote?
+
+The number 10100 is also called a googol. The estimated number of atoms in the universe is 1078 to 1082. The number 10googol is called a googolplex. It is hard to imagine how large this number is!
+
+The currency note with the highest denomination in India currently is 2000 rupees. Guess what is the highest denomination of a currency note ever, across the world. The highest numerical value banknote ever printed was a special note valued 1 sextillion pengő (1021 or 1 milliard bilpengő) printed in Hungary in 1946, but it was never issued. In 2009, Zimbabwe printed a 100 trillion (1014) Zimbabwean dollar note, which at the time of printing was worth about $30.
+
+Figure it Out
+
+1. Find out the units digit in the value of 2224 ÷ 432? [Hint: 4 = 22]
+
+2. There are 5 bottles in a container. Every day, a new container is brought in. How many bottles would be there after 40 days?
+
+3. Write the given number as the product of two or more powers in three different ways. The powers can be any integers.
+
+(i) 643 (ii)    1928 (iii)    32–5
+
+4. Examine each statement below and find out if it is ‘Always True’, ‘Only Sometimes True’, or ‘Never True’. Explain your reasoning.
+
+(i) Cube numbers are also square numbers. (ii) Fourth powers are also square numbers. (iii) The fifth power of a number is divisible by the cube of that
+
+number. (iv) The product of two cube numbers is a cube number.
+
+(v) q46 is both a 4th power and a 6th power (q is a prime number).
+
+5. Simplify and write these in the exponential form.
+
+(i) 10– 2 × 10– 5 (ii) 57 ÷ 54
+
+– 3
+
+(iii) 9– 7 ÷ 94 (iv) (13– 2)
+
+(v) m5n12(mn)9
+
+6. If 122 = 144 what is
+
+(i) (1.2)2 (ii) (0.12)2
+
+(iii) (0.012)2 (iv) 1202
+
+Power Play
+
+7. Circle the numbers that are the same —
+
+24 × 36        64 × 32        610        182 × 62        624
+
+8. Identify the greater number in each of the following —
+
+(i) 43 or 34 (ii) 28 or 82 (iii) 1002 or 2100
+
+9. A dairy plans to produce 8.5 billion packets of milk in a year. They want a unique ID (identifier) code for each packet. If they choose to use the digits 0–9, how many digits should the code consist of?
+
+Math
+
+Talk
+
+10. 64 is a square number (82) and a cube number (43). Are there other numbers that are both squares and cubes? Is there a way to describe such numbers in general?
+
+11. A digital locker has an alphanumeric (it can have both digits and letters) passcode of length 5. Some example codes are G89P0, 38098, BRJKW, and 003AZ. How many such codes are possible?
+
+12. The worldwide population of sheep (2024) is about 109, and that of goats is also about the same. What is the total population of sheep and goats?
+
+(ii) 209 (ii) 1011 (iii) 1010
+
+(iv) 1018 (v) 2 × 109 (vi) 109 + 109
+
+13. Calculate and write the answer in scientific notation:
+
+(i) If each person in the world had 30 pieces of clothing, find the
+
+total number of pieces of clothing. (ii) There are about 100 million bee colonies in the world. Find the
+
+number of honeybees if each colony has about 50,000 bees. (iii) The human body has about 38 trillion bacterial cells. Find the
+
+bacterial population residing in all humans in the world. (iv) Total time spent eating in a lifetime in seconds.
+
+14. What was the date 1 arab/1 billion seconds ago?
+
+Try This
+
+SUMMARY
+
+We analysed some situations, asked questions, and found
+
+answers by first guessing, then modelling the problem statement, followed by making assumptions and approximations to carry out the calculations.
+
+We experienced how rapid exponential growth, also called
+
+multiplicative growth, can be compared to additive growth.
+
+na is n × n × n × n ×…× n (n multiplied by itself a times) and n–a= 1
+
+na.
+
+Operations with exponents satisfy
+
+y na × nb = na+b
+
+y (na)b = (nb)a = na × b
+
+y na ÷ nb = na – b (n ǂ 0)
+
+y na × ma = (n × m)a
+
+y na ÷ ma = (n ÷ m)a (m ǂ 0)
+
+y n0 = 1 (n ǂ 0)
+
+The scientific notation for the number 308100000 is 3.081 × 108.
+
+The standard form of the scientific notation of any number is x × 10 y, where x ≥ 1 and x < 10, and y is an integer.
+
+Engaging in interesting thought experiments can be used as
+
+means to understand how large a number or a quantity is.
+
+Tremendous in Ten!
+
+Find a partner to play this game with. In 10 seconds, the person who writes a number or an expression, using only the digits 0 - 9 and arithmetic operations, that gives a number that is the larger between the two wins the round.
+
+In Round 1, Roxie wrote 10000000000000 and Estu wrote 999999 × 999999. Between these two, Roxie’s number is greater. Can you see why? Roxie’s number is 1013, whereas Estu’s number is less than (106)
+
+2. In Round 2, Roxie wrote 101000 + 101000 + 101000 + 101000 and Estu wrote (101000000) × 9000. Can you say which is greater?
+
+Below are some conditions that you may consider for different rounds.
+
+(i) Exponents are not allowed. Only addition is allowed. (ii) Exponents are not allowed. Only addition and multiplication
+
+are allowed. (iii) Exponents are allowed. Only addition is allowed.
+
+(iv) Exponents are allowed. Any arithmetic operation is allowed. You can create your own conditions and/or involve more people to play together.
+
+2 POWER PLAY
+
+Page No. 22
+
+Which expression describes the thickness of a sheet of paper after it is folded 10 times? The initial thickness is represented by the letter-number v. (i) 10v (ii) 10 + v (iii) 2 × 10 × v (iv) 210 (v) 210v (vi) 102v
+
+Ans: (v) 210v
+
+What is (– 1)5 ? Is it positive or negative? What about (– 1)56 ?
+
+Ans: (– 1)5 is negative
+
+(– 1)56 is positive
+
+Is (– 2)4 = 16? Verify.
+
+Ans: Yes.
+
+Page No. 22-23
+
+Figure it Out
+
+1. Express the following in exponential form:
+
+(i) 6 × 6 × 6 × 6 (ii) y × y (iii) b × b × b × b (iv) 5 × 5 × 7 × 7 × 7 (v) 2 × 2 × a × a (vi) a × a × a × c × c × c × c × d
+
+Ans:
+
+(i) 64 (ii) y2 (iii) b4 (iv) 52 × 73 (v) 22 × a2 (vi) a3 × c4 × d
+
+2. Express each of the following as a product of powers of their prime factors in exponential form.
+
+(i) 648 (ii) 405 (iii) 540 (iv) 3600
+
+Ans: (i) 23 × 34 (ii) 34 × 5 (iii) 22 × 33 × 5 (iv) 24 × 32 × 52
+
+3. Write the numerical value of each of the following:
+
+(i) 2 × 103 (ii) 72 × 23 (iii) 3 × 44
+
+(iv) (– 3)2 × (– 5)2 (v) 32 × 104 (vi) (– 2)5 × (– 10)6
+
+Ans: (i) 2000 (ii) 392 (iii) 768 (iv) 225 (v) 90000 (vi) – 32000000
+
+Page No. 24
+
+37 can also be written as 32 × 35. Can you reason out why?
+
+Ans:
+
+37 = 3 × 3 × 3 × 3 × 3 × 3 × 3 = (3 × 3) × (3 × 3 × 3 × 3 × 3) = 32 × 35
+
+Use this observation to compute the following. (i) 29 (ii) 57 (iii) 46
+
+Ans: (i) One of the ways is
+
+29 = 24 × 25 = 16 × 32 = 512 (ii) One of the ways is
+
+57 = 53 × 54 = 125 × 625 = 78125
+
+Write the following expressions as a power of a power in at least two different ways: (i) 86 (ii) 715 (iii) 914 (iv) 58
+
+Ans: (i) 86 = (82)3
+
+86 = (23)6 = 218 (ii) 715 = (73)5 ; 715 = (75)3 (iii) 914 = (92)7
+
+914 = (32)14 = 328 (iv) 58 = (52)4
+
+58 = (54)2
+
+Page No. 25
+
+Write the number of lotuses (in exponential form) when the pond was —
+
+(i) fully covered (ii) half covered
+
+Ans: (i) 230 (ii) 229
+
+Simplify 104
+
+54 and write it in exponential form.
+
+Ans: 24 = 16
+
+Page No. 26
+
+Roxie has 7 dresses, 2 hats, and 3 pairs of shoes. How many different ways can Roxie dress up?
+
+Ans: 7 × 2 × 3 ways
+
+Page No. 27
+
+How many passwords are possible with such a lock?
+
+Ans: 26 × 26 × 26 × 26 × 26 × 26 = (26)6
+
+What is 2100 ÷ 225 in powers of 2?
+
+Ans: 275
+
+Page No. 28
+
+Why can’t n be 0?
+
+Ans: If n = 0, then we get 0
+
+0 which is not defined.
+
+Page No. 29
+
+We had required a and b to be counting numbers. Can a and b be any integers? Will the generalised forms still hold true?
+
+Ans: Yes.
+
+Write equivalent forms of the following.
+
+(i) 2– 4 (ii) 10– 5 (iii) (– 7)–2 (iv) (– 5)– 3 (v) 10– 100
+
+Ans:
+
+(i)
+
+1 24 (ii)
+
+1 105 (iii)
+
+1 (–7)2
+
+(iv)
+
+1 (–5)3 (v)
+
+1 (10)100
+
+Simplify and write the answers in exponential form.
+
+(i) 2– 4 × 27 (ii) 32 × 3– 5 × 36 (iii) p3 × p–10
+
+q
+
+(iv) 24 × (– 4)
+
+– 2 (v) 8
+
+p × 8
+
+Ans: (i) 23 (ii) 33 (iii) p–7
+
+(iv) 1 (v) 8p + q
+
+Page No. 30
+
+How many times larger than 4–2 is 42?
+
+Ans: 44 times
+
+Use the power line for 7 to answer the following questions.
+
+Ans:
+
+2,401 × 49 = 7 6
+
+823543
+
+77
+
+117649
+
+493 = 7 6
+
+76
+
+16807
+
+75
+
+343 × 2,401 = 77
+
+2401
+
+74
+
+343
+
+16,807 49 = 73
+
+73
+
+49
+
+72
+
+7 343 = 7–2
+
+7
+
+71
+
+1
+
+16,807 8,23,543 = 7–2
+
+70
+
+7–1
+
+1 7
+
+1,17,649 × 1 343 = 73
+
+7–2
+
+1 49
+
+1 343 × 1 343 = 7–6
+
+7–3
+
+7–4
+
+1 343 1 2401
+
+Write these numbers in the same way: (i) 172, (ii) 5642, (iii) 6374.
+
+Ans:
+
+(i) 172 = 1 × 102 + 7 +101 + 2 × 100
+
+(ii) 5642 = 5 × 103 + 6 × 102 + 4 × 101 + 2 × 100 (iii) 6374 = 6 × 103 + 3 × 102 + 7 × 101 + 4 × 100
+
+Page No. 32
+
+Can you say which of the three distances is the smallest?
+
+Ans: Distance between Sun and Earth is the smallest.
+
+The number line below shows the distance between the Sun and Saturn (1.4335 × 1012 m). On the number line below, mark the relative position of the Earth. The distance between the Sun and the Earth is 1.496 × 1011 m.
+
+Sun Saturn
+
+Ans:
+
+Sun Earth Saturn Express the following numbers in standard form.
+
+(i) 59,853 (ii) 65,950 (iii) 34,30,000 (iv) 70,04,00,00,000
+
+Ans:
+
+(i) 5.9853 × 104 (ii) 
+6.595 × 104 (iii) 3.43 × 106 (iv) 
+7.004 × 1010
+
+Page No. 38
+
+Calculate and write the answer using scientific notation:
+
+(i) How many ants are there for every human in the world? (ii) If a flock of starlings contains 10,000 birds, how many flocks
+
+could there be in the world? (iii) If each tree had about 104 leaves, find the total number of leaves
+
+on all the trees in the world. (iv) If you stacked sheets of paper on top of each other, how many
+
+would you need to reach the Moon?
+
+Ans:
+
+(i) 2.5 × 106 ants (ii) 1.3 × 105 flocks (iii) 3 × 1016 leaves
+
+(iv) 3.844 × 1013 sheets
+
+Page No. 39
+
+If you have lived for a million seconds, how old would you be?
+
+Ans: Lived for approximately 12 days.
+
+Page No. 42
+
+Calculate and write the answer using scientific notation:
+
+(i) If one star is counted every second, how long would it take
+
+to count all the stars in the universe? Answer in terms of the number of seconds using scientific notation. (ii) If one could drink a glass of water (200 ml) every 10 seconds,
+
+how long would it take to finish the entire volume of water on Earth?
+
+Ans:
+
+(i) 2.0 × 1023 seconds (ii) 6.25 × 1022 seconds
+
+Page No. 43
+
+What does the first part of each name denote?
+
+Ans: The first part of each name denotes the number of times 1000s are
+
+multiplied to 1000.
+
+Page No. 44 – 45
+
+Figure it Out
+
+1. Find out the units digit in the value of 2224 ÷ 432? [Hint: 4 = 22]
+
+Ans: The units digit is ‘6’
+
+2. There are 5 bottles in a container. Every day, a new container is brought in. How many bottles would be there after 40 days?
+
+Ans: 200 = 2 × 102 bottles.
+
+3. Write the given number as the product of two or more powers in three different ways. The powers can be any integers.
+
+(i) 643 (ii) 1928 (iii) 32–5
+
+Ans: Some of the ways are
+
+(i) 210 × 28, 45 × 44, 83 × 83
+
+(ii) 248 × 38, 240 × 28 × 38
+
+240 × 68
+
+(iii) 2–10 × 2–15, 2–5 × 2–20, 4–12 × 2–1
+
+4. Examine each statement below and find out if it is ‘Always True’, ‘Only Sometimes True’, or ‘Never True’. Explain your reasoning.
+
+(i) Cube numbers are also square numbers. (ii) Fourth powers are also square numbers. (iii) The fifth power of a number is divisible by the cube of that
+
+number. (iv) The product of two cube numbers is a cube number.
+
+(v) q46 is both a 4th power and a 6th power (q is a prime number)
+
+Ans:
+
+(i) Only Sometimes True.
+
+“This is only true for numbers that have powers as 6.” n6= (n2)3 = (n3)2
+
+(ii) Always True.
+
+We can write n4 = (n2)2
+
+(iii) Always True.
+
+As
+
+5 2 3 
+• n 
+• = ,
+
+(iv) Always True.
+
+(n1)3 × (n2)3 = (n1× n2)3 = (n1n2)3
+
+(v) Never True.
+
+q46, here q is prime number and 46 is not divisible by 4 and 6.
+
+5. Simplify and write these in the exponential form. (i) 10– 2 × 10– 5 (ii) 57 ÷ 54 (iii) 9– 7 ÷ 94 (iv) (13– 2)–3 (v) m5n12(mn)9
+
+Ans:
+
+(i) 10-7 or 1 107
+
+(ii) 53
+
+(iii) 9–11 or 1 911
+
+(iv) 136
+
+(v) m14 n21
+
+6. If 122 = 144 what is (i) (1.2)2 (ii) (0.12)2
+
+(iii) (0.012)2 (iv) 1202
+
+Ans: If (12)2 = 144, then
+
+(i) (1.2)2 = 1.44 (ii) (0.12)2 = 0.0144 (iii) (0.012)2 = 0.000144
+
+(iv) (120)2 = 14400
+
+7. Circle the numbers that are the same —
+
+24 × 36        64 × 32        610        182 × 62        624
+
+Ans: 24 × 36, 64 × 32 and 182 × 62 are same.
+
+8. Identify the greater number in each of the following —
+
+(i) 43 or 34 (ii) 28 or 82 (iii) 1002 or 2100
+
+Ans:
+
+(i) 34 is greater than 43
+
+(ii) 28 is greater than 82
+
+(iii) 2100 is greater than 102
+
+9. A dairy plans to produce 8.5 billion packets of milk in a year. They want a unique ID (identifier) code for each packet. If they choose to use the digits 0–9, how many digits should the code consist of?
+
+Ans: Total packets of milk in a year = 8,500,000,000
+
+Total digits (0-9) = 10, Let each code have ‘n’ digits So, number of unique ID codes possible = 10n
+
+So, 10n ≥ 8,500,000,000 But, 109 < 8,500,000,000 and 1010 > 8,500,000,000. So, n = 10 Hence at least 10 digits are required in the code.
+
+10. 64 is a square number (82) and a cube number (43). Are there other numbers that are both squares and cubes? Is there a way to describe such numbers in general?
+
+Ans: Yes, there are infinitely many such numbers.
+
+In general the numbers are 6th powers (n6) for some integer n. Examples: 16(1), 36(729), 46(4096) and so on.
+
+11. A digital locker has an alphanumeric (it can have both digits and letters) passcode of length 5. Some example codes are G89P0, 38098, BRJKW, and 003AZ. How many such codes are possible?
+
+Ans: We have 26 letters and 10 digits (0-9) there are 36 possible characters
+
+for each of the length of 5. Total possible codes are 36 × 36 × 36 × 36 × 36 = 365.
+
+12. The worldwide population of sheep (2024) is about 109, and that of goats is also about the same. What is the total population of sheep and goats?
+
+(i) 209 (ii) 1011 (iii) 1010
+
+(iv) 1018 (v) 2 × 109 (vi) 109 + 109
+
+Ans: (vi)
+
+13. Calculate and write the answer in scientific notation:
+
+(i) If each person in the world had 30 pieces of clothing, find the
+
+total number of pieces of clothing. (ii) There are about 100 million bee colonies in the world. Find the
+
+number of honeybees if each colony has about 50,000 bees. (iii) The human body has about 38 trillion bacterial cells. Find the
+
+bacterial population residing in all humans in the world. (iv) Total time spent eating in a lifetime in seconds.
+
+Ans:
+
+(i) The estimated global population is 8.2 × 109
+
+Each person has 30 pieces of clothes. So, total pieces of clothing = 8.2 × 109 × 30
+
+= 2.46 × 1011
+
+(ii) Bee colonies = 100 million = 108
+
+Number of bees in each colony = 50,000. So, total number of honeybees = 50,000 × 108
+
+= 5.0 × 1012
+
+(iii) Human body has about 38 × 1012 bacterial cells.
+
+World population = 8.2 × 109
+
+Total becterial population = 38 × 8.2 × 1012 × 109
+
+= 3.116 × 1023
+
+(iv) Estimated life time 70 years, and eating time per day
+
+= 1 hour = 3600 seconds. Total number of seconds = 3600 × 365 × 70 = 91980000
+
+= 9.198 × 107 seconds
+
+14. What was the date 1 arab/1 billion seconds ago?
+
+Ans: A billion (1 × 109) seconds ago means approx. 11574 days ago or
+
+approx. 31.7 years ago and calculate as per the present date

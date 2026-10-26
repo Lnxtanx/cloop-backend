@@ -1,0 +1,812 @@
+# CLASS-9 - SOCIAL-SCIENCE-PART-2 - CHAPTER 01
+# Source: iest201.pdf
+
+Chapter 1
+
+Oceans and Life
+
+The Big Questions
+
+1. What is the importance of ocean relief?
+
+2. How does ocean water movement impact life and environment?
+
+3. Why are maritime zones important for a country?
+
+4. How can we use ocean resources in a sustainable way?
+
+5. How do early warning systems help protect people from tsunamis and cyclones?
+
+1. Ocean water is always in motion.
+
+1 2
+
+Waves, tides, and currents shape our climate, support marine life, and impact travel.
+
+3
+
+6
+
+2. The gravitational pull creates tides.
+
+4
+
+5
+
+The daily rise and fall of sea level is crucial for navigation and generating tidal energy.
+
+3. The ocean floor is a hidden landscape.
+
+5. Early warning systems protect coastal life.
+
+6. Maritime zones create ‘rules of the sea’.
+
+4. The ‘Blue Economy’: sustaining ocean resources.
+
+Like land, it has features like mountains, plains, mid-oceanic ridges, trenches, etc.
+
+Seismic sensors and satellites detect tsunamis and cyclones, allowing for timely evacuations.
+
+International laws like UNCLOS define a country’s rights from its coast to the high seas.
+
+Oceans provide food, energy, and jobs, which must be used sustainably.
+
+Fig. 1.1. The dynamic ocean system
+
+In earlier grades, you learnt about continents and oceans. In Indian culture, the ocean—commonly called Samudra—is considered powerful and sacred, and features prominently in stories and rituals.
+
+Oceans cover most of our planet and conceal many secrets beneath their waters. Have you ever wondered what the land under the oceans looks like, why ocean water is always moving, or what wealth and resources lie beneath the sea? How do areas like maritime zones help countries use the oceans, and how can we protect ourselves from ocean hazards, such as cyclones and tsunamis? In this chapter, we will explore these human–ocean connections and discover how oceans shape both our daily lives and the world around us.
+
+Ocean Relief
+
+As we explore human–ocean connections, let us begin with the ocean floor and its features. Just as land has mountains, valleys, and plains, the ocean floor, too, has several landforms, together known as submarine relief or ocean relief. These include underwater mountains, valleys, plateaus, and trenches. The Mariana Trench in the Pacific Ocean is the deepest place on Earth, while the Mid-Ocean Ridge is the world’s longest mountain range, hidden beneath the ocean. Some underwater mountains like Mauna Kea (Hawai‘i) are even taller than Mount Everest.
+
+Abyssal
+
+Submarine
+
+Continental
+
+Hill Seamount
+
+Canyon Volcanic
+
+Island
+
+Slope
+
+Continent
+
+Continental
+
+Continental
+
+Abyssal
+
+Mid-Ocean
+
+Magma Trench
+
+Shelf
+
+Rise
+
+Plain
+
+Ridge
+
+Rift Valley
+
+Fig. 1.2. Submarine relief
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 Part 2
+
+LET’S EXPLORE
+
+Looking at Fig. 1.2
+
+Æ How do you think these oceanic features would have been formed?
+
+Æ Which part of the ocean floor appears deep and shallow?
+
+Æ How do you think these underwater features would have an effect on marine life and ocean movements?
+
+Important submarine relief features
+
+Continental Shelf
+
+Continental Slope
+
+The steep slope marking the
+
+true edge of a continent.
+
+The submerged, shallow edge of a continent; extends under the ocean. Rich in marine life and resources like oil and gas.
+
+Seamount: An underwater mountain, usually of volcanic origin, that rises from the ocean floor but does not reach the sea surface.
+
+Mid-Ocean Ridge
+
+Abyssal Plain
+
+The vast, flat, and deep
+
+An immense underwater mountain range formed by
+
+ocean floor.
+
+volcanic activity.
+
+Ocean Trenches
+
+Seamounts and Guyots
+
+Guyot: A flat-topped underwater mountain, usually a former seamount whose summit was eroded and later submerged.
+
+Seamounts are often volcanic,
+
+The deepest parts
+
+with some flattened by wave
+
+of the ocean.
+
+action over millennia to
+
+form guyots.
+
+1 – Oceans and Life
+
+Movement of Ocean Water—Waves, Tides, and Currents
+
+The water in the oceans is constantly in motion. Waves, tides, and currents are not merely movements of ocean water; they help shape the Earth’s surface, support marine life, aid fishing and travel, and even influence climate. Let us learn more about these oceanic movements.
+
+Waves
+
+Wavelength: The horizontal
+
+When the surface of the ocean rises and falls alternately, it is called a wave. Waves are primarily caused by winds blowing across the water. They carry energy across the oceans over long distances. Observe Fig. 1.3 and note the crests (high peaks) and troughs (lower valleys).
+
+distance between two
+
+consecutive wave crests or
+
+troughs.
+
+Waves are often called coastal architects as they shape the shoreline through erosion and sediment transport. Observe the various landforms formed by waves in Fig. 1.4 and note how wave action creates erosional features, such as sea cracks, caves, arches, sea stacks, and stumps. Also notice the original headland shown in the figure.
+
+Direction of travel
+
+A B
+
+Wavelength
+
+Calm sea level Crest
+
+Wave Height
+
+Trough
+
+Wave Period The time required for the wave crest
+
+Wave Frequency The number of wave crests passing point A each second
+
+at point A to reach point B
+
+Fig. 1.3. Anatomy of waves
+
+In addition to erosional landforms, waves also form depositional features such as beaches.
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 Part 2
+
+Large crack
+
+Blow Hole
+
+Headland
+
+r
+
+i
+
+O
+
+g
+
+i
+
+n
+
+a
+
+l
+
+H
+
+opened up by hydraulic
+
+e
+
+a
+
+The top of the arch collapses due to gravity, leaving a tall stack of rock.
+
+d
+
+l
+
+action.
+
+a
+
+n
+
+d
+
+Waves breaking along the
+
+coastline
+
+Crack Sea Cave Arch Sea Stack Stump
+
+Over the time the stack gets eroded and weathered forming a stump.
+
+The back of the cave is eroded through to form a sea arch.
+
+Hydraulic action and abrasion turn the crack into a cave, which gets larger.
+
+Fig. 1.4. Landform features formed by waves
+
+LET’S EXPLORE
+
+Find out the names of some famous sea beaches in our country and locate them on the map of India.
+
+During storms, strong winds can generate huge waves that may cause significant damage along coastlines. The giant waves majorly caused by underwater earthquakes are called tsunamis, which can be extremely destructive. On reaching the shore, tsunamis may attain a maximum vertical height above sea level, known as the run-up height, of up to 30 metres, or even more in extreme cases.
+
+Tides
+
+Hydraulic action: The erosion of rock and soil caused by the force of moving water, which loosens and removes material.
+
+Tides are the rhythmic rise and fall of ocean water that occur twice a day in most parts of the world. When the water rises to its highest level and covers much of the shore, it is called high tide (flood tide). When the water falls to its lowest level and moves away from the shore, it is called low tide (ebb tide). Observe Fig. 1.5 and note the change in water level during high and low tides. Do you notice the oval layer around the Earth indicating water level? Can you also see how the water level rises during high tide and falls during low tide?
+
+1 – Oceans and Life
+
+Neap tide (first-quarter moon)
+
+Spring tide (full moon)
+
+Sun Earth Moon
+
+Neap tide (third-quarter moon)
+
+Spring tide (new moon)
+
+(a) (b)
+
+Fig. 1.5 (a) Spring tide (b) Neap tide (Schematic diagram
+
+of tidal forcing showing idealised bulges)
+
+Spring Tides and Neap Tides
+
+You may wonder what causes this regular rise and fall of ocean water. To understand this, let us explore how tides are formed.
+
+Spring tides: Observe Fig. 1.5(a), where the Sun, the Earth, and the Moon are aligned in a straight line. Spring tides occur during this alignment, which happens on full moon and new moon days. At this time, the combined gravitational pull of the Sun and the Moon causes high tides of unusual heights and low tides that are unusually lower. The figure also shows the bulging of water on opposite sides of the Earth due to this strong gravitational pull, leading to the formation of spring tides.
+
+Neap tides: When the Moon is in its first- and third-quarter phases, as shown in Fig. 1.5(b), the gravitational pull of the
+
+High-water
+
+spring tide
+
+High-water
+
+neap tide
+
+Low-water
+
+neap tide Low-water spring tide
+
+Understanding Society:
+
+India and Beyond
+
+Fig. 1.6. Levels of spring and neap tides
+
+Grade 9 Part 2
+
+Sun and the Moon acts in different directions. As a result, the difference between high tide and low tide becomes smaller, producing neap tides. Fig. 1.6 shows the levels of high and low water during both spring and neap tides, along with the average low-water levels for each.
+
+High tides are important for navigation because they raise the water level near the shore, allowing ships to enter harbours more easily. In ports and coastal areas, tidal information is essential, as tidal ranges in some ports can reach 4–5 metres. The Gulf of Khambhat has one of the highest tidal ranges, at about 12 metres. Before a ship berths at a port, it must check both the water depth and the tidal range to ensure safe docking, especially during low tide.
+
+Some sea channels, such as the Singapore Strait, contain shallow areas. Hence, ships such as Very Large Crude Carriers (VLCCs) passing through these regions often wait for hours to transit only during high tide to ensure sufficient water depth and avoid running aground.
+
+Tidal changes also generate strong currents because large volumes of water flow in and out of coastal areas. These tidal currents can reach speeds of 5–6 knots (about 9–11 km/h).
+
+High tide Low tide
+
+Fig. 1.7. Observe how high and low tides help in fishing activities
+
+High tides also support fishing activities (Fig. 1.7). During high tide, many fish move closer to the shore in search of food and shelter, enabling fishing communities to obtain a better catch.
+
+The rise and fall of tidal water are also used to generate electricity in some places (Fig. 1.8). India has a vast coastline of 11,098.81 kilometres, and although tidal energy is not yet widely used on a large scale, certain areas have been identified as suitable for its development. The Gulf of Kutch, the Gulf of Khambhat, and the Sundarbans are among the major tidal energy sites in India.
+
+1 – Oceans and Life
+
+DON’T MISS OUT
+
+The Bhadkeshwar Mahadev Temple in Dwarka is situated on a small hillock in the Arabian Sea. Visitors can reach the temple only during low tide, as the stone pathway leading to it is completely submerged during high tide. Fig. 1.8. Tides at the Bhadkeshwar Mahadev Temple, Dwarka, Gujarat
+
+Ocean Currents
+
+Coriolis force:
+
+A force caused
+
+by Earth's rotation that deflects any free
+
+moving object from its straight path to the right
+
+in the Northern
+
+Hemisphere and to the left in the Southern
+
+Ocean currents are continuous streams of water that flow across the ocean surface in definite directions (Fig. 1.9). They are caused by factors, such as winds, the Earth’s rotation (Coriolis force), differences in temperature and salinity, and the shape of continents and ocean basins. Ocean currents may be warm or cold depending on the direction from which the water flows. Currents flowing from warmer regions are called warm currents, while those flowing from colder regions are called cold currents. On maps, warm currents are usually shown in red and cold currents in blue.
+
+Hemisphere.
+
+THINK ABOUT IT
+
+Observe the map carefully and note the movement patterns of cold and warm currents. Do you think these currents affect the temperature of nearby coastal regions?
+
+The Gulf Stream, a warm current originating in the Gulf of Mexico in the Atlantic Ocean, flows towards Norway and keeps its waters relatively warm. As a result, sea ice does not form easily in the Norwegian region despite its high latitude (60°–70°). In contrast, the Labrador Current, a cold current flowing along the east coast of Canada, carries freezing water and supports the formation of sea ice and icebergs even at lower latitudes.
+
+LET’S EXPLORE
+
+Observe Fig. 1.9 and take a note on ocean currents along the coastline of India. What is the nature of ocean currents?
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 Part 2
+
+Fig. 1.9. Major ocean currents
+
+DON’T MISS OUT
+
+The regions where warm and cold currents meet are known as fishing grounds. These waters are rich in nutrients, supporting a large variety of fish and making them important fishing grounds.
+
+Cyclones and Tsunamis—Early Warning Systems
+
+Oceans and seas can give rise to sudden natural hazards such as cyclones, which are large rotating storms, and tsunamis, which are giant waves caused by earthquakes. To protect people from such dangers, scientists have developed Early Warning Systems that work like giant alarm systems for coastal areas. To reduce risks, people, communities, and governments must act in advance. Early Warning Systems help detect cyclones and tsunamis, predict disasters, and issue timely warnings so that people can evacuate and stay safe.
+
+LET’S EXPLORE
+
+Most deaths during the 2004 Indian Ocean tsunami occurred in Indonesia. However, the Island of Simeulue was largely spared from the disaster. Researchers suggest that this was partly because
+
+1 – Oceans and Life
+
+of local folklore, passed down through generations, that helped residents recognise the warning signs of a tsunami and respond quickly. Talk to your elders and find out whether similar folk traditions or stories related to natural disasters exist in your culture. Share these with your classmates and discuss how traditional knowledge can help communities stay safe.
+
+India has several Cyclone Warning Services and Marine Weather Services that monitor storms along both the eastern and western coasts. For early warning systems to be effective, they must function continuously. India uses advanced technologies to predict cyclones at an early stage, which has significantly reduced the loss of human and animal lives.
+
+The Government of India has launched the National Cyclone Risk Mitigation Project (NCRMP) to build cyclone shelters, strengthen warning systems, and improve emergency response mechanisms. The project focuses on cyclone-prone States and Union Territories and includes a Decision Support System (DSS) for disaster management authorities. The Indian National Centre for Ocean Information Services (INCOIS), in collaboration with the India Meteorological Department (IMD), has also established the Storm Surge Early Warning System (SSEWS) for the Indian coasts. Its main objective is to protect coastal communities by forecasting cyclone-induced storm surges and the extent of coastal inundation.
+
+DON’T MISS OUT
+
+The GAGAN-Enabled Mariner’s Instrument for Navigation and Information (GEMINI) is a handheld device designed for fishermen that plays an important role in ensuring the safety of fishing communities at sea (Fig. 1.10). The device receives satellite information and transmits it to mobile phones through Bluetooth. Using its dedicated mobile application, fishermen can access
+
+Understanding Society:
+
+India and Beyond
+
+Fig. 1.10. Local fishermen at work in the Arabian Sea; Alappuzha, Keralam
+
+Grade 9 Part 2
+
+important information in their local language, including alerts about high waves and strong winds, cyclone and tsunami warnings, potential fishing zone advisories, current speeds, bathymetry data, mapping, and risk management information.
+
+Bathymetry: The study and mapping of the underwater topography of water bodies, such as oceans, rivers, lakes, and streams.
+
+Under the Pradhan Mantri Matsya Sampada Yojana (PMMSY), the government provides financial support for GEMINI devices to improve the safety of coastal communities while they are at sea (Fig. 1.11).
+
+How GEMINI Works
+
+The GEMINI device receives data from the GAGAN satellite and transfers it to fishermen’s mobile phones through Bluetooth.
+
+The INCOIS mobile application decodes and displays this information in nine regional languages.
+
+Fig. 1.11. GEMINI
+
+At present, the communication channel can transmit information only up to 50 nautical miles into the sea.
+
+An upgraded version is expected to provide a two-way communication system on a pilot basis, allowing fishermen to send feedback as well.
+
+This upgraded system will benefit fishermen travelling up to 300 nautical miles in search of better fishing opportunities.
+
+Focus on Cyclones
+
+Cyclones are caused by atmospheric disturbances over warm ocean waters. Naming the cyclone: Cyclones in the North Indian Ocean are named sequentially from a list of 169 names submitted by 13 member countries, including India. This system aids clear communication and public awareness. Recent examples include Biparjoy (2023) and Remal (2024). Note: You may track cyclones and their affected areas in India on the School Bhuvan–NCERT Geoportal (Fig. 1.12).
+
+Fig. 1.12. Satellite image of a cyclone
+
+1 – Oceans and Life
+
+DON’T MISS OUT
+
+On 26 December 2004, the world witnessed unprecedented devastation caused by the Indian Ocean Tsunami. The disaster claimed around 2,30,000 lives and caused severe environmental damage across many countries bordering the Indian Ocean. India was among the worst-affected countries, as massive waves swept away people and structures along the coasts. Tamil Nadu, Puducherry, Andhra Pradesh, Keralam, and the Andaman & Nicobar Islands especially suffered extensive damage. The scale of the disaster led many countries to establish effective tsunami early warning systems and stronger disaster-management mechanisms. Under an initiative of the Indian Tsunami Early Warning Centre (ITEWC), the Government of India set up a real-time network of tsunami detection buoys (Fig. 1.14) designed to detect, measure, and monitor tsunamis.
+
+The photograph in Fig. 1.13 shows some areas of Chennai affected by the Indian Ocean tsunami (2004).
+
+Fig. 1.14. Tsunami
+
+Fig. 1.13. Some of the tsunami- affected areas in Chennai (2004)
+
+detection buoy
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 Part 2
+
+Confirmation
+
+Tracking Coastal tide gauges and radars
+
+Warning Dissemination Alerts are transmitted
+
+Detection A network of seismic stations detects undersea
+
+Ocean Bottom Pressure Recorders (OBPRs) placed on the
+
+monitor changes
+
+earthquakes in
+
+via satellite to government agencies
+
+real time.
+
+seafloor detect the passage of tsunami
+
+waves, confirming
+
+in sea level to track the arrival and movement of
+
+and are also sent directly to officials
+
+the threat.
+
+tsunami waves.
+
+and the public through SMS and other communication
+
+channels.
+
+Fig. 1.15. Functioning of the tsunami early warning system
+
+4 5
+
+1
+
+2
+
+3
+
+7
+
+6
+
+8
+
+3
+
+9
+
+10
+
+Warning centre 1 Modelling/ simulation 2 Capacity development 3 Communication satellite 4 GPS satellite 5
+
+Tide gauges station 6 GPS station 7 Seismometer station 8 Seismic waves 9 Earthquake 10
+
+Fig. 1.16. The different elements of the tsunami early
+
+warning system
+
+1 – Oceans and Life
+
+For an early warning system to save lives, information must reach the public quickly and effectively. The Indian Tsunami Early Warning Centre (ITEWC) is tasked with sending alerts to the Government of India, which then informs state governments and emergency response teams. Reliable communication is ensured through satellite-based communication networks, SMS, emails, and coastal display boards.
+
+Besides technology, public awareness and training programmes are equally important for an effective early warning system. Educating officials and coastal communities on how to interpret warnings helps ensure that when disasters such as cyclones are predicted, people know how to respond appropriately.
+
+THINK ABOUT IT
+
+If you receive a tsunami or cyclone alert on your phone right now, do you know the five steps your family should take to stay safe?
+
+Marine Resources and Their Significance
+
+Do you recall learning about natural resources in the Grade 8 Social Science Part 1 textbook? These resources are obtained from land, water, forests and animals, and other natural sources. Oceans, too, are vast storehouses of resources, and the materials and features found in oceans that have intrinsic or economic value are called marine resources. Marine resources can be broadly classified into two categories—Marine Living Resources and Marine Non-living Resources. They include fish and seafood, biodiversity, oil and natural gas, minerals, sand and gravel, renewable blue energy sources such as tidal and wave energy, tourism potential, and unique ecosystems such as coral reefs. Fig. 1.17 presents a detailed classification of marine resources.
+
+Significance of Marine Resources
+
+Understanding Society:
+
+Marine resources are vital for food security, economic activities, and maintaining a healthy environment (Fig. 1.17). Countries with long coastlines, such as India, benefit greatly from the sea. Fishing, trade, and tourism provide livelihoods to millions of people, while oceans also support biodiversity and sustain numerous plant and animal species. However, marine resources must be used responsibly without disturbing marine ecosystems.
+
+India and Beyond
+
+Grade 9 Part 2
+
+Marine Resources
+
+Living Resources Non-Living Resources
+
+Minerals Energy
+
+Submerged
+
+Bioactive
+
+Marine
+
+Aquatic Vegetation
+
+Natural Products Fish
+
+Bio- organisms
+
+(SAV)
+
+Non-Conventional Conventional
+
+Biofuels
+
+Oil
+
+Coastal/Neritic Fish
+
+Gas Hydrates
+
+Natural Gas
+
+Live within the Continental Shelf at
+
+Oceanic Fish Live beyond the Continental Shelf at
+
+depths of 0–200 m
+
+depths of >200 m
+
+Offshore Wind
+
+Ocean Energy
+
+Epipelagic Fish, Pelagic
+
+Fish, Demersal Fish,
+
+Benthopelagic Fish,
+
+Benthic Fish
+
+Ocean Mechanical Energy: Tidal Energy,
+
+Ocean Thermal Energy Conversion
+
+(OTEC)
+
+Wave Energy, Current Energy
+
+Fig. 1.17. Classification of marine resources
+
+The Ocean is a Vast Storehouse of Resources Vital for Life,
+
+Livelihoods, and Culture
+
+Marine resources hold immense value for humanity and for coastal nations like India, they are the bedrock of local economies and traditions.
+
+Food and Livelihood: Fish are a major source of protein, while fishing and aquaculture support
+
+important industries
+
+Energy: Offshore oil and gas reserves; immense potential for renewable ‘blue energy’ from tides and waves.
+
+and livelihoods.
+
+Minerals and Materials:
+
+Sand, gravel, and deep-
+
+sea minerals.
+
+Trade and Tourism: 90% of global trade by volume is carried by sea; coastal tourism is a multi-billion dollar industry.
+
+Cultural Significance: The sacred śhaṅkha (conch) and kapardikā (cowrie shells), once used as currency,
+
+are regarded as divine treasures from the mythological Samudra Manthana,
+
+reflecting the close connection among the sea, prosperity, and culture.
+
+Fig. 1.18. Significance of marine resources
+
+1 – Oceans and Life
+
+DON’T MISS OUT
+
+Blue Economy is the Future: Sustainable Growth Powered by Healthy Oceans
+
+Connecting to Global Goals: This concept is enshrined in the UN’s Sustainable Development Goal (SDG) 14: Life Below Water. Its key aims are to:
+
+Reduce marine pollution
+
+The World Bank defines Blue Economy as “the sustainable use of ocean resources to promote economic growth, improved livelihoods, and jobs, while preserving the health of the marine ecosystem”.
+
+Protect marine ecosystems
+
+Address ocean acidification
+
+Ecosystem Health
+
+Blue Economy
+
+Economic Growth
+
+Regulate fishing
+
+Conserve marine areas
+
+Eliminate harmful subsidies
+
+Improved Livelihoods and Jobs
+
+Increase economic benefits
+
+Nautical mile:
+
+Fig. 1.19. The role of Blue Economy
+
+A unit of measurement used in maritime and air navigation.
+
+Maritime Zones
+
+It is defined as
+
+Have you ever wondered who owns the oceans and how countries decide where they can fish or travel? To understand this, we need to learn about maritime zones—different areas of the ocean defined by international law.
+
+exactly 1,852 metres (about 6,076 feet). Based on the Earth’s circumference, one nautical mile
+
+corresponds to
+
+one minute of latitude making it
+
+a convenient unit
+
+The sea area closest to a country is called its territorial waters, over which the country has near-complete control, subject to the right of innocent passage for foreign ships. Just as on land, the government can make laws relating to customs, immigration, and pollution control in this zone.
+
+for charting and navigation across
+
+the world’s seas.
+
+Understanding Society:
+
+India and Beyond
+
+Observe Fig. 1.20 and note the extent of the territorial sea in nautical miles. Beyond this lies the contiguous zone, extending from the baseline up to 24 nautical miles, where the country has limited control over customs, fiscal matters, and illegal immigration.
+
+Grade 9 Part 2
+
+The high seas
+
+24 NM
+
+12 NM
+
+Territorial sea
+
+Contiguous zone Internal
+
+Baseline
+
+waters
+
+Exclusive economic zone
+
+200 NM
+
+Continental shelf margin
+
+Continental shelf
+
+Fig. 1.20. Maritime zones (Indicative only)
+
+DON’T MISS OUT
+
+Innocent Passage is a principle that allows foreign ships to pass through the territorial waters of a country as long as they do not threaten its peace, good order, or security. Ships must move continuously without stopping, except in emergencies or cases of breakdowns. This right does not permit activities such as fishing, military operations, or other non-peaceful actions.
+
+Beyond the contiguous zone, lie the Exclusive Economic Zones (EEZs), which extend from the baseline up to 200 nautical miles from the coast, and are defined under the United Nations Convention on the Law of the Sea (UNCLOS) by global agreement. In these zones, a country has special rights to use ocean resources, such as fish, oil, and gas, although ships from other countries may still pass through peacefully. It is important to note, however, that the country does not fully own or control the waters of the EEZ.
+
+Beyond the EEZs of all countries lie the high seas, also known as international waters. Covering about 64 per cent of the world’s oceans, these waters do not belong to any single country and are therefore considered part of the global commons. All countries enjoy equal rights on the high seas, including navigation, fishing, flying over them, laying undersea cables, building lawful structures such as artificial lands, and exploring for minerals.
+
+1 – Oceans and Life
+
+Although the high seas are essential, they also present many challenges. Since no single country controls them, issues, such as overfishing, illegal fishing, and conflicts over resources often arise. These problems affect millions of people who depend on the sea for food and livelihoods. Ensuring navigation and safety is also more difficult without clear enforcement mechanisms. On the high seas, the laws of the flag state—the country in which a ship is registered—apply.
+
+International Maritime Rules and Regulations
+
+In the earlier sections of this chapter, you learnt that oceans are vital for trade, travel, and communication. To ensure that activities at sea remain safe, fair, and peaceful, countries follow a set of international rules and agreements known as maritime law or maritime regulations. These laws regulate how ships operate and move; protect the marine environment; address issues such as piracy, terrorism, natural disasters, and accidents; safeguard trade routes; and help settle disputes between countries.
+
+LET’S EXPLORE
+
+Maritime disputes are conflicts or disagreements between countries over territory, resources, or rights in naval areas such as oceans, seas, or coastal regions. Can you find out some countries that have conflicts over their territorial sea waters?
+
+Important Maritime Rules and Regulations
+
+Just as there are traffic rules on land, ships must follow “rules of the road at sea” to avoid accidents. These rules, known as COLREGs (Convention on the International Regulations for Preventing Collisions at Sea), include maintaining a proper lookout, deciding which side to pass on, identifying the give-way and stand-on vessels, proceeding at a safe speed, and using lights, sound signals, shapes (for different types of vessels such as fishing boats), along with appropriate actions to prevent collisions. In addition, ships use international signals and radio communication to share information and prevent accidents, especially in crowded or hazardous waters.
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 Part 2
+
+Ships must also meet safety standards and are prohibited from polluting the seas. The MARPOL (International Convention for the Prevention of Pollution from Ships) Convention is an important international agreement aimed at reducing pollution from ships.
+
+Why are Maritime Rules Important?
+
+International maritime rules, regulations, and agreements help keep the oceans safe and ensure the fair and sustainable use of ocean resources. These rules enable countries to cooperate in using marine resources without conflict while protecting marine life, ships, sailors, and coastal communities. Without such regulations, the oceans could become dangerous and chaotic, with increased pollution, accidents, collisions, and disputes over resources. By establishing common standards for all ships, regardless of the country they belong to, maritime rules help keep the oceans safe, clean, and open for trade and travel.
+
+Before we move on…
+
+Æ Oceans are vital for global trade, travel, communication, and climate regulation.
+
+Æ Submarine relief refers to the physical features of the ocean, such as the continental shelf, ridges, trenches, and seamounts, which influence marine life, resource availability, and undersea exploration.
+
+Æ Movements of ocean water—waves, tides, and currents—affect marine ecosystems, global climate, and human activities like fishing and navigation.
+
+Æ Maritime zones include territorial waters, EEZs (Exclusive Economic Zones), and the high seas.
+
+Æ Sustainable use of marine resources through cooperation, regulation, and conservation is essential to protect aquatic life and support future generations.
+
+Æ Maritime rules and regulations exist to resolve disputes over marine boundaries.
+
+Æ International laws, such as UNCLOS (United Nations Convention on the Law of the Sea), help define maritime zones and settle disputes among countries.
+
+1 – Oceans and Life
+
+Questions and activities
+
+1. How do different features of the ocean floor affect human activities such as fishing, transport, and underwater exploration?
+
+2. How do waves, tides, and ocean currents influence climate, marine life, and human activities around the world?
+
+3. Describe the importance of marine resources.
+
+4. Draw a poster that encourages people to protect marine resources. Include a slogan (like Save Our Seas or Fish for the Future) and explain your message in 2–3 sentences.
+
+5. Using a map of India, mark at least five coastal states that might need tsunami warnings.
+
+6. Work in a group and act out what would happen when a cyclone warning is issued. Highlight what role different people, like scientists, officials, and coastal villagers, would play.
+
+7. Suppose a foreign ship is sailing through India’s territorial sea. What principle allows the ship to pass through these waters, subject to certain conditions?
+
+8. A country has an Exclusive Economic Zone (EEZ) extending up to 200 nautical miles from its baseline. What rights does the country have over the natural resources in this zone?
+
+9. Create a model of an ocean with ship routes, protected zones, and safety measures. Based on the model, explain how it follows maritime laws and protects the ocean.
+
+Notes
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 Part 2

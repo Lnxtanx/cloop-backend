@@ -1,0 +1,3545 @@
+# CLASS-6 - MATHS - CHAPTER 07
+# Source: fegp107.pdf
+
+Fractions 7
+
+Recall that when some whole number of things are shared equally among some number of people, fractions tell us how much each share is.
+
+Shabnam: Do you remember, if one roti is divided equally
+
+between two children, how much
+
+roti will each child get?
+
+Mukta: Each child will get half a roti.
+
+Shabnam: The fraction ‘one half’ is written as
+
+1 2 . We also sometimes read this as
+
+‘one upon two.’
+
+Mukta: If one roti is equally shared among
+
+4 children, how much roti will one child get?
+
+Shabnam: Each child’s share is 1
+
+4 roti.
+
+Mukta: And which is more 1
+
+2 roti or 1 4 roti?
+
+Shabnam: When 2 children share 1 roti
+
+equally, each child gets 1
+
+2 roti. When
+
+4 children share 1 roti equally, each
+
+child gets 1
+
+4 roti. Since, in the second
+
+group more children share the
+
+Ganita Prakash | Grade 6
+
+same one roti, each child gets a smaller share. So, 1
+
+2 roti is
+
+more than 1
+
+4 roti.
+
+1 2 > 1 4
+
+7.1 Fractional Units and Equal Shares
+
+Beni: Which fraction is greater — 1
+
+5 or 1 9?
+
+Arvin: 9 is bigger than 5. So I would guess that 1 9 is greater than 1
+
+5. Am I right? Beni: No! That is a common mistake. Think of these fractions as shares. Arvin: If one roti is shared among 5 children, each one gets a share of 1
+
+5 roti. If one roti is shared among 9 children, each one gets a share of 1
+
+9 roti? Beni: Exactly! Now think again - which share is higher?
+
+Arvin: If I share with more people, I will get less. So, 1
+
+9 < 1 
+5. Beni: You got it!
+
+Oh, so 1 100 is bigger than 1 200!
+
+When one unit is divided into several equal parts, each part is called a fractional unit. These are all fractional units:
+
+1 2 , 1 3 , 1 4 , 1 5 , 1 6 , …, 1 10 , …, 1 50 , …, 1 100, etc.
+
+We also sometimes refer to fractional units as ‘unit fractions.’
+
+Figure it Out
+
+Fill in the blanks with fractions.
+
+1. Three guavas together weigh 1 kg. If they are roughly of the same size, each guava will roughly weigh ____ kg.
+
+2. A wholesale merchant packed 1 kg of rice in four packets of equal weight. The weight of each packet is ___ kg.
+
+Math
+
+Talk
+
+3. Four friends ordered 3 glasses of sugarcane juice and shared it equally among themselves. Each one drank ____ glass of sugarcane juice.
+
+Fractions
+
+4. The big fish weighs 1 2 kg. The small one weighs 1 4 kg.
+
+Math
+
+Talk
+
+Together they weigh ____ kg.
+
+Knowledge from the past! Fractions have been used and named in India since ancient times. In the Rig Veda, the fraction 3
+
+4 is referred to as tri-pada. This has the same meaning as the words for 3
+
+4 in many Indian languages today, e.g., ʻteen paavʼ in colloquial Hindi and ‘mukkaal’ in Tamil. Indeed, words for fractions used today in many Indian languages go back to ancient times.
+
+Find out and discuss the words for fractions that are used in the different languages spoken in your home, city, or state. Ask your grandparents, parents, teachers, and classmates what words they use for different fractions, such as for one and a half, three quarters, one and a quarter, half, quarter, and two and a half, and write them here:
+
+___________ ___________ ___________ ___________ ___________ ___________
+
+5. Arrange these fraction words in order of size from the smallest to the biggest in the empty box below:
+
+One and a half, three quarters, one and a quarter, half, quarter, two and a half.
+
+Write your answer here.
+
+Ganita Prakash | Grade 6
+
+7.2 Fractional Units as Parts of a Whole
+
+The picture shows a whole chikki.
+
+A whole chikki A picture of the chikki broken into 2 pieces is shown below. How much of the original chikki is each piece?
+
+1 4
+
+We can see that the bigger piece has 3 pieces of 1
+
+4 chikki in it. So, we
+
+can measure the bigger piece using the fractional unit 1
+
+4. We see that
+
+the bigger piece is 3
+
+4 chikki.
+
+1 6
+
+1 6
+
+A whole chikki cut into 6 equal
+
+A whole chikki cut into 6 equal pieces.
+
+pieces in a different way.
+
+By dividing the whole chikki into 6 equal parts in different
+
+Math
+
+ways, we get 1
+
+Talk
+
+6 chikki pieces of different shapes. Are they of
+
+the same size?
+
+Fractions
+
+What is the fractional unit of chikki shown below?
+
+We get this piece by breaking the chikki into 3 equal pieces. So this is 1
+
+3 chikki.
+
+1 3
+
+A whole chikki
+
+Figure it Out
+
+The figures below show different fractional units of a whole chikki. How much of a whole chikki is each piece?
+
+a.
+
+b. c. d.
+
+e. f. g. h.
+
+Ganita Prakash | Grade 6
+
+7.3 Measuring Using Fractional Units
+
+Take a strip of paper. We consider this paper strip to be one unit long.
+
+1 Strip Paper
+
+Fold the strip into two equal parts and then open up the strip again. Taking the strip to be one unit in length, what are the lengths of the two new parts of the strip created by the crease?
+
+1 2 1 2
+
+What will you get if you fold the previously-folded strip again into two equal parts? You will now get four equal parts.
+
+1 4
+
+2 times 1 4 = 2 4
+
+3 times 1 4 = 3 4
+
+4 times 1 4 = 4 4
+
+Do it once more! Fill in the blank boxes.
+
+Fractions
+
+2 times 1 8
+
+=
+
+=
+
+4 times 1 8
+
+=
+
+=
+
+6 times 1 8
+
+=
+
+8 times 1 8 8
+
+8 = = 1
+
+Fractional quantities can be measured using fractional units.
+
+Let us look at another example,
+
+Represents a full roti (whole)
+
+1 2
+
+1 2 + 1 2 + 1 2
+
+1 2 + 1 2 + 1 2 + 1 2
+
+1 2 + 1 2 + 1 2 + 1 2 + 1 2
+
+1 2 + 1 2
+
+= 1 times half
+
+= 3 times half
+
+= 4 times half
+
+= 5 times half
+
+= 2 times half
+
+We can describe how much the quantity is by collecting together the fractional units.
+
+Ganita Prakash | Grade 6
+
+Figure it Out
+
+1. Continue this table of 1 2 for 2 more steps.
+
+2. Can you create a similar table for 1 4?
+
+3. Make 1 3 using a paper strip. Can you use this to also make 1 6 ?
+
+4. Draw a picture and write an addition statement as above to show:
+
+a. 5 times 1
+
+4 of a roti b. 9 times 1
+
+4 of a roti
+
+5. Match each fractional unit with the correct picture:
+
+1 3 1 5 1 8 1 6
+
+Reading Fractions
+
+We usually read the fraction 3
+
+4 as ‘three quarters’ or ‘three upon four’,
+
+but reading it as ‘3 times 1
+
+4’ helps us to understand the size of the
+
+fraction because it clearly shows what the fractional unit is (1
+
+4) and
+
+how many such fractional units (3) there are.
+
+Recall what we call the top number and the bottom number of fractions.
+
+In the fraction 5
+
+6 , 5 is the numerator and 6 is the denominator.
+
+Teacher’s Note
+
+Give several opportunities to the children to explore the idea of fractional units with different shapes like circles, squares, rectangles, triangles, etc.
+
+Fractions
+
+7.4 Marking Fraction Lengths on the Number Line
+
+We have marked lengths equal to 1, 2, 3, … units on the number line. Now, let us try to mark lengths equal to fractions on the number line.
+
+What is the length of the blue line? Write the fraction that gives the length of the blue line in the box.
+
+0 1 2
+
+The distance between 0 and 1 is one unit long. It is divided into two equal parts. So, the length of each part is 1
+
+2 unit. So, this blue line is 1
+
+2 unit long.
+
+Now, can you find the lengths of the various blue lines shown below? Fill in the boxes as well. 
+1. Here, the fractional unit is dividing a length of 1 unit into three equal parts. Write the fraction that gives the length of the blue line in the box or in your notebook.
+
+0 1 2 1 3
+
+2. Here, a unit is divided into 5 equal parts. Write the fraction that gives the length of the blue lines in the respective boxes or in your notebook.
+
+0 1 2 1 5 3 5
+
+3. Now, a unit is divided into 8 equal parts. Write the appropriate fractions in your notebook.
+
+Ganita Prakash | Grade 6
+
+Figure it Out
+
+1. On a number line, draw lines of lengths 1 10 , 3 10 , and 4 5 .
+
+Math
+
+Talk
+
+2. Write five more fractions of your choice and mark them on the
+
+number line.
+
+3. How many fractions lie between 0 and 1? Think, discuss with
+
+your classmates, and write your answer.
+
+4. What is the length of the blue line and black line shown below? The
+
+distance between 0 and 1 is 1 unit long, and it is divided into two
+
+equal parts. The length of each part is 1
+
+2. So the blue line is 1 2 units
+
+long. Write the fraction that gives the length of the black line in the
+
+box.
+
+1 2 0 1 2
+
+5. Write the fraction that gives the lengths of the black lines in the respective boxes.
+
+0 1 2 1 5 2 5 3 5 4 5
+
+Teacher’s Note
+
+Draw these lines on the board and ask the students to write the answers in their notebooks.
+
+Fractions
+
+7.5 Mixed Fractions
+
+Fractions greater than one You marked some fractions on the number line earlier. Did you notice that the lengths of all the blue lines were less than one and the lengths of all the black lines were more than 1?
+
+Write down all the fractions you marked on the number line earlier. Now, let us classify these in two groups:
+
+Lengths less than 1 unit Lengths more than 1 unit
+
+Did you notice something common between the fractions that are greater than 1?
+
+In all the fractions that are less than 1 unit, the numerator is
+
+smaller than the denominator, while in the fractions that are more
+
+than 1 unit, the numerator is larger than the denominator.
+
+We know that 3
+
+2 , 5 2 and 7 2 are all greater than 1 unit. But can we
+
+see how many whole units they contain?
+
+3 2 = 1 2 + 1 2 + 1 2 = 1 + 1 2
+
+5 2 = 1 2 + 1 2 + 1 2 + 1 2 + 1 2 = 2 + 1 2
+
+I know that 1
+
+3 + 1 3 + 1 3 = 3 3 = 1. If I add one more 1 3,
+
+I will get more than 1 unit! So, 4
+
+3 > 1.
+
+Ganita Prakash | Grade 6
+
+Figure it Out
+
+1. How many whole units are there in 7 2 ?
+
+Math
+
+Talk
+
+2. How many whole units are there in 4 3 and in 7 3 ?
+
+Writing fractions greater than one as mixed numbers
+
+We saw that: 3
+
+2 = 1 + 1 2 .
+
+We can write other fractions in a similar way. For example,
+
+4 3 = 1 3 + 1 3 + 1 3 + 1 3 = 1 + 1 3 .
+
+3 × 1
+
+3 = 1
+
+Figure it Out
+
+1. Figure out the number of whole units in each of the following fractions:
+
+a. 8
+
+3 b. 11
+
+5 c. 9
+
+4
+
+We saw that
+
+This number is thus also called ‘two and
+
+8 3 = 2 + 2 3
+
+two thirds’. We also write it as 2 2
+
+3 .
+
+Fraction Mixed number
+
+2. Can all fractions greater than 1 be written as such mixed numbers?
+
+A mixed number or mixed fraction contains a whole number (called the whole part) and a fraction that is less than 1 (called the fractional part).
+
+3. Write the following fractions as mixed fractions (e.g., 9 2 = 4 1 2 ):
+
+a. 9
+
+2 b. 9
+
+5 c. 21
+
+19 d. 47 9 e. 12
+
+11 f. 19
+
+6
+
+Fractions
+
+Can we write a mixed number (mixed fraction)
+
+as a regular fraction?
+
+Yes! I figured out a way to write a mixed number as a
+
+regular fraction!
+
+Jaya: When I have 3 + 3
+
+4 , this means 1 + 1 + 1 + 3 4 . I know
+
+1 = 1 4 + 1 4 + 1 4 + 1 4 .
+
+So I get
+
+( 1
+
+4 + 1 4 + 1 4 + 1 4 ) + ( 1 4 + 1 4 + 1 4 + 1 4 ) + ( 1 4 + 1 4 + 1 4 + 1 4 ) + ( 1 4 + 1 4 + 1 4 ) = 15 4 .
+
+Therefore, (4 × 1
+
+4 ) + (4 × 1 4 ) + (4 × 1 4 ) + (3 × 1 4 ) = 15 4 .
+
+Figure it Out
+
+Write the following mixed numbers as fractions: a. 3 1
+
+4 b. 7 2
+
+3 c. 9 4 9
+
+Math
+
+Talk
+
+d. 3 1
+
+6 e. 2 3
+
+11 f. 3 9
+
+10
+
+7.6 Equivalent Fractions
+
+Using a fraction wall to find equal fractional lengths!
+
+In the previous section, you used paper folding to represent various fractions using fractional units. Let us do some more activities with the same paper strips.
+
+Ganita Prakash | Grade 6
+
+1
+
+What do you
+
+observe?
+
+1 2
+
+• Are the lengths 1 2 and 2 4 equal?
+
+• Are the lengths 2 4 and 4 8 equal?
+
+We can say that 1
+
+2 = 2 4 = 4 8 .
+
+2 4
+
+4 8
+
+These are ‘equivalent fractions’ that denote the same length, but they are expressed in terms of different fractional units.
+
+Now, check whether 1
+
+3 and 2 6 are equivalent fractions or not, using paper strips.
+
+Make your own fraction wall using such strips as given in the picture below!
+
+Answer the following questions after looking at the fraction wall:
+
+1. Are the lengths 1
+
+2 and 3 6 equal?
+
+1 UNIT
+
+2. Are 2
+
+3 and 4 6 equivalent
+
+1 2 2 2
+
+fractions? Why?
+
+1 3 2 3 3 3
+
+3. How many pieces of
+
+1 4 2 4 3 4 4 4
+
+length 1
+
+6 will make a
+
+1 5 2 5 3 5 4 5 5 5
+
+length of 1
+
+2 ?
+
+1 6 2 6 3 6 4 6 5 6 6 6
+
+4. How many pieces of length 1
+
+6 will make a length of 1 3 ?
+
+Fractions
+
+We can extend this idea to make a fraction wall up to the fractional unit 1
+
+10. (This fraction wall is given at the end of the book.)
+
+1 UNIT
+
+2 2
+
+2 3 3 3
+
+2 4 3 4 4 4
+
+2 5 3 5 4 5 5 5
+
+2 6 3 6 4 6 5 6 6 6
+
+2 7 3 7 4 7 5 7 6 7 1 7
+
+2 8 3 8 4 8 5 8 6 8 7 8 8 8
+
+2 9 3 9 4 9 5 9 6 9 7 9 8 9 9 9
+
+1 2 1 3 1 4 1 5 1 6 1 7 1 8 1 9 1 10 2 10 3 10 4 10 5 10 6 10 7 10 8 10 9 10 10 10
+
+Figure it Out
+
+1. Are 3 6 , 4 8 , 5 10 equivalent fractions? Why?
+
+2. Write two equivalent fractions for 2 6 .
+
+3. 4 6 = = = = ............ (Write as many as you can)
+
+Understanding equivalent fractions using equal shares
+
+One roti was shared equally by four children. What fraction of the whole did each child get?
+
+The adjoining picture shows the division of a roti among four children.
+
+Fraction of roti each child got is 1
+
+4 .
+
+The four shares must be
+
+equal to each other!
+
+Ganita Prakash | Grade 6
+
+You can also express this event through division facts, addition facts, and multiplication facts.
+
+The division fact is 1 ÷ 4 = 1
+
+4 .
+
+The addition fact is 1 = 1
+
+4 + 1 4 + 1 4 + 1 4 .
+
+The multiplication fact is 1 = 4 × 1
+
+4 .
+
+Figure it Out
+
+1. Three rotis are shared equally by four children. Show the division in the picture and write a fraction for how much each child gets. Also, write the corresponding division facts, addition facts, and, multiplication facts.
+
+Fraction of roti each child gets is ______.
+
+Division fact:
+
+Addition fact:
+
+Multiplication fact:
+
+Compare your picture and answers with your classmates!
+
+2. Draw a picture to show how much each child gets when 2 rotis are shared equally by 4 children. Also, write the corresponding division facts, addition facts, and multiplication facts.
+
+3. Anil was in a group where 2 cakes were divided equally among 5 children. How much cake would Anil get?
+
+What if we put two such groups
+
+Now, if there are 10 children
+
+together? one group where
+
+in my group, how many
+
+2 cakes are divided equally
+
+cakes will I need so that they
+
+between 5 children, and another
+
+get same amount of cake as
+
+group again with 4 cakes and
+
+Anil?
+
+10 children.
+
+Fractions
+
+Group 1
+
+Group 2
+
+So, 2
+
+5 = 4 10!
+
+So, the share of each child is the same in both these situations!
+
+Let us examine the shares of each child in the following situations.
+
+• 1 roti is divided equally between 2 children. 
+• 2 rotis are divided equally among 4 children. 
+• 3 rotis are divided equally among 6 children.
+
+Let us draw and share! Did you notice that in each situation the share of every child is the same? So, we can say that 1
+
+2 = 2 4 = 3 6 .
+
+2 rotis are divided
+
+1 roti is divided
+
+3 rotis are divided
+
+equally among 4
+
+equally between 2
+
+equally among 6
+
+1 2 1 2 2 4 2 4 2 4 2 4 3 6 3 6 3 6 3 6 3 6 3 6
+
+Fractions where the shares are equal are called ‘equivalent fractions’.
+
+Ganita Prakash | Grade 6
+
+So, 1
+
+2 , 2 4 , and 3 6 are all equivalent fractions.
+
+Find some more fractions equivalent to 1
+
+2 . Write them in the
+
+boxes here:
+
+Equally divide the rotis in the situations shown below and write down the share of each child. Are the shares in each of these cases the same? Why?
+
+6 rotis divided
+
+2 rotis divided
+
+4 rotis divided
+
+equally among
+
+equally among
+
+equally among
+
+9 children
+
+3 children
+
+6 children
+
+2 3 2 3 2 3
+
+2 3 is also called the simplest form of 4 6 . It is also the simplest form of 6 9 as well.
+
+Do you notice anything about the relationship between the
+
+numerator and denominator in each of these fractions?
+
+Figure it Out
+
+Find the missing numbers:
+
+a. 5 glasses of juice shared equally among 4 friends is
+
+Math
+
+Talk
+
+the same as ____ glasses of juice shared equally among 8 friends.
+
+So, 5
+
+4 = 8 .
+
+b. 4 kg of potatoes divided equally in 3 bags is the same as
+
+12 kgs of potatoes divided equally in ___ bags.
+
+So, 4
+
+3 = 12
+
+Fractions
+
+c. 7 rotis divided among 5 children is the same as ____ rotis divided
+
+among _____ children.
+
+So, 7
+
+5 = .
+
+In which group will each child get more chikki?
+
+1 chikki divided between 2 children or 5 chikkis divided among 8 children.
+
+Mukta: So, we must compare 1
+
+2 and 5 8 . Which is more?
+
+Shabnam: Well, we have seen that 1
+
+2 = 4 8 ; and clearly 4 8 < 5 8 . So, the
+
+children for whom 5 chikkis is divided equally among 8 will get more than those children for whom 1 chikki is divided equally among 2. The children of the second group will get more chikki each.
+
+What about the following groups? In which group will each child get more?
+
+1 chikki divided between 2 children or 4 chikkis divided among 7 children.
+
+Shabnam: The children of which group will get more chikki this time?
+
+Mukta: We must compare 1
+
+7 and 4 7 .
+
+Now
+
+1 × 4 2 × 4 = 4 8 so, 1 2 = 4 8 .
+
+Shabnam: But why did you multiply the numerator and denominator
+
+by 4 again?
+
+Mukta: You will see!
+
+When 4 chikkis are divided equally among 7 children, each one will get 4
+
+7 chikki. When 4 chikkis are divided equally among 8 children, each one will get 4
+
+8 chikki. So 4 7 > 4 
+8.
+
+Ganita Prakash | Grade 6
+
+If the number of units that are shared
+
+is the same, but the number of children among whom the units are shared is more, then the share is less.
+
+Therefore, 4
+
+7 > 4 8 and 4 8 = 1 2 , so 4 7 > 1 
+2.
+
+Now I understood why you multiplied the numerator and denominator by 4.
+
+Suppose the number of children is kept the same, but the number of units that are being shared is increased? What can you say about each child’s share now? Why? Discuss how your reasoning explains
+
+1 5 < 2 5 , 3 7 < 4 7 , and 1 2 < 5 8 .
+
+Now, decide in which of the two groups will each child get a larger share:
+
+Math
+
+Talk
+
+1. Group 1 : 3 glasses of sugarcane juice divided equally among 4 children. Group 2: 7 glasses of sugarcane juice divided equally
+
+among 10 children.
+
+2. Group 1 : 4 glasses of sugarcane juice divided equally among 7 children. Group 2: 5 glasses of sugarcane juice divided equally
+
+among 7 children.
+
+Which groups were easier to compare? Why?
+
+When the number of
+
+children is same, it is easier
+
+Shabnam: To compare the first two groups,
+
+to compare, isn’t it?
+
+we have to find fractions equivalent to the fractions
+
+3 4 and 7 
+10.
+
+Mukta: How about 6
+
+8 = 3 4 and 21 30 = 7 10?
+
+Fractions
+
+Shabnam: There is a condition. The fractional unit used for the two
+
+fractions have to be the same! Like 2
+
+6 and 3 6 both use the
+
+same fractional unit 1
+
+6 (i.e., the denominators are the same).
+
+But 6
+
+8 and 21 30 do not use the same fractional units (they have
+
+different denominators).
+
+Mukta: Okay, so let us start making equivalent fractions then:
+
+3
+
+4 = 6 8 = 9 12 = 12 16 = 15 20 … But when do I stop?
+
+Shabnam: Got it! How about we go on till 4 × 10 = 40.
+
+Mukta: You mean the product of the two denominators?
+
+Sounds good!
+
+We have 3
+
+4 and 7 
+10. The product of the two denominators
+
+(4 and 10) is 40.
+
+3 4 = 6 8 = 9 12 = 12 16 = 15 20 = 18 24 = … = 27 36 = 30 40 .
+
+Go till we reach the
+
+denominator 40.
+
+7 10 = 14 20 = 21 30 = 28 40.
+
+Yes! We just needed to get the
+
+But notice that
+
+15 20 and 14 20 also had
+
+same fractional units for each
+
+the same denominator!
+
+fraction.
+
+Shabnam: So, fractions equivalent to 3
+
+4 and 7 10 with the same fractional
+
+unit (same denominators) are 30
+
+40 and 28 40, or 15 20 and 14 20.
+
+Since clearly 30
+
+40 > 28 40, we conclude that 3 4 > 7 
+10.
+
+Ganita Prakash | Grade 6
+
+Find equivalent fractions for the given pairs of fractions such that the fractional units are the same.
+
+a. 7
+
+2 and 3 5 b. 8
+
+3 and 5 6 c. 3
+
+4 and 3 5 d. 6
+
+7 and 8 5
+
+e. 9
+
+4 and 5 2 f. 1
+
+10 and 2 9 g. 8
+
+3 and 11 4 h. 13
+
+6 and 1 9
+
+Expressing a fraction in lowest terms (or in its simplest form)
+
+In any fraction, if its numerator and denominator have no common factor except 1, then the fraction is said to be in lowest terms or in its simplest form. In other words, a fraction is said to be in lowest terms if its numerator and denominator are as small as possible.
+
+Any fraction can be expressed in lowest terms by finding an equivalent fraction whose numerator and denominator are as small as possible.
+
+Let’s see how to express fractions in lowest terms.
+
+Example: Is the fraction 16
+
+20 in lowest terms? No, 4 is a common factor
+
+of 16 and 20. Let us reduce 16
+
+20 to lowest terms.
+
+We know that both 16 (numerator) and 20 (denominator) are divisible by 4.
+
+So, 16 ÷ 4
+
+20 ÷ 4 = 4 
+5.
+
+Now, there is no common factor between 4 and 5. Hence, 16
+
+20
+
+expressed in lowest terms is 4
+
+5. So, 4 5 is called the simplest form of 16 20,
+
+since 4 and 5 have no common factor other than 1.
+
+Any fraction can be converted to
+
+lowest terms by dividing both the
+
+numerator and denominator by the
+
+highest common factor between
+
+them.
+
+Fractions
+
+Expressing a fraction in lowest terms can also be done in steps.
+
+Suppose we want to express 36
+
+60 in lowest terms. First, we notice that both the numerator and denominator are even. So, we divide both by 2, and see that 36
+
+60 = 18 30.
+
+Both the numerator and denominator are even again, so we can divide them each by 2 again; we get 18
+
+30 = 9 15.
+
+We now notice that 9 and 15 are both multiples of 3, so we divide both by 3 to get 9
+
+15 = 3 5 .
+
+Now, 3 and 5 have no common factor other than 1, so, 36
+
+60 in lowest
+
+terms is 3
+
+5.
+
+Alternatively, we could have noticed that in 36
+
+60 , both the numerator
+
+and denominator are multiples of 12 : we see that 36 = 3 × 12 and
+
+60 = 5 × 12. Therefore, we could have concluded that 36 60 = 3 5 straight away.
+
+Either method works and will give the same answer! But sometimes it can be easier to go in steps.
+
+Figure it Out
+
+Express the following fractions in lowest terms:
+
+a. 17
+
+51 b. 64
+
+144 e. 126
+
+147 d. 525
+
+112
+
+7.7 Comparing Fractions
+
+Which is greater, 4
+
+5 or 7 9? It can be difficult to compare two such fractions directly. However, we know how to find fractions equivalent to two fractions with the same denominator. Let us see how we can use it:
+
+4
+
+5 = 4×9 5×9 = 36 45
+
+7
+
+9 = 7×5 9×5 = 35 45. 45 is a common multiple
+
+of 5 and 9, so we can
+
+use 45 as a common
+
+denominator.
+
+Ganita Prakash | Grade 6
+
+Clearly, 36
+
+45 > 35 45
+
+So, 4
+
+5 > 7 9 !
+
+Let us try this for another pair: 7
+
+9 and 17 21.
+
+63 is a common multiple of 9 and 21. We can then write:
+
+7
+
+9 = 7×7 9×7 = 49 63 , 17 21 = 17×3 21×3 = 51 63.
+
+Clearly, 49
+
+63 < 51 63 . So, 7 9 < 17 21!
+
+Let’s Summarise!
+
+Steps to compare the sizes of two or more given fractions:
+
+Step 1: Change the given fractions to equivalent fractions so that
+
+they all are expressed with the same denominator or same fractional unit.
+
+Step 2: Now, compare the equivalent fractions by simply comparing
+
+the numerators, i.e., the number of fractional units each has.
+
+Figure it Out
+
+1. Compare the following fractions and justify your answers:
+
+a. 8
+
+3 , 5 2 b. 4
+
+9 , 3 7 c. 7
+
+10 , 9 14
+
+d. 12
+
+4 , 5 2
+
+5 , 8 5 e. 9
+
+2. Write the following fractions in ascending order.
+
+a. 7
+
+10 , 11 15 , 2 5 b. 19
+
+24 , 5 6 , 7 12
+
+3. Write the following fractions in descending order.
+
+a. 25
+
+16, 7 8, 13 4 , 17 32 b. 3
+
+4 , 12 5 , 7 12, 5 4
+
+Fractions
+
+7.8 Addition and Subtraction of Fractions
+
+Meena’s father made some chikki. Meena ate 1
+
+2
+
+of it and her younger brother ate 1
+
+4 of it. How
+
+much of the total chikki did Meena and her brother eat together?
+
+We can arrive at the answer by visualising it. Let us take a piece of chikki and divide it into two halves first like this.
+
+Meena ate 1
+
+2 of it as
+
+shown in the picture.
+
+Meena ate
+
+Let us now divide the remaining half into two further halves as shown. Each of these pieces is 1
+
+4 of the whole chikki.
+
+Meena’s brother ate 1
+
+4
+
+Meena ate
+
+of the whole chikki, as is shown in the picture.
+
+Brother ate
+
+The total chikki eaten is 1
+
+2 (by Meena) and 1 4 (by her
+
+brother)
+
+The total chikki eaten = 1
+
+Total chikki eaten
+
+2 + 1 4
+
+= 1
+
+4 + 1 4 + 1 4
+
+= 3 × 1
+
+4 = 3 
+4.
+
+How much of the total chikki is remaining?
+
+Ganita Prakash | Grade 6
+
+Adding fractions with the same fractional unit or denominator
+
+Example: Find the sum of 2
+
+5 and 1 
+5.
+
+Let us represent both using the rectangular strips. In both fractions, the fractional unit is the same 1
+
+5 , so, each strip will be divided into 5 equal parts.
+
+So 2
+
+5 will be represented as —
+
+And 1
+
+5 will be represented as —
+
+Adding the two given fractions is the same as finding out the total number of shaded parts, each of which represent the same fractional unit 1
+
+5.
+
+In this case, the total number of shaded parts is 3. Since, each shaded part represents the fractional unit 1
+
+5 , we see that the 3 shaded
+
+parts together represent the fraction 3
+
+5.
+
+Therefore, 2
+
+5 + 1 5 = 3 5?
+
+Example: Find the sum of 4
+
+7 and 6 
+7.
+
+Let us represent both again using the rectangular strip model. Here in both fractions, the fractional unit is the same, i.e., 1
+
+7 , so each strip will
+
+be divided into 7 equal parts.
+
+Then 4
+
+7 will be represented as —
+
+Fractions
+
+and 6
+
+7 will be represented as —
+
+In this case, the total number of
+
+While adding fractions
+
+with the same fractional
+
+shaded parts is 10, and each shaded part
+
+unit, just add the number of
+
+represents the fractional unit 1
+
+7, so, the
+
+fractional units from each
+
+10 shaded parts together represent the
+
+fraction.
+
+fraction 10
+
+7 as seen here.
+
+Therefore, 4
+
+7 + 6 7 = 10 7
+
+= 1 + 3
+
+7
+
+= 1 3
+
+7.
+
+Try adding 4
+
+7 + 6 7 using a number line. Do you get the same answer?
+
+Adding fractions with different fractional units or denominators
+
+Example: Find the sum of 1
+
+4 and 1 
+3.
+
+To add fractions with different fractional units, first convert the fractions into equivalent fractions with the same denominator or
+
+Ganita Prakash | Grade 6
+
+fractional unit. In this case, the common denominator can be made
+
+3 × 4 = 12, i.e., we can find equivalent fractions with fractional unit 1 12.
+
+Let us write the equivalent fraction for each given fraction.
+
+1 4 = 1 × 3 4 × 3 = 3 12 , 1 3 = 1 × 4 3 × 4 = 4 12 .
+
+Now, 3
+
+12 and 4 12 have the same fractional unit, i.e., 1 12 .
+
+Therefore, 1
+
+4 + 1 3 = 3 12 + 4 12 = 7 12 .
+
+This method of addition, which works for adding any number of fractions, was first explicitly described in general by Brahmagupta in the year 628 CE! We will describe the history of the development of fractions in more detail later in the chapter. For now, we simply summarise the steps in Brahmagupta’s method for addition of fractions.
+
+Brahmagupta’s method for adding fractions
+
+1. Find equivalent fractions so that the fractional unit is common for all fractions. This can be done by finding a common multiple of the denominators (e.g., the product of the denominators, or the smallest common multiple of the denominators).
+
+2. Add these equivalent fractions with the same fractional units. This can be done by adding the numerators and keeping the same denominator.
+
+3. Express the result in lowest terms if needed.
+
+Let us carry out another example of Brahmagupta’s method.
+
+Example: Find the sum of 2
+
+3 and 1 
+5.
+
+The denominators of the given fractions are 3 and 5. The lowest common multiple of 3 and 5 is 15. Then we see that
+
+2 3 = 2 × 5 3 × 5 = 10 15 , 1 5 = 1 × 3 5 × 3 = 3 15 .
+
+Fractions
+
+Therefore, 2
+
+3 + 1 5 = 10 15 + 3 15 = 13 15 .
+
+Example: Find the sum of 1
+
+6 and 1 
+3.
+
+The smallest common multiple of 6 and 3 is 6.
+
+1 6 will remain 1 6 .
+
+1 3 = 1 × 2 3 × 2 = 2 6
+
+Therefore, 1
+
+6 + 1 3 = 1 6 + 2 6 = 3 
+6.
+
+The fraction 3 6 can now be re-expressed in lowest terms, if
+
+desired. This can be done by dividing both the numerator and denominator by 3 (the biggest common factor of 3 and 6):
+
+3 6 = 3 ÷ 3 6 ÷ 3 = 1 
+2.
+
+Therefore, 1
+
+6 + 1 3 = 1 
+2.
+
+Figure it Out
+
+1. Add the following fractions using Brahmagupta’s method:
+
+a.  2
+
+7 + 5 7 + 6 7 b.  3
+
+4 + 1 3 c.  2
+
+3 + 5 6 d.  2
+
+3 + 2 7 e.  3
+
+4 + 1 3 + 1 5
+
+f.  2
+
+3 + 4 5 g.  4
+
+5 + 2 3 h.  3
+
+5 + 5 8 i.  9
+
+2 + 5 4 j.  8
+
+3 + 2 7
+
+k.  3
+
+4 + 1 3 + 1 5 l.  2
+
+3 + 4 5 + 3 7 m.  9 2 + 5 4 + 7 6
+
+2. Rahim mixes 2 3 litres of yellow paint with 3 4 litres of blue paint to
+
+make green paint. What is the volume of green paint he has made?
+
+3. Geeta bought 2 5 meter of lace and Shamim bought 3 4 meter of the
+
+same lace to put a complete border on a table cloth whose perimeter is 1 meter long. Find the total length of the lace they both have bought. Will the lace be sufficient to cover the whole border?
+
+Ganita Prakash | Grade 6
+
+Subtraction of fractions with the same fractional unit or denominator
+
+Brahmagupta’s method also applies when subtracting fractions!
+
+Let us start with the problem of subtracting 4
+
+7 from 6 7, i.e., what is
+
+6 7 – 4 7?
+
+To solve this problem, we can again use the rectangular strips. In both fractions, the fractional unit is the same, i.e., 1
+
+7. Let us first represent the bigger fraction using a rectangular strip model as shown:
+
+6 7
+
+Each shaded part represents 1
+
+7. Now, we need to subtract 4 
+7. To do
+
+this let us remove 4 of the shaded parts:
+
+Fractional parts to
+
+be removed.
+
+We can do this here directly
+
+because both fractions have
+
+the same fractional units.
+
+So, we are left with 2 shaded parts, i.e., 6
+
+7 – 4 7 = 2 
+7.
+
+Try doing this same exercise using the number line.
+
+Fractions
+
+Figure it Out
+
+1. 5 8 – 3 8 
+2. 7 9 – 5 9 
+3. 10
+
+27 – 1 27
+
+Subtraction of fractions with different fractional units or denominators
+
+Example: What is 3
+
+4 – 2 3?
+
+As we already know the procedure for subtraction of fractions with the same fractional units, let us convert each of the given fractions into equivalent fractions with the same fractional units.
+
+Yes! By doing this we can easily
+
+subtract the two fractions.
+
+3 4 = (3×3) (4×3) = 9
+
+12
+
+Think! Why did we choose to
+
+multiply both the numerator and
+
+denominator by 3?
+
+and similarly,
+
+Again! Why did we choose to multiply
+
+2 3 = (2×4) (3×4) = 8
+
+12 .
+
+both the numerator and denominator
+
+here by 4?
+
+Therefore, 3
+
+4 – 2 3 = 9 12 – 8 12 = 1 12 .
+
+Brahmagupta’s method for subtracting two fractions —
+
+1. Convert the given fractions into equivalent fractions with the same fractional unit, i.e., the same denominator.
+
+2. Carry out the subtraction of fractions having the same fractional units. This can be done by subtracting the numerators and keeping the same denominator.
+
+3. Simplify the result into lowest terms if needed.
+
+Ganita Prakash | Grade 6
+
+Figure it Out
+
+1. Carry out the following subtractions using Brahmagupta’s method:
+
+a. 8
+
+6 – 4 9 d. 2
+
+3 – 1 2
+
+15 – 3 15 b. 2
+
+5 – 4 15 c. 5
+
+2. Subtract as indicated:
+
+a. 13
+
+5 from 23 3 c. 29
+
+7 from 45 7
+
+4 from 10 3 b. 18
+
+3. Solve the following problems:
+
+a. Jaya’s school is 7
+
+10 km from her home. She takes an auto for
+
+1 2 km from her home daily, and then walks the remaining
+
+distance to reach her school. How much does she walk daily
+
+to reach the school?
+
+b. Jeevika takes 10
+
+3 minutes to take a complete round of the
+
+park and her friend Namit takes 13
+
+4 minutes to do the same.
+
+Who takes less time and by how much?
+
+7.9 A Pinch of History
+
+Do you know what a fraction was called in ancient India? It was called bhinna in Sanskrit, which means ‘broken’. It was also called bhaga or ansha meaning ‘part’ or ‘piece’.
+
+The way we write fractions today, globally, originated in India. In ancient Indian mathematical texts, such as the Bakshali manuscript (from around the year 300 CE), when they wanted to write 1
+
+2, they wrote it as 1
+
+2 which is indeed very similar to the way we write it
+
+today! This method of writing and working with fractions continued to be used in India for the next several centuries, including by Aryabhata (499 CE), Brahmagupta (628 CE), Sridharacharya (c. 750 CE), and Mahaviracharya (c. 850 CE), among others. The line segment between the numerator and denominator in ‘1
+
+2’ and in other
+
+Fractions
+
+fractions was later introduced by the Moroccan mathematician Al-Hassar (in the 12th century). Over the next few centuries the notation then spread to Europe and around the world.
+
+Fractions had also been used in other cultures such as the ancient Egyptian and Babylonian civilisations, but they primarily used only fractional units, that is, fractions with a 1 in the numerator. More general fractions were expressed as sums of fractional units, now called ‘Egyptian fractions’. Writing numbers as the sum of fractional units, e.g., 19
+
+24 = 1 2 + 1 6 + 1 8, can be quite an art and leads to beautiful
+
+puzzles. We will consider one such puzzle below.
+
+General fractions (where the numerator is not necessarily 1) were first introduced in India, along with their rules of arithmetic operations like addition, subtraction, multiplication, and even division of fractions. The ancient Indian treatises called the ‘Sulba- sutras’ shows that even during Vedic times, Indians had discovered the rules for operations with fractions. General rules and procedures for working with and computing with fractions were first codified formally and in a modern form by Brahmagupta.
+
+Brahmagupta’s methods for working with and computing with fractions are still what we use today. For example, Brahmagupta described how to add and subtract fractions as follows:
+
+“By the multiplication of the numerator and the denominator of each of the fractions by the other denominators, the fractions are reduced to a common denominator. Then, in case of addition, the numerators (obtained after the above reduction) are added. In case of subtraction, their difference is taken.’’ (Brahmagupta, Brahmasphuṭasiddhānta, Verse 12.2, 628 CE)
+
+The Indian concepts and methods involving fractions were transmitted to Europe via the Arabs over the next few centuries and they came into general use in Europe in around the 17th century and then spread worldwide.
+
+Ganita Prakash | Grade 6
+
+Puzzle! It is easy to add up fractional units to obtain the sum 1, if one uses the same fractional unit, for example,
+
+1 2 + 1 2 = 1, 1 3 + 1 3 + 1 3 = 1, 1 4 + 1 4 + 1 4 + 1 4 = 1, etc.
+
+However, can you think of a way to add fractional units that are all different to get 1?
+
+It is not possible to add two different fractional units to get 1. The reason is that 1
+
+2 is the largest fractional unit, and 1 2 + 1 2 = 1.
+
+To get different fractional units, we would have to replace at
+
+least one of the 1
+
+2’s with some smaller fractional unit - but then
+
+the sum would be less than 1! Therefore, it is not possible for
+
+two different fractional units to add up to 1.
+
+We can try to look instead for a way to write 1 as the sum of three different fractional units.
+
+1.  Can you find three different fractional units that add up to 1?
+
+Try This
+
+It turns out there is only one solution to this problem
+
+(up to changing the order of the 3 fractions)! Can you find it? Try to find it before reading further.
+
+Here is a systematic way to find the solution. We know that
+
+1 3 + 1 3 + 1 3 = 1. To get the fractional units to be different, we will have
+
+to increase at least one of the 1
+
+3’s, and decrease at least one of the
+
+other 1
+
+3’s to compensate for that increase. The only way to increase
+
+1 3 to another fractional unit is to replace it by 1 
+2. So 1 2 must be one of
+
+the fractional units.
+
+Now 1
+
+2 + 1 4 + 1 4 = 1. To get the fractional units to be different, we
+
+will have to increase one of the 1
+
+4’s and decrease the other 1 4 to
+
+compensate for that increase. Now the only way to increase 1
+
+4 to
+
+Fractions
+
+another fractional unit, that is different from 1
+
+2, is to replace it by 1 
+3.
+
+So two of the fractions must be 1
+
+2 and 1 3! What must be third fraction
+
+then, so that the three fractions add up to 1?
+
+This explains why there is only one solution to the above problem.
+
+1 2 + 1 3 + 1 6 = 1
+
+What if we look for four different fractional units that add up to 1?
+
+2.  Can you find four different fractional units that add up to 1?
+
+Try This
+
+It turns out that this problem has six solutions! Can
+
+you find at least one of them? Can you find them all? You can try using similar reasoning as in the cases of two and three fractional units — or find your own method! Once you find one solution, try to divide a circle into parts like in the figure above to visualise it!
+
+Ganita Prakash | Grade 6
+
+Fraction as equal share: When a whole number of units is divided into equal parts and shared equally, a fraction results.
+
+Fractional Units: When one whole basic unit is divided into equal parts, then each part is called a fractional unit.
+
+Reading Fractions: In a fraction such as 5
+
+6, 5 is called the numerator
+
+and 6 is called the denominator.
+
+Mixed fractions contain a whole number part and a fractional part.
+
+Number line: Fractions can be shown on a number line. Every fraction has a point associated with it on the number line.
+
+Equivalent Fractions: When two or more fractions represent the same share or number, they are called equivalent fractions.
+
+Lowest terms: A fraction whose numerator and denominator have no common factor other than 1 is said to be in lowest terms or in its simplest form.
+
+Brahmagupta’s method for adding fractions: When adding fractions, convert them into equivalent fractions with the same fractional unit (i.e., the same denominator), and then add the number of fractional units in each fraction to obtain the sum. This is accomplished by adding the numerators while keeping the same denominator.
+
+Brahmagupta’s method for subtracting fractions: When subtracting fractions, convert them into equivalent fractions with the same fractional unit (i.e., the same denominator), and then subtract the number of fractional units. This is accomplished by subtracting the numerators while keeping the same denominator.
+
+CHAPTER 7 — SOLUTIONS
+
+Fractions
+
+Section 7.1
+
+Page no. 152
+
+Figure it out
+
+Q1. Three guavas together weigh 1 kg. If they are roughly of the same size, each guava
+
+will roughly weigh ____kg.
+
+1
+
+Ans.
+
+3
+
+Q2. A wholesale merchant packed 1 kg of rice in four packets of equal weight. The weight
+
+of each packet is_______ kg.
+
+1
+
+Ans.
+
+4
+
+Q3. Four friends ordered 3 glasses of sugarcane juice and shared it equally among
+
+themselves. Each one drank ____ glass of sugarcane juice
+
+3
+
+Ans.
+
+4
+
+𝟏
+
+𝟏
+
+Q4. The big fish weighs
+
+𝟐 kg. The small one weighs
+
+𝟒 kg. Together they weigh ____ kg.
+
+3
+
+Ans.
+
+4
+
+Q5. Arrange these fraction words in order of size from the smallest to the biggest in the
+
+empty box below:
+
+One and a half, three quarters, one and a quarter, half, quarter, two and a half.
+
+1
+
+Ans.
+
+4, 1
+
+2, 3
+
+4, 1 1
+
+4, 1 1
+
+2, 2 1
+
+2
+
+Section 7.2
+
+Page No. 154
+
+Q. By dividing the whole chikki into 6 equal parts in different ways, we get 1/6 chikki
+
+pieces of different shapes. Are they of the same size?
+
+Ans. Yes, they are of the same size.
+
+Page No. 155
+
+Figure it out
+
+Q. The figures below show different fractional units of a whole chikki. How much of a
+
+whole chikki is each piece?
+
+1
+
+1
+
+1
+
+1
+
+1
+
+Ans. a.
+
+12 b. 1
+
+4 c.
+
+8 d. 1
+
+6 e.
+
+8 f.
+
+6 g.
+
+24 h. 1
+
+24
+
+Section 7.3
+
+Figure it out Page No. 158
+
+𝟏
+
+Q1. continue this table of
+
+𝟐 for 2 more steps.
+
+1
+
+Ans.
+
+2 + 1
+
+2 + 1
+
+2 + 1
+
+2 + 1
+
+2 + 1
+
+2 = 6 times 1
+
+2
+
+1
+
+2 + 1
+
+2 + 1
+
+2 + 1
+
+2 + 1
+
+2 + 1
+
+2 + 1
+
+2 = 7 times 1
+
+2
+
+𝟏
+
+Q2. Can you create a similar table for
+
+𝟒 ?
+
+Ans.
+
+1
+
+1
+
+1
+
+1
+
+4 =
+
+4 + 1
+
+4 =
+
+4 + 1
+
+4 + 1
+
+4 =
+
+4 + 1
+
+4 + 1
+
+4 + 1
+
+4=
+
+1-time quarter
+
+2 times quarter
+
+3 times quarter
+
+4 times quarter
+
+Try Further!
+
+Q4. Draw a picture and write an addition statement as above to show:
+
+𝟏
+
+𝟏
+
+a. 5 times
+
+𝟒 of a roti b. 9 times
+
+𝟒 of a roti
+
+Ans. a.
+
+1
+
+4 + 1
+
+4 + 1
+
+4 + 1
+
+4 + 1
+
+4 = 5
+
+4 = 5 times quarter
+
+b.
+
+1
+
+4 + 1
+
+4 + 1
+
+4 + 1
+
+4 + 1
+
+4 + 1
+
+4 + 1
+
+4 + 1
+
+4 + 1
+
+4 = 9
+
+4 = 9 times quarter = 2 + 1
+
+4
+
+Q5. Match each fractional unit with the correct picture:
+
+𝟏
+
+𝟏
+
+𝟏
+
+𝟏
+
+𝟑
+
+𝟓
+
+𝟖
+
+𝟔
+
+1
+
+Ans.
+
+3
+
+1
+
+5
+
+1
+
+6
+
+1
+
+8
+
+Section 7.4
+
+Page no. 159
+
+Q1. Here, the fractional unit is dividing a length of 1 unit into three equal parts. Write
+
+the fraction that gives the length of the blue line in the box or in your notebook.
+
+2
+
+Ans.
+
+3
+
+Q2. Here, a unit is divided into 5 equal parts. Write the fraction that gives the length of
+
+the blue lines in the respective boxed or in your notebook.
+
+2
+
+Ans.
+
+5, 4
+
+5
+
+Q3. Now, a unit is divided into 8 equal parts. Write the appropriate fractions in your
+
+notebook.
+
+1
+
+Ans.
+
+8, 2
+
+8, 3
+
+8 ,…
+
+Page no. 160
+
+Figure it out
+
+𝟏
+
+𝟑
+
+𝟒
+
+Q1. On a number line, draw lines of lengths
+
+𝟏𝟎,
+
+𝟏𝟎, and
+
+𝟓.
+
+Ans.
+
+0
+
+𝟏
+
+𝟑
+
+𝟏𝟎
+
+4 5 1
+
+𝟏𝟎
+
+Q3. How many fractions lie between 0 and 1? Think, discuss with your classmates, and
+
+write your answer.
+
+Ans. Uncountable number of fractions
+
+Q4. What is the length of the blue line and black line shown below? The distance between
+
+0 and 1 is 1 unit long, and it is divided into two equal parts. The length of each part
+
+𝟏
+
+𝟏
+
+is
+
+𝟐. So the blue line is
+
+𝟐 units long. Write the fraction that gives the length of the
+
+black line in the box.
+
+3
+
+Ans.
+
+2
+
+Q5. Write the fraction that gives the lengths of the black lines in the respective boxes.
+
+6
+
+Ans.
+
+5, 7
+
+5, 8
+
+5, 9
+
+5
+
+Section 7.5
+
+Page No. 162
+
+Figure it out
+
+𝟕
+
+Q1. How many whole units are there in
+
+𝟐?
+
+7
+
+Ans. There are 3 whole units in
+
+2
+
+𝟒
+
+𝟕
+
+Q2. How many whole units are there in
+
+𝟑 and in
+
+𝟑?
+
+4
+
+Ans. There is 1 whole unit in
+
+3 and 2 whole units in 7
+
+3.
+
+Figure it out
+
+Q1. Figure out the number of whole units in each of the following fractions:
+
+𝟖
+
+𝟏𝟏
+
+𝟗
+
+a.
+
+𝟑 b.
+
+𝟓 c.
+
+𝟒
+
+Ans. a. 2
+
+b. 2 c. 2
+
+Q2. Can all fractions greater than 1 be written as such mixed numbers?
+
+8
+
+Ans. No. For example:
+
+4 = 2 cannot be written as a mixed number.
+
+𝟗
+
+𝟏
+
+Q3. Write the following fractions as mixed fractions (e.g.,
+
+𝟐 = 𝟒
+
+𝟐):
+
+𝟗
+
+𝟗
+
+𝟐𝟏
+
+𝟒𝟕
+
+𝟏𝟐
+
+𝟏𝟗
+
+a.
+
+𝟐 b.
+
+𝟓 c.
+
+𝟏𝟗 d.
+
+𝟗 e.
+
+𝟏𝟏 f.
+
+𝟔
+
+9
+
+Ans. a.
+
+2 = 4 1
+
+2
+
+9
+
+b.
+
+5 = 1 4
+
+5
+
+21
+
+c.
+
+19 = 1 2
+
+19
+
+47
+
+d.
+
+9 = 5 2
+
+9
+
+12
+
+e.
+
+11 = 1 1
+
+11
+
+19
+
+f.
+
+6 = 3 1
+
+6
+
+Page No. 163
+
+Figure it out
+
+Q1. Write the following mixed numbers as fractions:
+
+𝟏
+
+𝟐
+
+𝟒
+
+𝟏
+
+𝟑
+
+𝟗
+
+a. 3
+
+𝟒 b. 7
+
+𝟑 c. 9
+
+𝟗 d. 3
+
+𝟔 e. 2
+
+𝟏𝟏 f. 3
+
+𝟏𝟎
+
+1
+
+Ans. a. 3
+
+4
+
+1
+
+= 3 +
+
+4
+
+1
+
+= 1 + 1 + 1 +
+
+4
+
+1
+
+= (
+
+4 + 1
+
+4 + 1
+
+4 + 1
+
+4) + ( 1
+
+4 + 1
+
+4 + 1
+
+4 + 1
+
+4) + ( 1
+
+4 + 1
+
+4 + 1
+
+4 + 1
+
+4) + 1
+
+4
+
+1
+
+= (4 ×
+
+4) + (4 × 1
+
+4) + (4 × 1
+
+4) + 1
+
+4
+
+13
+
+=
+
+4
+
+23
+
+b.
+
+3
+
+85
+
+c.
+
+9
+
+19
+
+d.
+
+6
+
+25
+
+e.
+
+11
+
+39
+
+f.
+
+10
+
+Section 7.6
+
+Page no. 164
+
+𝟏
+
+𝟑
+
+Q1. Are the lengths
+
+𝟐 and
+
+𝟔 equal?
+
+Ans. Yes.
+
+𝟐
+
+𝟒
+
+Q2. Are
+
+𝟑 and
+
+𝟔 equivalent fractions? Why?
+
+Ans. Yes, since they are of equal length which can be seen in fractional wall also.
+
+𝟏
+
+𝟏
+
+Q3. How many pieces of length
+
+𝟔 will make a length of
+
+𝟐?
+
+Ans. 3 pieces.
+
+𝟏
+
+𝟏
+
+Q4. How many pieces of length
+
+𝟔 will make a length of
+
+𝟑?
+
+Ans. 2 pieces.
+
+Page no. 165
+
+Figure it out
+
+𝟑
+
+𝟒
+
+𝟓
+
+Q1. Are
+
+𝟔,
+
+𝟖, and
+
+𝟏𝟎 are equivalent fractions? Why?
+
+Ans. Yes. In the fraction wall their lengths can be seen to be equal.
+
+𝟐
+
+Q2. Write two equivalent fractions for
+
+𝟔.
+
+2
+
+Ans. Two equivalent fractions for
+
+6 are 1
+
+3 and 3
+
+9. (Try for other equivalent fractions also)
+
+𝟒
+
+Q3 .
+
+𝟔 = = = = = ……. (Write as many as you can)
+
+4
+
+Ans.
+
+6 = 2
+
+3 = 6
+
+9 = 8
+
+12 = 10
+
+15 = …….
+
+Page no. 166
+
+Figure it out
+
+Q1. Three rotis are shared equally by four children. Show the division in the picture and
+
+write a fraction for how much each child gets. Also, write the corresponding division facts, addition facts, and, multiplication facts.
+
+Fraction of roti each child gets is ______.
+
+Division fact:
+
+Addition fact:
+
+Multiplication fact:
+
+Compare your picture and answers with your classmates!
+
+3
+
+Ans. Each child gets
+
+4 roti.
+
+3
+
+Division fact: 3  4 =
+
+4
+
+3
+
+Addition fact: 3 =
+
+4 + 3
+
+4 + 3
+
+4 + 3
+
+4
+
+3
+
+Multiplication fact: 3 = 4 ×
+
+4
+
+Q2. Draw a picture to show how much each child gets when 2 rotis are shared equally by
+
+4 children. Also, write the corresponding division facts, addition facts, and multiplication facts.
+
+1
+
+gets
+
+2 Ans. 2 Rotis equally shared by 4 children. Each child
+
+roti.
+
+2
+
+Division fact :2  4 =
+
+4 = 1
+
+2
+
+1
+
+Addition fact: 2 =
+
+2 + 1
+
+2 + 1
+
+2 + 1
+
+2
+
+1
+
+Multiplication fact: 2 = 4 ×
+
+2
+
+Q3. Anil was in a group where 2 cakes were divided equally among 5 children. How much
+
+cake would Anil get?
+
+2
+
+Ans. Anil would get
+
+5 cake.
+
+Page no. 168
+
+Section 7.6
+
+Figure it out
+
+Q1. Find the missing numbers:
+
+a. 5 glasses of juice shared equally among 4 friends is the same as ____ glasses of
+
+juice shared equally among 8 friends.
+
+𝟓
+
+So,
+
+𝟒 = 𝟖
+
+Ans. 10
+
+b. 4 kg of potatoes divided equally in 3 bags is the same as 12 kgs of potatoes divided
+
+equally in __ bags.
+
+𝟒
+
+So,
+
+𝟏𝟐
+
+𝟑 =
+
+Ans. 9
+
+c. 7 rotis divided among 5 children is the same as____rotis divided among _____
+
+children.
+
+𝟕
+
+So,
+
+𝟓 =
+
+Ans. One of the choices is 14, 10 (Try for other options also.)
+
+Page no. 170
+
+Section 7.6
+
+Q. Suppose the number of children is kept the same, but the number of units that are
+
+being shared is increased? What can you say about each child’s share now? Why? Discuss how your reasoning explains
+
+𝟏
+
+𝟐
+
+𝟑
+
+𝟒
+
+𝟏
+
+𝟓
+
+𝟓 <
+
+𝟓,
+
+𝟕 <
+
+𝟕 and
+
+𝟐 <
+
+𝟖 .
+
+Ans. Each child will have larger share now.
+
+If the number of units to be shared increase with same number of children then each child will have larger share.
+
+Q. Now, decide in which of the two groups will each child get a larger share:
+
+1. Group 1: 3 glasses of sugarcane juice divided equally among 4 children.
+
+Group 2: 7 glasses of sugarcane juice divided equally among 10 children.
+
+2. Group 1: 4 glasses of sugarcane juice divided equally among 7 children.
+
+Group 2: 5 glasses of sugarcane juice divided equally among 7 children.
+
+Which groups were easier to compare? Why?
+
+4
+
+Ans. Each child’s share in group 1 =
+
+7
+
+5
+
+Each child’s share in group 2 =
+
+7
+
+5
+
+And
+
+7 > 4
+
+7
+
+The groups in second part were easier to compare because the number of children is same.
+
+Page no. 172
+
+Section 7.6
+
+Q. Find equivalent fractions for the given pairs of fractions such that the fractional units
+
+are the same.
+
+𝟕
+
+𝟑
+
+𝟖
+
+𝟓
+
+𝟑
+
+𝟑
+
+𝟔
+
+𝟖
+
+a.
+
+𝟐 and
+
+𝟓 b.
+
+𝟑 and
+
+𝟔 c.
+
+𝟒 and
+
+𝟓 d.
+
+𝟕 and
+
+𝟓
+
+𝟗
+
+𝟓
+
+𝟏
+
+𝟐
+
+𝟖
+
+𝟏𝟏
+
+𝟏𝟑
+
+𝟏
+
+e.
+
+𝟒 and
+
+𝟐 f.
+
+𝟏𝟎 and
+
+𝟗 g.
+
+𝟑 and
+
+𝟒 h.
+
+𝟔 and
+
+𝟗
+
+Ans.
+
+35
+
+a.
+
+10 and 6
+
+10
+
+16
+
+b.
+
+6 and 5
+
+6
+
+15
+
+𝑐.
+
+20 and 12
+
+20
+
+30
+
+𝑑.
+
+35 and 56
+
+35
+
+9
+
+𝑒.
+
+4 and 10
+
+4
+
+9
+
+𝑓.
+
+90 and 20
+
+90
+
+32
+
+𝑔.
+
+12 and 33
+
+12
+
+39
+
+ℎ.
+
+18 and 2
+
+18
+
+Page no. 173
+
+Section 7.6
+
+Figure it out
+
+Q. Express the following fractions in lowest terms:
+
+𝟏𝟕
+
+𝟔𝟒
+
+𝟏𝟐𝟔
+
+𝟓𝟐𝟓
+
+a.
+
+𝟓𝟏 b.
+
+𝟏𝟒𝟒 c.
+
+𝟏𝟒𝟕 d.
+
+𝟏𝟏𝟐
+
+1
+
+Ans. a.
+
+3
+
+4
+
+𝑏.
+
+9
+
+6
+
+c.
+
+7
+
+75
+
+d.
+
+16
+
+Page no. 174
+
+Section 7.7
+
+Figure it out
+
+Q1. Compare the following fractions and justify your answers:
+
+𝟖
+
+𝟓
+
+𝟒
+
+𝟑
+
+𝟕
+
+𝟗
+
+a.
+
+𝟑,
+
+𝟐 b.
+
+𝟗 ,
+
+𝟕 c.
+
+𝟏𝟎 ,
+
+𝟏𝟒
+
+𝟏𝟐
+
+𝟖
+
+𝟗
+
+𝟓
+
+d.
+
+𝟓 ,
+
+𝟓 e.
+
+𝟒 ,
+
+𝟐
+
+Ans.
+
+8
+
+a.
+
+3 > 5
+
+2
+
+4
+
+b.
+
+9 > 3
+
+7
+
+7
+
+𝑐.
+
+10 > 9
+
+14
+
+12
+
+d.
+
+5 > 8
+
+5
+
+9
+
+𝑒.
+
+4 < 5
+
+2
+
+Q2. Write the following fractions in ascending order.
+
+𝟕
+
+𝟏𝟏
+
+𝟐
+
+𝟏𝟗
+
+𝟓
+
+𝟕
+
+a.
+
+𝟏𝟎,
+
+𝟏𝟓,
+
+𝟓 b.
+
+𝟐𝟒,
+
+𝟔,
+
+𝟏𝟐
+
+2
+
+Ans. a.
+
+5 < 7
+
+10 < 11
+
+15
+
+7
+
+b.
+
+12 < 19
+
+24 < 5
+
+6
+
+Q3. Write the following fractions in descending order.
+
+𝟐𝟓
+
+𝟕
+
+𝟏𝟑
+
+𝟏𝟕
+
+𝟑
+
+𝟏𝟐
+
+𝟕
+
+𝟓
+
+a.
+
+𝟏𝟔,
+
+𝟖,
+
+𝟒,
+
+𝟑𝟐 b.
+
+𝟒,
+
+𝟓,
+
+𝟏𝟐,
+
+𝟒
+
+13
+
+Ans. a.
+
+4 > 25
+
+16 > 7
+
+8 > 17
+
+32
+
+12
+
+b.
+
+5 > 5
+
+4 > 3
+
+4 > 7
+
+12
+
+Section 7.8
+
+Page no. 177
+
+𝟒
+
+𝟔
+
+Q. Try adding
+
+𝟕 +
+
+𝟕 using a number line. Do you get the same answer?
+
+4
+
+Ans.
+
+7 + 6
+
+7
+
+4
+
+7 + 6
+
+7 = 10
+
+7 = 1 + 3
+
+7
+
+Yes, using a number line, the answer is same.
+
+Page no. 179
+
+Section 7.8
+
+Figure it out
+
+Q1. Add the following fractions using Brahmagupta’s method:
+
+Ans.
+
+13
+
+a.
+
+7
+
+13
+
+b.
+
+12
+
+9
+
+c.
+
+6 = 93
+
+6 3 = 3
+
+2
+
+20
+
+d.
+
+21
+
+77
+
+e.
+
+60
+
+22
+
+f.
+
+15
+
+22
+
+g.
+
+15
+
+49
+
+h.
+
+40
+
+23
+
+i.
+
+4
+
+62
+
+j.
+
+21
+
+77
+
+k.
+
+60
+
+199
+
+l.
+
+105
+
+83
+
+m.
+
+12
+
+𝟐
+
+𝟑
+
+Q2. Rahim mixes
+
+𝟑 litres of yellow paint with
+
+𝟒 litres of blue paint to make green paint.
+
+What is the volume of green paint he has made?
+
+5
+
+Ans. 1
+
+12 litres
+
+𝟐
+
+𝟑
+
+Q3. Geeta bought
+
+𝟓 meter of lace and Shamim bought
+
+𝟒 meter of the same lace to put a
+
+complete border on a table cloth whose perimeter is 1 meter long. Find the total length of the lace they both have bought. Will the lace be sufficient to cover the whole border?
+
+3
+
+Ans. Total length of the lace = 1
+
+20 m
+
+Yes.
+
+Section 7.8
+
+Figure it out (Page no. 181)
+
+5
+
+Q1.
+
+8 - 3
+
+8
+
+2
+
+Ans.
+
+8 (= 1
+
+4, in lowest terms)
+
+𝟕
+
+𝟓
+
+Q2.
+
+𝟗 -
+
+𝟗
+
+2
+
+Ans.
+
+9
+
+𝟏𝟎
+
+𝟏
+
+Q3.
+
+𝟐𝟕 -
+
+𝟐𝟕
+
+9
+
+Ans.
+
+27 (= 1
+
+3, in lowest terms)
+
+Page no. 181
+
+Section 7.8
+
+Figure it out
+
+1
+
+Ans. 1.
+
+4 2. 2
+
+9 3 1
+
+3
+
+Figure it out
+
+Q1. Carry out the following subtractions using Brahmagupta’s method:
+
+8
+
+2
+
+5
+
+2
+
+a.
+
+15 - 3
+
+15 b.
+
+5 - 4
+
+15 c.
+
+6 - 4
+
+9 d.
+
+3 - 1
+
+2
+
+1
+
+Ans. a.
+
+3
+
+2
+
+b.
+
+15
+
+7
+
+c.
+
+18
+
+1
+
+d.
+
+6
+
+Q2. Subtract as indicated:
+
+𝟏𝟑
+
+𝟏𝟎
+
+𝟏𝟖
+
+𝟐𝟑
+
+𝟐𝟗
+
+𝟒𝟓
+
+a.
+
+𝟒 from
+
+𝟑 b.
+
+𝟓 from
+
+𝟑 c.
+
+𝟕 from
+
+𝟕
+
+1
+
+Ans. a.
+
+12
+
+61
+
+b.
+
+15
+
+16
+
+c.
+
+7
+
+Q3. Solve the following problems:
+
+𝟕
+
+𝟏
+
+a. Jaya’s school is
+
+𝟏𝟎 km from her home. She takes an auto for
+
+𝟐 km from her home
+
+daily, and then walks the remaining distance to reach her school. How much does she walk daily to reach the school?
+
+𝟏𝟎
+
+b. Jeevika takes
+
+𝟑 minutes to take a complete round of the park and her friend
+
+𝟏𝟑
+
+Namit takes
+
+𝟒 minutes to do the same. Who takes less time and by how much?
+
+1
+
+Ans. a.
+
+5 Km
+
+1
+
+b. Namit takes less time than Jeevika, by
+
+12 minutes

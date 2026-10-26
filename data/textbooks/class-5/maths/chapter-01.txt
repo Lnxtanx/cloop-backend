@@ -1,0 +1,693 @@
+# CLASS-5 - MATHS - CHAPTER 01
+# Source: eemm101.pdf
+
+Chapter Chapter
+
+1
+
+We the Travellers — I
+
+When was the last time you went on a long trip? Where did you go? How did you travel? What was the duration of your trip? How much distance did you cover? Ask the elders who went with you to help you answer these questions.
+
+Human beings have always been interested in travelling. About a hundred years ago, there were far fewer vehicles than today. There were animal-drawn carts, cars, and trains. Long before this, thousands of years ago, people travelled long distances on foot or used animals to travel from one place to another. They also built boats and ships to travel across lakes, rivers, and seas. Boats were probably the first form of transport invented by humans, much before bullock carts! Do you know how many vehicles are currently there in your state?
+
+Reading and writing large numbers
+
+How do you write numbers to show several thousand objects?
+
+Let us start with 1,000. What numbers do we get when we keep adding a thousand?
+
+1,000 2,000 9,000
+
+What number do we get when we add a thousand to 9,000? We get ten thousand. How do we write this number?
+
+Look at the table below and notice the pattern of writing numbers. In the place value chart, we have added another column, TTh. It stands for ten thousand.
+
+1 ×10 ×10 ×10 ×10 10 Ones = 1 Ten = 10
+
+TTh Th H T O
+
+1
+
+1 0
+
+1 0 0
+
+10 Tens = 1 Hundred
+
+1 0 0 0
+
+= 100 10 Hundreds = 1 Thousand
+
+1 0 0 0 0
+
+= 1,000
+
+In the same way, 10 Thousands = Ten Thousand = 10,000
+
+We use a comma to We use a comma to
+
+help us read large help us read large
+
+numbers easily numbers easily 1,000
+
+1,000
+
+1,000 1,000 1,000
+
+10,000
+
+1,000
+
+1,000
+
+1,000 1,000 1,000
+
+Do you remember how we read and write numbers in the Indian place value system? We use the same ten digits 0–9 in different places to write larger numbers.
+
+For example,
+
+1,380 = 1 Thousand + 3 Hundreds + 8 Tens + 0 Ones.
+
+10
+
+10
+
+10
+
+10
+
+1,000 100 100
+
+100
+
+10
+
+10
+
+10
+
+10
+
+9,123 = 9 Thousands + 1 Hundred + 2 Tens + 3 Ones.
+
+100 10
+
+1 1
+
+1,000
+
+1,000
+
+1,000
+
+1,000
+
+1,000
+
+1,000
+
+10
+
+1
+
+1,000
+
+1,000
+
+1,000
+
+Let us see how we write numbers beyond 10,000 and how we name them. We write them in the same way as numbers below 9,999. You can use the tokens given in the end of the book.
+
+Token(s) Number TTh Th H T O Number Name
+
+10,000 1 10,001 1 0 0 0 1 Ten thousand
+
+one
+
+10,000 1 1 10,002 1 0 0 0 2 Ten thousand
+
+two
+
+10,000 10 10,010 1 0 0 1 0 Ten thousand
+
+ten
+
+10,000 10 10
+
+1
+
+1 1 10,024 1 0 0 2 4 Ten thousand
+
+twenty-four
+
+1
+
+10,000 10
+
+10
+
+10
+
+1 1 Ten thousand
+
+thirty-three
+
+1
+
+100
+
+100
+
+10,000
+
+100
+
+100
+
+10
+
+10
+
+10 10
+
+10,458 Ten thousand
+
+four hundred
+
+10
+
+1
+
+1
+
+fifty-eight
+
+1
+
+1
+
+1
+
+1
+
+1
+
+1
+
+Token(s) Number TTh Th H T O Number Name
+
+100
+
+10,000 1,000
+
+1
+
+100
+
+10
+
+1 1 2 1 4
+
+1
+
+1 1
+
+10,000 1,000
+
+1,000
+
+100
+
+100
+
+1,000
+
+Thirteen thousand five
+
+13,520
+
+hundred
+
+100 100
+
+100
+
+twenty
+
+10 10
+
+10,000 10,000 20,000 Twenty thousand
+
+10,000
+
+10,000
+
+10,000
+
+10,000
+
+1,000
+
+1,000
+
+1,000
+
+100
+
+1,000
+
+1,000
+
+100
+
+100
+
+100
+
+100
+
+100
+
+100
+
+45,867
+
+Forty-five thousand eight hundred
+
+100
+
+10 10
+
+sixty-seven
+
+10
+
+10 10
+
+10
+
+1
+
+1
+
+1
+
+1
+
+1
+
+1
+
+1
+
+Let Us Do
+
+1. Fill in the blanks by continuing the pattern in each of the following sequences. Discuss the patterns in class.
+
+(a) 456 567 678
+
+(b) 1,050 3,150 4,200
+
+(c) 5,501 6,401 7,301
+
+(d) 10,100 10,200 10,300
+
+10,900
+
+(e) 10,105 10,125
+
+(f) 10,992 10,993
+
+(g) 10,794 10,796 10,798
+
+(h) 73,005 72,004
+
+(i) 82,350 83,350
+
+2. Fill in the blanks appropriately. Use commas as required.
+
+Number Number Name
+
+8,045 Eight thousand forty-five
+
+7,209
+
+10,599
+
+Ten thousand seven hundred forty-three
+
+20,869 Twenty thousand eight hundred sixty-nine
+
+13,579
+
+Ten thousand ten
+
+Fifty-six thousand four hundred ninety-one
+
+45,045
+
+39,593
+
+50,005
+
+26,050
+
+81,200
+
+Ninety thousand nine
+
+Twenty-three thousand two hundred thirty
+
+Thirty-six thousand one
+
+3. Arrange the numbers below in increasing order. You can use the number line below, if required.
+
+40,347 73,404 34,407 74,430 40,473 47,340 34,740 18,926
+
+0 20,000 40,000 60,000 80,000
+
+4. A student said 9,990 is greater than 49,014 because 9 is greater than 4. Is the student correct? Why or why not?
+
+Use the number line below to find the position of the numbers. Fill in the blanks.
+
+10,000 50,000 5,000
+
+TTh Th H T O
+
+You can use this place value chart to You can use this place value chart to
+
+compare the numbers. compare the numbers.
+
+9 9 9 0
+
+4 9 0 1 4
+
+5. Digit swap
+
+(a) In the number 1,478, interchanging the digits 7 and 4 gives 1,748.
+
+Now, interchange any two digits in the number 1,478 to make a number that is larger than 5,500 (b) Interchange two digits of 10,593 to make a number i) Between 11,000 and 15,000. ii) More than 35,000. (c) Interchange two digits of 48,247 to make a number i) As small as possible. ii) As big as possible.
+
+Nearest Tens (10s), Hundreds (100s), and Thousands (1,000s)
+
+A rabbit is hungry. Its location is given in the pictures below. Its food has been kept at two places. Help the rabbit to reach its food.
+
+2,345 2,340 2,350 2,346
+
+The rabbit is at 2,346. Its food has been kept at its neighbouring tens. On which tens should the rabbit go to get its food, with the least number of steps.
+
+2,350 is the nearest ten of 2,346. It will need 4 jumps to reach 2,350.
+
+The rabbit is at 2,346. Its food has been kept at its neighbouring hundreds. Which of the two hundreds should the rabbit go to?
+
+2,300 2,400 2,350 2,346
+
+_______ is the nearest hundred of 2,346. It will need ______ jumps to reach ______.
+
+The rabbit is at 2,346. Its food has been kept at its neighbouring thousands. Which number should the rabbit go to?
+
+2,000 3,000 2,500 2,346
+
+_________ is the nearest thousand of 2,346. It will need _______ jumps to reach ______.
+
+Fill in the boxes appropriately.
+
+Number Nearest Tens Nearest Hundreds Nearest Thousands
+
+3,176
+
+4,017
+
+5,789
+
+8,203
+
+Let Us Think
+
+1. Vijay rounded off a number to the nearest hundred. Suma rounded off the same number to the nearest thousand. Both got the same result. Circle the numbers they might have used. 7,126 7,835 7,030 6,999
+
+Note for Teachers: Help the learners notice the placement of numbers in the neighbouring range of tens, hundreds, and thousands. Encourage them to use such images till they get comfortable identifying the nearest ten, hundred, and thousand.
+
+2. Think and write two numbers that have the same—
+
+For example, 19 and 21 have the same nearest ten, that is, 20.
+
+(a) Nearest ten. (b) Nearest hundred. (c) Nearest thousand.
+
+3. Think and write the numbers that have the same—
+
+(a) Nearest ten and nearest hundred. (b) Nearest hundred and nearest thousand. (c) Nearest ten, hundred and thousand.
+
+Travelling, Now and Then
+
+We learnt that people in the past travelled on foot, on animals, and used boats and sailing ships. The animals that have been used for travelling include bullocks, horses, donkeys, mules, and elephants. In hilly and snow-covered regions, yaks, dogs, and reindeers have been used, while camels have been used in deserts.
+
+Now, people use bicycles, motorbikes, cars, buses, trains, ships, and aeroplanes to travel from one place to another. Submarines are used to go deep under water. Humans are also using spacecraft to travel to outer space.
+
+In an hour a person can generally travel—
+
+(a) 3 – 5 km on foot. (b) 10 – 15 km on horseback. (c) 12 – 20 km by cycle. (d) 40 – 60 km by motorbike.
+
+(e) 40 – 160 km by train. (f) 25 – 45 km by ship. (g) 750 – 920 km by aircraft. (h) minimum 28,000 km by
+
+spacecraft.
+
+Let Us Do
+
+1. A cyclist can cover 15 km in one hour. How much distance will she cover in 4 hours, if she maintains the same speed?
+
+2. A school has 461 girls and 439 boys. How many vehicles are needed for all of them to go on a trip using the following modes of travel?
+
+The numbers in the bracket indicates the number of people that can travel in one vehicle.
+
+(a) Bicycle ( 2) (b) Autorickshaw ( 3) (c) Car ( 4) (d) Big car ( 6)
+
+(e) Tempo traveller (10) (f) Boat ( 20) (g) Minibus ( 25) (h) Aeroplane (180)
+
+Finding Large Numbers Around Us
+
+We saw that the distance (in kilometre) covered by different means of transport in an hour can range from a 1-digit number to a 5-digit number. Can we find other contexts around us that contain numbers in this range? Let us consider the situation below.
+
+A book has around 200 pages, and each page has about 50 words. The book therefore has about 10,000 words in all.
+
+Find something in the textbook whose count is a 4-digit number.
+
+Now, let us try this with our school.
+
+(a) Our school has ________ classrooms. (b) There are ________ students in my class. (c) Our classroom has ________ books in total.
+
+Usually, we measure distances in sea and air using nautical miles. For now, we will use 1 km = 1,000 m. By now, you know different units of measuring length. We will study the units for measuring length, kilometre, in detail in a later chapter.
+
+Find something in the classroom whose count is a— (i) 4-digit number. (ii) 5-digit number. List some quantities whose count is a 4-digit or a 5-digit number in the context of—
+
+(i) A tree.
+
+(ii) Your village/town/city, or any other place of your choice.
+
+Pastime Mathematics
+
+Sanju and Mira are traveling on a train. To pass time, they challenge each other with games and puzzles.
+
+1. Mira poses the river crossing puzzle to Sanju.
+
+A boatman wants to cross a river in a boat. He has to take a lion, a sheep, and a bundle of grass with him. He can take one of them at a time. If the sheep and grass are left on the shore, the sheep will eat the grass. And, if the sheep and lion are left on the shore, the lion will eat the sheep.
+
+How can the boatman take the lion, sheep, and grass across the river?
+
+Help him so that he can ferry the lion, sheep, and grass across the river safely, and in the minimum number of trips.
+
+2. Sanju introduces a game called pile of pebbles to Mira.
+
+There are two piles of pebbles. Each pile contains 7 pebbles. Each player can pick as many pebbles they want from either of the piles. The player who picks the last pebble wins. Try this game with your friends. Now, how do you play so that you win?
+
+To find a winning strategy, try playing with 1 pebble in each pile, two in each, three in each, and so on. 
+3. Now, it’s Mira’s turn. She gives a fun puzzle to Sanju with the following steps —
+
+For example
+
+3 and 7
+
+(a) Take any two different digits. (b) Make two 2-digit numbers
+
+37 and 73
+
+using them. (c) Subtract the smaller number
+
+73 – 37 = 36
+
+from the bigger number.
+
+Now, use the two digits in the difference and repeat steps (b) and (c).
+
+Continue this process until you get a 1-digit number. Even before everyone could finish, Mira exclaimed, “Mind you! No matter which two numbers you choose, you will get 9 in the end.”
+
+The whole process will look as shown below.
+
+7 3 3 7 3 6 
+--
+
+6 3 3 6 2 7 
+--
+
+7 2 2 7 4 5 
+--
+
+5 4 4 5 9 
+--
+
+How did Mira know what the 1-digit number in the end would be?
+
+Let us explore.
+
+(1) Observe the differences you get in each step above. Do you notice
+
+anything in common?
+
+(2) Try the puzzle using any other pair of digits. What is common to
+
+these differences? What do you get in the end?
+
+(3) What digits can you choose so that you get a 1-digit number in the
+
+first step itself? Give some examples. Describe the pattern in the digits.
+
+Note for Teachers: Encourage the students to think logically and strategically while solving these puzzles. Such thinking underlies all of mathematics.
+
+(4) Now, find different digits such that the difference between the
+
+numbers is 27.
+
+(5) Mira found an interesting relationship between the two digits and
+
+the difference obtained. Can you see it in the table that Mira made?
+
+Digits Differences in digits Difference in numbers
+
+formed by the digits
+
+3, 7 7 – 3 = 4 73 – 37 = 36
+
+1, 9 9 – 1 = 8 91 – 19 = 72
+
+2, 8 8 – 2 = 6 82 – 28 = 54
+
+4, 5 5 – 4 = 1 54 – 45 = 9
+
+Extend this table by choosing appropriate digits so that the resulting differences are 2, 3, 5, and 7 respectively.
+
+What do the differences between the digits indicate?
+
+List the numbers that give a 1-digit number in the third subtraction.
+
+Identify pairs of digits that lead to the 1-digit number after the maximum possible number of subtractions. Compare your answers with your friends.
+
+Let Us Do
+
+1. Write 5 numbers between the numbers 23,568 and 24,234.
+
+___________, ___________, ___________, ___________, and ___________
+
+2. Write 5 numbers that are more than 38,125 but less than 38,600.
+
+___________, ___________, ___________, ___________, and ___________
+
+3. Ravi’s car has been driven for 56,987 km till now. Sheetal’s car has been driven 67,543 km. Whose car has been driven more? ________________.
+
+4. The following are the prices of different electric bikes. Arrange the prices in ascending (increasing) order.
+
+₹90,000 ₹89,999 ₹94,983 ₹49,900 ₹93,743 ₹39,999
+
+5. The following table shows the population of some towns. Arrange them in a descending (decreasing) order.
+
+Town Population
+
+Town 1 65,232
+
+Town 2 53,231
+
+Town 3 56,380
+
+Town 4 51,336
+
+Town 5 45,858
+
+Town 6 66,540
+
+__________ , __________ , __________ , __________ , __________, __________,
+
+6. Find numbers between 42,750 and 53,500 such that the ones, tens, and hundreds digits are all 0? .
+
+7. Write the following numbers in the expanded form. One has been done for you.
+
+(a) 783 = 700 + 80 + 3
+
+(b) 8,062 = .
+
+(c) 9,980 = .
+
+(d) 10,304 = .
+
+(e) 23,004 = .
+
+(f) 70,405 = .
+
+8. Fill in the blanks with the correct answer. Share your thoughts in class.
+
+90 Tens is 900, so remaining 83 will 90 Tens is 900, so remaining 83 will be Ones be Ones
+
+(a) 983 = 90 Tens + 83 Ones
+
+(b) 68 = ___ Tens + 18 Ones
+
+(c) 607 = 4 Hundreds + ___ Ones
+
+(d) 5,621 = 4 Thousand + ___ Hundreds + 2 Tens + ___ Ones
+
+(e) 7,069 = ___ Thousand + 20 Hundreds + ___ Ones
+
+(f) 37,608 = ___ Ten Thousand + 17 Thousand + ___ Hundreds + 8 Ones
+
+(g) 43,001 = 3 Ten Thousand + ____ Thousand + ____ Hundreds + 1 Ones
+
+9. Fill in the blanks with the correct answers.
+
+3 Tens is 30, 90 3 Tens is 30, 90 Tens in 900, and Tens in 900, and 700 Tens in 7000 700 Tens in 7000
+
+(a) How many notes of ₹10 are there in ₹7,934? 793
+
+(b) How many notes of ₹100 are there in ₹7,934? _________________
+
+(c) How many thousands are there in 7,934? _________________
+
+(d) How many ₹500 notes are there in ₹7,934? _________________
+
+(Hint: Observe the answer of (iii))
+
+(e) How many notes of ₹10 are there in ₹65,342? _________________
+
+(f) How many notes of ₹100 are there in ₹65,342? _________________
+
+(g) How many thousands are there in 65,342? _________________
+
+(h) How many ₹500 notes are there in ₹65,342? _________________
+
+King’s Horses
+
+Once upon a time, there was a king who was very fond of horses. He had 20 horses of the best breed. The horses were kept in the royal stable, and cared for by a caretaker.
+
+One night, a thief stole one of the horses. Fearing punishment, the caretaker arranged the horses in the stable as shown in the picture here.
+
+The next day, when the king came to check on the horses, the caretaker led him around the square stable. “Please count the number of horses along each side, your majesty,” he said.
+
+The dots above show how the horses were arranged in the stable.
+
+The king counted 5 horses along each side. “We have 5 horses along each side and there are 4 sides. So there are a total of 20 horses, your majesty,” the caretaker explained.
+
+Satisfied with the explanation, the king returned to his palace.
+
+But wait, were there really 20 horses in the stable? Count the horses one by one and check! What was the mistake in the caretaker’s explanation?
+
+The following night, the thief stole another horse from the stable. Now, only 18 horses remained. The caretaker once again cleverly arranged the 18 horses, so that there were 5 horses on each side of the square stable. How do you think he was able to do it? Arrange the 18 horses in the stable with 5 on each side.
+
+How many more horses can the thief steal before the king notices something is wrong? Try making the arrangements yourself.

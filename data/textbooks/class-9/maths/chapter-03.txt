@@ -1,0 +1,1267 @@
+# CLASS-9 - MATHS - CHAPTER 03
+# Source: iemh103.pdf
+
+The World of Numbers
+
+3
+
+3.1. The Dawn of Mathematics: The Human Need to Count
+
+Long before humanity built cities, formulated laws, or studied the stars, there existed a fundamental, practical necessity: the need to keep count. Mathematics did not begin in a classroom with equations on a board; it began in the dirt, on the bark of trees, and on bones.
+
+Imagine you are living thousands of years ago in a small agricultural settlement along the banks of the Saraswati river. You have a herd of cattle. Every morning, they go out into the dense forests to graze, and every evening, they return. How do you ensure that a calf has not wandered off? Without words for numbers, and without written symbols, early humans solved this through a concept called one-to-one correspondence.
+
+For every cow that left the settlement, the herder might place one pebble in a clay pot. In the evening, for every cow that returned, one pebble was removed. If the pot was empty at the end of the day, the herd was safe. If pebbles remained, cows were missing. This simple act of matching one object to another was the birth of the Natural Numbers ( = {1, 2, 3, 4, … }).
+
+3.1.1 A History Written in Bone
+
+While the decimal place-value system we use today was perfected in the Indian subcontinent, the earliest physical evidence of humanity recording natural numbers takes us deep into the heart of Africa. The first mathematicians did not use paper; they used tally marks carved into bone.
+
+The Lebombo Bone, discovered in the Lebombo Mountains between South Africa and Swaziland, dates back approximately 35,000 years. It is a bone featuring 29 distinct, deliberately-carved uniformly-sized notches. Anthropologists and mathematicians believe this was not just random scratching, but a tool used as a lunar phase counter or a menstrual calendar, indicating that early humans were tracking time through natural numbers.
+
+42 Ganita Manjari | Grade 9 | Part I
+
+Even more fascinating is the Ishango bone, found near the headwaters of the Nile River in the Democratic Republic of Congo, dating to around 20,000 BCE. This bone contains three columns of asymmetrical notches. What makes the Ishango bone a mathematical marvel is the specific grouping of the tallies. One of the columns groups notches into 11, 13, 17, and 19 — the prime numbers between 10 and 20. Another column seems to demonstrate the concept of multiplication by 2 (doubling). These artefacts indicate that the abstract concept of a ‘number’ is indeed tens of thousands of years old.
+
+Fig. 3.1: Representation of the prime number tally
+
+groupings found on the Ishango bone.
+
+3.1.2 The Indian Context: Trade and Astronomy
+
+As civilisations advanced, so did the need for larger numbers. In the ancient urban centers of the Indus Valley Civilisation, such as Lothal and Harappa, standardised weights and measures were crucial for trade. A merchant trading terracotta pottery, lapis lazuli, or cotton with Mesopotamia needed a robust system of accounting.
+
+During Vedic times, Indian philosophers were fascinated by and deeply pondered large numbers. In the Vedas, which go back thousands of years, names were given to all powers of 10 up to 1012 (which was called parārdha). In the Lalitavistara in the 4th century BCE, Buddha describes names up to 1053, which is called tallakṣhaṇa.
+
+Expressing quantities in terms of powers of 10 was explicitly used in the Ṛigveda, thus setting the stage for the number system based on powers of 10 to be developed in India in the ensuing years, and which we now use around the world today. The development of the Indian numeral system in terms of place values and powers of 10 also helped pave the way for what is perhaps the most important mathematical invention in human history: the concept of zero.
+
+43 The World of Numbers
+
+Exercise Set 3.1
+
+1. A merchant in the port city of Lothal is exchanging bags of spices
+
+for copper ingots. He receives 15 ingots for every 2 bags of spices. If he brings 12 bags of spices to the market, how many copper ingots will he leave with? 
+2. Look at the sequence of numbers on one column of the Ishango
+
+bone: 11, 13, 17, 19. What do these numbers have in common? List the next three numbers that fit this pattern. 
+3. We know that Natural Numbers are closed under addition (the sum
+
+of any two natural numbers is always a natural number). Are they closed under subtraction? Provide a couple of examples to justify your answer. *4. Ancient Indians used the joints of their fingers to count, a practice
+
+still seen today. Each finger has 3 joints, and the thumb is used to count them. How many can you count on one hand? How does this relate to the ancient base-12 counting systems?
+
+3.2 The Revolution of Śhūnya: When Nothing Became Something
+
+For millennia, the number line started at 1. If you had five apples and gave all five away, you did not have a number to represent your state; you simply had a void, a lack of apples. Civilisations like the Babylonians and Mayans used placeholders — symbols to indicate an empty column in a number — but they did not treat ‘nothing’ as a number that you could add, subtract, and multiply.
+
+It was in the work of Brahmagupta (628 CE) that the void was formally transformed into a number, which truly transformed mathematics. This monumental leap was in turn inspired by Indian philosophical traditions.
+
+3.2.1 From Philosophy to Mathematics: The Concept of Śhūnyatā
+
+In the Upanishads and in the vast Buddhist literature starting well before the 7th century BCE, the concept of Śhūnyatā (emptiness or nothingness)
+
+44 Ganita Manjari | Grade 9 | Part I
+
+was a profound state that was the goal of yoga and meditation. The word śhūnya means zero, and the word śhūnyatā (zeroness) was used extensively in these works to describe the state that one is trying to reach during meditation — that of emptying one’s mind of all vṛttis (fluctuations of the mind) to achieve the state of perfect stillness and tranquility. Patanjali in the Yoga Sutras around the 3rd century BCE also describes how śhūnyatā can help lead to control over one’s mind, body, and senses.
+
+Because Indian thinkers revered this state of ‘emptiness’, they possessed the conceptual framework necessary to welcome ‘nothingness’ as a concept in philosophy. This concept of zeroness then found its way into many fields, such as architecture, literature, linguistics, and eventually made its way into mathematics in the works of Āryabhaṭa and finally Brahmagupta.
+
+Thus, the philosophical concept of emptiness crystallised into the mathematical zero.
+
+3.2.2 The Bakhśhālī Manuscript and Brahmagupta’s Rules
+
+In the Hindu Number System that we use today, the physical transition from a blank space to a symbol can be seen in the Bakhśhālī Manuscript. Dated to the early centuries CE, it features a bold dot (bindu) used to represent zero.
+
+However, a symbol is just a mark on a page until it has rules. The transformation of zero into a fully operational number occurred in the work of Brahmagupta. In his seminal work, the Brāhmasphuṭasiddhānta (628 CE), he explicitly defined zero as the result of subtracting a number from itself (a – a = 0).
+
+Brahmagupta then laid down the fundamental laws of arithmetic with śhūnya:
+
+Brahmagupta’s Rules for Zero
+
+• When zero is added to a number, the number remains unchanged: a + 0 = a.
+
+• When zero is subtracted from a number, the number remains unchanged: a – 0 = a.
+
+• When any number is multiplied by zero, the result is zero: a × 0 = 0.
+
+45 The World of Numbers
+
+3.3 Integers: Expanding the Horizon
+
+Brahmagupta did not stop at zero. He realised that if subtraction of a number from itself can result in zero (5 – 5 = 0), then what would happen if we subtracted a larger number from a smaller one (3 – 5 = )? To answer this, Brahmagupta grounded his mathematics in the reality of commerce and life.
+
+He recognised two states: 
+• Fortunes (Dhana): Positive numbers, representing wealth or assets. 
+• Debts (Ṛiṇa): Negative numbers, representing debts.
+
+By moving to the left of zero on the number line, Brahmagupta formally introduced Negative Numbers to the world. The combination of positive natural numbers, their negative counterparts, and zero creates the set of Integers, denoted by the symbol Z (from the German word Zahlen, meaning numbers).
+
+Negative Integers ← Debt (Ṛiṇa) Fortunes (Dhana) → Positive Integers
+
+Zero (Śhūnya)
+
+–5 
+–4 
+–3 
+–2 
+–1 0 1 2 3 4 5
+
+Fig. 3.2
+
+3.3.1 The Arithmetic of Integers
+
+Brahmagupta gave explicit rules for adding and multiplying these integers, which we still use exactly as he wrote them over 1,300 years ago:
+
+1. A fortune plus a fortune is a fortune: 5 + 4 = 9.
+
+2. A debt plus a debt is a debt: (– 5) + (– 4) = –9. (If you owe `5 and
+
+borrow `4 more, you owe ` 9.)
+
+3. A fortune minus zero is a fortune, a debt minus zero is a debt:
+
+7 – 0 = 7, and – 6 – 0 = – 6. 
+4. The product of a debt and a fortune is a debt: (–3) × 4 = –12.
+
+(If you take on 4 debts of `3, your total debt is `12.)
+
+5. The product of two debts is a fortune: (–3) × (–4) = 12.
+
+46 Ganita Manjari | Grade 9 | Part I
+
+Think and Reflect
+
+Why does a negative times a negative equal a positive? Think of it in terms of action and debt. If a negative number represents a debt, then multiplying by a negative number represents the removal of that debt.
+
+(Hint: If someone takes away (–) four of your debts that are each worth `3 (that is, –3), you are effectively `12 richer! Therefore, (–3) × (– 4) = +12.)
+
+Exercise Set 3.2
+
+1. The temperature in the high-altitude desert of Ladakh is recorded
+
+as 4 °C at noon. By midnight, it drops by 15 °C. What is the midnight temperature?
+
+2. A spice trader takes a loan (debt) of `850. The next day, he makes
+
+a profit (fortune) of `1,200. The following week, he incurs a loss of `450. Write this sequence as an equation using integers and calculate his final financial standing. 
+3. Calculate the following using Brahmagupta’s laws:
+
+(i) (–12) × 5 (ii) (–8) × (–7)
+
+(iii) 0 – (–14) (iv) (–20) ÷ 4
+
+4. Explain, using a real-world example of debt, why subtracting
+
+a negative number is the same as adding a positive number (e.g., 10 – (–5) = 15).
+
+3.4 Filling the Spaces: Fractions and Rational Numbers
+
+As society grew more complex, measuring became just as important as counting. If a farmer divides a field of wheat among his three children, how much does each get? If a recipe calls for half a cup of ghee, how do we represent that mathematically?
+
+Numbers that represent parts of a whole are called fractions. Just as every natural number has an additive inverse (3 has –3, 19 has –19, etc.),
+
+we can conceive of additive inverses for every positive fraction: – 3
+
+4 for 3 4 , – 19 7 for 19 7 , etc. Let us refer to such additive inverses of positive
+
+47 The World of Numbers
+
+fractions as negative fractions. Note that in a negative fraction, the ‘–’ sign can also be placed with either the numerator or denominator, as
+
+follows: – 1
+
+5 = –1 5 = 1 
+–5.
+
+When we combine all integers and all fractions (both positive and negative), we get the set of Rational Numbers, denoted by ℚ (for quotient).
+
+A rational number is defined as any number that can be expressed
+
+in the form p
+
+q , where p and q are integers and q ≠ 0.
+
+Think and Reflect
+
+Can you explain why we need q ≠ 0 in the definition of a rational number?
+
+We must make some important observations at this stage.
+
+• All rational numbers can be written in the form p
+
+q , where p and
+
+q are integers and q ≠ 0. For example, 5 and –10 can be written
+
+as 5
+
+1 and –10 1 , respectively. What this means is that the
+
+rational numbers also include the natural numbers, whole numbers and integers. 
+• Rational numbers do not have a unique representation in the
+
+form p
+
+q , where p and q are integers and q ≠ 0. For example, we have
+
+– 1
+
+3 = – 2 6 = – 3 9 = – 10 30 = – 2026 6078 and so on. These are equivalent
+
+rational numbers (or equivalent fractions). This fact allows us to freely divide any common factor between the numerator and the denominator of a given fraction. The resulting fraction is
+
+then equivalent to the original one. For example, 12
+
+30 is equivalent
+
+to 2
+
+5. Here, we have divided both the numerator and the
+
+denominator by 6.
+
+• The common understanding is that when we say that p
+
+q is a rational
+
+number, or when we represent p
+
+q on the number line, we assume
+
+that q ≠ 0 and that p and q have no common factors other than
+
+48 Ganita Manjari | Grade 9 | Part I
+
+1 (that is, p and q are co-prime). So, on the number line, among
+
+the infinitely many fractions equivalent to 1
+
+2 (i.e., the fractions 1 2,
+
+2
+
+4, 3 9, 6 12, … , 1013 2026 , …), we choose 1 2 to represent all of them.
+
+As you will remember from Grades 6 and 7, Brahmagupta also gave rules for addition, subtraction, multiplication, and division of fractions. He noted that these rules also apply to both positive and negative fractions which together constitute the rational numbers.
+
+Here are the various laws:
+
+1. Equality: Two rational numbers a
+
+b and c
+
+d are said to be equal if ad = bc.
+
+2. Addition and subtraction of two rational numbers: We first
+
+express the two rational numbers as fractions a
+
+b and c
+
+b with the
+
+same denominator, b. Then we use the rules a
+
+b + c
+
+b = a + c
+
+b and a b – c
+
+b = a – c
+
+b .
+
+3. Multiplication and division of two rational numbers:
+
+We use the rules a b
+
+ac bd × = provided that
+
+c d
+
+ad
+
+(b ≠ 0, d ≠ 0) and a
+
+b
+
+bc ÷ = × = provided that (b ≠ 0,
+
+c d
+
+a b
+
+d c
+
+d ≠ 0, c ≠ 0).
+
+4. With the arithmetic laws defined as above, addition and
+
+multiplication are both commutative (i.e., a
+
+b
+
+c d
+
+c d
+
+a b + = + and a b
+
+a b × = × , and they follow the law of distributivity: if p, q and r
+
+c d
+
+c d
+
+are rational numbers, then p (q + r) = pq + pr.
+
+Rational numbers are closed under addition, subtraction, and multiplication; that is, if one adds two rational numbers, or subtracts two rational numbers, or multiplies two rational numbers, a rational number is again obtained. Rational numbers are also closed under division, provided that one does not divide by zero. That is, the quotient of two rational numbers is again a rational number, as long as one does not divide by zero.
+
+49 The World of Numbers
+
+Think and Reflect
+
+1. While adding or subtracting two rational numbers having different denominators, how will you make the denominators equal?
+
+2. Verify the distributive law for rational numbers.
+
+Exercise Set 3.3
+
+1. Prove that the following rational numbers are equal:
+
+(i)
+
+5 4 10 8 and
+
+2 3 4 6 and (ii)
+
+(iii) − − 3 5 6 10 and (iv) 9
+
+3 and 3
+
+2. Find the sum:
+
+(i) 2 5 3 10 + (ii) 7 12 5 8 +
+
+(iii) − + 4 7 3 14
+
+3. Find the difference:
+
+(i) 5 6 1 4 − (ii) 11
+
+8 3 4 −
+
+
+
+(iii) − −− 
+
+
+
+ 7 9 2 3
+
+4. Find the product:
+
+(i) 2 3 3 10 × (ii) 7 11 5 8 ×
+
+(iii) − × 4 7 5 14
+
+5. Find the quotient:
+
+8
+
+(i) 2 3 ÷ 3 10 (ii) 7 11 ÷ 5
+
+50 Ganita Manjari | Grade 9 | Part I
+
+(iii) − ÷ 4 7 5 14
+
+
+
+6. Show that: 1
+
+2 3 4 8 3 1 2 8 3 3 4 8 3 + 
+
+
+
+× = × + × .
+
+7. Simplify the following using the distributive property:
+
+
+
+7 9 6 7 3 4 − 
+
+
+
+.
+
+
+
+8. Find the rational number x such that: 5
+
+6 3 5 5 6 1 2 x x + 
+
+
+
+= + .
+
+3.4.1 Representation of Rational Numbers on the Number Line
+
+We already know that integers can be represented on a number line. To do this, we first choose a point and mark it as 0, called the origin. Moving one unit to the right gives the point representing 1, two units to the right gives 2, and so on. Similarly, moving one unit to the left of the origin gives –1, two units to the left gives –2, and so on. Each integer lies at an equal distance from the next one. This is represented in Fig. 3.3.
+
+–7 
+–6 
+–4 
+–5 
+–3 
+–2 
+–1 0 1 2 3 4 5 6 7
+
+Fig. 3.3
+
+Rational numbers can also be represented on the number line. Unlike
+
+integers, they may lie between two integers. For example, 1
+
+2 lies exactly
+
+halfway between 0 and 1, and – 3
+
+4 lies between –1 and 0 as shown in Fig. 3.4.
+
+–2 
+–1 0 1 2 1 2 
+–3
+
+4
+
+Fig. 3.4
+
+p
+
+To represent a rational number
+
+q , q ≠ 0, on the number line, divide the unit interval (the distance between two consecutive integers) into q equal parts. Then move p parts from 0 to the right if the number is positive, and to the left if it is negative.
+
+51 The World of Numbers
+
+For example, to represent 3
+
+4, divide the interval between 0 and 1 into four equal parts and move three parts to the right from 0.
+
+0 1 1 2 1 4 3 4
+
+Fig. 3.5
+
+Even fractions greater than 1 can be located on the number line in
+
+this way. For example, 9
+
+4 = 21 4 so it lies between 2 and 3. We divide the
+
+interval between 2 and 3 into four equal parts and move one part to the right of 2. See Fig. 3.6.
+
+0 1 2 3 1 4 1 2 3 4 5 4 3 2 7 4 9 4 5 2 11 4
+
+Fig. 3.6
+
+Think and Reflect
+
+Try and represent 8
+
+5 and – 7 4 on a number line.
+
+– 18
+
+5 
+– 9
+
+4
+
+32 7 26 7 
+– 7
+
+8
+
+7 8 9 4
+
+0 
+–5 
+–4 
+–3 
+–2 
+–1 1 2 3 4 5
+
+– 22
+
+5
+
+3 2
+
+Fig. 3.7: Some integers and rational numbers on a number line
+
+Absolute value of a rational number
+
+The absolute value of a rational number x, written as |x|, represents its distance from 0 on the number line.
+
+Example 1: |5
+
+3|= 5 3 , |– 5 3|is also equal to 5 3 and |0|= 0.
+
+Thus, the absolute value of a positive number is the number itself. The absolute value of a negative number is its positive value. Therefore, the absolute value of any rational number is always non-negative, that is, |x| ≥ 0.
+
+52 Ganita Manjari | Grade 9 | Part I
+
+For two rational numbers a and b, the distance between them on the number line is given by |a – b|. Fig. 3.8 represents the distance between the integers –4 and 3.
+
+|a – b|= 7
+
+b a
+
+–5 
+–4 
+–3 
+–2 
+–1 0 1 2 3 4
+
+Fig. 3.8
+
+3.4.2 The Density of Rational Numbers
+
+One of the most magical properties of rational numbers is that they are dense. Between any two integers, say 1 and 2, there is a rational number 3 2 . Between 1 and 3 2 , there is another rational number 5 
+4.
+
+No matter how close two rational numbers are on the number line, you can always find another rational number between them by taking their average. For example, a rational number between 1 and
+
++
+
+= 5
+
+4. Try to explain why
+
+3 2 can be found by taking their average: 1 3 2 2
+
+the average of two rational numbers a and b, which equals (a + b)
+
+2 , is always a rational number between a and b.
+
+5 4 3 2 1 2
+
+Fig. 3.9
+
+This means that there are infinitely many rational numbers between any two points. It feels as though the rational numbers must completely fill the number line, leaving no gaps whatsoever. But do they?
+
+Exercise Set 3.4
+
+1. Represent the rational numbers 2
+
+3, –5 4 and 11 2 on a single number line. 
+2. Find three distinct rational numbers that lie strictly between
+
+– 1
+
+2 and 1 
+4.
+
+53 The World of Numbers
+
+
+
+
+
+3. Simplify the expression: − 
+
+
+
+ 1 4 5 12 .
+
++ 
+
+
+
+4. A tailor has 15 3
+
+4 metres of fine silk. If making one kurta requires
+
+21 4 metres of silk, exactly how many kurtas can he make?
+
+5. Find three rational numbers between 3.1415 and 3.1416.
+
+*6. Can you think of other way(s) to find a rational number between
+
+any two rational numbers?
+
+3.5 Irrational Numbers
+
+2 1
+
+1
+
+For centuries, mathematicians believed that every measurable length in the universe could be represented as a ratio of two integers. However, when Baudhāyana composed his Śhulbasūtra (a manual for constructing complex geometric fire altars) in around 800 BCE, he quickly encountered lengths that defied fractions. The ancient Greeks encountered the same crisis a few centuries later.
+
+Fig. 3.10
+
+Consider a square where each side is exactly 1 unit long. By the Baudhāyana–Pythagoras Theorem, the length of the diagonal d is given by 12 + 12 = d2, so d2 = 2. Therefore, the length of the diagonal is 
+2.
+
+Think and Reflect
+
+Can 2 be written as a rational number p q ?
+
+As you learned in Grade 8, the answer is a resounding NO! We will soon again see why! Numbers on the number line that cannot be expressed as a ratio of integers are called Irrational Numbers.
+
+3.5.1 The Proof of Irrationality of
+
+The first proof of the irrationality of 2 is due to a mathematician named Hippasus who was a member of the Pythagorean school (c. 400 BCE). To explain why 2 is irrational, he employed a brilliant
+
+54 Ganita Manjari | Grade 9 | Part I
+
+technique called Proof by Contradiction. Namely, we assume the opposite of what we want to prove, and show that this assumption leads to a logical disaster.
+
+Proof: We shall explain the proof in steps.
+
+Step 1: Assumption: Assume 2 is a rational number. Therefore, it
+
+p
+
+can be written as a fraction
+
+q , q ≠ 0 in its simplest form. (This means p
+
+and q are integers that share no common factors other than 1, that is, they are co-prime.)
+
+2 = p q
+
+Step 2: Square both sides of the equation:
+
+2
+
+2
+
+2 = p
+
+q Step 3: Multiply both sides by q2:
+
+2q2 = p2
+
+Step 4: Deduction for p:
+
+Because p2 is equal to 2 times some integer, p2 must be an even number. If the square of a number is even, the number itself must be even. Therefore, p is an even integer. Let us say p = 2k (where k is an integer).
+
+Step 5: Substitute p = 2k back into our equation from Step 3:
+
+2q2 = (2k)2
+
+2q2 = 4k2
+
+Step 6: Divide both sides by 2: q2 = 2k2
+
+Step 7: Deduction for q: Now we see that q2 is equal to 2 times some integer k2. This means q2 is even, and therefore, q must also be an even integer.
+
+Step 8: The Contradiction: We deduced that p is even and q is even. This means they both share a common factor of 2. However, in Step 1,
+
+p
+
+we stated that
+
+q was in simplest form, sharing no common factors!
+
+55 The World of Numbers
+
+Because our logical steps are flawless, our initial assumption must be wrong. Therefore, 2 cannot be expressed as a fraction. It is irrational.
+
+Think and Reflect
+
+Try to prove the irrationality of 3 using the approach of proof by
+
+contradiction. Will the same approach work for 5 , 7 , or 10 ?
+
+3.5.2 Construction of Length
+
+Think and Reflect
+
+We have seen how to obtain a line whose length is a rational number. How do we obtain lines whose lengths are irrational?
+
+For example, to construct a line segment of length 2 and mark its position on the number line, we may proceed as follows.
+
+Step 1: On the number line (see Fig. 3.11), we measure OA = 1 unit and draw a perpendicular on OA through A.
+
+56 Ganita Manjari | Grade 9 | Part I
+
+Step 2: On this perpendicular line we mark the point B such that AB = 1 unit and join the origin to B. Clearly, OB = 2 units.
+
+Step 3: With O as centre and OB as radius, with a compass we draw an arc which intersects the number line at P. Clearly, OP = 2 units. Hence, P represents the irrational number 
+2.
+
+C B
+
+O A
+
+1 1 2 2
+
+P
+
+–3 
+–2 
+–1 1
+
+0
+
+2 3
+
+Fig. 3.11: Constructing irrational lengths and
+
+locating them on the number line
+
+Think and Reflect
+
+Try to extend this method for constructing line segments of lengths 3
+
+and 5 using a ruler and a compass. Generalise this method to construct a line segment of any length of the form n , where n is a positive integer.
+
+3.5.3 The Story of Pi (π) and Madhava’s Infinite Series
+
+Another famous irrational number is π, the ratio of a circle’s circumference to its diameter. For centuries, mathematicians sought better and better fractional approximations for π. Āryabhaṭa (499 CE) gave the highly
+
+accurate approximation 3927
+
+1250 = 3.1416, but stated that this was only an
+
+asanna (approximation), and indicated that an exact fraction could likely not be found.
+
+However, because π is irrational (as was formally proven by Lambert in 1761), no single fraction (or finitely many fractions) can ever provide a perfect formula for π. An exact formula for π was first unlocked in the 14th century by Mādhava of Sangamagrama, who launched the Kerala School of Mathematics. Mādhava realised that to express an irrational number, you cannot use a single fraction; you must use an infinite sum. He discovered the profound infinite series:
+
+
+
+π = 4 1 1 3 1 5 1 7 × − + − + 
+
+
+
+ .
+
+We know what it means to add 2, 100, or even a lakh terms. What does it mean to add an infinite number of terms? It means finding the
+
+57 The World of Numbers
+
+value that we get “closer” and “closer” to as we add more and more terms of the infinite sum, starting from the first term. You will learn more about infinite series in higher grades.
+
+Thus, the number line is not only filled with rational numbers but also contains irrational numbers. We have seen how to mark some irrationals, and will simply conceive the rest of the irrationals to lie on the line.
+
+– 22
+
+0
+
+5 
+– 12
+
+5
+
+7 2 9 2
+
+−10 π 2 5
+
+1 2 3 4 5 
+–5 
+–4 
+–2 
+–3 
+–1
+
+– 3
+
+2 
+– 1
+
+3
+
+5 6 3 2
+
+Fig. 3.12
+
+3.6 Real Numbers: Decimals and Cyclic Patterns
+
+When we unite the dense web of Rational Numbers with the unfillable gaps of Irrational Numbers, we create the unbroken, continuous line of the Real Numbers (R).
+
+The easiest way to distinguish a rational number from an irrational number is to look at its decimal expansion.
+
+3.6.1 Rational Decimals: Terminating and Repeating
+
+If you divide the numerator of a rational number by its denominator, exactly one of two things will happen: 
+1. It terminates: The division eventually leaves a remainder of 0.
+
+The decimal stops.
+
+Example 2: 3
+
+8 = 0.375. (Can you tell for which rational numbers the
+
+decimal will be terminating?) 
+2. It repeats: The division never reaches a remainder of 0, but the
+
+sequence of digits begins to loop infinitely.
+
+Example 3: 5
+
+11 = 0.454545 … = 0.45.
+
+Think and Reflect
+
+Try to find the decimal expansions of 10
+
+3 and 11 12. What do you observe
+
+about the repetition of the digits after the decimal point?
+
+58 Ganita Manjari | Grade 9 | Part I
+
+Why do some rational numbers have repeating decimal
+
+representations? Imagine calculating 1
+
+7 using long division. You are
+
+dividing by 7. What are the possible remainders at each step? They can only be 1, 2, 3, 4, 5, or 6 (why not 0?). Because there is a limited number of possible remainders eventually, a remainder must show up a second time. Once a remainder repeats, the entire division process loops, creating a repeating decimal!
+
+Predicting the Type of Decimal Expansion
+
+The interesting thing is that we can predict whether the decimal expansion of a rational number will terminate or go on forever without actually doing the long division process!
+
+For this, we resort to finding the prime factors of the denominator.
+
+p
+
+Let
+
+q , q ≠ 0, be a rational number in its lowest terms (that is, p and
+
+q have no common factor other than 1).
+
+Consider the fraction 3
+
+20. The prime factorisation of 20 is 22 × 5.
+
+3 5
+
+= ×
+
+= = . .
+
+Hence, 3
+
+20 3
+
+15 100 0 15 2 2 =
+
+2 5
+
+2 5 5
+
+× ×
+
+×
+
+We multiply the numerator and denominator by 5 to get 100 and arrive at 0.15 which is a terminating decimal.
+
+Think and Reflect
+
+The decimal expansion of
+
+p q will be terminating precisely when the prime
+
+factors of q are only 2, only 5 or both 2 and 5. Can you explain why?
+
+This is because in such cases, we can make the denominator a power of 10 by multiplying both numerator and denominator by a suitable number.
+
+p
+
+Converting Rational Decimals into the Form
+
+q
+
+Case 1: Terminating decimals We have already seen in earlier grades how to convert terminating
+
+p
+
+decimals into the form
+
+q .
+
+59 The World of Numbers
+
+p
+
+Example 4: Convert 0.35 into the form
+
+q .
+
+We know that 0.35 = 35
+
+100 = 7 20.
+
+Now, let us understand how to convert non-terminating repeating
+
+p
+
+decimals into the form
+
+q .
+
+Case 2: Pure repeating decimals A pure repeating decimal is one in which a digit or a sequence of digits begins repeating immediately after the decimal point.
+
+p
+
+Example 5: Convert 0.6 into the form
+
+q .
+
+Step 1: Let x = 0.6
+
+Step 2: Since one-digit repeats, multiply both sides by 101 = 10, we get
+
+10x = 6.6
+
+Step 3: Subtract the first equation from the second:
+
+10x – x = 6.6 – 0.6 = 6.
+
+Step 4: Solve for x: 9x = 6. Thus, x = = 6 9 2 3 .
+
+p
+
+Example 6: Convert 0.45 into the form
+
+q . Let x = 0.45.
+
+Since two digits repeat, multiply by 102 = 100. We get 100x = 45.45. Subtracting the two equations, we get 99x = 45.
+
+So, x = 45
+
+99 = 5 11.
+
+Case 3: General repeating decimals
+
+A general repeating decimal has some non-repeating digits just after the decimal point, followed by a repeating block.
+
+p
+
+Example 7: Convert 0.16 into the form
+
+q .
+
+Step 1: Let x = 0.16.
+
+Step 2: First, shift the decimal to place the repeating part immediately after the decimal point.
+
+60 Ganita Manjari | Grade 9 | Part I
+
+Since one digit is non-repeating, we multiply by 101 = 10 and obtain 10x = 1.6
+
+Step 3: Now, to move one full repeating cycle (1 digit repeating), we multiply by 101 = 10 again and get 100x = 16.6.
+
+Step 4: Subtracting the first shifted equation from the second, we get,
+
+100x – 10x = 16.6 – 1.6, or 90x = 15. Thus, x = = 15 90 1 6 .
+
+p
+
+Example 8: Convert 2.357 into the form
+
+q .
+
+Step 1: Let x = 2.357.
+
+Step 2: Here, ‘35’ is non-repeating (2 digits), ‘7’ repeats (1 digit). Firstly, we multiply by 102 = 100 to move the non-repeating digits before the decimal and we obtain 100x = 235.7.
+
+Step 3: Now, we multiply by 101 = 10 to move the full repeating cycle and get 1000x = 2357.7.
+
+Step 4: Subtracting, we obtain 1000x – 100x = 2357.7 – 235.7.
+
+Hence, 900x = 2122 and x = = 2122 900 1061 450 .
+
+p
+
+Example 9: Convert 2.4537 into the form
+
+q .
+
+Step 1: Let x = 2.4537.
+
+Step 2: Here, ‘45’ is non-repeating (2 digits), ‘37’ repeats (2 digits). Firstly, we multiply by 102 = 100 to move the non-repeating digits before the decimal and we obtain 100x = 245.37.
+
+Step 3: Now, we multiply by 102 = 100 to move the full repeating cycle and get 10000x = 24537.37.
+
+Step 4: Subtracting, we obtain 10000x – 100x = 24537.37 – 245.37.
+
+Hence, 9900x = 24292 and x = = 24292 9900 6073 2475 .
+
+Summary Table for Conversion
+
+Decimal type Steps to follow
+
+Pure repeating
+
+• Let x = the decimal number. 
+• Multiply by 10n where n = the number of repeating digits, 
+• Subtract from the original equation, and solve for x.
+
+61 The World of Numbers
+
+General repeating
+
+• Let x = the decimal number. 
+• Multiply by 10m where m = the number of non-repeating digits, then multiply by 10n where n = the number of repeating digits. 
+• Subtract from the previous equation, and solve for x.
+
+3.6.2 The Magic of Cyclic Numbers
+
+When we calculate the decimal for 1
+
+7 we get 0.142857142857 … or
+
+0.142857. The repeating block, 142857, is one of mathematics’ most fascinating gem — a cyclic number. Watch what happens when we multiply it by the digits 1 through 6:
+
+142857 × 1 = 142857
+
+142857 × 2 = 285714
+
+142857 × 3 = 428571
+
+142857 × 4 = 571428
+
+142857 × 5 = 714285
+
+142857 × 6 = 857142
+
+The same digits simply shift in a cyclic circle! This beautiful internal
+
+structure is a hallmark of the rational number 1
+
+7 .
+
+3.6.3 Irrational Decimals: Chaos and Infinity
+
+Irrational numbers, however, possess decimal expansions that never end and never repeat. There is no cyclic block, no pattern that loops forever. Examples include:
+
+2 = 1.4142135623730950488 …
+
+π = 3.1415926535897932384 …
+
+Exercise Set 3.5
+
+1. Without performing long division, determine which of the
+
+following rational numbers will have terminating decimals and
+
+which will be repeating: 7
+
+20 , 4 15 and 13 250 . Then check your answers
+
+62 Ganita Manjari | Grade 9 | Part I
+
+by explicitly performing the long divisions and expressing these rational numbers as decimals.
+
+2. Perform the long division for 1
+
+13. Identify the repeating block
+
+of digits. Does it show cyclic properties if you evaluate 2
+
+13? Now
+
+compute 3
+
+13, 4 13, etc. What do you notice?
+
+3. Classify the following numbers as rational or irrational:
+
+(i) 81
+
+(ii) 12
+
+(iii) 0.33333 …
+
+(iv) 0.123451234512345 …
+
+(v) 
+1.01001000100001 … (Notice the pattern: Is it repeating a single block?)
+
+(vi) 23.560185612239874790120
+
+Find the explicit fractions in case they are rational.
+
+4. The number 0.9 (which means 0.99999 … ) is a rational number.
+
+Using algebra (let x = 0.9, multiply by 10, and subtract), explain why 0.9 is exactly equal to 1.
+
+*5. We have seen that the repeating block of 1
+
+7 is a cyclic number.
+
+Try to find more numbers (n) whose reciprocals (
+
+1 n ) produce decimals with repeating blocks that are cyclic.
+
+Non-uniqueness of decimal representations. Just as 1 = 10
+
+10 = 100 100,
+
+rational numbers can have two decimal forms. Any terminating decimal has an alternative with repeating 9s: 1.000 … = 0.999 …, 2.47000 … = 2.46999 ….
+
+Is it not surprising that 0.999 … = 1? Many would have guessed that it is slightly less than 1.
+
+3.7 Conclusion: The Never-Ending Journey
+
+We have travelled an immense distance. From the simple notches carved into the Ishango bone to track the passing days, to the
+
+63 The World of Numbers
+
+profound philosophical void of Śhūnya in ancient India. We crossed the threshold of zero into the realm of debts and negative numbers with Brahmagupta. We found that the space between numbers is infinitely dense with fractions, yet fundamentally interspersed with the infinite-nonrepeating-decimal irrational numbers like 2 and π. By uniting the rational and the irrational, we built the continuous, unbroken Real Number Line. Every length, every temperature, every real physical measurement in the known universe has a home on this line.
+
+The Evolution of Our World of Numbers
+
+Our world of numbers has grown in stages over thousands of years, to meet the needs of humanity:
+
+• Natural Numbers (): The basic counting numbers {1, 2, 3, …}. These are contained in the collection of integers. 
+• Integers (Z): These include also zero and the negative numbers {…, −2, −1, 0, 1, 2, …}. These in turn are contained in the collection of rational numbers. 
+• Rational Numbers (Q): These include all fractions p q , where p, q are integers and q ≠ 0. They also correspond to those numbers with terminating decimals like 0.135 and repeating decimals like 0.142857. 
+• Irrational Numbers (I): These are separate from the above. They are numbers that cannot be written as fractions (e.g., 2 , π, 10 ) and do not have terminating or repeating decimals. 
+• Real Numbers (R): Together, the rational and irrational numbers make up the entire real number line.
+
+Fig. 3.13
+
+64 Ganita Manjari | Grade 9 | Part I
+
+Is the journey over? Are there more numbers waiting to be discovered beyond the Real Number line?
+
+Think and Reflect
+
+Consider this puzzle: What is the square root of –1? We know that 1 × 1 = 1. We also know that (–1) × (–1) = 1. There is no Real Number that, when multiplied by itself, results in a negative number. Thus, −1 cannot exist on number line.
+
+To solve this, mathematicians stepped completely off the line and invented a new dimension of numbers, denoted by the letter i, standing for Imaginary Numbers. While they sound like fiction, they are essential for modern electrical engineering, quantum mechanics, and the technology that powers your mobile phone. But that is a journey for another year. For now, master the Real Numbers. The universe is largely written in their language.
+
+End-of-Chapter Exercises
+
+1. Convert the following rational numbers in the form of a terminating decimal or non-terminating and repeating decimal, whichever the case may be, by the process of long division:
+
+(i) 3
+
+50 (ii) 2 9
+
+2. Prove that 5 is an irrational number.
+
+3. Convert the following decimal numbers in the form of p
+
+q .
+
+(i) 12.6 (ii) 0.0120 (iii) 3.052
+
+(iv) 1.235 (v) 0.23 (vi) 2.05
+
+(vii) 2.125 (viii) 3.125 (ix) 2.1625
+
+4. Locate the following rational numbers on the number line.
+
+(i) 0.532 (ii) 1.15
+
+65 The World of Numbers
+
+5. Find 6 rational numbers between 3 and 4.
+
+6. Find 5 rational numbers between 2 5 and 3 
+5.
+
+7. Find 5 rational numbers between1 6 and 2 
+5.
+
+8. If x x 3 5 16 15 + = , find the rational number x.
+
+9. Let a and b be two non-zero rational numbers such that a b + = 1 0 .
+
+Without assigning any numerical values, determine whether ab is positive or negative. Justify your answer.
+
+10. A rational number has a terminating decimal expansion whose
+
+last non-zero digit occurs in the 4th decimal place. Show that such
+
+a number can be written in the form
+
+p 104, where p is an integer
+
+not divisible by 10. Is it necessary that the denominator of this rational number, when written in the lowest form, is divisible by 24 or 54? Give reasons.
+
+11. Without performing division, determine whether the decimal
+
+expansion of 18 125 is terminating or non-terminating. If it
+
+terminates, state the number of decimal places.
+
+12. A rational number in its lowest form has denominator 23 × 5. How
+
+many decimal places will its decimal expansion have? Explain your answer.
+
+2
+
+*13. Let a = 7
+
+1 and k m
+
+12 and b = 5 
+6. Express both a and b in the form k m
+
+where k1, k2 and m are integers and k2 – k1 > 6. Using the same denominator m, write exactly five distinct rational numbers lying between a and b keeping an integer numerator. Explain why the condition k2 – k1 > n + 1 is necessary to find n such rational numbers between the two rational numbers a and b using this method.
+
+*14. Three rational numbers x, y, z satisfy x + y + z = 0 and
+
+xy + yz + zx = 0. Show that all the rational numbers x, y, z must be simultaneously zero.
+
+66 Ganita Manjari | Grade 9 | Part I
+
+*15. Show that the rational number a b + ( ) 2 lies between the rational numbers a and b.
+
+16. Find the lengths of the hypotenuses of all the right triangles in
+
+Fig. 3.14 which is referred to as the square root spiral.
+
+Fig 3. 14: Square root spiral
+
+Chapter Summary
+
+In this chapter you have learnt the following concepts:
+
+• Natural Numbers () are the counting numbers {1, 2, 3, … } that emerged at least tens of thousands of years ago due to humanity’s need to count.
+
+• The Concept of Zero (Śhūnya) was formalised in India by philosophers and then brought into mathematics formally by Brahmagupta (629 CE), who transformed the philosophical state of ‘nothingness’ (Śhūnyatā) into an actual number on which one could perform arithmetic operations. Brahmagupta also introduced the negative numbers, i.e., numbers less than zero.
+
+• Integers (Z) extend the number line to the left of 1 to include zero as well as the negative numbers, which Brahmagupta historically categorised as ‘debts’ (ṛiṇa) in contrast with the positive number ‘fortunes’ (dhana).
+
+67 The World of Numbers
+
+• Brahmagupta’s Laws provided the first rigorous framework for arithmetic with signed numbers, establishing rules such as ‛the product of two debts is a fortune’ (– × – = +), as well as the rules for zero.
+
+• Rational Numbers (Q) are defined as any number that can
+
+be expressed as a ratio p
+
+q (where p and q are integers and q ≠ 0).
+
+Brahmagupta also gave the formal rules for addition, subtraction, multiplication, and division of rational numbers.
+
+• Rational numbers are dense, meaning a rational number always exists between any two other rational numbers.
+
+• Irrational Numbers are values like 2 and π that cannot be written as fractions. Their existence proves that the number line contains gaps that rational ratios alone cannot fill. The first proof of the irrationality of a number was that of 2, by Hippasus (c. 400 BCE). It was a proof by contradiction. A proof that π is irrational (as it was suspected to be by Āryabhaṭa in 499 CE) was given by the Swiss mathematician Johann Lambert in 1761.
+
+• Real Numbers (R) represent the total union of all rational and irrational numbers, forming a perfectly continuous and unbroken line where every real physical measurement has a corresponding point.
+
+• Decimal expansions serve as a mathematical signature for rational vs. irrational: rational numbers always result in terminating or repeating decimals, while irrational numbers produce non-repeating decimals that continue infinitely.
+
+• Cyclic Numbers, such as the digits found in the repeating block
+
+of 1
+
+7 (i.e., 142857), reveal the elegant and symmetrical internal
+
+patterns hidden within the rational numbers.
+
+• Imaginary Numbers are introduced as a final conceptual frontier to handle operations like −1, which cannot be solved on the real number line and require a new dimension of mathematics.

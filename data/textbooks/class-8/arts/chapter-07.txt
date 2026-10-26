@@ -1,0 +1,534 @@
+# CLASS-8 - ARTS - CHAPTER 07
+# Source: hekr107.pdf
+
+7 Indian Classical Music
+
+CARNATIC MUSIC
+
+There are seven main talas in Carnatic music. They are:
+
+An important set of vocal exercises to build vocal strength and understand talas is the sapta-tala alankaras, three of which were introduced in Grade 7. In Grade 8, we will learn to sing and keep tala for the remaining four —
+
+Mishra Jathi Jhampa Talam Alankaram
+
+1. Dhruva
+
+2. Mattya
+
+I7 U 0 = 7 + 1 + 2 = 10 Beats
+
+3. Rupaka
+
+I7 0
+
+4. Jhampa
+
+S R G S R S R | G | M ,
+
+5. Triputa
+
+R G M R G R G | M | P ,
+
+6. Ata
+
+G M P G M G M | P | D ,
+
+7. Eka
+
+M P D M P M P | D | N ,
+
+P D N P D P D | N | S ,
+
+The three main parts or angas that make up a tala are: 
+1. Laghu (clap and finger counts): notated I
+
+S N D S N S N | D | P ,
+
+2. Drutam (clap and wave): notated as O
+
+N D P N D N D | P | M ,
+
+3. Anudrutam (beat): notated as U
+
+D P M D P D P | M | G ,
+
+Note: There can be different numbers of beats in a laghu,
+
+P M G P M P M | G | R ,
+
+which is known as jathi. Also, not all talas have all angas.
+
+M G R M G M G | R | S
+
+76 | KRITI
+
+Thrisra Jathi Triputa Talam
+
+Alankaram
+
+I3 0 0 = 3 + 2 + 2 = 7 Beats
+
+I3 0 0
+
+s r g | s r | g m ||
+
+r g m | r g | m p ||
+
+g m p | g m | p d ||
+
+m p d | m p | d 
+• ||
+
+p d 
+• | p d | 
+• S ||
+
+An ensemble of (L-R) — mridangam, morsing, violin and ghatam
+
+S 
+• d | S 
+• | d p ||
+
+• d p | 
+• d | p m ||
+
+d p m | d p | m g ||
+
+p m g | p m | g r ||
+
+m g r | m g | r s ||
+
+Artists playing the nadaswaram — a double reed wind instrument
+
+from South India
+
+Khanda Jathi Ata Talam Alankram
+
+Chatushra Jathi Eka Talam
+
+Alankaram: I4 = 4 Beats
+
+I5 I5 0 0 = 5 + 5 + 2 + 2 = 14 Beats
+
+I5 I5 0 0
+
+I4
+
+s r , g , | s , r g , | m , | m , ||
+
+s r g m ||
+
+r g , m , | r , g m , | p , | p , ||
+
+r g m p ||
+
+g m , p , | g , m p , | d , | d , ||
+
+g m p d ||
+
+m p , d , | m , p d , | 
+• , | 
+• , ||
+
+m p d 
+• ||
+
+p d , 
+• , | p , d 
+• , | S , | S , ||
+
+p d 
+• S ||
+
+S 
+• , d , | S , 
+• d , | p , | p , ||
+
+S 
+• d p ||
+
+• d , p , | 
+• , d p , | m , | m , ||
+
+• d p m ||
+
+d p , m , | d , p m , | g , | g , ||
+
+d p m g ||
+
+p m , g , | p , m g , | r , | r , ||
+
+p m g r ||
+
+m g , r , | m , g r , | s , | s , ||
+
+m g r s ||
+
+Students singing and playing instruments
+
+77 | Indian Classical Music
+
+78 | KRITI
+
+SRI GANANATHAM BHAJARE
+
+Sri Gananathan Bhajare
+
+Ragam: Ishamanohari
+
+Arohanam: S R2 G3 M1 P D2 N2 Ṥ
+
+Talam: Rupaka
+
+Avarohanam: Ṥ N2 D2 P M1 G3 M1 R2 S
+
+Before singing this song, sing the arohana and the avarohana. Try keeping the tala as you sing the composition.
+
+Composer: Muthuswami Dikshitar
+
+Rupaka tala is a rhythm
+
+Pallavi
+
+cycle of 6 beats.:
+
+1 S , R G R , || R , G M P , ||
+
+Sr i Ga na na || th am Bha ja re ||
+
+N , D P M , || G , R S Ṇ3 , ||
+
+ch it ta Pa ra a || sh Ak ti yu th am ||
+
+2 S , R G R , || R , G M P , ||
+
+This composition is a kriti. There are three main parts of a kriti: pallavi, anupallavi and charanam. After singing the anupallavi, you return to the pallavi line. And after singing the charanam, you return to the pallavi line again. This kriti has an additional portion in madhayama kala, which is sung twice as fast as the rest of the composition.
+
+Sri Ga na na || th am Bha ja re ||
+
+ṠNN, D P M , || G , R S Ṇ3 , ||
+
+DO YOU KNOW?
+
+Chit ta Pa raa || sh ak ti yu th am || (sri)
+
+MaDhyama kalam
+
+Ṡ , Ṡ , N , D , N D P M || G M P , D P D N Ṡ N Ṡ , ||
+
+Ra ga dwesha diRahita || RamaneeyaHrdaya Viditham ||
+
+R , G Ṁ Ṙ G 
+- Ṡ , N D P || N , N , D 
+- P M G , R S M3 ||
+
+SirGuruguhaSan muditam || Chinmu laKamalasthitham || (sri)
+
+Anupallavi
+
+G , G-M , M || P , Ṡ N Ṡ , ||
+
+Naa gaYag Na || su tra Dha ram ||
+
+N , D N P , || M , G R S Ṇ3 ||
+
+Na da La yaa || nan da ka ram ||
+
+G , G-M , M || P , Ṡ N Ṡ,,Ṙ ||
+
+Naa gaYag na || su traDha ram ||
+
+ṠNN, D N P , || M , G R S Ṇ3 ||
+
+Na da La yaa || nan da Ka ra m || (sri)
+
+79 | Indian Classical Music
+
+80 | KRITI
+
+Charanam
+
+R , G-M , R || G , S-R , , ||
+
+Aa gama di || San Nutham ||
+
+S Ṇ3 Ḍ Ρ , G || R , Ṇ3S , , ||
+
+Ak hi la De Va || Pu Jith am ||
+
+S , G-R , M || G , P-M , , ||
+
+Yo gish aa li || Bh aa vith am ||
+
+P , G-M , R || G , M-P , , ||
+
+Bho gish aa li || Se , vith am ||
+
+Students singing a group song
+
+Raag Asavari Lakshan Geet Teentala
+
+RAAG ASAVARI
+
+Sthayi
+
+Kanha mohe aasavari raga sunaye gani ko aarohan me chupaye
+
+S R M R M P D P D Ġ Ṙ Ṡ Ṙ N D P
+
+Antara
+
+Dhaivat vadi g samvadi madhym sur grah nyas supanchmavrohan sang purn dikhavat
+
+This raga is originated from asavari thaat. In this raga, the notes — gandhar, dhaivat and nishad — are komal, and the remaining notes are shudh. Its vaadi note is ‘dhaivat’ and the samvaadi note is ‘gandhar’. The ‘gandhar’ and ‘nishad’ are missing notes in aroh (ascending order), due to which the jathi of this raga is audav-sampoorna. The singing time of this raga is the second quarter of the day. A raga similar to this is jaunpuri.
+
+S R M R M P D P D Ġ Ṙ Ṡ Ṙ N D P
+
+Raag 
+— Asavari
+
+Thaat 
+— Bhairavi
+
+ACTIVITY 7.1
+
+Aroh 
+— S, R, M P, D, Ṡ
+
+Avroh 
+— Ṡ N D, P, M G, R, S
+
+Accompaniment
+
+Pakad 
+— R, M, P, N D P
+
+Varjit swar 
+— G, N, in aroha
+
+Play a musical instrument you know to accompany one of the compositions you have learnt in this chapter.
+
+Jathi-audav 
+— Sampoorn
+
+Tempo changes
+
+Komal swar 
+— G, D, N,
+
+Vadi swar 
+— Dhaivat
+
+Samvadi swar — Gandhar
+
+Sing any of the pieces from this chapter at a lower tempo, and then at a higher tempo. Explore how a change in tempo changes the mood.
+
+Singing time 
+— 11.00 a.m. to 1.00 p.m.
+
+81 | Indian Classical Music
+
+82 | KRITI
+
+HINDUSTANI MUSIC
+
+Raga Asavari— Teentaal Lakshan Geet
+
+Kramik Pustak Mallika Part 2, Page no. 362
+
+Matra
+
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
+
+Dha Dhin Dhin Dha Dha Dhin Dhin Dhin Dha Tin Tin Ta Ta Dhin Dhin Dha
+
+Bol
+
+Symbol
+
+X 2 0 3
+
+Sthayi
+
+D N M P
+
+M pṠ D P D M PD MP
+
+Ka nha Mo he Aa sa va ri
+
+X 2 0 3
+
+M G M N N N D
+
+G 
+- R S R M P 
+- D D D 
+- N D P DM
+
+Ra ऽ ga Su na ऽ ye ऽ Ga ni Ko ऽ ऽ Ro ऽऽ
+
+X 2 0 3
+
+P M P M S
+
+M P PD MP G 
+- R S
+
+ha 
+• Me Chu pa ऽ ऽ ye S R M R M P D P
+
+X 2 0 3
+
+D Ġ Ṙ Ṡ Ṙ N D P
+
+X 2 0 3
+
+Antara
+
+p m 
+• n
+
+M 
+- P P D 
+- D 
+-
+
+Dhai ऽ va t Va ऽ di ऽ
+
+2 0 3
+
+d 
+• n
+
+Ṡ 
+- Ṡ Ṡ Ṡ 
+- Ṡ 
+- D D D Ṡ Ṡ Ṡ Ṡ
+
+G ऽ Sa m Va ऽ di ऽ M ऽ dhya m Su r Gra ha
+
+X 2 0 3
+
+m ṡ n p p n m p
+
+ṠṘ Ġ Ṙ Ṡ Ṡ ṘN D P M P Ṡ 
+- D P PD MP
+
+Nya ऽ s Su pan ऽऽ Cha ma a va Ro ऽ ha 
+• Sang ऽऽ
+
+X 2 0 3
+
+m
+
+G G R S R 
+- S S
+
+Pu r 
+• Di Kha ऽ va t S R M R M P D P
+
+X 2 0 3
+
+• d
+
+D Ġ Ṙ Ṡ Ṙ N D P
+
+X 2 0 3
+
+83 | Indian Classical Music
+
+84 | KRITI
+
+Raga Asavari, Jhaptal— Sargam Geet
+
+Matra
+
+1 2 3 4 5 6 7 8 9 10
+
+Bol
+
+Dhi Na Dhi Dhi Na Ti Na Dhi Dhi Na
+
+Symbol
+
+X 2 0 3
+
+Sthayi
+
+R M P N D P M P G M
+
+X 2 0 3
+
+R S Ṇ Ḍ SR MP D P MG RS
+
+X 2 0 3
+
+Antara
+
+M P D D S S S S R 
+-
+
+X 2 0 3
+
+Ġ Ṙ Ṡ N DP MP DP MP G G RS
+
+X 2 0 3
+
+Note to the Teacher: Have you listened to the programme Sangita Sarita? Listen to it and you will get multiple ideas of how music is connected with different aspects of life. Try listening to music related to the above ragas through concert, your acquaintances, or any other internet resource. As you hear ragas performed by different artists, you will be able to understand the depth in each ragas.
+
+BHAKTI SANGEET AND SUFI QAWWALI
+
+Warkari (pilgrims) singing bhajans
+
+Devotional music in India has its roots in the Bhakti movement, a significant religious, social and literary movement that swept across India beginning from the 6th century CE, and reaching its peak during the 15th – 17th century CE. It led to a spiritual revival emphasising devotion, and significantly influenced Indian music, leading to the creation of new musical forms like kirtanas and bhajans. Some prominent bhakti poets include Mirabai and Tulsidas in northern India, and Haridasa saints like Purandara Dasa and Kanakadasa in the southern India.
+
+Similarly, Sufism is a mystical dimension of Islam that emerged around the medieval period in India. Sufi saints like Khwaja Moinuddin Chishti and Baba Farid focused on inner devotion and spiritual experience as a means of connecting with god. The Sufi Qawwali genre of music arose from this philosophy and continues to be widely practised and performed, especially in Punjab and the western regions of India.
+
+Sufi whirling dervish performance
+
+85 | Indian Classical Music
+
+86 | KRITI
+
+Here is a bhajan by Tulsidas.
+
+Thumak Chalat Ram Chandra
+
+Thumak Chalat Ram Chandra Baajat Paijaniya
+
+Kilak Kilak Uthat Dhave Girat Bhumi Latpataye, Dhaya Maat God Let Dashrath Ki Raniya
+
+Tulasidas Ati Aanand Dekh Ke Mukharvind,
+
+Raghuvar Chhabi Ke Samaan Raghubar Chhavi Baniya
+
+The following is a Sufi Qawwali that is sung in both traditional and contemporary music.
+
+Duma Dum Mast Kalandar
+
+Ho laal meri pat rayhio bala jhoole laalan, Sindhri da, sehwan da sakhi shabaaz kalandar
+
+Duma dum mast kalandar, Ali dum dum de andar, Ali da pehla number
+
+Duma dum mast kalandar, Ho laal meri Ho laal meri …
+
+Char chirag tere baran hamesha, Panjva main baaran aayi bhala jhoole laalan, Sindhri da …
+
+Goswami Tulsidas, Awadhi, hindi poet
+
+ASSESSMENT
+
+CHAPTER 7: Indian Classical Music
+
+CG C Learning Outcomes Teacher Self
+
+1 
+1.1 Ability to sing basic songs in Carnatic and Hindustani music.
+
+1 
+1.1 Ability to keep tala while singing or listening to a composition.
+
+4 
+4.1 Understands the importance of the Bhakti movement and is able to sing a devotional song.
+
+Teacher’s Comments and Student’s Observations

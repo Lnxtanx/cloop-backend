@@ -1,0 +1,334 @@
+# CLASS-9 - ARTS - CHAPTER 07
+# Source: iemr107.pdf
+
+7 The Science of Music
+
+Note to the teacher: When you are teaching this chapter, at the beginning of each period, play a recording of a musical instrument from various categories—string (tata-vādya), wind (suṣhira-vādya), percussion (avanaddha-vādya) and solid (ghana-vādya). Encourage children to identify the category that the instrument belongs to.
+
+Fig. 7.1. Chimṭā Fig. 7.2. Flute
+
+Fig. 7.4. Mṛidaṅgam
+
+Fig. 7.3. Santoor
+
+Music is both an art and a science. This means that you can enjoy music for the various emotions it invokes and for the entertainment and relaxation it provides, but equally, you can also study it in-depth. Also, music is connected to various aspects of our lives and the different subjects that we study in school. In this chapter, we will explore how music is connected to physics, biology, and maths.
+
+Madhurima
+
+Do you know?
+
+Fig. 7.5. C.V. Raman
+
+C.V. Raman (1888–1970) was a renowned Indian physicist and Nobel laureate. When he studied the sounds made by the mṛidaṅgam and the tabla, he discovered that they produced a sustained and rich sound, and could be tuned to a higher or lower pitch. Raman showed that the way the membranes of the mṛidaṅgam are prepared causes them to vibrate in complex patterns. This is especially because of the karaṇai or syāhī, which is a black patch at the centre, made of iron/ manganese powder, starch, and water.
+
+The Science of Sound
+
+We have encountered some of the fundamental concepts of sound in Grade 8. Let us discover them in action.
+
+Activity 7.1
+
+Making a stringed instrument model
+
+Materials:
+
+Rubber bands/ threads An empty tissue box/ small cardboard box
+
+Fig. 7.6. Stretched
+
+Steps:
+
+rubber band
+
+1. Hold the rubber band between your fingers and strum it; what do you hear?
+
+2. Now, stretch the rubber band across the hollow part of the tissue box/ cardboard box and pluck it; what happens to the loudness?
+
+3. Stretch it tighter and pluck again. Identify what happens to the pitch of the sound— does it become higher or lower?
+
+4. Use a few rubber bands of different thickness. Observe how the sound changes in each case.
+
+5. Now, replace the rubber band with a piece of string or thread. How does this change the sound? (Be careful when tightening the string as it might break or hurt you)
+
+104
+
+The Science of Music
+
+You may have noticed that sound was produced by the vibration of the string. This sound could be varied by:
+
+1. tightening or loosening the string (to increase and decrease the pitch);
+
+2. using a hollow box to impact the loudness; and
+
+3. changing the thickness or material of the string to vary the quality of the sound.
+
+The same principles are used while making and playing musical instruments.
+
+Note to the teacher: For Activity 7.2, bring a string instrument with tuning pegs such as tanpura, veena, or violin to the class.
+
+Activity 7.2
+
+Connecting to musical instruments
+
+Look carefully at the stringed instrument in your class.
+
+Observe that the instrument has a hollow body. How do you think this enhances the sound of the instrument? Observe what happens when the tuning pegs are tightened and loosened. (Be careful to not tighten it too much— the string could snap.)
+
+When the strings are tightened, the pitch
+
+Fig. 7.7.
+
+Sitar
+
+When the strings are loosened, the pitch (increases/ decreases/ stays the same) Observe that different strings also have different thicknesses. How do you think the thickness of the string affects the sound? Discuss in class: When a note is played on the instrument, listen to its tone. Describe it in words — is it short or sustained? Is it high-pitched or low-pitched?
+
+Do you know?
+
+The concepts of sound in India
+
+Ancient Indian scholars explored various aspects of sound in detail. Texts such as Nāṭyaśhāstra and Saṅgīta-ratnākara explain the concepts of dhvani (sound), nāda (musical sound), śhruti (discernible intervals of sound) and svaras (notes) with practical demonstrations.
+
+105
+
+Madhurima
+
+Biology of the Human Voice
+
+Resonating
+
+Nasal Cavity Oral Cavity
+
+System
+
+Vibratory
+
+Larynx Vocal Cords
+
+System
+
+Lungs
+
+Air Pressure
+
+System
+
+Diaphragm
+
+Fig. 7.8. The human vocal system
+
+We use our voices everyday to speak, laugh, sing, and shout. The human voice enables us to communicate; it is a musical instrument in our own body! Various parts of the body work together to produce the sounds that we make while speaking and singing. There are three main subsystems involved in speaking and singing. Let us experience them.
+
+Activity 7.3
+
+Experiencing the human vocal system
+
+Activity Subsystem Body regions/ parts involved
+
+Air pressure
+
+Diaphragm,
+
+system
+
+lungs, and surrounding
+
+Place your hands on your belly. Take a big breath in, and notice your belly expand outwards. Now, exhale and notice how your belly moves inwards.
+
+muscles
+
+Vibratory
+
+system
+
+Voice box (larynx) and vocal folds (or
+
+vocal cords)*
+
+Try the same activity again, but this time, as you exhale, make a soft mmmm sound; experience the connection between the breath and the voice.
+
+Resonating
+
+Throat, mouth,
+
+system
+
+nasal cavities
+
+Do the same activity, but this time, as you make a sound, first start with mmmmm and then vary the shape of your mouth to make various sounds like aaaa, oooo, eeee and uuuuu.
+
+106
+
+*Refer to Chapter 10 in the Grade 9 Science textbook, Exploration, for an illustration of vocal cords.
+
+The Science of Music
+
+నాభి హృత్్కకంఠ రసన నాసాదులయంందు శోభిల్లుుǪ సప్తతస్వవర సుం�ంందరుల భజింంపవే మనసా
+
+Nābhi hṛit-kanṭha rasana nāsādulayaṅdu Śhobhillu saptasvara suṅdarula bhajiṁpave manasā
+
+O Mind ! Praise the divine forms of the seven musical notes, which glow in the abdomen, heart,
+
+neck, tongue, and nose of the human body
+
+Legendary composer of Carnatic music, Saint Thyagaraja, has described the human vocal system
+
+in his kriti — Śhobhillu Saptasvara.
+
+How to care for our voices
+
+Have you ever ‘lost your voice’ or noticed how it becomes tired and fatigued after long periods of speaking or singing? Now that we know which are the different parts of the human vocal system, we need to know how to care for our voices.
+
+1. Drink sufficient water: This keeps your vocal cords hydrated and enables them to vibrate efficiently.
+
+2. Eat a healthy diet: Oily or very acidic foods can irritate the vocal cords. Also, a diet rich in fruits and vegetables boosts immunity. This keeps you from falling ill with colds and coughs, which can affect voice quality.
+
+3. Speak at a moderate volume: At times, we get overexcited when we are with friends, and we tend to shout and raise our voices. Ensure you speak at a moderate volume to protect your voice.
+
+Vocal warm-ups
+
+An important part of keeping our voices healthy is doing regular vocal warm-ups.
+
+107
+
+Madhurima
+
+Activity 7.4
+
+Daily vocal warm-up routine
+
+(Practise each exercise 5–6 times.)
+
+1. Breathing and Diaphragm Exercise Stand or sit straight. Inhale deeply through the nose, letting your lungs expand (Grade 7 Chapter 9 Science textbook). Hold for 2–3 seconds, then exhale slowly through the mouth. Benefits: Activates lungs and diaphragm, extending breath control while singing long phrases for better control and supports long phrases in singing.
+
+2. Humming (Bhrāmarī prāṇāyāma) Hum a note at a comfortable pitch, feeling the vibration in the lips, nose, and chest. Gently slide up and down in pitch while saying mmm. Benefits: Warms up vocal cords gently and improves resonance
+
+3. Lip Trills/ Bubbles Blow air through closed lips while making a sound like a brrr or the sound of a motorbike. Glide up and down in pitch using the lip trill. Benefits: Relaxes facial muscles, reduces tension, improves airflow.
+
+4. Sargam exercises Sing alaṅkāra patterns in varying speeds to improve vocal control:
+
+i. SGR, RMG, GPM (complete the pattern)
+
+ii. SRGM, RGMP, GMPD (complete the pattern)
+
+See how many phrases you can sing in one breath. As you practise these exercises regularly, you may notice that you can sing longer phrases in a single breath.
+
+Benefits: Improves voice flexibility and breath control
+
+The Science of Music
+
+Mathematics in Tāla
+
+Making patterns in rhythm
+
+Rhythm is built using patterns, just like numbers. It has a language where we use different phrases to denote different counts. As an example:
+
+1 akṣhara – ta
+
+3 akṣharas – ta kita
+
+2 akṣharas – taka
+
+4 akṣharas – tha ka di mi
+
+Using these basic building blocks, we can make rhythmic phrases or patterns of different lengths.
+
+For example: a phrase of 5 akṣharas would be 2 + 3 = taka takita
+
+Similarly, a phrase of 6 akṣharas can be 3 + 3 = takita takita or even 2 + 2 + 2 = taka taka taka
+
+Activity 7.5
+
+Making your own rhythmic phrase
+
+Now, think of different rhythm phrases you can make for:
+
+7 akṣharas
+
+8 akṣharas
+
+9 akṣharas
+
+Applying Lowest Common Multiple (LCM) in rhythm
+
+Activity 7.6
+
+The coming together of rhythms
+
+Divide the class into two groups. Group 1 will recite ta kita (the phrase for 3 beats). Each time you say ‘ta’, clap your hands. Group 2 will recite ta ka di mi (the phrase for 4 beats). Each time you say ‘ta’, clap your hands.
+
+Start together and observe after how many cycles will both groups clap together.
+
+109
+
+Note to the teacher: Ensure both groups maintain the same tempo i.e. both groups say ’ta‘ together, then Group 1 says ’ki‘ while Group 2 says ’ka‘ and so on.
+
+Madhurima
+
+Lowest Common Multiple (LCM) is the smallest number that is a multiple of two or more numbers. In music, this idea helps us understand how rhythmic cycles come together. In Activity 7.6, after 12 beats:
+
+Group 1 would have completed 4 cycles of 3 beats each.
+
+Group 2 would have completed 3 cycles of 4 beats each.
+
+This shows that the LCM of 3 and 4 is 12.
+
+Extending this to a tāla:
+
+Teen Tāla has 16 beats while Ektāla has 12 beats, which you have learnt in Grade 7.
+
+The LCM of 12 and 16 is
+
+After beats, both tālas would have completed full cycles.
+
+EXERCISES
+
+Q1. Fill in the blanks.
+
+i. When a string is tightened, the pitch .
+
+ii. The diaphragm and lungs form part of the subsystem.
+
+iii. The hollow body of a musical instrument is important because
+
+.
+
+Q2. State whether the following statements are true or false.
+
+i. The thickness of a string affects the quality of sound. (True/ False)
+
+ii. Drinking water is bad for the voice. (True/ False)
+
+iii. C.V. Raman conducted experiments on the sound of the veena.
+
+(True/ False)
+
+Q3. Name the three subsystems of the human vocal system, and describe the
+
+function of each.
+
+Q4. Describe some ways to ensure our voices are in good condition.
+
+Q5. Jhaptāla has 10 beats (mātras) in a cycle (āvartana), and Kehervā (Tāla) has 8
+
+beats. After how many beats will they both complete full cycles together?
+
+Q6. Describe a warm-up routine that can be done daily to keep the voice in
+
+good condition.
+
+Q7. Write a Konnakkol/ Bol phrase for:
+
+i. 5 akṣharas ii. 6 akṣharas
+
+Q8. Describe the connection between the science of sound and musical
+
+instruments (50 words).
+
+Q9. If you were to design a string instrument using the principles of sound,
+
+how would it look and sound? Draw a diagram.
+
+110
+
+Q10. Which category of instrument (tata, suṣhira, avanaddha, ghana) does the
+
+human voice belong to? Justify your answer.

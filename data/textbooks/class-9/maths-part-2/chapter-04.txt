@@ -1,0 +1,1125 @@
+# CLASS-9 - MATHS-PART-2 - CHAPTER 04
+# Source: iemh204.pdf
+
+Quadrilaterals
+
+12
+
+Quadrilaterals, which we also call 4-gons, occur everywhere in daily life. For example, we often see flooring made of square tiles. We say that the floor has been ‘tiled’ using those squares.
+
+Think and Reflect
+
+Can we use any given quadrilateral to tile the plane? If not, which quadrilaterals can be used and which cannot?
+
+Recall that tiling the plane means covering it with copies of the given shape or shapes without gaps or overlaps. Tiling the plane with a rectangle is easy, but it seems difficult with an irregular quadrilateral. We will answer the above question at the end of the chapter (can you do it now?) and understand the answer using what we learn in this chapter. However, to start with, we will discuss a simple new example of a tiling.
+
+Imagine that tiling with rectangles is done using a grid of two sets of long wooden sticks, one set horizontal and the other set vertical. See Fig. 12.1A.
+
+Fig. 12.1A Fig. 12.1B
+
+52 Ganita Manjari | Grade 9 | Part II
+
+These sticks are pinned together at each intersection point such that they are free to rotate about those points. Now suppose you pick up this grid. You hold the bottom stick fixed with one hand and push the vertical side with the other. See Fig. 12.1B. Each set of parallel lines will stay parallel but the angle between the two sets will no longer be 90°. Thus we see that the plane can be tiled using copies of any fixed parallelogram.
+
+In this chapter, we will ask and answer several questions about quadrilaterals, paying particular attention to parallelograms. We will investigate their properties, examine ways to recognise them, and see important applications in geometry. At the end, we will answer the question above about whether one can tile the plane with a given quadrilateral.
+
+12.1 What Exactly is a Quadrilateral?
+
+Think and Reflect
+
+Informally, a quadrilateral is a figure with four straight sides, as in the first figure ABCD in Fig. 12.2 below. But consider the other six figures in Fig. 12.2: the five plane figures NOPE, SILY, DART, CUTS, OPENS and the non-planar BENT. Should we call all these figures quadrilaterals? If you answer ‘no’ for any of them, how will you define a quadrilateral so that such a figure is excluded? As you can see, some care is needed to precisely define what we think of as a quadrilateral.
+
+A
+
+R
+
+N
+
+A B
+
+I
+
+D
+
+S L Y
+
+E P O
+
+C D
+
+T
+
+S
+
+T
+
+U C
+
+O
+
+N
+
+B
+
+S
+
+E N
+
+P E
+
+T
+
+Fig. 12.2
+
+53 Quadrilaterals
+
+To prepare, let us first consider how we can define a triangle. Let A, B and C be three points. Can we say that ∆ABC consists of points on the three line segments AB, BC, CA? Yes, provided A, B, C are not collinear. Otherwise, we just get a line segment: see Fig. 12.3.
+
+A B C
+
+Fig. 12.3: Not a triangle
+
+When A, B, C are non-collinear, we call them the vertices of ∆ABC and the three segments AB, BC and CA the sides of ∆ABC.
+
+Think and Reflect
+
+Can we similarly define a quadrilateral ABCD?
+
+Take any 4 distinct non-collinear points A, B, C and D. Will segments AB, BC, CD and DA always form a quadrilateral as we visualise it? See figures NOPE, SILY, DART, CUTS, OPENS and BENT in Fig. 12.2 again. Do you see, OPENS that there are some subtle new issues to consider?
+
+First, to rule out examples like NOPE and SILY, no three vertices should be collinear. Otherwise, the two adjacent sides formed by the three collinear vertices will be along the same line, giving a triangle like NOPE or a figure with overlapping sides like in SILY.
+
+Second, to rule out examples like BENT, all four vertices should be in the same plane. Four-sided figures like BENT are called non-planar quadrilaterals. We will study only planar quadrilaterals (except in a few exercises).
+
+Third, do we want to call CUTS a quadrilateral? The answer depends on what we decide! Ordinarily, CUTS is not considered a quadrilateral. If we want to include it, we call it a self-intersecting quadrilateral.
+
+Can you come up with a definition that rules out self-intersecting quadrilaterals like CUTS? Answer: we should require that all the points of the quadrilateral, other than the vertices, must lie on exactly one side.
+
+Can you see how to rule out figures like OPENS? Putting together all three requirements, we get the following definition.
+
+Definition 1. Suppose A, B, C, D are four distinct points in a plane. Then the points on the 4 segments AB, BC, CD and DA are said to form quadrilateral ABCD if every such point other than A, B, C, and D lies on exactly one of these four segments.
+
+54 Ganita Manjari | Grade 9 | Part II
+
+Now that we have precisely defined a quadrilateral, let us give similarly precise definitions of familiar terms associated with a quadrilateral.
+
+A, B, C, D are called the vertices of quadrilateral ABCD; segments AB, BC, CD, DA are its sides or edges; segments AC and BD are its diagonals. The two endpoints of a side are called adjacent vertices. Two sides with a common endpoint are called adjacent sides. A quadrilateral has 4 internal angles, each formed at a vertex by a pair of adjacent sides. Internal angles at adjacent vertices are called a pair of adjacent angles. How will you define opposite sides? Opposite angles? See Exercise Set 12.1, Q1.
+
+Note that quadrilateral ABCD can also be denoted as BCDA, CDAB, DABC, DCBA, ADCB, BADC or CBAD but not by any other sequence of vertices. (Draw ABCD and trace the vertices in various orders to see why.)
+
+When we refer to a quadrilateral, we always mean a planar non-self-intersecting quadrilateral, unless stated otherwise.
+
+Convex Quadrilaterals
+
+Should DART in Fig. 12.2 be considered a quadrilateral? It seems different from our usual mental picture of a quadrilateral because it has a dent, as if someone has taken a bite out of triangle ART! We call DART a non-convex quadrilateral.
+
+A
+
+B
+
+A
+
+R
+
+D
+
+T
+
+C
+
+D
+
+∠D > 180°
+
+All angles < 180°
+
+Internal angles of convex and non-convex 4-gons
+
+A convex quadrilateral is one without a dent. How can we define this precisely? We can see in DART that at the dent at vertex D, the internal angle is more than 180°. So we call a quadrilateral convex when all of its internal angles are less than 180°.
+
+Fig. 12.4
+
+B
+
+A
+
+A
+
+D
+
+R
+
+C Non-convex
+
+D Convex
+
+T
+
+There are other ways of testing convexity. For example, visually verify that the diagonals of a convex quadrilateral intersect while those of a non-convex quadrilateral don’t intersect.
+
+Fig. 12.5
+
+55 Quadrilaterals
+
+Figures having 4 vertices and 4 sides
+
+Venn Diagram Representation
+
+4-gons that do not fit your mental image of a quadrilateral may look strange. Do we really need to care about, e.g., self-intersecting 4-gons? Yes, because they do occur in real life, such as in 4-bar linkages. Linkages are widely used mechanical devices with several interlinked bars. Some ends of these bars are fixed, while other interlinked ends are free to rotate around the fixed ones. Search the internet for a video showing how linkages move. Linkages can attain a range of configurations, including non-convex and self-intersecting figures, as shown below. So engineers have to take such figures into account.
+
+Exercise Set 12.1
+
+1. Let ABCD be a quadrilateral.
+
+(i) List all sides of ABCD adjacent to side AB. List all sides
+
+opposite to AB.
+
+56 Ganita Manjari | Grade 9 | Part II
+
+(ii) List all angles of ABCD adjacent to ∠A. List all angles opposite
+
+to ∠A. (iii) Define a pair of opposite sides and a pair of opposite angles
+
+without using the names of the vertices.
+
+*2. You have used internal angles of quadrilaterals, but they too require an exact definition, just like how we gave one for a quadrilateral. Precisely define the internal angle of a quadrilateral at a given vertex. Your answer should work for a non-convex quadrilateral too. (Hint: use the opposite vertex as well.)
+
+3. In a quadrilateral ABCD, suppose AB ‖ DC. Can ABCD be non-convex? What if we instead assume AB = CD? What if we instead assume ∠A = ∠C?
+
+4. Consider three non-collinear points A, B, C and draw the lines AB, BC, CA. For every possible location of point D in the plane outside these lines, decide if ABCD is self-intersecting, non-convex, or convex. (Hint: the three lines divide the plane into 7 regions.)
+
+5. Can a quadrilateral be both self-intersecting and non-planar?
+
+12.2 Parallelograms
+
+As we studied in Grade 8, parallelograms are quadrilaterals whose opposite sides are parallel. They include rhombuses, rectangles and squares and form a very important and widely used class of quadrilaterals.
+
+To test if a given quadrilateral is a parallelogram, do we have to check that the opposite sides are parallel? Are there other ways to test this? To answer this, recall the following properties of a parallelogram that we proved last year.
+
+Theorem 1: (a) The opposite sides of a parallelogram are equal. (b) The opposite angles of a parallelogram are equal. (c) The diagonals of a parallelogram bisect each other.
+
+It is usually interesting to examine if converses of known theorems are true. If the converse of any of the three properties is true, it can be used as an alternate way to show that a quadrilateral is a parallelogram. To explore this, let us write the converses. For this, we first write (a), (b) and (c) in “If … then …” form.
+
+57 Quadrilaterals
+
+(a) If a quadrilateral is a parallelogram, then its opposite sides
+
+are equal.
+
+Converse: If the opposite sides of a quadrilateral are equal,
+
+then it is a parallelogram. Is this converse statement true?
+
+(b) If a quadrilateral is a parallelogram, then the opposite angles
+
+are equal.
+
+Converse: If the opposite angles of a quadrilateral are equal,
+
+then it is a parallelogram. Is this converse statement true?
+
+(c) If a quadrilateral is a parallelogram, then its diagonals bisect
+
+each other.
+
+Converse: If the diagonals of a quadrilateral bisect each
+
+other, then it is a parallelogram. Is this converse statement true?
+
+Can you experiment and guess what the answers are?
+
+It turns out that all three converse statements are true. To demonstrate this, it is useful to recall how we had proved Theorem 1:
+
+Proof of Theorem 1:
+
+B
+
+A
+
+B B A
+
+A
+
+180°–x x
+
+E
+
+x
+
+180°–x
+
+D
+
+C
+
+C D
+
+D C
+
+(a) (b) (c)
+
+Fig. 12.6
+
+Proof of (a): In the parallelogram ABCD, AC is a transversal for AB ‖ DC and also for AD ‖ BC. So we get ∆ACD ≅ ∆CAB by the ASA test. Therefore, AB = DC and AD = BC.
+
+Proof of (b): BC ‖ AD with AB a transversal. Therefore ∠A + ∠B = 180° as they are interior angles on the same side of this transversal. By similar reasoning, any two adjacent angles add up to 180°. By using algebra, ∠A = ∠C and ∠B = ∠D.
+
+58 Ganita Manjari | Grade 9 | Part II
+
+Proof of (c): Call the intersection point of the two diagonals E. Using property (a), ∆AED ≅ ∆CEB, by ASA or AAS. So EA = EC and EB = ED, which means that E is the midpoint of both diagonals.
+
+We will now deduce the converse statements. To prove the converse of a known theorem, we can try to run the original proof backwards. This strategy may or may not work. (For example, the reasoning “If x = y, then x
+
+2 = y 2” cannot be reversed, because x and y may have opposite signs, e.g., we could have x = 3 and y = –3.) When the strategy does work, we should be careful to give proper justification for each step in the backward direction.
+
+Theorem 2 (converse of (a)): If the opposite sides of a quadrilateral are of equal length, then it is a parallelogram.
+
+A
+
+B
+
+D C
+
+Fig. 12.7: Converse to (a)
+
+Proof: Let ABCD be this quadrilateral. ∆ACD ≅ ∆CAB by SSS, so corresponding angles are equal. Using transversal AC, we get AB ‖ DC and AD ‖ BC.
+
+Pay close attention to how the above proof retraces the proof of (a) backwards. Both proofs go via the same congruence ∆ACD ≅ ∆CAB, but the two proofs use different tests to justify the congruence (ASA vs SSS) and draw different conclusions. Try to use the same ‘backward retracingʼ strategy for the remaining converses.
+
+Theorem 3 (converse of (b)): If the opposite angles of a quadrilateral are equal, then it is a parallelogram.
+
+Proof: Let ABCD be this quadrilateral. Because ∠A = ∠C and ∠B = ∠D, we have
+
+360° = ∠A + ∠B + ∠C + ∠D = 2(∠A + ∠B) = 2(∠B + ∠C).
+
+A
+
+B
+
+x
+
+y
+
+x y
+
+D C
+
+Fig. 12.8: Converse to (b)
+
+2(x + y) = 360°
+
+59 Quadrilaterals
+
+Therefore ∠A + ∠B = ∠B + ∠C = 180°. As in the proof of (b), we use the fact that AB is a transversal for the pair BC and AD. By ∠A + ∠B = 180° we deduce BC ‖ AD. Similarly, we get AB ‖ DC by using ∠B + ∠C = 180°.
+
+Think and Reflect
+
+The angles of a quadrilateral add up to 360°. Therefore, if the opposite angles are equal, what can we say about adjacent angles? Is the converse of your answer true? Conclude that Theorem 3 can also be stated as follows. “If each pair of adjacent angles in a quadrilateral ABCD…then ABCD is a parallelogram.” Fill in the blank.
+
+Theorem 4 (converse of (c)): A quadrilateral whose diagonals bisect each other is a parallelogram.
+
+Proof: Let ABCD be this quadrilateral. Let E be the intersection point of the diagonals AC and BD. As EA = EC and EB = ED, we have ∆AED ≅ ∆CEB by SAS. Now using ∠DAE = ∠ECB along with transversal AC, we get AD ‖ BC. Similarly, ∆EAB ≅ ∆ECD gives AB ‖ DC.
+
+A
+
+B
+
+E
+
+D C
+
+Fig. 12.9: Converse to (c)
+
+Finally, there is one more useful test to check if a given quadrilateral ABCD is a parallelogram.
+
+Theorem 5 (equal parallel sides test): A quadrilateral with one pair of equal and parallel opposite sides is a parallelogram.
+
+B A
+
+E
+
+C D
+
+Fig. 12.10
+
+Proof: Suppose in a quadrilateral ABCD we have AB ‖ DC and AB = DC. Let E be the intersection point of the diagonals AC and BD. (Why must the diagonals intersect? See Exercise Set 12.1, Q3.) We have ∆EAB ≅ ∆ECD by ASA. So the diagonals bisect each other. By the converse of (c), ABCD is a parallelogram.
+
+60 Ganita Manjari | Grade 9 | Part II
+
+Exercise Set 12.2
+
+1. True or false?
+
+(i) A parallelogram with a right angle is a rectangle. (ii) A rhombus with perpendicular diagonals is a square. (iii) If the diagonals of a parallelogram are equal, then it is a
+
+rectangle.
+
+2. The diagonal AC of a parallelogram ABCD bisects ∠A. Show that it also bisects ∠C and that ABCD is a rhombus.
+
+3. The following questions examine converses of true properties. Answer them with Yes or No. If your answer is No, what extra condition can you add so that the answer becomes Yes?
+
+(i) If the diagonals of a quadrilateral ABCD bisect its angles,
+
+must ABCD be a rhombus? (ii) If the diagonals of a quadrilateral ABCD bisect each other at
+
+right angles, must ABCD be a rhombus? (iii) If the diagonals of a quadrilateral ABCD are of equal length,
+
+must ABCD be a rectangle? (In the ancient Indian study of quadrilaterals, equality of diagonals was considered significant. Quadrilaterals were first classified according to whether their diagonals were equal or not, before considering equality of sides.)
+
+D C P
+
+Q
+
+S
+
+R
+
+B A
+
+Fig. 12.11
+
+4. Let ABCD be a parallelogram with AB ≠ BC. Show that the pairwise intersection points of the four angle bisectors form the vertices of a rectangle (see Fig. 12.11). Why did we assume AB ≠ BC?
+
+12.3 Applications of Parallelograms
+
+We saw that parallelograms have several nice geometric properties. These properties make the parallelogram a versatile shape with many real-world applications. In physics, a fundamental law uses parallelograms to combine certain physical quantities like forces, as you will learn in a later year. Parallelograms are used in several mechanical linkages, such as the parallel motion linkage discovered by James Watt,
+
+61 Quadrilaterals
+
+which formed an important part of his steam engine. His design used the concept behind another parallelogram-based device called a pantograph, which can make exact scaled copies of a drawing: search the internet for a video showing how a pantograph works. It is ingenious!
+
+Schematic drawing of a pantograph
+
+Parallelograms also serve as a powerful tool within geometry. Let us illustrate this by using parallelograms in a clever way to prove an important fact about triangles. We will discover this fact through exploration.
+
+12.3.1 An Important Property of Triangles
+
+?
+
+? ?
+
+Fig. 12.12
+
+On a piece of paper, draw and then cut out two copies of the same triangle. Keep one copy aside. On the other, mark the midpoint of each side. (You can do this by folding the paper to join two vertices at a time.) Draw the triangle made by the three midpoints and cut the paper along each of these lines. Now you have four smaller triangles. Compare them to each other and to the intact copy of the original triangle. What do you notice? It appears that all four smaller triangles are congruent to each other! And each seems to be a smaller copy of the original triangle. Verify that this pattern holds for triangles of other shapes.
+
+62 Ganita Manjari | Grade 9 | Part II
+
+Think and Reflect
+
+Try to prove directly that the four smaller triangles are congruent. You will see that no congruence test applies, because many quantities are unknown.
+
+Here is one idea. The difficulty might be because we are considering too many new things at once: three new points and three new segments. Can we try to break this down into steps?
+
+Fig. 12.13
+
+Let us see what happens with just one of the three new segments. Can you make a guess about this new segment, specifically about its direction and length compared with the unused third side? The triangles you cut earlier will help. It appears that the segment is parallel to the third side and has half the length! Let us try to justify this using reasoning.
+
+Geometric reasoning: To set up, suppose that in ∆ABC, P and Q are the midpoints of side AB and AC respectively. Now comes the key idea. Construct the line l through C parallel to BA. Suppose it intersects line PQ at point R.
+
+(See the comment about this line immediately after the statement of Theorem 6.)
+
+A
+
+l
+
+R Q P
+
+In ∆APQ and ∆CRQ, we have AQ = CQ, ∠AQP = ∠CQR (vertically opposite angles), and
+
+∠APQ = ∠CRQ (since AP ‖ RC by construction).
+
+So ∆APQ ≅ ∆CRQ by AAS.
+
+B C
+
+Fig. 12.14
+
+Therefore PQ = QR (by congruence) = PR
+
+2 and CR = AP. Combining
+
+CR = AP with AP = BP, we get CR = BP. Hence by Theorem 5
+
+63 Quadrilaterals
+
+(equal parallel sides test), BCRP is a parallelogram. This gives
+
+PQ ‖ BC and also PQ = PR
+
+2 = BC 2 . We have deduced the following important fact.
+
+Theorem 6 (Midpoint Theorem): The segment joining the midpoints of two sides of a triangle is parallel to the third side and has half the length.
+
+In the reasoning for this theorem, the idea to take a completely new line l appeared out of nowhere, and worked like magic. What is your reaction to this? Do you feel a sense of wonder? Do you perhaps feel discouraged because it seems impossible to think of such an idea on your own? This type of auxiliary construction is a classic geometric trick that one learns with experience, so no need to be disheartened! See Exercise 15 at the end of the chapter for another proof that uses a different, slightly less magical construction.
+
+Can you now prove the original claim about cutting ∆ABC into four congruent parts by using midpoints of all three sides? You are asked to do this in Exercise Set 12.3 Q1 below.
+
+Think and Reflect
+
+Read the statement of the Midpoint Theorem again. The following questions seem natural to ask. What can we say about (1) a segment PQ (with P on side AB and Q on side AC) that is parallel to the third side and has half the length, and (2) the line that passes through the midpoint of one side and is parallel to another side? We will address question (1) in Exercise 22 at the end of the chapter. For now, experiment and see if you can make a guess about question (2). It appears that this line must bisect the remaining side! Let us try to justify this.
+
+Geometric reasoning: To set up, take ∆ABC and suppose the line through midpoint P of AB, drawn parallel to BC, meets AC at point Q. Again draw the line parallel to BA through C, intersecting line PQ at point R. Tracing the proof of the Midpoint Theorem backwards works easily as follows.
+
+64 Ganita Manjari | Grade 9 | Part II
+
+A
+
+BCRP is a parallelogram, so CR = BP. BP = PA and ∠AQP = ∠CQR (vertically opposite angles).
+
+R Q P
+
+Combining with CR ‖ BA, ∆APQ ≅ ∆ CRQ. (Why?)
+
+This gives two equalities.
+
+First, AQ = QC, so Q is the midpoint of AC.
+
+B C Fig. 12.15
+
+Second, PQ = QR, so PQ = PR
+
+2 = BC 2 .
+
+We have deduced the following important fact. It can be considered a converse of the Midpoint Theorem, for reasons we will see in Exercise 22 at the end of the chapter.
+
+Theorem 7 (Converse of the Midpoint Theorem): The line drawn through the midpoint of one side of a triangle and parallel to another side bisects the third side (and the resulting segment has half the length of the parallel side).
+
+Let us see a different reasoning to justify Theorem 7. Read this short proof carefully.
+
+A
+
+M
+
+P
+
+B C
+
+Fig. 12.16
+
+Another proof of Theorem 7. Recall our previous setup: the line parallel to BC through midpoint P of AB meets AC at point Q. Ignore this line for now and instead consider the midpoint M of AC. We want to show M = Q. We have PM ‖ BC by the Midpoint Theorem. Therefore line PM = line PQ, because there is a unique line parallel to BC through P. As lines PM and PQ coincide, they must intersect AC in the same point. Thus M = Q. This is what we wanted!
+
+We used the Midpoint Theorem to prove its converse! This may look like cheating because, as emphasised earlier, the truth of a statement and of its converse are separate issues. But there is no mistake here. There is a key new point in this proof, namely that there is a unique line through a given point and parallel to a given line. This proof illustrates that sometimes we can use a theorem to prove its converse.
+
+65 Quadrilaterals
+
+In Grade 10, we will generalise Theorem 7 by dropping the condition that P is the midpoint of AB and assuming only that PQ ‖ BC. Can you guess the conclusion in this case? (Hint: the name of the more general theorem includes the word proportionality.)
+
+12.3.2 A Surprising Property of Medians
+
+The Midpoint Theorem allows us to deduce an important fact about triangles. Let us discover it experimentally. In ∆ABC, suppose P, Q and R are the midpoints of side AB, AC and BC respectively. Instead of joining the midpoints with each other as we did earlier, draw segments AR, BQ and CP. These are called the medians of ∆ABC. What do you see? Repeat this for several triangles and see that the three medians always seem to be concurrent, meaning they pass through a common point!
+
+A
+
+P Q M
+
+C
+
+B R
+
+Fig. 12.17
+
+There is more! Assume for the moment that the medians are always concurrent. Let M be the common point where they meet. Compare the lengths of the two parts CM and MP of the median CP, and do the same for the other two medians. Do you see a pattern? It appears that the ratio CM : MP = 2 : 1. We will now show why this is always true.
+
+Geometric reasoning: It seems difficult to keep track of the three medians at once, so let us first examine only two medians CP and BQ. Call their intersection point M. We want to show that CM = 2MP and BM = 2MQ.
+
+A
+
+Q
+
+P
+
+X
+
+Y M
+
+B C Fig. 12.18
+
+We have not yet seen any theorem that gives a 2 : 1 division of a segment. The Midpoint Theorem only gives a 1 : 1 ratio. So to show that CM = 2MP, one idea is to bisect CM and try to show that the resulting three parts of CP are equal.
+
+Let Y and X be the midpoints of CM and BM respectively. Now we can use the Midpoint Theorem in ∆ABC and in ∆MBC! We get
+
+66 Ganita Manjari | Grade 9 | Part II
+
+that PQ and XY are parallel to BC and hence to each other. Moreover
+
+PQ = XY = BC
+
+2 . So ∆MPQ ≅ ∆MYX by ASA (How?). Therefore MQ = MX = XB
+
+and MP = MY = YC. This shows CM : MP = 2 : 1 = BM : MQ.
+
+What about the third median AR? We can repeat the argument in the previous paragraph with medians AR and BQ! Let N be the point at which the AR and BQ intersect.
+
+A
+
+P Q N
+
+B R
+
+C
+
+Fig. 12.19
+
+Now the same reasoning gives BN : NQ = 2 : 1 = AN : NR. (Use Fig. 12.19 if you wish to repeat the reasoning.) We already had BM : MQ = 2 : 1, so BM : MQ = 2 : 1 = BN : NQ. But this means M and N have to be the same point, because there is only one point that divides BQ in a given ratio. Thus M lies on all three medians and divides each median in the ratio 2 : 1. We have deduced the following important fact.
+
+Theorem 8: (Centroid Theorem) The three medians of ∆ABC pass through a common point, which divides each of the medians in the ratio 2 : 1, with the longer part connecting to the vertex. This point is called the centroid of ∆ABC.
+
+Think and Reflect
+
+A
+
+P Q M
+
+X
+
+C
+
+B
+
+S
+
+Fig. 12.20
+
+Give another proof of the Centroid Theorem using a clever construction that we will describe only partly and ask you to complete. Once again let M be the intersection point of the two medians CP and BQ. We want to show that the intersection point of line AM with side BC is the midpoint of BC. For this, extend AM up to a carefully chosen point S such that BSCM becomes a parallelogram. (Hint: To arrange MC ‖ BS, first note that PM and MC are along the same line. Now where should M be on segment AS? Does your placement of S also prove MB ‖ CS?)
+
+67 Quadrilaterals
+
+We started this section by examining the triangle formed by midpoints of the sides of a triangle. What happens if we use midpoints of the sides of a quadrilateral to make another quadrilateral? Experiment and see what this new quadrilateral looks like. It appears to be a parallelogram! Let us try to justify this using reasoning.
+
+B
+
+P
+
+A
+
+Q
+
+S
+
+C R D
+
+Geometric reasoning. Suppose the midpoints of sides AB, BC, CD and DA of a quadrilateral ABCD are P, Q, R and S respectively. The Midpoint Theorem applied to ∆ABC and to ∆ADC gives, respectively, PQ ‖ AC and SR ‖ AC. So PQ ‖ SR. Using the Midpoint Theorem in ∆BCD and in ∆BAD gives QR ‖ PS. Therefore PQRS is a parallelogram.
+
+Fig. 12.21
+
+We have deduced the following interesting fact, also known as Varignon’s theorem.
+
+Theorem 9 (Midpoint Theorem for Quadrilaterals): The midpoints of the four sides of a quadrilateral are the vertices of a parallelogram. This is called the Varignon parallelogram of the original quadrilateral.
+
+Exercise Set 12.3
+
+1. (i) If P, Q, R are the midpoints of sides AB, AC, BC respectively of
+
+∆ABC, show that ∆PQR is congruent to ∆QPA and to two other triangles which you should identify. (ii) Suppose someone erases ∆ABC, leaving only ∆PQR on the
+
+paper. Can you reconstruct ∆ABC from ∆PQR?
+
+A
+
+Q
+
+P
+
+B
+
+C
+
+R
+
+Fig. 12.22
+
+68 Ganita Manjari | Grade 9 | Part II
+
+2. In ∆ABC, let M and N be midpoints of AB and AC respectively. Let D be any point on BC. Show that MN bisects AD.
+
+A
+
+M
+
+N
+
+D C
+
+B
+
+Fig. 12.23
+
+3. In a quadrilateral ABCD, suppose AB ‖ DC and AB ≠ CD. Suppose G and H are the midpoints of AC and BD respectively. Prove that GH ‖ AB. (Why did we assume AB ≠ CD?)
+
+A B
+
+H G
+
+D C
+
+Fig. 12.24
+
+4. Suppose the midpoints of sides AB, BC, CD and DA of a quadrilateral ABCD are P, Q, R and S respectively.
+
+(i) Show that PR and QS bisect each other. (ii) Show that if AC = BD, then PR and QS are perpendicular.
+
+Is the converse true?
+
+5. Suppose PQRS is the Varignon parallelogram of ABCD.
+
+Aʹ P Bʹ
+
+A P B
+
+Q S
+
+Q S
+
+Cʹ R Dʹ
+
+C R D
+
+Fig. 12.25
+
+(i) Copy only PQRS on another paper. Show how you will
+
+recreate a congruent copy AʹBʹCʹDʹ of ABCD from PQRS. This will be relevant when we return to study tilings at the end of this chapter. (Hint: How will you place vertex Aʹ? How will you place Bʹ, Cʹ and Dʹ?)
+
+69 Quadrilaterals
+
+(ii) There are multiple ways to construct AʹBʹCʹDʹ in (i). Justify
+
+why the quadrilateral AʹBʹCʹDʹ you constructed is congruent to ABCD. You may need to show why S is collinear with the points Aʹ and Dʹ that you constructed, and similarly for P, Q and R. (Hint: Use congruence of triangles, for example ∆SDR ≅ ∆SDʹR. ) (iii) Show that if PQRS is a square, then AC and BD are
+
+perpendicular and equal. Prove the converse.
+
+12.4 Tiling the Plane Using Any 4-gon
+
+There are many ways to tile the plane, using a single shape or multiple shapes, leading to beautiful pictures. These occur in mosaics in several ancient civilizations to more recent artwork, such as that of M.C. Escher, in nature (for example, a honeycomb) and in decorative patterns we encounter in daily life.
+
+We will see how the plane can be tiled with any given 4-gon, not just a parallelogram as we saw at the beginning of the chapter.
+
+Fig. 12.26
+
+Before you see the answer in Fig. 12.28, see the hints below and try to find a tiling using the given irregular 4-gon SOME. First, trace SOME on paper with its four angles labelled 1, 2, 3, 4. Remember that they add up to 360°. Cut out 15 identical copies.
+
+70 Ganita Manjari | Grade 9 | Part II
+
+Throughout this section, we will focus on experimental verification of our methods. However, you are encouraged to try to prove, on your own, that they work.
+
+Think and Reflect
+
+Suppose we have a tiling of the plane. Consider any vertex. As we go around this vertex and consider the angles made by consecutive lines, the total of these angles must be 360°. This suggests an idea. What if we take 4 copies of SOME and fit them together around a common point so that each angle is used once as we go around?
+
+There are multiple ways of doing this, as shown in Fig. 12.27. Can you use any of these ways to continue fitting further copies of SOME to tile the plane? Try it with the 15 copies you made!
+
+Fig. 12.27
+
+Here is how one can tile! Recreate it with your pieces.
+
+Fig. 12.28
+
+How can we understand the figure? There seems to be a repeating pattern. (1) Can you precisely describe a procedure to draw the pattern
+
+71 Quadrilaterals
+
+so that someone can draw the tiling on their own, based only on your description? (2) Can you justify why your procedure works?
+
+We will sketch two methods and ask you to complete the details. Method 1: We start with two copies of SOME, one exactly above the other. Rotate the top copy by 180° around the midpoint of OM. The rotated copy aligns with the original copy perfectly along the shared edge OM.
+
+Fig. 12.29
+
+Now repeat this procedure at each edge of every copy of SOME that you add. Verify that this will result in a tiling! Two steps of a possible continuation are shown in Fig. 12.30. The first step (Fig. 12.30 A) adds 4 copies around the starting copy and the second step (Fig. 12.30 B) adds 4 more copies. Note two interesting things about the second step: (1) each new copy can be obtained by rotating any one of its neighbours, and both ways give the same result. (2) The new copies fit perfectly. Can you explain these facts by reasoning? This is needed to prove that the method works!
+
+Do you see which of the three possibilities shown in Fig. 12.27 occurs in the tiling?
+
+Fig. 12.30 A Fig. 12.30 B
+
+72 Ganita Manjari | Grade 9 | Part II
+
+Method 2. Before we explain Method 2, let us conduct a thought experiment. Remember the Varignon parallelogram for 4-gons (Theorem 9). Imagine that we have drawn this parallelogram in each copy of SOME in the tiling shown earlier in Fig. 12.28. Visualise what the picture looks like. Fig. 12.31 shows the result: It appears that the Varignon parallelograms form a grid, giving the same parallelogram tiling we saw in the introduction!
+
+This suggests an idea. What if we start by drawing just the simple grid tiling made by the Varignon parallelogram of SOME? Can we use this grid to construct the new tiling by SOME?
+
+Fig. 12.31
+
+A grid of Varignon parallelograms of SOME is given in Fig. 12.32. To begin with, focus only on the 9 green coloured copies of SOME in Fig. 12.31. We will first place only these 9 copies in Fig. 12.32. The corresponding parallelograms are shaded in Fig. 12.32. Place 9 copies of SOME so as to match the way the green coloured copies of SOME are placed in Fig. 12.31 (You were asked to give a precise description of how to do this in Exercise Set 12.3, Q5.) If done carefully, you will observe that each
+
+73 Quadrilaterals
+
+4-gon you placed meets other placed copies exactly at vertices. Now see how 4 copies of SOME are made automatically in the gaps! Carefully place four more copies of SOME in these gaps. Continuing this process with more copies of SOME will give us the desired tiling.
+
+Fig. 12.32
+
+It should be emphasised that our procedure needs to be justified to assure us that it will always work. We will not do this here, but invite you to try it on your own!
+
+Mathematicians have found many interesting ways to tile the plane using a small set of shapes. Some of these, called aperiodic tilings, turned out to be useful to describe atomic arrangements of quasicrystals—new physical structures that were discovered some time later. The discovery of quasicrystals, made by Dan Shechtman, was very surprising because the atomic arrangement was outside what was then considered physically possible. It led to a broader scientific understanding of the nature of order in solids. Dan Shechtman won the chemistry Nobel prize in 2011 for his discovery.
+
+74 Ganita Manjari | Grade 9 | Part II
+
+A Cutting-edge Discovery
+
+The following shape— the first of its kind!—that leads to aperiodic tilings was discovered only recently in 2023 by a team of four mathematicians (Smith, Myers, Kaplan and Goodman-Strauss).
+
+Cut out 15 identical copies of the following shape (known as the ‘hat’) and start to tile with it. Do you see any pattern? You will find that the hat shape will tile the plane endlessly, but without ever quite repeating the same pattern. That is why it is called an ‘aperiodic’ tiling.
+
+Exercise Set 12.4
+
+1. Justify why the plane cannot be tiled with a regular pentagon. (Hint: Read the first 3 sentences of ‘Think and Reflect’ in the section on tiling.) (There are many ways to tile the plane using a suitable irregular pentagon. The most recent method was found in 2015.)
+
+C
+
+B
+
+c d
+
+b
+
+e
+
+D
+
+a
+
+E
+
+A
+
+a = 1
+
+b = 1
+
+A = 60° B = 135° C = 105°
+
+2
+
+c = 1 2 3 1 ( ) 
+-
+
+D = 90° E = 150°
+
+d = 1
+
+2
+
+e = 1
+
+2
+
+75 Quadrilaterals
+
+2. Draw a non-convex 4-gon DART. Show how we can tile the plane with copies of DART. Both methods that we discussed earlier will work. Which do you prefer?
+
+End-of-Chapter Exercises
+
+1. Using a fact about parallelograms, show how to tile the plane using any given triangle. (Hint: Can you use the parallelogram tiling in the introduction?)
+
+2. Mark the midpoint of the line drawn on the paper (see Fig. 12.33), given that the horizontal lines are equally spaced. Justify your answer.
+
+Fig. 12.33
+
+3. You know that the sum of angles of a quadrilateral is 360°, even for a non-convex quadrilateral. (Recall the proof.) Now consider a self-intersecting quadrilateral ABCD, where AB and CD intersect at point E. Show that ∠A + ∠B + ∠C + ∠D < 360°. Can you construct ABCD such that ∠A + ∠B + ∠C + ∠D = 2°?
+
+4. In a parallelogram ABCD, two points P and Q are taken on diagonal BD such that DP = BQ (see Fig. 12.34). Show that APCQ is a parallelogram.
+
+C
+
+D
+
+P
+
+Q
+
+B A
+
+Fig. 12.34
+
+76 Ganita Manjari | Grade 9 | Part II
+
+5. A right-triangle shaped cutout of a paper is folded such that point A touches point B (Fig. 12.35). Show that the crease line can be used to find the midpoint of not only AB but also that of AC.
+
+Step 1 Step 2
+
+A A
+
+B B C C
+
+Fig. 12.35
+
+6. You saw how to use the Midpoint Theorem to divide a given triangle into 4 congruent triangles. Can we divide a triangle into 3 congruent triangles? This exercise shows us how to do that and more, provided we are allowed to cut and reassemble.
+
+(i) Draw medians AP, BQ and CR of ∆ABC, meeting in a common
+
+point M. Cut along each median to get 6 triangles. Show with justification how to assemble the 6 pieces into 3 congruent triangles! (Hint: Align ∆MPB and ∆MPC along equal sides PB and PC, matching P with itself and B with C.) Prove that you get a triangle. What are its side lengths? *(ii) Repeat the procedure with each of the 3 assembled triangles you got in (i). Show that each of the resulting 9 triangles has
+
+sides AB
+
+3 , BC 3 and AC 3 .
+
+The procedure and the result above were unnoticed till 2014, when they were discovered by Lee Sallows, an amateur mathematician! (iii) Naturally, we can next ask about the possibility of cutting a
+
+triangle and reassembling it into 2 congruent triangles. You were asked this question in the chapter Measuring Space: Perimeter and Area. Can you solve this now? (Hint: Use median AP in ∆ABC and then a median of ∆APB.)
+
+For any two given figures with straight sides, we can ask whether one figure can be cut (using only straight cuts) into pieces and reassembled to make the other. This notion is
+
+77 Quadrilaterals
+
+called scissors congruence. The figures need not be in the plane. Research on such questions at a higher level is ongoing.
+
+7. A more general midpoint theorem and its converse. In a quadrilateral ABCD, suppose AB ‖ DC. Recall that such ABCD is called a trapezium. Let E be the midpoint of AD. A line drawn through E intersects side BC at F.
+
+A B
+
+F E
+
+D C Fig. 12.36
+
+(i) If EF ‖ AB, then show that F is the midpoint of BC. Conclude
+
+that EF = (AB +CD)
+
+2 .
+
+(ii) If F is the midpoint of BC, then show that EF ‖ AB.
+
+There are at least two ways to solve (ii). Do it directly by using the midpoint M of BD and showing that EM and FM are the same lines. Or use (i) along with the same idea used in the second proof of the converse of the Midpoint Theorem. Which way do you think is simpler?
+
+8. The diagonals AC and BD of a parallelogram ABCD intersect at O. A line through O meets AB and CD at points P and Q respectively. Show that O is the midpoint of PQ. (Multiple proofs are possible. Which is the simplest?)
+
+P B
+
+A
+
+O
+
+C Q D
+
+Fig. 12.37
+
+*9. ABCD is a trapezium with parallel sides AD = 3 cm and BC = 5 cm. E and F are the midpoints of the non-parallel sides. Find the ratio of the areas of the 4-gons AEFD and EBCF.
+
+78 Ganita Manjari | Grade 9 | Part II
+
+A D 3
+
+F E
+
+5
+
+B C
+
+Fig. 12.38
+
+10. Consider 4 points A, B, C, D in the plane with no three collinear. Answer the following questions. Some answers may require you to consider different cases, depending on how the points are positioned in the plane.
+
+(i) How many different quadrilaterals do they form if the
+
+quadrilateral is allowed to be self-intersecting or non-convex? (ii) How many of these quadrilaterals are self-intersecting?
+
+How many are convex?
+
+11. Suppose P is a point on side AB of ∆ABC and the line through P parallel to BC meets AC in point Q. For parts (i) to (iii), assume AP = 1, AQ = 5 , and see Fig. 12.39.
+
+A
+
+5 A
+
+Q 1
+
+P
+
+1 5
+
+2
+
+P
+
+Q
+
+1 3
+
+B C
+
+B C
+
+Fig. 12.39
+
+(i) If PB = 2 find QC. (Hint: See the dotted line)
+
+*(ii) If PB = 1 3 find QC. (Hint: See the dotted lines)
+
+*(iii) If PB = 2 3 find QC.
+
+(Hint: Divide both PB and AP suitably.)
+
+*(iv) Show that if AP PB is a rational number, then AP
+
+PB = AQ
+
+QC . In Grade 10,
+
+you will prove this equality without assuming AP
+
+PB is rational. That will require a new idea.
+
+79 Quadrilaterals
+
+12. (i) Suppose ABCD is a parallelogram and M, N are midpoints
+
+of AB and CD respectively. Show that segments DM and BN trisect segment AC. (ii) Use part (i) to find a procedure to trisect any given segment
+
+PQ. Find two other ways to trisect PQ, one using Exercise 11 above and a third using the Centroid Theorem.
+
+B C
+
+N M
+
+A D
+
+Fig. 12.40
+
+13. Is the Midpoint Theorem for Quadrilaterals (Theorem 9) true when the quadrilateral is non-convex? How about when it is self-intersecting? Experiment and check. The pictures may look strange, but the theorem appears to be true.
+
+(i) Can you explain why this is so? See the geometric reasoning
+
+in the text. (ii) There is one exception: In a very special case the Varignon
+
+parallelogram becomes a single segment. When will this happen? *(iii) Does your reasoning apply even when ABCD is non-planar?
+
+14. Let P, Q, R, S be four points on sides AB, BC, CD and DA respectively of a quadrilateral ABCD. Suppose PQRS is a parallelogram. Must P, Q, R and S be midpoints of the respective sides? This can be considered a possible converse question to Theorem 9.
+
+15. (i) Complete the following proof of the Midpoint Theorem.
+
+Extend segment PQ beyond Q until point S. By how much should we extend PQ?
+
+A
+
+Q P
+
+S
+
+B C
+
+Fig. 12.41
+
+80 Ganita Manjari | Grade 9 | Part II
+
+It would be good to be able to prove that ∆APQ ≅ ∆CSQ. (Why?) Use this as a guide to specify the location of S and then complete this proof. (ii) Give a similar proof of the converse of the Midpoint
+
+Theorem (Theorem 7). Start by extending PQ up to a suitable point S. *16. Review all the properties of a rhombus/rectangle/square that you proved in Grade 8. Formulate a converse of each. Decide if the converse is true. There are many possibilities here! *17. Show that the sum of angles of a non-planar quadrilateral is always less than 360°. Can you find a non-planar quadrilateral ABCD for which ∠A + ∠B + ∠C + ∠D = 2°?
+
+(Hint: Think of a diagonal, say AC, as a hinge around which triangles ABC and ADC can rotate.) What happens to each angle of ABCD as you do this rotation? *18. Let us see a third method to tile the plane using a 4-gon.
+
+Focus on only two coloured copies of SOME sharing a vertex. What do you see? It appears that each 4-gon is just a shifted copy of the other. Let us see exactly how. Draw two copies of SOME as shown in Fig. 12.42 so that the diagonals EO and EʹOʹ are collinear with O = Eʹ. Now place a cutout of one copy on top of SOME with diagonal EO drawn on it. Slide this cutout so that segment EO moves along EOʹ until EO matches EʹOʹ. Verify that your cutout exactly matches SʹOʹMʹEʹ.
+
+Oʹ
+
+Sʹ
+
+Mʹ
+
+Eʹ O
+
+S
+
+M
+
+E
+
+Fig. 12.42
+
+(i) Prove the exact match of SOME with SʹOʹMʹEʹ using four
+
+parallelograms. (ii) Follow the described procedure along each diagonal of
+
+the starting coloured 4-gon in both directions to get 4 new 4-gons. Using these 4 copies, repeat the procedure 4 more
+
+81 Quadrilaterals
+
+times to place 4 new copies, resulting in a 3 by 3 grid of 9 copies exactly like the 9 coloured copies in Fig. 12.42. These 9 copies meet each other only at vertices and once again the blank spaces among them also form 4-gons congruent to SOME! *19. Is there a 4-gon with given side lengths?
+
+(i) Recall the following fact about triangles and check it by
+
+construction. For given positive numbers a, b, c, is there a triangle whose sides have these lengths? The answer is Yes exactly when the sum of any two numbers is greater than the third. If we arrange the numbers in increasing order (suppose a ≤ b ≤ c), then this amounts to requiring a + b > c. (Hint: Start by drawing a segment of length c.) (ii) Suppose a 4-gon has 2, 5, 11 as three side lengths. Can the
+
+length of the fourth side be 100? Can it be 10? Can it be 1? What are the possible lengths of the fourth side? (iii) For given positive numbers a, b, c, d, how will you decide if
+
+there is a 4-gon whose sides have these lengths?
+
+*20. Counting diagonals of a polygon.
+
+(i) How should we define a diagonal of an n-gon? How many
+
+diagonals does an n-gon have? Make a table for small values of n. A 3-gon has no diagonals. A 4-gon has 2. How many diagonals does a 5-gon have? A 6-gon? Try to find a pattern and guess the answers for n = 7 and n = 8. Check your guesses by systematic counting. (ii) Can you guess a formula for the number of diagonals? How
+
+many diagonals get added when we increase the number of sides by 1? Can you now justify why the formula you guessed is true for all n? *21. Sum of angles of a polygon. What is the sum of angles of a (planar non-self-intersecting) n-gon? We know that the answer is 180° for n = 3 and 360° for n = 4. Find the next few values. Then find a formula in terms of n and prove it.
+
+*22. Multiple converses to a theorem. Let us see how multiple statements can be considered converses to the Midpoint Theorem and how Theorem 7 is one of them.
+
+To formulate a converse we should express the original statement in “If … then …” form. For a complex statement, there may be multiple ways to do that. The Midpoint Theorem starts with ∆ABC and points P and Q on sides AB and AC respectively.
+
+82 Ganita Manjari | Grade 9 | Part II
+
+The theorem has two assumptions and two conclusions, which we have named for further discussion.
+
+Assumptions: (P MID) P is the midpoint (Q MID) Q is the of AB, and midpoint of AC.
+
+Conclusions: (PRLL) PQ ‖ BC, and (HALF) PQ = BC
+
+2 .
+
+Let us use these four named conditions to discuss various possible statements.
+
+(i) A natural converse of the Midpoint Theorem would be: “If
+
+(PRLL) and (HALF) are true, then (P MID) and (Q MID) are true.” Write out this statement fully. Experiment and see that it seems to be true! Prove the statement. (Hint: Try to run a proof of the Midpoint Theorem backwards.) (ii) To see Theorem 7 as a converse of the Midpoint Theorem,
+
+we first write the Midpoint Theorem as follows: “Suppose P is the midpoint of side AB of ∆ABC and Q is a point on side AC. If Q is the midpoint of AC then PQ ‖ BC.” (Also PQ =
+
+BC
+
+2 , but let us set that aside for now.) Write the converse of
+
+the second sentence in quotes by keeping the first sentence the same. Verify that Theorem 7 is what you get! (And PQ =
+
+BC
+
+2 also follows.) Now write Theorem 7 in terms of the four
+
+named conditions. (iii) The discussion so far suggests that it is reasonable to
+
+take two of the four listed statements as assumptions and ask if the other two are true. Verify that only one such combination remains to be examined. “If (P MID) and (HALF) are true, then can we conclude (Q MID) and/or (PRLL)?” Write this out in words. This is a precise version of question (1) stated before Theorem 7. Can you answer it? In the text, why did we focus only on Theorem 7 among the multiple possibilities? Because Theorem 7 turns out to be particularly useful. It is still important to pursue various avenues while exploring a subject: often it is only after examining multiple possibilities that we can judge what is most valuable. *23. Validity of tiling methods. Show using reasoning that each of the three tiling methods we saw produces a tiling of the plane
+
+83 Quadrilaterals
+
+using the given 4-gon. You have to prove that when we place new copies using any of the three procedures, the entire plane is covered with no gaps and no overlaps. First, think carefully about what it means to prove this. Then find a proof for each procedure.
+
+*24. What fraction of the square is shaded?
+
+Fig. 12.43
+
+Chapter Summary
+
+• Quadrilateral: For four distinct points A, B, C, D in a plane with no three collinear, the quadrilateral ABCD is a collection of all points on segments AB, BC, CD, DA provided every point other than A, B, C, and D lies on exactly one of these four segments.
+
+• A quadrilateral is convex when all of its internal angles are less than 180°, or equivalently, when its diagonals intersect.
+
+• The following converse statements about parallelograms are true:
+
+⸰ If the opposite sides of a 4-gon are equal, then it is a
+
+parallelogram. ⸰ If the opposite angles of a 4-gon are equal, then it is a
+
+parallelogram. ⸰ If the diagonals of a 4-gon bisect each other, then it is a
+
+parallelogram. ⸰ If a pair of opposite sides of a 4-gon are equal and parallel,
+
+then it is a parallelogram.
+
+84 Ganita Manjari | Grade 9 | Part II
+
+• The Midpoint Theorem: the line joining the two midpoints of any two sides of a triangle is parallel to the third side and has half the length of the third side.
+
+• A Converse to the Midpoint Theorem: the line passing through the midpoint of a side of a triangle and parallel to a second side bisects the third side.
+
+• Medians of a triangle are concurrent and the point of concurrence, called the centroid, divides each median in a 2 : 1 ratio.
+
+• The 4-gon formed by joining the midpoints of a given 4-gon is always a parallelogram.
+
+• The plane can be tiled with any given 4-gon.

@@ -1,0 +1,971 @@
+# CLASS-9 - ARTS - CHAPTER 08
+# Source: iemr108.pdf
+
+Rāga and Tāla 8
+
+Let us recall
+
+Nāda: Musical sound
+
+Śhruti: A sound that is heard clearly and can be recognised as distinct from another
+
+Svara: A note in music. There are seven notes in Indian music— S R G M P D N
+
+Saptak/ Sthāyī: An octave or register in music. Musicians usually perform in Mandra (lower), Madhya (middle) and Tāra (higher) saptak/ octaves.
+
+Svara
+
+Let us revisit some of the basic building blocks of melody in classical music.
+
+There are 7 notes (svaras) of music.
+
+S and P are the invariant notes known as achala-svara/ prakṛiti-svara.
+
+The remaining 5 notes (R G M D N) have higher and lower variants and known as chala-svaras/ vikṛiti-svaras.
+
+So, the total number of notes (svara-sthānas) comprise 2 prakṛiti-svaras or achala-svaras (S and P), and 2 variants of the remaining 5 notes (R G M D N), bringing the total number of note positions to 12.
+
+In a keyboard or a harmonium, you can see the arrangement of notes in an octave, and how the same note positions repeat, across different octaves.
+
+Madhurima
+
+R G M M D D N N R G M D N R G
+
+R R R G G G M M M P P P D D D N N N
+
+S S S
+
+Mandra Saptaka Madhya Saptaka Tāra Saptaka
+
+Fig. 8.1. The arrangement of svaras and octaves on a keyboard
+
+It is important to know that the 7 notes and 12 note positions are the same in both Hindustani and Carnatic Music, but the variants are known by different names.
+
+Note to the teacher: If you have access to a keyboard or a harmonium, use it to introduce the concepts of 7 notes, 12 note positions, and octaves. Alternatively, you can also download a piano app on your mobile phone or computer.
+
+Table 8.1. Svara-sthānas in Hindustani and Carnatic Music
+
+Variant Names
+
+Variant Names
+
+Svar Name Note Position
+
+(Hindustani)
+
+(Carnatic)
+
+S Ṣhaḍja No variant No variant
+
+Lower Komala Śhuddha
+
+R Ṛiṣhabha
+
+Higher Śhuddha Chatuḥśhruti
+
+Lower Komala Sādhāraṇa
+
+G Gāndhāra
+
+Higher Śhuddha Antara
+
+Lower Śhuddha Śhuddha
+
+M Madhyama
+
+Higher Tīvra Prati
+
+P Pañchama No variant No variant
+
+Lower Komala Śhuddha
+
+D Dhaivata
+
+Higher Śhuddha Chatuḥśhruti
+
+Lower Komala Kaiśhikī
+
+N Niṣhāda
+
+112
+
+Higher Śhuddha Kākalī
+
+Rāga and Tāla
+
+Do you know?
+
+The 7 notes and 12 note positions are found in most music systems around the world!
+
+Rāga
+
+A rāga is a melodic framework in Indian Classical Music and comprises a set of notes. The rāga system is one of the reasons why Indian Classical Music is one of the most sophisticated, complex, and scientific music systems in the world.
+
+So, how do we group and classify these hundreds of rāgas? Just like you would have studied the classification of plants and animals into different groups and families, rāgas are also classified and grouped according to their characteristics so that we can understand them better.
+
+Classification based on number of svaras
+
+In both Hindustani and Carnatic traditions, one way of classifying rāgas is based on how many notes are used in the ārohaṇa (ascending scale) and avarohaṇa (descending scale).
+
+Fig. 8.2. Students performing Carnatic Classical
+
+Music (Kala Utsav 2025)
+
+In Hindustani Music, this classification of rāgas based on the number of notes in the scale is called the Rāga-jāti.
+
+Table 8.2. Rāga-jāti and Examples
+
+Example in
+
+No. of Svaras Name Example in Hindustani
+
+Carnatic
+
+Śhaṅkarābharaṇam
+
+Alhaiyā Bilāval,
+
+7 Saṁpūrṇa
+
+Yaman
+
+(S R G M P D N S)
+
+Gurjarī Todī
+
+Śhrīrañjanī
+
+6 Ṣhāḍava
+
+(S R G M D N S)
+
+(S R G M D N S)
+
+Bhūpālī
+
+Haṁsadhvani
+
+5 Auḍava
+
+(S R G P D S)
+
+(S R G P N S) 113
+
+Madhurima
+
+Rāgas can also have different numbers of notes in the āroha/ ārohaṇa and avaroha/ avarohaṇa.
+
+Rāga-jātis
+
+Saṁpūrṇa — Saṁpūrṇa Saṁpūrṇa — Ṣhāḍava Saṁpūrṇa — Auḍava
+
+Ṣhāḍava — Saṁpūrṇa Ṣhāḍava — Auḍava Ṣhāḍava — Ṣhāḍava
+
+Auḍava — Saṁpūrṇa Auḍava — Auḍava Auḍava — Ṣhāḍava
+
+Activity 8.1
+
+Write any Auḍava Rāga scale
+
+Write any Ṣhāḍava Rāga scale
+
+Write any Auḍava-Ṣhāḍava scale
+
+Tānsen and the rāga of fire
+
+Legend says that Tānsen, Akbar’s favourite singer, was tricked by jealous courtiers into singing Rāga Dīpaka, believed to create deadly heat. Knowing only Rāga Megha could save him, he trained his daughter Sarasvatī and her friend Rūpavatī. As the heat rose during his performance, the girls sang Rāga Megha, bringing rain and saving Tānsen.
+
+Fig. 8.3. Portrait of Tānsen c. 1585–90, National Museum, New Delhi
+
+114
+
+Rāga and Tāla
+
+Discussion circle
+
+If you could name a rāga what would it be? Describe how you
+
+would like the rāga to make a listener feel.
+
+Classification based on the svara-sthānas
+
+Rāgas in both Carnatic and Hindustani Music have also been traditionally classified into various families, based on their note positions (svara-sthānas). In this case, the systems of classification in Carnatic and Hindustani Music are different. Let us look at each one below.
+
+Carnatic 72 Meḻakartā System
+
+The 72 meḻakartās form the basic scale system of Carnatic Music. Each meḻakartā rāga uses all seven svaras in both the ārohaṇa (ascending) and avarohaṇa (descending) order. In all, 72 different scales are created by systematically combining the lower and higher variants of the svaras — R, G, M, D, and N.
+
+Do you know?
+
+The system of mathematically deriving 72 meḻakartā scales based on the permutation and combination of svara-sthānas was established by Venkatamakhi in his treatise Chaturdaṇḍī- Prakāśhikā, which was published in the eighteenth century.
+
+Janaka Janya Rāgas
+
+These 72 meḻakartās can also be referred to as Janaka (parent) rāgas. Many janya rāgas are derived from each janaka by eliminating notes or changing the order of the notes. For example, the Meḻakartā/ janaka Rāga Śhaṅkarābharaṇam has the scale:
+
+S R3 G3 M1 P D3 N3 Ṡ
+
+Ṡ N3 D3 P M1 G3 R3 S
+
+In Rāga Haṁsadhvani, the M and D svaras are removed from Śhaṅkarābharaṇam to give rise to a 5 note (auḍava) scale
+
+S R3 G3 P N3 Ṡ
+
+Ṡ N3 P G3 R3 S
+
+115
+
+Madhurima
+
+Hindustani Thāṭ System
+
+The thāṭ system is a method used to group rāgas based on the notes that are used in the rāga. A thāṭ is a musical scale consisting of 7 svaras (S R G M P D N) arranged in order. Each of the notes — R G M D, and N have two variants. Based on different combinations of these variants, there are 10 different thāṭs, and all rāgas belong to one of these 10 thāṭs.
+
+Eg: The Kalyāṇ Thāṭ has the scale: S R G M’ P D N S
+
+Do you know?
+
+The thāṭ system was developed by musicologist Pandit Vishnu Narayan Bhatkhande in the early twentieth century to make the study of rāgas easier and more structured.
+
+Two rāgas belonging to the Kalyāṇ Thāṭ are:
+
+1. Yaman
+
+N R G M’ D N Ṡ, Ṡ N D P M G R S
+
+2. Śhuddha Kalyāṇ
+
+S R G P D Ṡ, Ṡ N D P M' G R S
+
+Compositions
+
+Let’s look at compositions in both Carnatic and Hindustani Music. In both systems, we will deal with a similar rāga — Śhaṅkarābharaṇam in Carnatic and Alhaiyā Bilāval in Hindustani.
+
+Carnatic Music — Rāga Śhaṅkarābharaṇam
+
+Feature Details
+
+Meḻakartā Number 29
+
+Classification (Jāti) Saṁpūrṇa
+
+Western Equivalent Major Scale
+
+Ārohaṇam (Ascent) S R2 G3 M1 P D2 N3 Ṡ
+
+Avarohaṇam (Descent) Ṡ N3 D2 P M1 G3 R2 S
+
+Famous Composition ‘Enduku Peddala’ by Tyāgarāja
+
+116
+
+Significance One of the first rāgas students learn due to the simplicity of its scale
+
+Rāga and Tāla
+
+Let’s learn two compositions that are in janya rāgas of Śhaṅkarābharaṇam.
+
+Jatisvaram
+
+It is a Carnatic Music composition that has svaras (musical notes) and optionally rhythmic syllables (jatis) to create a lively musical piece. It generally has no lyrics or sāhitya.
+
+Rāga: Kaṇṇaḍā Tāla: Ādi
+
+Composer: Veena Padmanābhayya
+
+Ārohaṇa: S G3 M1 D2 N3 Ṡ
+
+Avarohaṇa: Ṡ N3 Ṡ D2 P M1 G3 M1 R2 S
+
+Pallavī
+
+Ṡ--- 
+--N- ṠD-P MG-M | D--- 
+--DN | DPM G -M DN ||
+
+Chitte-svara
+
+1. Ṡ-ṘN 
+-ṠD- D-ND- PM- | G--G 
+-MR- | ṆS-G 
+-MDN ||
+
+2. D--- 
+--DP DP-M GMDP | D--- 
+--DN | ṠD-P MG-M ||
+
+D--D NṠD- NṠ-D NṠṘṠ | D--N DPD- | DPMG 
+-MDN ||
+
+3. Ṡ--- 
+--ṠṘ N-NṠ D-PM | D---- 
+--DN | D-PD PMGM ||
+
+R--- 
+--SG M-MG MD-D | DNṠṠ 
+-ṘNṠ | DP-M GMDN ||
+
+4. Ṡ-ṠR N-NṠ D-DN DPM- | G-GM R-RG | S-SR SṆS- ||
+
+SG-M DNṠṘ ṠĠ-M ṘṠNṘ | ṠṠ-D PMGG | 
+-MRS GMDN ||
+
+117
+
+Madhurima
+
+Svarajati
+
+It is a Carnatic Music composition that combines simple lyrics (sāhitya) with musical notes (svaras) and optionally, rhythmic patterns (jati).
+
+Rāga: Haṁsadhvani Tāla: Ādi
+
+Ārohaṇa: S R2 G3 P N3 S
+
+Avarohaṇa: S N3 P G3 R2 S
+
+Pallavī
+
+G
+
+P
+
+G
+
+. R
+
+S
+
+, Ṅ
+
+. S
+
+. R
+
+Shree
+
+Raa
+
+Maa
+
+, Bhi
+
+Raa
+
+. Ma
+
+, Naa
+
+, Du
+
+S R
+
+.  G
+
+R G
+
+.  P
+
+G . N P
+
+. Ṡ N P
+
+GP . .
+
+GRSR
+
+,  Bu
+
+Nee Paa
+
+,  Da
+
+Pan KaJam
+
+, Bu , Pai
+
+YaNiChiTi
+
+Chit Tam
+
+SaDaa ,
+
+Anupallavī
+
+P . N PG P ṠN PN PG PG
+
+Nae , Ra MuLa Nem ChaKu KaRu NaGa Li Gi
+
+Charaṇa
+
+Ṡ ṘṠ .
+
+ṠNPG
+
+. NP .
+
+G R R .
+
+S Ṡ . N
+
+P
+
+G R SR
+
+1. RG P N
+
+NaNuKaRa
+
+MuLaChae
+
+BaLiMiGa
+
+, DaYa ,
+
+NwiTaPat
+
+Ti Yaa ,Da
+
+Rin
+
+ChuMi YiKa
+
+. GP N
+
+Ṡ . R G
+
+P N . S
+
+RGP .
+
+P GRS
+
+NP GR
+
+S N SR
+
+2. PNṠṘ
+
+NinuViNaa
+
+, NaNuKru
+
+TaarThuNi
+
+GaChae Yu
+
+TaKuNee
+
+Ja GaTi Lo
+
+NeVaRuRa
+
+NruPaVaRa
+
+SRSN
+
+P
+
+NS R G
+
+PNṠṘ
+
+Ṡ
+
+Ṙ Ṡ . N
+
+Ṡ N . P
+
+3. GPRG
+
+MuNiNuTa
+
+DaNuJaVi
+
+Daa
+
+RaNaSuRa
+
+HiTaShuBha
+
+Vee
+
+KshaNaa , Bha
+
+YaHa , sTa
+
+Ṡ . ṘṠ
+
+. N P N
+
+Ṡ PṠ .
+
+P N . G
+
+P . RG
+
+Sr . .
+
+S N PG
+
+4. P .  N .
+
+ShreeSee
+
+Ta , ViHaa
+
+, RaChaTu
+
+RaSaDaa
+
+ShiVaarThi
+
+BhamJaNa
+
+SaRo ,
+
+JaNa YaNa
+
+Ṡ ṘṖĠ
+
+Ṙ ṠṘṠ
+
+N P ĠṘ
+
+Ṡ N ṖĠ
+
+Ṙ Ṡ ṘĠ
+
+Ṡ Ṙ NṠ
+
+PN GP
+
+R GSR
+
+MaDaNaJa
+
+NaKaPaTu
+
+TaRa Su Va
+
+ChaNaDaSha
+
+RaThaSuTa
+
+SaDaYaHru
+
+DaYaViDhi
+
+HaRaNuTa
+
+118
+
+Rāga and Tāla
+
+Fig. 8.4. Kala Utsav participants playing the sitar and tabla
+
+Hindustani Music — Rāga Alhaiyā Bilāval
+
+Feature Details
+
+Thāṭ Bilāval
+
+Jāti Saṁpūrṇa
+
+Notes
+
+In this rāga, all svaras (notes) used are Śhuddha (pure/ natural).
+
+Vādī D
+
+Saṁvādī G
+
+Singing Time First prahāra* of the night
+
+Nature This is an Uttaraṅga Pradhāna Rāga
+
+Distinction
+
+Bilāval and Alhaiyā Bilāval are two separate rāgas. Rāga Bilāval is similar to this one, but Komala Niṣhāda is not used in it.
+
+Āroha (Ascending) S G R G P D N S
+
+Avaroha (Descending) S N D P, D N D P, M G M R, S
+
+G R G P D N S
+
+Pakaḍ (Important Phrase)
+
+*A day is divided into eight parts. Each part is called a prahāra and lasts three hours.
+
+119
+
+Madhurima
+
+Bandiśh
+
+Tāla: Teen Tāla Kramik Pustak Mālika – Bhāg 2
+
+Sthāyī: Tū Hī Ādhār Sakala Tribhuvana Ko Pālaka Sacharāchar Bhūtan Ko
+
+Tū Hī Viṣhṇu Tū Nārāyaṇa Kāraṇa Tū Parabrahma Jagat Ko
+
+Sthāyī
+
+P D N
+
+G P N N Ṡ 
+- Ṡ Ṡ Ṡ Ṙ Ṡ N D P MG MR
+
+Tu ऽ Hi Aa dha ऽ r Sa ka l Tri bhu va n koऽ ऽऽ
+
+3 X 2 0
+
+M N
+
+G M P MG M R S 
+- D N Ṡ N D P MG MR
+
+Paa ऽ la kऽ Sa ch Raa ऽ ch ar Bhu ऽ Ta n koऽ ऽऽ
+
+3 X 2 0
+
+Antarā
+
+P D N Ṙ
+
+P 
+- N N Ṡ 
+- Ṡ 
+- Ṡ Ġ Ġ Ṁ Ġ Ṙ Ṡ Ṡ
+
+Tu ऽ Hi ऽ Vi ऽ shnu ऽ Tu ऽ Na ऽ ra ऽ ya n
+
+3 X 2 0
+
+N N N
+
+Ṡ 
+- Ġ Ṙ Ṡ 
+- D P D N Ṡ ṠN D P MG MR
+
+Kaa ऽ ra na Tu ऽ Pa r Bram ऽ ha Jaऽ ga t koऽ ऽऽ
+
+3 X 2 0
+
+120
+
+Rāga and Tāla
+
+Lakṣhaṇa-Gīta
+
+Tāla: Teen Tāla (Madhya Laya) Kramik Pustak Mālika – Bhāg 2
+
+Sthāyī: Taba Kahata Bilāval Bheda Chatura Jaba Mela Milāvata Śhuddha Surana Ko Prātaḥ Samaya Nit Prathama Prahara Dhaivata Vādī Gā Samvādī Aṣhṭa Bheda Saba Gāye Madhura
+
+Sthāyī
+
+N
+
+Ṡ Ṡ
+
+Ta b
+
+N G R G D D
+
+D P M G P 
+— N N Ṡ 
+— Ṡ Ṡ N N P P
+
+Ka ha t Bi La ऽ wa l Bhe ऽ d Cha tu r Ja b
+
+0 3 X 2
+
+DN ṠṘ Ṡ ṠN D P M G G R G M G R S 
+—
+
+Meऽ ऽऽ l Miऽ laa ऽ va t Shu ऽ dha Su ra n Ko ऽ
+
+0 3 X 2
+
+D Ṙ D
+
+S M G P P 
+— N N Ṡ Ġ Ṡ Ṡ N N Ṡ Ṡ
+
+Pra ऽ tah Sa may ऽ Ni t Pra tha m Pra ha r, Ta b
+
+0 3 X 2
+
+Antarā
+
+D Ṙ Ġ
+
+P 
+— N N Ṡ 
+— Ṡ 
+— NṠ Ġ Ġ Ṁ Ṙ 
+— Ṡ 
+—
+
+Dhai ऽ va t Va ऽ di ऽ Gaऽ ऽ Sam ऽ va ऽ di ऽ
+
+0 3 X 2
+
+Ṁ Ṁ
+
+Ġ Ṁ Ṗ Ġ Ṁ Ṙ Ṡ Ṡ DN ṠṘ Ṡ ṠN D N Ṡ Ṡ
+
+A ऽ sht Bhe ऽ d Sa b Gaऽ ऽऽ ye Maऽ dhu r, Ta B
+
+0 3 X 2 121
+
+Madhurima
+
+Tāla
+
+It is the rhythmic cycle in Indian Classical Music that organises beats into a repeating pattern. Let us revisit the basic tālas in Hindustani and Carnatic Music.
+
+Tālas of Hindustani Music
+
+Ṭhekā: The basic pattern of tabla strokes or rhythmic syllables that defines a tāla in Hindustani Music.
+
+Mātrā: A single beat within a tāla
+
+Vibhāg: A division or group of beats within a tāla
+
+Tālī: A stressed beat in a tāla, usually marked by a hand clap
+
+Khālī: An unstressed or ‘empty’ beat in a tāla, usually marked by a wave of the hand
+
+Sam: The first and most important beat of a tāla cycle
+
+Note to the Teacher: Demonstrate the counting of tālas or share a video in class.
+
+Teen Tāla
+
+Mātrā: 16
+
+Tālī: 1, 5, 13 mātrā
+
+Vibhāg: 4
+
+Khālī: 9 mātrā
+
+Mātrā 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
+
+Bol dha dhin dhin dha dha dhin dhin dha dha tin tin ta ta dhin dhin dha
+
+Tālī X 2 0 3
+
+Jhaptāla
+
+Mātrā: 10
+
+Tālī: 1, 3, 8 mātrā
+
+Vibhāg : 4 (2, 3, 2, 3)
+
+Khālī: 6 mātrā
+
+Mātrā 1 2 3 4 5 6 7 8 9 10
+
+Bol dhee Naa dhee dhee naa tee naa dhee dhee naa
+
+Tālī X 2 0 3
+
+122
+
+Rāga and Tāla
+
+Activity 8.2
+
+Identifying the various bols
+
+Listen to a recording of the ṭheka being played on the tabla and try and identify its bols.
+
+Note to the Teacher: Play a recording of the ṭheka of Teen Tāla, or use a mobile app. Assist students as they try and identify the bols corresponding to the tabla sounds.
+
+Activity 8.3
+
+Finding sam
+
+Try and follow along the tabla ṭheka of the bandiśh being played in class and identify the sam as you follow the tāla.
+
+Observe how the artist, in their elaboration, arrives at the sam in different ways.
+
+Note to the Teacher: Play a performance of a bandiśh in Teen Tāla or Jhaptāla. Help the students follow the tabla ṭheka and identify the tāla. Encourage students to appreciate the process by which the artist arrives at the sam.
+
+Tālas of Carnatic Music
+
+Carnatic Music also has several tālas, of which two most popular are Ādi Tāla and Rūpaka Tāla. Let us revise counting the tāla with our fingers as shown below:
+
+Ādi Tāla
+
+Beat 1 2 3 4 5 6 7 8
+
+Syllable Ta Ka Dhi Mi Tha Ka Ta Ta
+
+Action Beat Little Finger
+
+Ring Finger
+
+Middle Finger Beat Turn Beat Turn
+
+123
+
+Madhurima
+
+Rūpaka Tāla
+
+Beat 1 2 3 4 5 6
+
+Syllable Ta Ka Ta Ka Dhi Mi
+
+Action Beat Turn Beat Little Finger
+
+Ring Finger
+
+Middle Finger
+
+Activity 8.4
+
+Listening to a song and identifying the tāla pattern
+
+As you listen to the song, first react naturally to the beat by tapping your feet, clapping your hand, etc.
+
+Now, try and find how many beats this tāla cycle has.
+
+Note to Teacher: Play any song with a strong rhythm in the class.
+
+Activity 8.5
+
+Write a lyric to tāla Tāla is used to arrange svaras and lyrics into definite patterns in a song. Fill in the lyrics in any language to fit the below tāla cycles with one syllable per beat and then recite it.
+
+Teen Tāla (Hindustani)
+
+Mātrā 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
+
+Example Once - upon a
+
+Time there lived a
+
+Little girl who
+
+Liked to sing songs
+
+Your lyric
+
+Rūpaka Tāla (Carnatic)
+
+Mātrā 1 2 3 4 5 6 1 2 3 4 5 6
+
+Example Ra ma Ja ya ra ma Krish-na Ha re Krish na
+
+Your lyric
+
+You can use any words in the rhythm, for example, Tvameva Mātā Pitā Tvameva.
+
+124
+
+Rāga and Tāla
+
+Activity 8.6
+
+Fitting your song to tāla
+
+Go back to the song you created in Chapter 6 Activity 6.7 (My
+
+family tradition). Does your song naturally fall into a tāla or rhythm pattern?
+
+How will you modify it (by speeding it up, slowing it down,
+
+elongating or compressing a syllable, or adding or removing a word) to fit it to a specific rhythm pattern? Try singing or reciting your song while keeping a tāla/ steady
+
+beat. How does this change the feel of your song?
+
+Through this activity, we observe how tāla can provide structure and definition to a song, and indeed this is one of the factors that differentiate prose (which you will find in a story) from song lyrics.
+
+EXERCISES
+
+Q1. Explain the following in one line:
+
+i. Ṣhāḍava-saṁpūrṇa ii. Vibhāg
+
+iii. Jātis in Hindustani Music
+
+Q2. If a rāga has 6 svaras in the ārohaṇa and 6 in the avarohaṇa, what is the
+
+jāti of the rāga. Give an example from the rāgas you have learnt.
+
+Q3. Which are achala-svaras/ prakṛiti-svaras and chala-svaras/ vikṛiti-svaras?
+
+Explain with examples.
+
+Q4. Name two rāgas and their scales derived from Śhaṅkarābharaṇam.
+
+Q5. Answer the following:
+
+i. A rāga with 5 notes is called .
+
+ii. The Meḻakartā system was devised by .
+
+iii. Vishnu Narayan Bhatkhande grouped the Hindustani rāgas in the
+
+system.
+
+iv. Complete the series SMGR , RPMG .
+
+Q6. What is the difference between Jatisvaram and Svarajati ?
+
+Q7. Give a brief introduction of Rāga Haṁsadhvani.
+
+125
+
+Q8. Describe one system of classification of rāgas with examples.
+
+Madhurima
+
+Q9. Find out about the contributions of the following stalwarts to Indian music.
+
+i. Tānsen ii. Kumar Gandharva
+
+iii. Mīrābāī iv. MS Subbulakshmi
+
+Q10. Identify the Rāga-jāti based on the following:
+
+i. 5 svaras in āroha and 6 svaras in avaroha
+
+ii. 6 svaras in āroha and 5 svaras in avaroha
+
+iii. 5 svaras in āroha and avaroha
+
+iv. 7 svaras in āroha and 7 svaras in avaroha
+
+Q11. Complete the table.
+
+Variant
+
+Variant
+
+Svara Note Position
+
+Names (Hindustani)
+
+Names (Carnatic)
+
+S
+
+Higher R
+
+Lower M
+
+Higher N
+
+Pañchama
+
+Q12. Write the tāla lipi (notation) of Teen Tāla.
+
+Notes
+
+126

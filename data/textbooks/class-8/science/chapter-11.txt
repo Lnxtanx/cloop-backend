@@ -1,0 +1,790 @@
+# CLASS-8 - SCIENCE - CHAPTER 11
+# Source: hecu111.pdf
+
+Keeping Time with the Skies 11
+
+Probe and ponder
+
+• Have you ever seen the Moon during the day? Why do you think
+
+it is sometimes visible when the Sun is up?
+
+• Imagine you lived on the Moon instead of Earth. What would
+
+you mean by a day, a month or a year?
+
+• What would happen if Earth had two moons instead of one?
+
+How would that change the night sky?
+
+• If we didn’t have clocks or calendars, how else could we
+
+measure time?
+
+• Share your questions
+
+?
+
+It was Makar Sankranti, and Meera was in Ahmedabad for the Patang Mahotsav, the International Kite Festival. As she looked up at the sky filled with colourful kites, she noticed the Moon shining during the daytime. She was surprised as she had always thought the Moon appeared only at night. Also, the Moon did not appear like a full circle, but that didn’t surprise her as much. She knew its shape changed every night. Still, it got her thinking. She remembered learning that the Moon is spherical and shines by reflecting sunlight. Then why isn’t the whole Moon visible every night? For a moment, she wondered if it was due to a lunar eclipse. But eclipses are rare and brief. So, what causes the Moon’s changing shape?
+
+11.1 How Does the Moon’s Appearance Change and Why?
+
+Let us carefully watch the Moon to understand how its appearance changes over a month. You may have done a similar activity earlier, but let us now do it in more detail. Begin this activity from the sunrise after a full Moon day, that is when it is easiest to spot the Moon in the sky.
+
+Activity 11.1: Let us explore*
+
+• Spot the Moon at sunrise in the western direction on the first
+
+day after the full Moon.
+
+• Make a table similar to Table 11.1 in your notebook. Document
+
+the following:
+
+{ Date
+
+{ When you saw the Moon (at sunrise or sunset)?
+
+{ Shade the corresponding Circle with pencil to show the bright portion of the Moon as shown in Fig. 11.1.
+
+• From the second day onwards also document the following.
+
+Fig. 11.1: Shading
+
+the dark portion
+
+of the Moon
+
+{ Is the size of bright portion of the Moon increasing or decreasing from the previous day.
+
+{ Whether the Moon appears closer to or farther from the Sun in the sky than the day before.
+
+• After about 15 days, you may not be able to see the Moon at
+
+sunrise or sunset. For the next 15 days, carry out this activity at sunset.
+
+* It is best to begin this activity a month or more before this chapter is scheduled to be learnt.
+
+Table 11.1: Documenting changes in the Moon’s appearance
+
+Moon and Sun separation in the
+
+Day Date Moon seen
+
+Appearance of the Moon
+
+at
+
+Size of the bright portion compared to the
+
+in the sky
+
+previous day
+
+sky compared to the previous day
+
+1. Sunrise/Sunset 
+— 
+—
+
+2. Sunrise/Sunset Increased/ Decreased Closer/Farther
+
+3. Sunrise/Sunset Increased/ Decreased Closer/Farther
+
+Analyse the data recorded by you in Table 11.1. Did the Moon appear different each day? Was the Moon visible on all days? Did the Moon appear at the same position in the sky as on the previous day?
+
+About 1 week
+
+Waxing Gibbous Crescent
+
+New Moon
+
+Full Moon
+
+Gibbous
+
+Crescent Waning
+
+11.1.1 Phases of the Moon You may have observed that the bright portion of the Moon decreases from a full circle to a half circle in about a week, as shown in Fig. 11.2. The bright portion continues to shrink for another week until it is no longer visible. This two-week period is called the waning period of the Moon. Different names are given to the Moon’s visible shapes during this cycle (Fig. 11.2). The day when the Moon appears as a full bright circle is called the full Moon day (or Purnima), and the day when it is not visible is called the new Moon day (or Amavasya).
+
+About 1 week
+
+Fig. 11.2: Waxing (Shukla Paksha) and waning period (Krishna Paksha) of the Moon as viewed from the Earth
+
+After the new Moon, its bright side grows to a half circle in about a week and to a full circle (full Moon) in another week. The period when the bright part of the Moon increases is called the
+
+waxing period. In India, the waning period of the Moon is generally called the Krishna Paksha, while the waxing period is called the Shukla Paksha. The Moon goes through a waning period followed by a waxing period in a cyclical manner as shown in Fig. 11.2. The cycle from one full Moon to the next takes about a month.
+
+The changing shapes of the bright portion of the Moon from one day to another as seen from the Earth are called the phases of the Moon.
+
+11.1.2 Locating the Moon When you checked the Moon at the same time on successive days (for example, at sunrise), did you see it in a different part of the sky? On a full Moon day, the Moon is nearly opposite the Sun — when the Sun rises in the East, the Moon is almost setting in the West. On subsequent mornings at sunrise, as its bright part continues to decrease, the Moon appears to move closer in the sky to the Sun. When the bright part of the Moon decreases to a half circle shape, the Moon is overhead at Sunrise. A few days later, the crescent Moon appears even closer to the Sun. Knowing the phase of the Moon and whether it is waxing or waning can thus help us find out where and when to look for the Moon on any given day. A waxing Moon is easiest to spot at sunset, and a waning Moon at sunrise. Because of these shifts, the Moon always rises and sets at different times than the Sun.
+
+A step further
+
+Many people believe the Moon rises when the Sun sets, but that is not always true. Look in a local newspaper or on the Positional Astronomy Centre (India Meteorological Department) website to find the moonrise time in your area. Check these times for several days in a row and you will see that the Moon rises about 50 minutes later each day. Sometimes moonrise happens in the afternoon (around 2:00 – 4:00 p.m.), so you can spot the Moon in the eastern sky during daylight. You may need to wait about 30 minutes past the listed moonrise time for the Moon to climb high enough for it to be seen.
+
+7 April 2025 14:23 8 April 2025 15:17
+
+The time and position of moonrise changes from one day to the next.
+
+Illuminated Non- illuminated
+
+Sunrays
+
+11.1.3 Making sense of our observations The shape of the Moon itself does not change, only what we see changes. You may recall learning earlier that the Moon does not emit light of its own, but shines because it reflects sunlight that falls on it. The half of the Moon that faces the Sun receives sunlight and becomes illuminated (Fig. 11.3). The other half facing away from the Sun does not receive sunlight and remains non-illuminated.
+
+Fig. 11.3: Sunlight falling on
+
+the Moon
+
+The Moon revolves around the Earth and, only one half of the Moon always faces the Earth. However, the portion of the Moon facing the Earth is not always its illuminated part. We can only see the illuminated portion of the Moon from Earth. Sometimes, the entire illuminated portion of the Moon faces the Earth, and at other times only a part of it. At such times the illuminated portion of the Moon that we see is not a full circle. On New Moon day, we do not see the illuminated portion of the Moon at all, as only the non-illuminated portion of the Moon faces the Earth. Therefore, the Moon appears different
+
+on different days.
+
+Let us do an activity to understand how the illuminated portion of the Moon, as seen by us, changes when its position changes with respect to the Sun.
+
+Why does the illuminated portion of the Moon seen from the Earth decrease when it appears closer to the Sun?
+
+Activity 11.2: Let us explore
+
+• Take a small soft ball and insert a stick into it (Fig. 11.4a).
+
+This represents the Moon.
+
+• Go to a dark open place (at night), and ask a teacher or
+
+guardian to shine a torchlight towards you from about 3 m to represent light coming from the Sun or stand near an electric lamp. Your head represents the Earth.
+
+• Now hold the ball at arm’s length in one hand such that it is
+
+slightly above your head as shown in Fig. 11.4b. Keep the ball at position E towards the direction of the lamp. Does the portion of the ball facing you appear to be illuminated or not?
+
+Fig. 11.4: (a) Ball with stick
+
+• Turn around slowly, in the anti-clockwise direction, with your
+
+arm outstretched as shown in Fig. 11.4b and keep looking at the ball. Does the shape of the illuminated portion change? Is the line separating the illuminated and non-illuminated portions of the ball curved?
+
+• Was your observation similar to the changing shape of the
+
+illuminated portion of ball shown in Fig. 11.4c? The shape of the illuminated portion of the ball, as seen by you, changes depending on where the ball is with respect to the lamp.
+
+G
+
+F
+
+H
+
+A
+
+E
+
+D
+
+C
+
+B
+
+(b)
+
+A
+
+B
+
+C
+
+D
+
+E
+
+F
+
+G
+
+H
+
+A
+
+(c)
+
+Fig. 11.4: (b) A student using a ball and stick to understand phases of
+
+Moon; (c) The ball as seen by the student at different positions When the ball is held opposite to the direction of the lamp (at A), you are facing the entire illuminated portion of the ball, just like the full Moon day. On the other hand, when the ball is held towards the direction of the lamp (at E), you are facing the non-illuminated portion of the ball, and cannot see the illuminated portion of the ball at all. This is similar to the new Moon day. Notice how in other cases, the line separating the illuminated and non-illuminated portions of the ball appears curved (Fig. 11.4c), similar to the shape of the illuminated portion of the Moon viewed from the Earth on other days.
+
+Using our observations of Activity 11.2, let us now try to understand the phases of Moon. Fig. 11.5a shows the positions of the Moon corresponding to the different positions of the ball in Fig. 11.4b. Also shown are the Earth and the sunrays. As shown in Fig. 11.5a, the Moon revolves once around the Earth from position A to H and back to position A in about one month. The side of the Moon that faces the Sun is illuminated.
+
+The portion of the Moon that faces the Earth is marked by the orange dashed lines and arrows. The illuminated portion of only this part of the Moon can be seen from the Earth. At positions B and H, more than half of the illuminated portion, called the gibbous phase, can be seen. At positions D and F, less than half of the illuminated portion, called the crescent phase, can be seen. The change in the fraction of the illuminated portion of the Moon seen from Earth causes phases of the Moon.
+
+The phases that will be seen from the Earth at different positions of the Moon are shown in Fig. 11.5b. From A to C to E, we see the waning phase, and from E to G and back to A, we see the waxing phase. Since the rotation period of the Earth of one day is much smaller compared to the revolution period of the Moon which is nearly a month, on a given day, people on different parts of the Earth see nearly the same phase.
+
+As can be seen in Fig. 11.5a, on the New Moon day, the Moon appears closest to the Sun and it appears farthest on the Full Moon day. Is this not what we also observed in Activity 11.1?
+
+Half of the illuminated portion of Moon can be seen
+
+G
+
+Less than half of the
+
+More than half of the
+
+Day 22
+
+F
+
+illuminated portion of Moon can be seen
+
+H
+
+illuminated portion of Moon can be seen
+
+Day 18
+
+Day 26
+
+(Crescent phase)
+
+(Gibbous phase)
+
+Illuminated
+
+Entire illuminated
+
+Day 15
+
+Day 1
+
+E
+
+portion of Moon
+
+A
+
+portion of Moon cannot
+
+(a)
+
+can be seen (Full Moon)
+
+SUNRAYS
+
+be seen (New Moon)
+
+Day 12
+
+Day 4
+
+Day 8
+
+Less than half of the
+
+More than half of the
+
+B
+
+D
+
+illuminated portion of Moon can be seen
+
+(Crescent phase)
+
+(Gibbous phase)
+
+C
+
+Half of the illuminated portion of Moon can be seen
+
+A B C D E F G H A
+
+(b)
+
+Fig. 11.5: (a) The Moon at different positions in its orbit around the Earth; (b) The corresponding phases of the Moon as seen from the Earth. (The sizes and the distances are not to scale in this figure.)
+
+Moon’s orbit around
+
+(b) In the same time of one day, the Moon would revolve a bit further in its
+
+the Earth
+
+orbit around the Earth.
+
+(a) Today the Moon is
+
+overhead. The Earth will rotate once in one
+
+(c) So I will find the Moon overhead about 50 minutes later than today,
+
+day, and I will be back
+
+at this same position.
+
+when the Earth has rotated some more.
+
+Fig. 11.6: The Moon takes about 50 minutes longer to
+
+In Activity 11.1, we also observed that the position of the Moon at sunrise (or sunset) appeared to be shifted on successive days. This happens because, as shown in Fig. 11.6, the Moon moves ahead in its orbit while the Earth completes one rotation about its axis in 24 hours. Earth needs to rotate some more for the Moon to appear in nearly the same spot in the sky.
+
+come back to nearly the same position in the sky.
+
+A step further
+
+The Moon phases do not happen due to Earth’s shadow. It is an incorrect explanation for the Moon’s phases that Earth’s shadow falls on it. As we have learnt, the phases of the Moon occur due to the relative change in orientation of the Sun, Moon, and Earth as the Moon revolves around the Earth. The Earth’s shadow on the Moon causes a lunar eclipse, not the Moon’s phases as we learnt earlier (in chapter ‘Earth, Moon and the Sun’ in the Curiosity, Grade 7).
+
+Lunar eclipses can only happen on a full Moon day and solar eclipses can happen only on a new Moon day. But they do not occur every month because of the small tilt of the Moon’s orbit with respect to the Earth’s orbit around the Sun. Position favourable for
+
+eclipses Earth’s orbit
+
+Lunar eclipse at
+
+around Sun Moon’s slightly
+
+this position No eclipses on these full
+
+tilted orbit around Earth
+
+and new Moon days Solar eclipse
+
+Sun
+
+at these positions
+
+No eclipses on these full
+
+and new Moon days
+
+Position favourable for
+
+Lunar eclipse at
+
+eclipses
+
+this position
+
+So, changing phases of the Moon is a natural periodic event, with a cycle of almost a month, which can also be used for time keeping.
+
+Yes, along with the natural periodic events of day and night and the changing seasons about which we learnt earlier. But how are these periodic events used for keeping time?
+
+11.2 How Did Calendars Come into Existence?
+
+We have learnt earlier that when viewed from the Earth, the Sun appears to rise in the eastward direction, set in the westward direction every day, and rise again the next day. This apparent periodic motion of the Sun seen by us is primarily due to the rotation of the Earth around its own axis. This natural cycle of the Sun due to the rotation of the Earth, is the foundation of the day, a unit to measure time.
+
+The average time that the Sun takes to go from its highest position in the sky on one day to the highest position in the sky the next day, is 24 hours, and is called the mean solar day. The highest position of the Sun in the sky can be found by measuring the length of the shadows cast by an object during the day. The shadow is shortest when the Sun is at the highest point in the sky.
+
+Activity 11.3: Let us measure a day!
+
+• Find a small flat area in a ground which receives sunlight
+
+during the day. Fix a 1 m stick vertically in it as shown in Fig. 11.7.
+
+• Start observing at 11:00 a.m. Every
+
+minute, mark a dot on the ground at the tip of the stick’s shadow. Keep marking dots until around 1:10 p.m.
+
+• Identify when the shadow was
+
+shortest and find out its time by counting the number of dots. Record this time in Table 11.2. Repeat this exercise for the next few days.
+
+• Find the duration of the solar day
+
+Fig. 11.7: Observing the length of the shadow
+
+by finding a difference in time on two consecutive days as shown in Table 11.2.
+
+at different times during the day.
+
+Table 11.2: Finding the duration of a solar day
+
+Date Time of shortest shadow
+
+(hh:mm) Duration of day (hh:mm)
+
+22 March 2025 12:20 
+——
+
+23 March 2025 12:20 24:00
+
+24 March 2025 12:19 23:59
+
+Cycle of Moon’s phases
+
+Cycle of Earth’s seasons
+
+due to its revolution
+
+around the Earth
+
+due to its revolution around the Sun define
+
+defines a month
+
+a year
+
+Find the average duration of the day. Is it nearly equal to 24 hours? The phases of the Moon give us another natural cycle with a duration that is longer than a day. The Moon takes about 29.5 days (nearly a month) to cycle through all its phases. The cycle of the phases of the Moon is the basis for a month, another unit to measure time (Fig. 11.8).
+
+Cycle of Sun returning
+
+to its highest position in the sky due to Earth’s
+
+rotation defines a day
+
+Fig. 11.8: The Earth goes around the Sun, and the Moon revolves around the Earth in regular
+
+intervals of time.
+
+The next larger unit to measure time is related to the natural cycle of seasons. Do you remember learning earlier that the Earth revolves around the Sun and takes nearly 365 and a quarter days to complete one revolution around the Sun? The Earth undergoes one cycle of seasons during this time, which can be used to define a solar year (Fig. 11.8).
+
+11.2.1 Lunar calendars In ancient times, people had noticed that during one cycle of seasons, one can fit nearly 12 cycles of the phases of the moon, that is, 12 lunar months. This is how lunar calendars came into being, with the day as the shortest unit, a month of nearly 29.5 days, and a lunar year consisting of 12 lunar months. The phases of the Moon thus gave an easy and a perfectly sound way to track the passage of time.
+
+However, in a lunar calendar the seasons do not remain synchronised to the same lunar months in successive lunar years. The reason is that the seasons repeat in approximately 365 days while the lunar year is 354 days long.
+
+11.2.2 Solar calendars It was important to know the arrival of seasons for agricultural purposes. This need for a year to synchronise with seasons led to the creation of solar calendars. The Gregorian calendar, widely used today, is a solar calendar. The months in solar calendars are adjusted to add up to 365 days. That is why in Gregorian calendars, some months have 30 days, others 31, and February has only 28 days. On top of the 365 days, the Earth takes nearly an extra quarter of a day to complete one revolution around the Sun. These extra hours add up to approximately one day every four years. To adjust for this, solar calendars add an extra day every four years using the concept of a leap year. In the Gregorian calendar, if a year is divisible by four, then an extra leap day is added. So in a leap year, February has 29 days, which keeps the calendar well synchronised with the seasons.
+
+A step further
+
+The Earth takes slightly less time than 365 and a quarter day to go from one spring equinox to the next spring equinox. Adding a day every four years helps to synchronise with the seasons, but it actually adds a little too much over time. To fix this, leap years are skipped every 100 years—like in 1700, 1800, and 1900. But skipping all of them would make the calendar lag slightly behind. So every 400 years, a leap year is again added back—like in 1600 and 2000. These careful corrections keep the calendar closely matched with the seasons over long periods of time!
+
+A step further
+
+As we learnt earlier, seasons are caused by the Earth’s revolution around the Sun and its movement from the spring equinox to winter equinox and back. The time between successive spring equinoxes is called the tropical year. Gregorian calendar is based upon tropical year.
+
+We have also learnt earlier that the stars that rise at sunset change throughout the year due to the Earth’s revolution around the Sun. The time duration required for the same stars to rise again at sunset is called the sidereal year, and it can also be used to define a solar calendar. The sidereal year is longer than the tropical year by a mere 20 minutes, and so it takes a long time before the differences between the two calendars become noticeable. In modern times, astronomers use the sidereal year to keep track of the Earth’s position in its orbit around the Sun.
+
+Our scientific heritage
+
+Path of Sun on
+
+June solstice
+
+Sun rises exactly in the East and sets exactly in
+
+the west on equinoxes
+
+For thousands of years, people — including those in India — have been observing the sky and developing calendars. People in ancient times did not know that Earth revolves around the Sun, and lacked modern instruments. Yet through years of careful sky observations, they noticed patterns and cycles in natural events. Hence, they could determine that the length of the year was approximately 365 days allowing them to create calendars.
+
+Path of Sun on December
+
+solstice
+
+West
+
+South North
+
+East
+
+Uttarayan from December to June
+
+For example, careful observation reveals that the Sun does not always rise exactly in the East. In summer, it rises a little northward of East and in winter a little southward of East. These extremes happen on the solstices, around June 21 and December 21 each year. The Sun’s apparent northward movement from December to June is called Uttarayan, and its apparent southward movement from June to December is Dakshinayan. This cycle repeats every year and is closely linked to the changing seasons. The Taittirīya Saṁhitā records it in the verse 6.5.3:
+
+तस्‍‍माादाादि�त्‍‍य: षण्माासाा दक्षिि±णेेनैैति� षडुुत्तरेेण । “Thus the Sun moves southwards for six months and northwards for six months.”
+
+In the past, the equinoxes and solstices were also tracked by identifying the stars that rose at sunset. Ancient Indian texts like the Surya Siddhanta noted that the pattern of stars, Capricorn (called Makar in India), would be in the background of the Sun around the winter solstice during those ancient times.
+
+भाानोर्मकरसंंस््‍ङ््क्राान्तेःः3 षण्माासाा उत्तरायणम्् । कर्क्‍का�ा�देेस्तुु तथैैव स्याात्् षण्माासाा दक्षिि±णायनम्् ।।9।। Translation: From the moment of the Sun’s entrance into the constellation of Capricorn, six months make up its northward progress (Uttarayana), so likewise from the moment of entrance into the constellation of Cancer, six months are its southward progress (Dakshinayana).
+
+Over the years, different types of calendars have evolved based on specific needs. A number of these calendars are used in different parts of India to track time and celebrating festivals.
+
+11.2.3 Luni-solar calendars There is another kind of calendar which primarily uses the Moon’s phases for counting days and months but also make adjustments to stay in sync with the cycle of seasons.
+
+The 12 lunar months add up to 354 days and thus fall short by nearly 11 days compared to the solar year. Thus every 2–3 years,
+
+the accumulated difference becomes close to a full month. Therefore, every few years, an extra month (called Adhika Maasa or intercalary month) is added to the year in some calendars. This keeps the solar year and the lunar cycle in step. Such calendars are called luni-solar calendars. They combine elements from both the solar and the lunar calendars and are used in many parts of India.
+
+Ever heard of ...
+
+You may have heard of the names (or similar sounding names) of the months in various Indian luni-solar calendars — Chaitra, Vaisakha, Jyeshtha, Ashadha, Shravana, Bhadrapada, Ashwin, Kartika, Margashirsha (or Agrahayan), Pausha, Magha, and Phalguna. In some communities, the new month starts on the first day after the new Moon and ends on the day of the new Moon. Such calendars are called Amant. In others, the start of the new month corresponds to the day after the full Moon, and the month ends on the full Moon. Such calendars are called Purnimant.
+
+11.2.4 The Indian National Calendar A national calendar by the Government of India is used along with Gregorian calendar for multiple official purposes.
+
+Shaka Era 1947
+
+Chaitra
+
+(March 22 - April 20, 2025)
+
+Vaisakha (April 21 - May 21, 2025) Jyestha (May 22 - June 21, 2025)
+
+MON TUE WED THU FRI SAT SUN MON TUE WED THU FRI SAT SUN MON TUE WED THU FRI SAT SUN
+
+MAR
+
+1
+
+3
+
+MAY
+
+APR
+
+2 1 3 4 5 6
+
+22
+
+24
+
+22 23 1 2
+
+22 21 23 24 25 26
+
+2 4 3 5 6 7 8
+
+10
+
+4 6 5 7 8 9
+
+7 9 8 10 11 12 13
+
+MAY
+
+23 25 24 26 27 28 29
+
+25 27 26 28 29 30 31
+
+27 29 28 30 1 2 3
+
+9 11 10 12 13 14 15
+
+APR
+
+JUN
+
+11 13 12 14 15 16 17
+
+14 16 15 17 18 19 20
+
+30 1 31 2 3 4 5
+
+1 3 2 4 5 6 7
+
+4 6 5 7 8 9 10
+
+16 18 17 19 20 21 22
+
+18 20 19 21 22 23 24
+
+21 23 22 24
+
+6 7 8 9 10 11 12
+
+8 10 9 11 12 13 14
+
+11 13 12 14 15 16 17
+
+23 25 24 26 27 28 29
+
+25 27 26 28 29 30 31
+
+13 14 15 16 17 18 19
+
+20 19 21 30 29 31 25 26 27
+
+15 17 16 18 19 20 21
+
+28 18
+
+30 20
+
+Fig. 11.9: Indian National Calendar
+
+It is a solar calendar (Fig. 11.9) consisting of 365 days in a year. The year begins on 22 March, which is the day after the spring equinox. Unlike the Gregorian calendar, months in the Indian National Calendar have either 30 or 31 days. The names of these months were taken from traditional Indian calendars. In a regular year, the second to sixth months have 31 days and the rest have 30 days. The leap years are matched to the Gregorian calendar by adding a day to Chaitra, the first month of the year. In such years, the new year begins on 21 March of the Gregorian calendar.
+
+Ever heard of ...
+
+In 1952, the Government of India set up a Calendar Reform Committee (CRC) to examine all existing calendars which were being followed in the country at that time and to recommend an accurate and uniform calendar for the whole of India. The CRC recommended ‘Unified National Calendar’ was adopted for use with effect from 21 March 1956 CE, that is, 1 Chaitra 1878 Saka. The Indian National Calendar follows the general principles as that of the Surya Siddhanta.
+
+Be a scientist
+
+Meghnad Saha (1893 –1956) Meghnad Saha was a pioneering astrophysicist of India who studied stars and their temperatures and developed a mathematical equation, famously known as the Saha equation. The Saha Institute of Nuclear Physics, in Kolkata, is named after him. He was also the chairperson of the Calendar Reform Committee.
+
+11.3 Are Festivals Related to Astronomical Phenomena?
+
+Why do most Indian festivals fall on different dates every year?
+
+Many Indian festivals are tied to the phases of the Moon and hence are based on either lunar or luni-solar calendars. For instance, Diwali falls on the new Moon of the month of Kartika, Holi on the full Moon of Phalguna, Buddha Purnima on the full Moon of Vaisakha, Eid-ul-Fitr is celebrated after sighting the crescent Moon at the end of the month of Ramazan, while Dussehra is celebrated on the tenth day in the month of Ashwina. Hence, they occur on different dates in the Gregorian calendar in successive years.
+
+For festivals based on luni-solar calendars, the Gregorian calendar dates can shift, but this shift is typically less than a month. This is because the luni-solar calendars add the intercalary month every few years which correct for the difference between the lunar and the solar year. In contrast, purely lunar calendars do not account for this difference. Any festival celebrated according to the phases of the Moon, such as Eid-ul-fitr, therefore can occur in different months of the Gregorian calendar year after year.
+
+A step further
+
+A few festivals in India, like Makar Sankranti, Pongal, Bihu, Vaisakhi, Poila Baisakh, and Puthandu, follow a solar sidereal calendar. These festivals happen on almost the same date every year in the Gregorian calendar which is based on the tropical year.
+
+A long time ago, these festivals were tied to either a solstice or an equinox. Due to the small difference in the sidereal and tropical years, the dates of these festivals slowly shift away from the solstices/equinoxes. This shift is due to slow wobble of the Earth’s axis, similar to the movement of the axis of a wobbling top.
+
+This causes the dates of festivals based on the sidereal calendar to move ahead in tropical calendar. For example, Makar Sankranti moves ahead by one day every 71 years.
+
+Ever heard of ...
+
+The dates of many Indian festivals are based on the exact lunar phase at sunrise. As sunrise occurs earlier in Eastern India and later in Western India, these dates can also shift by a day between these regions even in the same year. To maintain uniformity throughout the country, the Positional Astronomy Center of the Government of India annually publishes the Rashtriya panchang, a detailed calculation of the positions of celestial objects, such as the Moon and the Sun for a central location in India. Based on these calculations, it provides an advance intimation on dates of festivals to Government of India for holiday declaration.
+
+Ever heard of ...
+
+The Moon and moonlight have inspired ragas in Indian classical music. Chandrakauns, Chandranandan, and Shubhapantuvarali (which also means “auspicious moon”) are a few ragas that display the moon’s imagery in their names and melodic expressions. Similarly, mudras (hand gestures), for example, Chandrakala, and Ardhachandran relating to the Moon can be found in Indian classical dance Bharatanatyam. The same is true for other dance forms — Kathak, Odissi, and Kuchipudi. Even the traditional painting styles: Madhubani, Warli, and other forms of art, such as sculpture and pottery among Saura, Gond and other tribes invoke depictions of the Moon and the Sun prominently implying their significance in daily life. Dhokra Brass
+
+sculpture Warli painting
+
+11.4 Why Do We Launch Artificial Satellites in Space?
+
+When I look at the night sky in early evening, I see some moving stars. What are they? Is their motion also periodic?
+
+The Moon is Earth’s natural satellite, orbiting our planet. Besides the Moon, man-made satellites sent by various countries also orbit the Earth. These artificial satellites appear as tiny specks moving in the night sky. Most orbit about 800 km above Earth’s surface and take roughly 100 minutes to complete one orbit.
+
+These satellites help us in many ways like communication, navigation, weather monitoring, disaster management, and scientific research. The Indian Space Research Organisation (ISRO) has launched many satellites that support these activities.
+
+Our scientific heritage
+
+The Cartosat series of satellites, launched by ISRO, capture high-quality images of the Earth to improve maps, plan cities, and handle natural disasters in India. One such mapping platform, Bhuvan, uses these images to show terrain, soil, land use, vegetation, and more.
+
+AstroSat, another ISRO mission, makes scientific observations of stars and other celestial objects. India’s other space missions include Chandrayaan 1, 2, and 3 to the Moon; Aditya L1 to study the Sun; and Mangalyaan to Mars. ISRO also lets Indian students build and launch small satellites, such as AzaadiSat, InspireSat-1, and Jugnu.
+
+AstroSat Cartosat
+
+Activity 11.4: Let us identify
+
+• Spotting an artificial satellite is a night sky watching activity
+
+like we have done previously. Just before sunrise or after sunset, go to a location, accompanied by an adult, that has a clear view of the sky, without any obstruction of trees or tall buildings.
+
+• To identify satellites in the sky, look for any moving object
+
+in the sky that appears as a point of light with steady or flickering brightness and is moving very fast across the sky. You can see them with the naked eye or with binoculars.
+
+• You may use mobile apps or websites that provide details
+
+of satellites visible in your location and when they will be passing above you in the sky.
+
+A step further
+
+A lot of artificial satellites are being sent up in space by many countries. After their useful life, many of them and their rocket parts become space junk or space debris. This debris crowds space, and could collide with working satellites. While small debris burns up in the atmosphere when it falls towards the Earth, the larger pieces can crash on ground. Countries are now working together to remove this dangerous debris.
+
+Be a scientist
+
+Vikram Ambalal Sarabhai (1919 –1971) Vikram Sarabhai, a researcher in space science and nuclear physics is known as the Father of the Indian Space programme. He pioneered the effort to launch the first artificial satellites. The Vikram Sarabhai Space Centre (VSSC), located in Thiruvananthapuram, the ISRO centre that develops rockets and launch vehicle technology, is named after him.
+
+Snapshots
+
+The illuminated part of the Moon changes its shape from day to day through phases, like the new Moon, crescent, and full Moon.
+
+The phases of the Moon happen because we see different parts of the illuminated portion of the Moon as it moves around the Earth.
+
+A full cycle of phases of the Moon takes about a month.
+
+The various cycles observed in nature resulted in the creation of calendars.
+
+Lunar calendars follow the Moon’s cycle, while solar calendars follow the cycle of seasons, which depend upon the position of the Earth in its orbit around the Sun. Luni-solar calendars adapt to both the cycles.
+
+Artificial satellites are human-made which are launched from the Earth. They provide important information for our well-being and space-science studies.
+
+Keep the curiosity alive
+
+1. State whether the following statements are True or False. (i) We can only see that part of the Moon which reflects
+
+sunlight towards us. (ii) The shadow of Earth blocks sunlight from reaching the
+
+Moon causing phases. (iii) Calendars are based on various astronomical cycles
+
+which repeat in a predictable manner. (iv) The Moon can only be seen at night.
+
+2. Amol was born on 6th of May on a full Moon day. Does his birthday fall on the full Moon day every year? Explain your answer.
+
+3. Name two things that are incorrect in Fig. 11.10.
+
+Fig. 11.10 
+4. Look at the pictures of the Moon in Fig. 11.11, and answer the following questions.
+
+A B C D E F
+
+Fig. 11.11
+
+(i) Write the correct panel number corresponding to the
+
+phases of the Moon shown in the pictures above.
+
+Picture label (e.g. A, B, C, etc.) Phase of Moon
+
+Three days after New Moon
+
+Full Moon
+
+Three days after Full Moon
+
+A week after Full Moon
+
+Day of New Moon
+
+(ii) List the picture labels of the phases of the Moon that
+
+are never seen from Earth. Hint: You can use your observations from Activity 11.1 or Fig. 11.2 as reference.
+
+5. Malini saw the Moon overhead in the sky at sunset. (i) Draw the phase of the Moon that Malini saw. (ii) Is the Moon in the waxing or the waning phase?
+
+6. Ravi said, “I saw a crescent Moon, and it was rising in the East, when the Sun was setting.” Kaushalya said, “Once I saw the gibbous Moon during the afternoon in the East.” Who out of the two is telling the truth?
+
+7. Scientific studies show that the Moon is getting farther away from the Earth and slower in its revolution. Will luni-solar calendars need an intercalary month more often or less often?
+
+8. A total of 37 full Moons happen during 3 years in a solar calendar. Show that at least two of the 37 full moons must happen during the same month of the solar calendar.
+
+9. On a particular night, Vaishali saw the Moon in the sky from sunset to sunrise. What phase of the Moon would she have noticed?
+
+10. If we stopped having leap years, in approximately how many years would the Indian Independence day happen in winter?
+
+11. What is the purpose of launching artificial satellites?
+
+12. On which periodic phenomenon are the following measures of time based: (i) day (ii) month (iii) year?
+
+Discover, design, and debate
+
+• The Moon’s crescent always faces towards the Sun (Fig. 11.12).
+
+On days when you see the crescent Moon, point your finger towards the Sun, and slowly move it across the sky towards the Moon taking as short a path as you can. Note how your finger always crosses the illuminated part of the Moon first and clearly shows us that we see sunlight reflected off the Moon. The line joining the tips of the crescent would correspond to the diameter of the Moon.
+
+• Most of the dates in the Indian National Calendar always
+
+Fig. 11.12
+
+map to the same dates in the Gregorian calendar. Can you find out which ones may differ for certain years?
+
+• Different states in India celebrate the New Year according to
+
+their local cultures. Find out the names of the New Year festival celebrated in any 10 states of India. Also find out whether it is
+
+Prepare some questions based on your
+
+Why not?
+
+Why? When?
+
+Where?
+
+How long?
+
+learnings so far ... ..................................................................................... ..................................................................................... ..................................................................................... ..................................................................................... .....................................................................................
+
+based on the lunar calendar or the solar calendar or the luni- solar calendar.
+
+• Collect Gregorian calendars (the regular calendar you use
+
+every day) for the last five years with the help of your family members or teachers or the internet. For each year, look for the dates on which the festivals Eid-ul-Fitr and Diwali were celebrated and list them year wise in a tabular form. Do you notice that the date of Eid-ul-Fitr moves earlier each year — by about 11 days? If you have a corresponding lunar calendar at home or on the internet, check that the month and the day for Eid-ul-Fitr according to the lunar calendar remains the same. Does Diwali follow the same steady pattern, or are there some sudden jumps? Based on your chart, try to guess which year might have included an intercalary month (Adhikamaasa). Obtain a luni-solar calendar and confirm if there is an intercalary month between Diwali in the previous year and that year.
+
+Society Science
+
+• Every morning on your way to school, notice the direction in
+
+Inter- disciplinary
+
+Projects
+
+which the Sun rises. Decide on a spot and look towards east, with trees, poles, or buildings acting as markers. Sketch the eastern horizon in your notebook. For the next one year, at the start of each month, stand at the same spot and mark the Sun’s position on your sketch. Label it with the name of the month. At the end of the year analyse your sketch. Do you find that the positions of sunrise shift in particular direction? Can you identify it with the Uttarayaan and Dakshinayaan that our ancestors noticed? (Refer the ‘A step further’ box on page 181).
+
+A step further
+
+If you visit a place near the sea, you may notice that water levels rise and fall. The rise and fall of water levels are called tides. Tides also follow a regular pattern. If there’s a low or a high tide at a certain time on one day, a similar tide will come about 50 minutes later the next day. We also learnt that the Moon also rises about 50 minutes later each day. Careful observations show that tide levels are closely related to the Moon’s position and phase.
+
+I think ...
+
+Shouldn’t it
+
+Reflect on the questions framed by your
+
+be ...
+
+But we thought ... Maybe ...
+
+friends and try to answer ... ..................................................................................... ..................................................................................... ..................................................................................... ..................................................................................... .....................................................................................

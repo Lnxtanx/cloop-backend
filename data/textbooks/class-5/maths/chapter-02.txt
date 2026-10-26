@@ -1,0 +1,680 @@
+# CLASS-5 - MATHS - CHAPTER 02
+# Source: eemm102.pdf
+
+Chapter Chapter
+
+Fractions
+
+2
+
+Tamanna is a student of Grade 5. She has two chocolates of different sizes. She says that 1
+
+3 of one of her chocolates is bigger than 1 2 of the
+
+other chocolate. Is that correct? Explain why this is so.
+
+When can we say that 1
+
+2 of something
+
+is greater than 1
+
+Identify 1
+
+3 of something?
+
+2 of the chocolate
+
+Identify 1
+
+3 of the chocolate
+
+To compare two fractions of two wholes, the wholes from which the fractions are derived must be the same.
+
+Playing with a Grid
+
+A B C
+
+Shade 1
+
+8 of Grid A in red.
+
+Shade 1
+
+6 of Grid B in blue.
+
+Shade 1
+
+12 of Grid C in yellow.
+
+Do you see 1
+
+3 in any of the grids? Mark it.
+
+Is 1
+
+3 equal to 2 6 ? Let us find out.
+
+Look at the picture and identify the fractions.
+
+Are there two different ways to write the fraction represented by the shaded part? ___________________
+
+Do you see that 1
+
+3 = 2 6 ? Yes. These are called ‘equivalent fractions’.
+
+Let us see how equivalent fractions can be generated.
+
+Fun with Fraction Kit
+
+Gurpreet is playing with his fraction kit (a kit is given at the end of the
+
+textbook). Do you remember how to make a whole with pieces of the same
+
+size? How many 1
+
+5 pieces will you need to make a whole?
+
+He makes a whole using two different fraction pieces. The whole looks like
+
+the following.
+
+One piece of 1
+
+2 and two pieces of 1 4 make a whole.
+
+1 2
+
+What is the relation between 1
+
+2 and 1 4 ? Discuss
+
+in class.
+
+1 4 1 4
+
+1 2 = 2 4 ( 1 2 is equivalent to 2 4 ).
+
+When a 1
+
+2 piece is broken into 2 equal parts, each part is a 1 4 piece.
+
+2 pieces of 1 4 are equal to 1 2 .
+
+What else is equivalent to 1
+
+2 ?
+
+1 2 = 2 4 = ____ = ____ = ____
+
+Let Us Do
+
+1. In groups of 3 or 4, find different ways of making a whole with different fraction pieces from your kit. Write the equivalent fractions for the following that you may find in the process.
+
+(a) 1 3 = = = (b) 1 4 = = =
+
+(c) 1 5 = = = (d) 1 6 = = =
+
+Do you see how to generate equivalent fractions for any given fraction? Discuss in class. 
+2. Find the following using your kit. You can also shade and check by shading the following. The first one is partially done for you.
+
+A. How many 1
+
+6 s make 1 3 ?
+
+The shaded part is 1
+
+3 . Identify
+
+1 6 in the same whole and find
+
+how many 1
+
+6 s fit into 1 3 ?
+
+B. How many 1
+
+8 s make
+
+(a) 1
+
+4 ? (b) 1
+
+2 ?
+
+C. How many 1
+
+12s make
+
+(a) 1
+
+2 (b) 1 3 (c) 1 4 (d) 1 6 ?
+
+3. Do as instructed using your fraction kit.
+
+Make a whole using only 1
+
+6 and 1 12 pieces.
+
+Make a whole using 1
+
+12, 1 4 , and 1 2 pieces.
+
+Make a whole using any five pieces of the same size.
+
+Make a whole using any seven pieces.
+
+Play in a group with this kit and find other interesting combinations to make a whole. Write or draw your findings.
+
+Making Equivalent Fractions
+
+Sameer has shaded one-third of the following figures. He draws horizontal lines to divide the shapes into more equal parts.
+
+4 12 1 3 2 6 3 9
+
+He observes an interesting pattern and says that 1
+
+3 , 2 6 , 3 9 , and 4 12 show the same shaded region.
+
+2 6 , 3 9 , and 4 12 are all equivalent to 1 3 . We use the word ‘equivalent’ to
+
+indicate the same part of a whole, with different names.
+
+Divide the wholes given below into more equal parts and find fractions
+
+equivalent to 1
+
+3 . Write them in the boxes below the images.
+
+Do you see any pattern in all the equivalent fractions that you found?
+
+1 3 = 2 6 = 3 9 = 4 12 = ______ = ______ = ______ = 24 = 36
+
+How do you know when a fraction is equivalent to another? Discuss in class.
+
+The below pictures show 2
+
+5 of a whole. Find the different fractions that are
+
+equivalent to 2
+
+5 and write your fractions below each image.
+
+2 5 4 10 4 36 4 36
+
+2 5 = 4 10 = _____ = _____ = 50 = 100
+
+Let Us Do
+
+1. Fill in the blanks with equivalent fractions. There may be more than one answer.
+
+(a) 1 7 = _____ (b) 2 3 = _____
+
+(c) 3 4 = _____ (d) 3 5 = _____
+
+2. Put a tick () against the fractions that are equivalent.
+
+(a) 2 3 and 3 4 (b) 3 5 and 6 10
+
+(c) 4 12 and 2 6 (d) 6 9 and 1 3
+
+3. Fill in the boxes such that the fractions become equivalent.
+
+(a) 2 5 = 10 (b) 3 4 = 16
+
+(c) 4 7 = 8 (d) 5 9 = 25
+
+Comparing Fractions — Same Denominator
+
+Sevi and Shami divided a piece of chikki between themselves. Sevi ate 1
+
+3 and Shami ate the rest, that is, 2
+
+3 . Who ate more?
+
+2 pieces of 1 3 are more than
+
+1 piece of 1 3 . So, Shami ate more.
+
+2 3 > 1 3
+
+Let Us Do
+
+1. Compare the fractions given below using < and > signs.
+
+(a) 1 4 ______ 3 4 (d) 7
+
+8 ______ 3 8
+
+10 ______ 6 10
+
+(b) 3 5 ______ 4 5 (e) 5
+
+6 ______ 1 6
+
+(c) 5 7 ______ 2 7 (f) 2
+
+Comparing Fractions — Same Numerator
+
+I ate 4
+
+I ate 4
+
+5 paratha
+
+6 paratha
+
+yesterday evening.
+
+yesterday evening.
+
+Between Sevi and Shami, can you tell who ate more? Use your fraction kit to find the answer.
+
+Do the following pictures help you reason? Share your thoughts in the class.
+
+1 6
+
+6
+
+1 5
+
+1
+
+1 6 piece is smaller than 1 5
+
+1 5
+
+piece. Therefore, 4
+
+1 6
+
+6 < 4 5 .
+
+1 5
+
+1 5 6 1
+
+Let Us Do
+
+1. Compare the following fractions using < and > signs.
+
+(a) 3 8 ______ 3 7 (b) 4
+
+9 ______ 4 10
+
+(c) 2 7 ______ 2 5 (d) 5
+
+7 ______ 5 6
+
+(e) 6 9 ______ 6 10 (f) 7
+
+9 ______ 7 11
+
+Fractions Greater Than 1
+
+Raman’s father makes nice soft parathas. He cuts the parathas either into halves (2 equal parts) or fourths (4 equal parts) before serving them. He asks his children (Raman and Radhika) each day to find out the number of parathas he made.
+
+Maa took 5 pieces of 1
+
+2 paratha. How many parathas did she eat?
+
+1 paratha 1 paratha 1 2 paratha
+
+1
+
+2 + 1 2 + 1 2 + 1 2 + 1 2 1 1
+
+5 pieces of 1 2 paratha = 5 2 parathas
+
+We can also show the same on a number line. Divide the distance between 0 and 1 in two equal parts. Each part is 1
+
+= 2 + 1
+
+2 parathas
+
+= 2 1
+
+2 . 2 halves make 1. Placing 5 halves next to each other takes
+
+2 parathas
+
+us to 5
+
+2 or 2 1 2 .
+
+0 =1 1 2 2 2
+
+0 =1 =2 1 2 2 2 4 2 5 2 3 2
+
+Raman’s sister Radhika took 6 pieces of 1
+
+2 paratha. How many parathas did she eat?
+
+0 =1 =2 1 2 2 2 3 2 4 2 5 2 6 2
+
+1
+
+2 + 1 2 + 1 2 + 1 2 + 1 2 + 1 2 = 6 2 parathas = 3 parathas.
+
+1 1 1
+
+Dadiji had 7 pieces of 1
+
+2 paratha. How many parathas did she eat? Find out.
+
+Raman ate 6 pieces of 1
+
+2 paratha, Dadaji ate 7 pieces of 1 2 paratha and
+
+Baba ate 5 pieces of 1
+
+2 paratha. How many parathas did each of them eat?
+
+Use the number line to find the answer.
+
+Quantity of Raman’s paratha
+
+0 1
+
+Quantity of Dadaji’s paratha
+
+0 1
+
+Quantity of Baba’s paratha
+
+0 1
+
+How many parathas were made on this day? Find out.
+
+Another day, Raman’s father cut all the parathas in 1
+
+4 . Dadaji took 9 pieces
+
+of 1
+
+4 paratha. How many parathas did he eat?
+
+1 paratha 1 paratha 1 4 paratha
+
+1 4 + 1 4 + 1 4 + 1 4 + 1 4 + 1 4 + 1 4 + 1 4 + 1 4 = 9 4 parathas =
+
+1 1
+
+2 + 1 4 parathas
+
+= 2 1
+
+4 parathas
+
+We can also show the same on a number line. Divide the distance between 0 and 1 into four equal parts. Each part is 1
+
+0 =1 1 4 2 4 3 4 4 4
+
+4 . 4 one-fourths make 1. Placing 9 one-fourths next to each other takes us to 9
+
+4 or 2 1 4 .
+
+0 =1 =2 1 4 2 4 3 4 4 4 5 4 6 4 7 4 8 4 9 4
+
+Raman ate 7 pieces of 1
+
+4 , Radhika ate 6 pieces of 1 4 , Maa ate 8 pieces of 1 4 , Dadiji ate 10 pieces of 1 4 , and Baba ate 12 pieces of 1 4 paratha. Use a
+
+number line to find out how many parathas were eaten by each of them.
+
+Quantity of Raman’s paratha
+
+0 1
+
+Quantity of Radhika’s paratha
+
+0 1
+
+Quantity of Maa’s paratha
+
+0 1
+
+Quantity of Dadiji’s paratha
+
+0 1
+
+Quantity of Baba’s paratha
+
+0 1
+
+How many parathas were made on this day? Find out.
+
+Raman’s family of 6 members ordered 2 pizzas and cut each pizza into 3 equal slices so that each family member had one slice. Dadiji and Dadaji gave their slices to Raman, Maa, and Baba gave theirs to Radhika. How much pizza do each of them have after this?
+
+1 3 + 1 3 + 1 3 = 3 3 = 1
+
+Raman’s slice Raman’s total share Raman’s total share — whole pizza
+
+0 =1 1 3 2 3 3 3
+
+Raman could eat only 2 slices of pizza. So, he gave 1 to Radhika. How much pizza does Radhika have now?
+
+Radhika’s slice Radhika’s total share
+
+1 3 + 1 3 + 1 3 + 1 3   =  4 3 = 1+ 1 3 = 1 1 3
+
+1
+
+0 =1 1 3 2 3 3 3 4 3
+
+Let Us Do
+
+1. Use parathas and number lines to show the following fractions in your notebook.
+
+4 and 5 4 (c) 4
+
+(a) 2 3 and 5 3 (b) 3
+
+8 and 9 8 
+2. Circle the fractions that are greater than one (whole). How do you know? Discuss your reasoning in the class.
+
+3 9
+
+9 4 9 4
+
+7 11
+
+4 9
+
+7 9 2 5
+
+5 7
+
+7 3
+
+12 5
+
+5 4 2 3
+
+13 11 12 8
+
+Comparing Fractions With Reference to 1 (a whole)
+
+Let us compare some more fractions. Between Sevi and Shami can you tell
+
+who ate less?
+
+I ate 8
+
+6 paratha
+
+I ate 7
+
+8 paratha
+
+yesterday evening.
+
+yesterday evening.
+
+1 6
+
+1 6
+
+7
+
+1 6
+
+8 is less than 1 and 8 6 is
+
+1 6
+
+1 6
+
+more than 1. So, 7
+
+8 < 8 6 .
+
+1 6
+
+1 6
+
+1 6
+
+Let Us Do
+
+1. Compare the following fractions using 1 as a reference. Share your reasoning in the class.
+
+(a) 8
+
+7 ______ 9 15 (b) 13
+
+20 ______ 17 15 (c) 7
+
+6 ______ 8 8
+
+(d) 6
+
+6 ______ 19 12 (e) 12
+
+9 ______ 4 5 (f) 15
+
+5 ______ 16 4
+
+Comparing Fractions with Reference to 1
+
+2
+
+1 6
+
+1 8
+
+1 8
+
+1 6
+
+1 8
+
+1 6
+
+1 8
+
+3 6 = 1 2 4 8 = 1 2
+
+Let Us Do
+
+1. Circle the fractions below that are equal to 1 2 .
+
+5 10 8 16
+
+7 14
+
+5 7
+
+2 4 3 5 6 8
+
+6 12
+
+10 20
+
+5 9
+
+2. Some fractions are written in the box below. Circle the fractions that are less than half. How do you know? Discuss your reasoning in the class.
+
+2 4
+
+11 12 3 15
+
+12 15
+
+8 15
+
+3 9
+
+7 11
+
+11 16
+
+4 8
+
+1 3 6 18 15 31
+
+Now let us compare fractions using 1
+
+2 .
+
+I ate 5
+
+I ate 3
+
+8 paratha
+
+6 paratha
+
+yesterday evening
+
+yesterday evening
+
+Who do you think ate more paratha?
+
+1 8
+
+1 6
+
+1 8
+
+3 6 is half. But 5 8
+
+1 6
+
+is more than 1
+
+2 .
+
+1 8
+
+So, 5
+
+8 > 3 6 .
+
+1 6
+
+1 8
+
+1 8
+
+3. Compare the following fractions. Where possible, compare the fractions with 1
+
+2 .
+
+2 9 and 4 7 11 14 and 7 20 5 7 and 3 9 6 7 and 4 10
+
+9 17 and 3 15 7 12 and 3 11 1 3 and 5 9 3 9 and 4 7
+
+Try This
+
+If the length of an ant is 1
+
+4 cm — then what is the total length of 16 such
+
+ants walking in a line? Use the number line given below.
+
+1 4 cm 0
+
+Fun with Relations
+
+If the only brother of your father’s sister had a child, what would be the child’s relationship with you?

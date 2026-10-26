@@ -1,0 +1,1864 @@
+# CLASS-9 - SOCIAL-SCIENCE - CHAPTER 05
+# Source: iest105.pdf
+
+Chapter 5
+
+State and Society up to 1000 CE
+
+The Big Questions
+
+1. How did society and state organise themselves prior to 1000 CE?
+
+2. How did states and societies emerge and spread to different parts of the Indian subcontinent?
+
+3. How did the ideas of dharma and chakravarti samrāṭ help create unity in social values and governance, and promote the idea of the Indian subcontinent as one political entity?
+
+4. How did different social, administrative, and occupational groups take shape over time and come together culturally?
+
+In the previous chapter, we traced the long journey of human development from our early ancestors to the emergence of settled communities and, subsequently, civilisations. We also examined the Sindhu–Sarasvatī civilisation along with other Bronze Age civilisations of the world.
+
+Let us now study the historical developments in the Indian subcontinent, with reference to state and society up to the end of the first millennium CE. By the end of this chapter, we will notice that our understanding of this period is more detailed and qualitatively enriched. This is because, from at least the second millennium BCE, we begin to find literary sources—the Ṛigveda being the earliest—that supplement archaeological evidence and provide insights into the social, political, cultural, and moral dimensions of the past. As a result, we gain insights into the social and political realities, ideas, ideologies, institutions, and practices of this period. We will begin with the social and political landscape described in the literary sources such as kin-based social organisation (jana, kula) and early forms of polity. Thereafter, we will study their development into more complex and bigger, territory-based political units like janapadas and mahājanapadas, and eventually into empires during the time of the Mauryas and the Guptas in northern India, and the Cholas in southern India. Alongside these
+
+changes, we will also examine elements of continuity, particularly the political ideal of a pan-Indian monarch—expressed through ritual practices such as the aśhvamedha yajña and the concept of the chakravarti samrāṭ—as well as the enduring socio-ethical principle of dharma.
+
+Janapadas and mahājanapadas
+
+Early India
+
+Regional empires; Imperial polities of southern India
+
+Kin-based polities of RV*
+
+(Sapta-Sindhu
+
+region)
+
+Emergence of empires (roughly pan-Indian in dimension); Early polities of southern India
+
+(Iron)
+
+500 CE
+
+700 CE
+
+300 CE
+
+PGW**
+
+1000 CE
+
+800 BCE
+
+300 BCE
+
+2000 BCE Neolithic-
+
+1000 BCE Megalithic
+
+PGW (Iron)
+
+Chalcolithic
+
+Iron-NBPW***
+
+*RV: Ṛigveda **PGW: Painted Grey Ware *** NBPW: Northern Black Polished Ware
+
+Fig. 5.1. Broad timeline of early India
+
+This long span of time (refer to Fig 5.1) witnessed the rise and fall of many dynasties and regional powers across the Indian subcontinent, which you have also explored in previous grades. In this chapter, we will gain a deeper understanding of the broad features of the state and society of this period, through representative examples from different regions of the subcontinent.
+
+LET’S EXPLORE
+
+As you read the chapter, follow the timeline at the bottom of each page. Notice the important events, changes, and connections across time. Think about which event interests you the most and why. By the end of the chapter, share one event you would like to explore further and document:
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 – Part 1
+
+1. What happened?
+
+2. When did it happen?
+
+3. Why do you think it matters?
+
+Understanding Early Indian State and Society
+
+Whenever large groups of people live together, certain rules and shared norms evolve over time to maintain order and harmony. These rules and norms bind different social groups into a unified whole, forming a ‘system’ that helps organise and govern people effectively. From early times, Indian society developed several such systems of organisation based on existing customs, traditions, and agreed practices. Before examining these systems, however, let us first explore a fundamental question—what is society?
+
+A society may be understood as a system of social relationships among individuals who share a common territory, culture, and a shared sense of belonging. It consists of structural units such as families or households, institutions such as marriage, and customs that provide a framework for individual and social life. Most importantly, society is primarily regulated by customs and practices rather than formal laws.
+
+And what is a State? As you read in your previous grades under the theme ‘Governance and Democracy’, a ‘State’ refers to an organised political system based on rules and laws. It includes well-defined rights and duties of rulers and subjects, mechanisms of governance, and institutions for enforcing law and order. From a historical perspective, such political systems developed gradually as societies became larger and more complex. By studying early historical sources, historians attempt to understand how forms of governance
+
+Cultural and Religious Developments
+
+600–300 BCE: Life of Gautama Buddha and Mahāvīra
+
+1500–300 BCE: Upaniṣhads
+
+2000–500 BCE: Vedic period
+
+2000 – BCE - 600 590 580 570 560 550 540 530 520 510 500
+
+600–300 BCE: Rise of the mahājanapadas
+
+Political Developments
+
+5 – State and Society up to 1000 CE
+
+and political authority evolved over time. Against this background, let us now explore the evolution of the state and society in India, beginning with the Vedic period.
+
+The Beginnings…
+
+Fig. 5.2. A Ṛigveda manuscript as rendered in Devanagari script
+
+The Vedas constitute the earliest known corpus of Indian literature, especially since the script used by the Harappans of the Sindhu–Sarasvatī civilisation has not yet been deciphered. What we know today as Vedic literature existed in oral form for several centuries before it was written down. We have read in previous grades that the date of composition of the Ṛigveda remains debated among historians, with estimates ranging from the fifth millennium BCE to the second millennium BCE. We have also studied earlier that the Ṛigveda was composed in the northwestern part of the Indian subcontinent, where the Sindhu–Sarasvatī civilisation flourished. Interestingly, both the Ṛigveda and the Sindhu–Sarasvatī civilisation were familiar with copper.
+
+Cultural and Religious Developments
+
+Life of Gautama Buddha and Mahāvīra
+
+1500–300 BCE: Upaniṣhads
+
+490 480 470 460 450 440 430 420 410 400
+
+600–300 BCE: Rise of the mahājanapadas
+
+Understanding Society:
+
+Political Developments
+
+India and Beyond
+
+Grade 9 – Part 1
+
+State and Administration
+
+The Vedic Period
+
+The Four Vedas
+
+Ṛigveda
+
+Sāmaveda
+
+Atharvaveda Yajurveda
+
+Elaborates the
+
+Comprises hymns
+
+performative
+
+The earliest veda, containing some of
+
+Contains a wide range of hymns—some
+
+the world’s oldest-
+
+drawn from the Ṛigveda, carefully
+
+surviving poetic
+
+aspects of yajnās and
+
+arranged for musical recitation.
+
+intended to ward off evil,
+
+the hymns referred to in
+
+Its chanting tradition forms
+
+and others related to the
+
+the Ṛigveda.
+
+compositions. It consists of 1,028 hymns (sūktas), some in praise
+
+It includes explanations
+
+in prose.
+
+an important foundation for the system of the seven
+
+treatment of physical and mental ailments.
+
+of various deities while others reflect on universal thoughts,
+
+such as creation and
+
+svaras (notes) that
+
+lie at the heart of
+
+cessation, birth and
+
+Indian music.
+
+death, and so on.
+
+Each text of the Veda has the following four parts:
+
+samhitā, brāhmaṇa, āranyaka, and upaniṣhad.
+
+Samhitās primarily contain hymns used for invoking the deity and for offering oblations in the yajña. The Brāhmaṇa, composed in prose, offer explanations for ritual performances.
+
+The Āraṇyakas (araṇya = forest) expand on philosophical speculations of sages living in forests. The Upaniṣhads delve into issues like the Self (Ātman) and the Ultimate Universal Being (Brāhmaṇ).
+
+Note that while Brāhman is a concept, Brāhmaṇas are texts and Brāhmaṇas/Brahmins
+
+is a varṇa category.
+
+Cultural and Religious Developments
+
+1500–300 BCE: Upaniṣhads
+
+390 380 370 360 350 340 330 320 310 300
+
+321 BCE: Foundation of Mauryan Empire by Chandragupta Maurya
+
+600–300 BCE: Rise of the mahājanapadas
+
+Political Developments
+
+5 – State and Society up to 1000 CE
+
+Vedic texts are often used by historians and other scholars to learn about the times and geographies in which they were composed. For instance, the earliest sections of the Ṛigveda were composed in the region known as Sapta–Sindhu—including the Indus River, its five tributaries, and the Sarasvatī. Vedic texts are also studied to gain insights into the lives of people, social structures, political systems, economic pursuits, and religious practices. As one of the earliest texts and given the continuity of cultural practices, the Vedic texts are regarded as foundational to Indian culture and traditions.
+
+Political Institutions in the Vedic Period
+
+We have read in previous grades that early Vedic society was organised into janas, or clans. These were groups of people bound by kinship ties. The Ṛigveda alone mentions about thirty janas, five of which—the Yadu, Turvaśha, Puru, Anu, and Druhyu—were collectively known as the pañchajana (‘five peoples’).
+
+LET’S RECALL
+
+In previous grades, you have read that the name ‘Bharata’ first appears in the Ṛigveda. It is used in reference to the ‘Bharata jana’, or the people who were ruled by the family of the Bharatas. What does this tell us about how early communities identified themselves and their rulers?
+
+During this period, the rājā functioned primarily as a clan chief who led the group in warfare and ensured the protection of its members. The Vedic texts, particularly the Ṛigveda and Atharvaveda, refer to three assemblies. These were called the sabhā, samiti, and vidhata.
+
+Cultural and Religious Developments
+
+300 BCE–300 CE: Sangam literature composed
+
+272–232 BCE: Philosophy of Dhamma
+
+290 280 270 260 250 240 230 220 210 200
+
+272–232 BCE: Aśhoka’s reign
+
+300 BCE–300 CE: Early kingdoms of Tamilakam (Cheras, Cholas, Pandyas)
+
+Understanding Society:
+
+Political Developments
+
+India and Beyond
+
+Grade 9 – Part 1
+
+Each of these assemblies played a significant role in early Vedic polity.
+
+Assemblies during Vedic Period
+
+Vidhata
+
+Sabhā
+
+Samiti
+
+A smaller
+
+A larger
+
+A popular
+
+body that primarily served a judicial function.
+
+gathering attended by members of the community (janas).
+
+assembly focused on policy decisions and political affairs.
+
+Functioned as
+
+Composed of
+
+Represented
+
+select elites.
+
+the broader population.
+
+a forum for discussions on warfare and other political matters.
+
+THINK ABOUT IT
+
+In modern democracies, heads of government exercise power but are bound by constitutions and parliaments, which function as representative bodies that check the powers of elected leaders. Do the roles of the rājā and the assemblies in Vedic times suggest a similar principle? Can we say that systems of governance in Indian history—since their early institutionalised forms—were guided by the idea of ensuring people’s participation in the political process?
+
+Cultural and Religious Developments
+
+300 BCE–300 CE: Sangam literature composed
+
+190 180 170 160 150 140 130 120 110 100
+
+185 BCE: Foundation of Śhunga empire by Puṣhyamitra Śhunga
+
+300 BCE–300 CE: Early kingdoms of Tamilakam (Cheras, Cholas, and Pandyas)
+
+Political Developments
+
+5 – State and Society up to 1000 CE
+
+65°E 70°E 75°E 80°E 85°E 90°E 95°E
+
+N
+
+E
+
+W
+
+Gandhara Caves
+
+Burzahom Burzahom
+
+S
+
+R.
+
+lum
+
+Jhe
+
+henab R.
+
+C
+
+avi R.
+
+Beas R.
+
+R
+
+tlej R.
+
+Deodhoora Deodhoora
+
+Su
+
+Pirak
+
+Jakhera
+
+Dadupur
+
+R.
+
+Ganga R.
+
+dus
+
+Lahuradeva
+
+l R
+
+Ahar
+
+In
+
+Brahmaputra R.
+
+mba
+
+Nartiang Nartiang
+
+a
+
+Malhar
+
+Yamuna R.
+
+R
+
+s
+
+Ch
+
+twa R
+
+Ganga R.
+
+na
+
+Nangbah Nangbah
+
+a
+
+Be
+
+B
+
+Birbir Raja-Nal-Ka-Tila
+
+Nagda
+
+Chaibasa
+
+Narmada R
+
+Mahanadi R.
+
+Tapi R.
+
+Naikund
+
+Mahurjhari
+
+Godavar
+
+i R
+
+Krishna R.
+
+BAY OF BENGAL ARABIAN
+
+SEA
+
+gabhadra R
+
+Kadambapur Maski Watgal Hire Benakal
+
+Nagarjunakonda
+
+Tun
+
+Hallur
+
+Brahmagiri
+
+Kaveri R.
+
+35°N 30°N 25°N 20°N 15°N 10°N
+
+35°N 30°N 25°N 20°N 15°N 10°N
+
+LEGEND
+
+Marayur Mangadu Pudukkottai
+
+500 km 250 0 250
+
+Adichanallur
+
+Megalithic Sites Early Finds of Iron
+
+INDIAN OCEAN
+
+65°E 70°E 75°E 80°E 85°E 90°E 95°E
+
+Fig. 5.3. First millennium BCE (iron finds)
+
+LET’S ANALYSE
+
+If you visualise the maps of the Indian subcontinent of the second and first millennium BCE, you will find more settlements concentrated in the Ganga region in the latter map. Archaeological findings from this region during the first millennium BCE provide increasing evidence of the use of iron implements, a wider variety of grain, and the characteristic PGW pottery. Further, in the second half of the first millennium BCE, particularly in the middle Ganga region (from present-day Prayagraj to eastern Bihar), there is evidence of a refined
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 – Part 1
+
+‘deluxe ware’ called NBPW, known for its smooth, glossy black surface. Archaeologically, this phase marks the emergence of a richer, more advanced material culture. Literary sources from this period also contain numerous references to expanding agricultural activities, increased grain output, greater crop variety—particularly paddy—and the use of iron implements.
+
+Can you identify the crucial factors behind this change?
+
+Early Kingdoms and Republics
+
+With the passage of time, the political organisation of Vedic society evolved into territorial entities known as janapadas. The term janapada literally means where a people ( jana) first set its feet, indicating a transition from kinship-based identity to territorial identity. This transition happened between approximately 1000 BCE and 600 BCE. In other words, people were not only connected solely by kinship ties but also by a sense of belonging to a land that gave them a more concrete sense of identity. Some scholars have viewed this transition as a consolidation of identity for the Vedic janas. Thus, control over land, agricultural production, and trade routes became increasingly important, leading to the development of more complex administrative systems. As a result, the period approximately from 600 BCE to 300 CE witnessed the rise of new political formations— mentioned in the contemporary texts as the mahājanapadas (bigger political units than janapadas).
+
+Historical sources for the period usually speak of sixteen mahājanapadas. Among these, Magadha, located in present-day Bihar, gradually emerged as the most powerful. Its strategic location, fertile plains, and strong rulers enabled it to expand its control over
+
+Cultural and Religious Developments
+
+300 BCE–300 CE: Sangam literature composed
+
+1st century BCE: Udaygiri and Khandagiri caves, patronage of art
+
+90 80 70 60 50 40 30 20 10
+
+300 BCE–300 CE: Early kingdoms of Tamilakam (Cheras, Cholas, and Pandyas)
+
+1st century BCE: Khāravela’s reign
+
+Political Developments
+
+5 – State and Society up to 1000 CE
+
+65°E 70°E 75°E 80°E 85°E 90°E 95°E
+
+N
+
+W
+
+E
+
+1
+
+S
+
+2
+
+4
+
+4
+
+3
+
+5 6 10
+
+11 7 8
+
+9
+
+12
+
+14
+
+15
+
+16
+
+BAY OF BENGAL ARABIAN
+
+SEA
+
+S
+
+LA
+
+HO
+
+C
+
+C
+
+35°N 30°N 25°N 20°N 15°N 10°N
+
+35°N 30°N 25°N 20°N 15°N 10°N
+
+HER
+
+NDYAS
+
+A
+
+PA
+
+S
+
+500 km 250 0 250
+
+INDIAN OCEAN
+
+65°E 70°E 75°E 80°E 85°E 90°E 95°E
+
+1
+
+3
+
+7
+
+9
+
+13
+
+Anga
+
+2 Matsya
+
+8 Kamboja
+
+4
+
+10 Vṛijji 11
+
+14 Avanti 15
+
+Magadha 12 Śhūrasena 5
+
+Pañchāla 6 Vatsa
+
+Aśhmaka 16 Kāśhī
+
+Gandhāra
+
+Kuru
+
+Kosala
+
+Malla
+
+Chedi
+
+Fig. 5.4. Spatial distribution of the sixteen mahājanapadas and kingdoms of Tamilakam
+
+neighbouring regions. This expansion eventually led to the rise of the Mauryan Empire, which became one of the largest and most powerful empires in early Indian history. Another significant development during this period was the expansion of Vedic culture in the Ganga plains. While the early Vedic culture was most prominent in the northwestern regions, particularly the Indus and Sarasvatī valleys, the later Vedic period saw the Ganga plains emerge as the main centre. Consequently, the
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 – Part 1
+
+region witnessed significant sociopolitical changes. This included substantial growth in agriculture, the formation of larger political units, and the development of more complex social institutions by about 600 BCE. However, this was also a time when the political landscape of northern India had evolved to include different forms of political organisation. These comprised monarchical states (rājyas) and republican states (gaṇas or saṁghas). In southern India, particularly in the Deccan, the Mauryan Empire was succeeded by the Satavāhana Empire, which lasted nearly 500 years, from the 2nd century BCE to the 3rd century CE. Further south in peninsular India, there were the polities of the Cholas (in the lower Kaveri River valley), Pandyas (in the river valleys of the Tamraparni and Vaigai), Keralaputras (identified with the Cheras in Kerala), and the Satiyaputras (in the northern part of Tamil Nadu). These polities also find mention in the Aśhokan inscriptions.
+
+LET’S RECALL
+
+You may remember from your previous grades that the three important kingdoms of southern India, the Cholas, Cheras, and Pandyas, had their own royal emblems. The tiger was the emblem of the Cholas, the bow represented the Cheras, and the fish symbolised the Pandyas. Much of what we know about these early Tamil kingdoms comes from Sangam literature, the earliest Tamil literary tradition, which dates between 300 BCE and 300 CE. The Chera, Chola, and Pandya rulers were known as the three crowned kings or “Vendar of Tamilakam”, and their kingdoms flourished in fertile rice-growing regions. Sangam poems also describe brave and ambitious kings, including a Chera ruler who earned the title
+
+Cultural and Religious Developments
+
+300 BCE–300 CE: Sangam literature composed
+
+10 20 30 40 50 60 70 80 90 100
+
+CE
+
+78 CE: Saka Era begins
+
+300 BCE–300 CE: Early kingdoms of Tamilakam (Cheras, Cholas, and Pandyas)
+
+30–375 CE: Kuṣhāṇas
+
+Political Developments
+
+5 – State and Society up to 1000 CE
+
+adhirāja after defeating several crowned kings. These poems further mention Vedic yajñas and links with epic traditions. However, these early kingdoms should not be confused with the later imperial Chola, Chera, and Pandya kingdoms that emerged many centuries later.
+
+Duties and Ideals of the King
+
+From the 6th century BCE onwards, rulers came to be known by various titles, such as rājā, mahārāja, or samrāṭ, across different regions, reflecting regional political traditions. Nonetheless, early Indian texts provide important insights into ideas of kingship and governance. For instance, Kauṭilya’s Arthaśhāstra states, “Only if a king is himself energetically active, do his officers follow him energetically.” Further, with reference to the oath of coronation in the Yajurveda, the king is advised to judge the strong and weak impartially and fairly in addition to protecting the country from all calamities and do good to the people.
+
+The Śhānti Parva of the Mahābhārata provides guidance to rulers on ethical conduct, justice, and the responsibilities of a king towards his subjects. The king was primarily responsible for protecting his subjects from external threats and internal disorder. He was also expected to administer justice in cases, such as abduction, robbery, theft, and adultery. Punishments for serious offences—including the killing of a cow, acts of treachery, and the consumption of intoxicating liquor—were severe and could include harsh penalties, sometimes even capital punishment. While kingship was generally hereditary,
+
+Cultural and Religious Developments
+
+300 BCE–300 CE: Sangam literature composed
+
+110 120 130 140 150 160 170 180 190 200
+
+30–375 CE: Kuṣhāṇas
+
+106–130 CE: Gautamīputra Śhātakarṇi’s reign
+
+300 BCE–300 CE: Early kingdoms of Tamilakam (Cheras, Cholas, and Pandyas)
+
+Understanding Society:
+
+Political Developments
+
+India and Beyond
+
+Grade 9 – Part 1
+
+there are references to kings being elected or even expelled. This suggests that royal authority was not always absolute and that succession was not entirely hereditary in practice.
+
+It is important to note that the geopolitical awareness of early Indian monarchs was not limited to the boundaries of their kingdoms but extended to the whole Indian subcontinent. This pan-Indian geopolitical awareness was expressed through terms such as Jambudvīpa, Bhāratavarṣha, Aśhvamedha and Rājasūya yajña, Prithivi, and chakravarti kśhetra. Embedded in these expressions were ideas of sovereignty and political authority over a territory that can largely be understood as the Indian subcontinent. The Mauryan ruler Aśhoka, for instance, in one of his edicts, states that his “energetic exertions” (pakama; parākrama in Sanskrit) led to “significant changes in the spiritual life in Jambudvīpa.” Similarly, the meaning of Prithivi (pathivi in Prakrit) by Aśhoka becomes clearer in the Arthaśhāstra, where it is defined as “the area lying between the Himavat (Himalayas) and the sea.” The Arthaśhāstra further equates the term prithivi with the chakravarti kśhetra, or the “domain of a universal paramount ruler.” This ideal of exercising political authority over the subcontinent continued to be expressed in later periods. Very early during the Sangam period in southern India, a Chera king Nedunjeral Adan is described to have not only won the rank of adhirāja for himself, but also to have extended his conquests up to the Himalayas in the north. Similarly, in the 11th century CE, the Chola ruler Rajendra I adopted the title Gangaikonda to commemorate his conquest of regions along the Ganga. Thus, the aspiration to exercise political authority over the Indian subcontinent was repeatedly expressed in the history of Indian kingship.
+
+Cultural and Religious Developments
+
+300 BCE–300 CE: Sangam literature composed
+
+210 220 230 240 250 260 270 280 290 300
+
+300 CE: Rise of Pallavas
+
+275 CE: Pallava dynasty established
+
+250–510 CE: Vākāṭakas
+
+30–375 CE: Kuṣhāṇas
+
+300 BCE–300 CE: Early kingdoms of Tamilakam (Cheras, Cholas, and Pandyas)
+
+Political Developments
+
+5 – State and Society up to 1000 CE
+
+THINK ABOUT IT
+
+Texts such as the Mahābhārata and the Arthaśhāstra describe the king’s duties as protecting people and ensuring justice. Why do you think it was important for rulers to protect people and ensure justice? What do these descriptions tell us about ideas of governance and the relationship between rulers and subjects during that period?
+
+Council of Ministers
+
+The state, was regarded as an organic whole composed of seven constituents. Kauṭilya identified the seven constituents (Saptāṁga) as follows—the king, the ministers, the territory, the forts, the treasury, the army, and the allies. The state can function effectively only if these constituents remain properly integrated.
+
+LET’S RECALL
+
+The Arthaśhāstra is one of the earliest and most systematic
+
+treatises on statecraft. It presents a detailed picture of
+
+administration, and emphasises the importance of training a
+
+king in the art of governance and public administration. The
+
+Arthaśhāstra states that “one wheel does not move the carriage”.
+
+This statement captures the belief that effective governance
+
+requires cooperation and a well-organised administrative
+
+machinery. In fact, various literary and epigraphic sources from
+
+Cultural and Religious Developments
+
+300–400 CE: Faxian’s visit; Kālidāsa
+
+310 320 330 340 350 360 370 380 390 400
+
+250–510 CE: Vākāṭakas
+
+350–1140 CE: Kāmarūpa
+
+320–550 CE: Guptas
+
+30–375 CE: Kuṣhāṇas
+
+Understanding Society:
+
+Political Developments
+
+India and Beyond
+
+Grade 9 – Part 1
+
+this period indicate that the
+
+king did not rule alone
+
+Kauṭilya’s Saptāṁga
+
+but governed through a
+
+multi-layered administrative
+
+system. Central to this system
+
+was the council of ministers
+
+the king (swāmi)
+
+(mantri–pariṣhad), a small
+
+body of elder statesmen,
+
+whose primary role was to
+
+[the group of] councillors,
+
+advise and support the king.
+
+ministers and other high
+
+the territory of the state along with the population
+
+officials (amātya)
+
+inhabiting it (janapada)
+
+The council of ministers
+
+generally included the treasurer,
+
+the chief tax collector, the
+
+chief legal advisor, and the
+
+commander-in-chief of the
+
+the fortified towns and cities
+
+the treasury or the wealth of
+
+(durga)
+
+the kingdom (koṣha)
+
+army. An Aśhokan
+
+inscription refers to decisions
+
+taken by the council of
+
+ministers during the emperor’s
+
+absence, showing that, in
+
+the forces of defence and
+
+the allies (mitra)
+
+law and order (daṇḍa)
+
+exceptional circumstances, the
+
+council could take decisions
+
+independently in public
+
+interest.
+
+Cultural and Religious Developments
+
+480 CE: Vallabhī university established 427 CE: Nalanda university established
+
+500 CE: Āryabhaṭa
+
+410 420 430 440 450 460 470 480 490 500
+
+350–1140 CE: Kāmarūpa
+
+320–550 CE: Guptas
+
+475–776 CE: Maitrakas
+
+Political Developments
+
+5 – State and Society up to 1000 CE
+
+DON’T MISS OUT
+
+Fig. 5.5. Junagadh Rock Inscription, Gujarat
+
+The Junagadh Rock Inscription near Girnar (Gujarat) is unique as it bears inscriptions of three rulers from different periods. The earliest inscriptions belong to the Mauryan emperor Aśhoka (3rd century BCE), whose Major Rock Edicts in Prakrit spread the message of Dhamma and moral governance. Later on, the Western Satrap ruler Rudradaman I (c. 150 CE) added a long Sanskrit inscription describing his military achievements and the repair of the Sudarshana Lake. Still later, the Gupta emperor Skandagupta (5th century CE) engraved another record on the same rock, noting the restoration of the lake after severe damage. Thus, this single rock inscription site preserves the records of the Maurya, Western Satrap, and Gupta dynasties, spanning about 700 years and providing valuable information about administration, public works, and political history in India.
+
+Cultural and Religious Developments
+
+550 CE: Rāvaṇaphāḍī cave temple
+
+510 520 530 540 550 560 570 580 590 600
+
+350–1140 CE: Kāmarūpa
+
+543 CE: Foundation of Chālukyan dynasty by Pulakeśhin I
+
+320–550 CE: Guptas
+
+475–776 CE: Maitrakas
+
+510–606 CE Maukharīs
+
+Understanding Society:
+
+Political Developments
+
+India and Beyond
+
+Grade 9 – Part 1
+
+THINK ABOUT IT
+
+Why do you think different rulers chose to record their inscriptions on the same stone instead of a new one? Discuss your answers with your classmates.
+
+How Were Empires Administered?
+
+Early Indian kingdoms and empires were generally divided into provinces, which were further subdivided into divisions and districts. For instance, the Satavāhana empire comprised āḥāras (administrative divisions), each with its respective ministers (amātyas). Below the āḥāras were villages, each led by a village headman known as grāmika. While supreme authority rested with the king, the general administration was carried out by officers operating both at provincial and local levels. District governors or pradeśhikas were responsible for judicial and administrative functions. It is important to note that district officers often made decisions after consulting important residents such as bankers, caravan leaders, artisans, and scribes. In addition, cities had their own governors who were in charge of revenue collection and maintenance of law and order.
+
+The period between approximately 300 CE and 800 CE was characterised by the decentralisation of power, as, for administrative convenience, the kingdom (rājya) was divided into several provinces, known as bhuktis in the north and manḍalas or manḍalams in the south. The provinces were further subdivided into divisions—viṣhaya or bhoga in the north and koṭṭams or valanāḍu in the south. Lower
+
+Cultural and Religious Developments
+
+629–645 CE: Xuanzang’s visit
+
+630–668 CE: Mahabalipuram rock-cut temples
+
+610 620 630 640 650 650 660 670 680 690
+
+630–668 CE: Narasimhavarman I’s reign
+
+606 CE: Harṣhavardhana annexes Kannauj
+
+350–1140 CE: Kāmarūpa
+
+475–776 CE: Maitrakas
+
+Political Developments
+
+5 – State and Society up to 1000 CE
+
+units of administration were the districts—adhiṣhṭhāna or paṭṭana in the north and nāḍu in the south; groups of villages, that is, modern tahsīl, were called vithis in the north and paṭṭalā and kūṛram in southern Indian records. Finally, villages formed the lowest administrative units. To govern various administrative units, a large machinery was developed, consisting of provincial governors and district officers.
+
+THINK ABOUT IT
+
+How would dividing a kingdom into provinces, districts, and villages have helped rulers manage their empires? What similarities can you identify between these administrative divisions and the system of governance in India today?
+
+Interestingly, the Guptas retained much of the earlier form of administration. So, as in Kauṭilya’s Arthaśhastra, the mantri was the head of the civil administration, while other important officers included the commander-in-chief, the general, and the chief of the palace guards. A new ‘minister of peace and war’ (sāndhivigrahika) was introduced during the Gupta period. The amātyas of Kauṭilya’s time also evolved into a broader category that included kumārāmātyas, who were administrators at the local or provincial level. Details of the district-level administration of the Gupta period are available from various records. For instance, the Damodarpur copper plates during the period of Kumaragupta I record that the district office comprised the following five members: the head district officer, the chief banker, the chief caravan trader, the chief artisan, and the chief of revenue
+
+Cultural and Religious Developments
+
+783–820 CE: Vikramśhila university
+
+756–773 CE: Kailasa Temple, Ellora
+
+724–760 CE: Martanda Sun Temple, Anantnag, Kashmir
+
+700 710 720 730 740 750 760 770 780 790
+
+750–1161 CE: Pālas
+
+753–982 CE: Rāṣhṭrakūṭas
+
+724–760 CE: Lalitāditya Muktapīḍa’s reign
+
+712 CE: Arab conquest of
+
+730–1036 CE: Gurjara-Pratihāras
+
+Sindh
+
+350–1140 CE: Kāmarūpa
+
+475–776 CE: Maitrakas
+
+Understanding Society:
+
+Political Developments
+
+India and Beyond
+
+Grade 9 – Part 1
+
+collection. Like other kingdoms of this period, the Pallavas (c. 275– 897 CE) in the south also adopted a combination of centralised monarchy and decentralised local governance. While the king was the supreme head of state, the kingdom was divided into provinces, districts, taluks, and villages. One of the most striking features of the Pallavas was the tax-free land grants to villages. These were known as Brahmadeya villages.
+
+It is further interesting to note how villages functioned relatively independently of the royal administration. For instance, the village assemblies had small committees known as variyams that managed specific tasks like irrigation, gardens, and temple management. Like their contemporaries, the Chālukyas (c. 543–753 CE) of
+
+65°E 70°E 75°E 80°E 85°E 90°E 95°E
+
+N
+
+E
+
+W
+
+S
+
+Śhāhī
+
+Puṣhy
+
+Maukharī
+
+abhūti
+
+G
+
+u
+
+p
+
+t a
+
+Pāla
+
+Gurjara-Pratihāra
+
+Sena
+
+Maitraka
+
+Rāṣhṭrakūṭas
+
+Eastern Chālukya
+
+BAY OF BENGAL ARABIAN
+
+SEA
+
+Badami Chālukya
+
+Pallava
+
+35°N 30°N 25°N 20°N 15°N 10°N
+
+35°N 30°N 25°N 20°N 15°N 10°N
+
+Chera
+
+Chola Pandya
+
+500 km 250 0 250
+
+INDIAN OCEAN
+
+65°E 70°E 75°E 80°E 85°E 90°E 95°E
+
+Fig. 5.6. Kingdoms and empires flourishing between 3rd and 10th century CE
+
+5 – State and Society up to 1000 CE
+
+Badami followed a monarchical system along with a decentralised administration. The king’s duties and the kingdom’s administrative divisions, along with the autonomous functioning of village assemblies, largely followed the same pattern discussed above. Thus, instead of the Brahmadeya villages of the Pallava dynasty, the Chālukyas gave land grants to Brahmin settlements known as agrahārams. Some of these agrahārams, such as those at Aihole and Badami, gradually developed into prominent centres of learning.
+
+As you have read in previous grades, the Gurjara–Pratihāras ruled over large parts of Northern and Western India from about the 8th to 10th centuries CE. The main capital of this dynasty, Kannauj (in modern-day Uttar Pradesh), became a coveted site for various political kingdoms of the period. The ‘struggle’ to control Kannauj later came to be known as the ‘tri-partite struggle’ because of the involvement of three major powers, namely the Gurjara–Pratihāras, Pālas, and Rāṣhṭrakūṭas. The administrative systems of all three kingdoms followed the same pattern, that is a mix of monarchy and decentralised administrative units comprising provinces, districts and villages. In all cases, the village remained the smallest administrative unit and was largely self-reliant and autonomous in major practical functions, including infrastructure, social welfare, and education.
+
+Remember meeting the early Cholas, a powerful kingdom of southern India, and the famous King Karikala in your previous grades. Now, we will explore the later Cholas, also known as the imperial Cholas (9th– 11th century CE), who were noted for their efficient administrative and revenue systems. Like other empires of the period, the Chola empire was divided into manḍalams (provinces), which were further subdivided into valanāḍus (districts), nāḍus (groups of villages), and
+
+Cultural and Religious Developments
+
+800 810 820 830 840 850 860 870 880 890
+
+750–1161 CE: Pālas
+
+753–982 CE: Rāṣhṭrakūṭas
+
+730–1036 CE: Gurjara-Pratihāras
+
+350–1140 CE: Kāmarūpa
+
+Understanding Society:
+
+Political Developments
+
+India and Beyond
+
+Grade 9 – Part 1
+
+finally Urs (individual villages). As usual, the village was the smallest unit within a district. Village councils or assemblies played an important role in settling disputes and managing local affairs. As in other parts of India, the village assemblies of the Chola empire were responsible for all local administrative functions, including revenue collection, land management, irrigation, road construction, record maintenance, and so on. Thus, the village assemblies functioned as independent, self-reliant institutions and were not dependent on the government for patronage.
+
+DON’T MISS OUT
+
+The Uttaramerur inscription of Parantaka I (10th century) of the Chola period provides a vivid description of village governance. Located in the Vaikunṭha Perumal Temple in Kanchipuram district of Tamil Nadu, these Tamil inscriptions furnish details about the functioning of village assemblies, and inform us about the Kudavolai, or the ‘ballot pot’ system used in village elections. In this system, the names of eligible candidates were written on palm leaves and placed inside a large pot. During a public gathering, a young child was asked to draw the leaves, one by one, to select representatives for the village assembly and its various committees. To ensure fairness, the draw took place in full view of the community, often at a temple. The elected members were then divided into specialised committees (variyams), each entrusted with important village responsibilities, such as managing irrigation (the tank committee), administering justice, and collecting taxes.
+
+Cultural and Religious Developments
+
+985–1014 CE: Brihadeeshwara Temple, Thanjavur
+
+900 910 920 930 940 950 960 970 980 990
+
+750–1161 CE: Pālas 985–1014 CE: Rājarāja I’s reign
+
+753–982 CE: Rāṣhṭrakūṭas
+
+730–1036 CE: Gurjara–Pratihāras
+
+350–1140 CE: Kāmarūpa
+
+Political Developments
+
+5 – State and Society up to 1000 CE
+
+Ethics: The Foundation of Law and Life
+
+Ethics form the basis of law and life, making it important to explore the roots of ethical thought in Indian history. Some of the earliest Indian texts, such as the Vedas and the epics, discuss questions of reality, right conduct, the origin of all things, and the nature of the universe. Vedic texts describe how life should be lived ideally. The Bhagavada Gītā emphasises knowledge, faith, action, virtue and an ethical way of life.
+
+India has a long tradition of ethical thought, and these moral principles often guided both state and society. One important principle through which reality is understood is samatva, or the principle of sameness. According to this principle, all bodies are made of the same matter, and all forms of consciousness are manifestations of one supreme consciousness. The Vedas describe this consciousness as satya (real, true) and ṛita (right), as well as and “the invisible origin of all things”. The Mahābhārata also includes characters from all varṇas who, despite their differences, repeatedly uphold the principle of samatva. The epics, often, critique discrimination and present goodness as non-discriminatory. They emphasise the ideal of a good person and ruler “as one who works for the welfare of all beings.”
+
+Ṛita is another concept that is described in the Ṛig Veda as an all pervading cosmic order that represents harmony and balance in nature, and in human society. It is seen as the principle that regulates the forces of nature, upholds moral values, and represents the underlying order that maintains balance in the universe.
+
+Cultural and Religious Developments
+
+985–1014 CE: Brihadeeshwara Temple, Thanjavur
+
+1000 1010 1020 1030 1040 1050 1060 1070 1080 1090
+
+985–1014 CE: Rājarāja I’s reign
+
+750–1161 CE: Pālas
+
+730–1036 CE: Gurjara–Pratihāras
+
+350–1140 CE: Kāmarūpa
+
+Understanding Society:
+
+Political Developments
+
+India and Beyond
+
+Grade 9 – Part 1
+
+The idea of justice is closely linked to dharma. Here, dharma does not mean religion; rather, it refers to duty, obligation, righteousness, and moral conduct. It represents a way of life in which ethical values are central and individuals are expected to perform their duties according to their roles and responsibilities in society. In Buddhism, the term ‘dhamma’—the Pāli equivalent of the Sanskrit word dharma—is used to express similar ethical principles.
+
+DON’T MISS OUT
+
+The word ‘dharma’ is derived from the Sanskrit root dhri, which is also the root of dharati (the earth). In the Mahābhārata, Bhishma says that dharma “is that which upholds beings; whatever upholds all beings is dharma.” In the sense of the law of existence, it is also said that “the dharma of iron is to sink and of wood is to float.”
+
+The connection between politics and ethics is further evident in historical records from different periods, from the Mauryas to the Cholas. For instance, Aśhoka’s edicts promoted dhamma by emphasising moral conduct, respect within the family, ethical behaviour in everyday life, non-violence, and compassion. Evidence of ethical principles in governance continued into later periods. The 10th century CE Uttaramerur inscription, for instance, specifies that candidates for village assembly elections should have “honest earnings” and be “pure” of mind. Literary works from different periods also highlight the importance of moral conduct in public life. Kāmandaka’s Nītisāra and Bāṇabhaṭṭa’s Kādambarī—widely celebrated as one of the world’s first novels—contain reflections
+
+Cultural and Religious Developments
+
+1100 1110 1120 1130 1140 1150 1160 1170 1180 1190
+
+750–1161 CE: Pālas
+
+350–1140 CE: Kāmarūpa
+
+Political Developments
+
+5 – State and Society up to 1000 CE
+
+and advice on kingship and governance, reinforcing the enduring connection between ethics and political authority in Indian history.
+
+Social Structures and Everyday Life
+
+Varṇa and Jāti
+
+In previous grades, we learned about the varṇa system and its fourfold structure—brāhmaṇas, kṣhatriyas, vaiśhyas, and śhūdras. Early Vedic texts do not indicate any fixed social status strictly based on birth. Instead, it is generally agreed that social identity was shaped by several complex and overlapping factors, including ethnicity, subgroups, geographic region, village affiliation, gotra (a kinship-based subgroup), language, and, especially occupation. While this system distinguished individuals and communities from one another, it also connected them through shared social, economic, and cultural relationships. At this stage, occupations remained flexible and mobile, and the idea of strict hereditary occupations had not yet become firmly established. Evidence of this flexibility is often drawn from a verse of the Ṛigveda in which the seer refers to occupational diversity within a single family.
+
+Kārurahaṁ tato bhiṣhagupalaprakṣhiṇī nanā ǀ
+
+Nānādhiyo vasūyavo’nu gā iva tasthimendrāyendo pari srava ǀǀ
+
+– Ṛigveda 9.112.3
+
+I am a poet; my father is a physician, my mother is a grinder of corn; having various occupation, desiring riches we remain (in the
+
+world) like cattle (in the stalls).
+
+LET’S EXPLORE
+
+Read the verse given above and discuss it in groups. As you do so, think like historians—look for clues in the source and use them to understand what life may have been like.
+
+While discussing, keep these questions in mind:
+
+Æ What does the source tell us? (evidence)
+
+Æ What can we understand from it? (interpretation)
+
+Understanding Society:
+
+India and Beyond
+
+Æ What might it not tell us? (limits of the source)
+
+Grade 9 – Part 1
+
+Now answer the following:
+
+1. What occupations are mentioned in the family described in the verse? What does this indicate about the nature of occupations in Vedic society?
+
+2. How does the above verse challenge the idea that social status and occupation were fixed by birth?
+
+3. What different occupations do you find in contemporary society?
+
+After the discussion, compare your group’s responses with those of another group and note the similarities and differences in interpretation. Did all groups interpret the source in the same way? What does this tell us about how historians use evidence to understand the past?
+
+The earliest reference to the four social categories, understood by historians as varṇa, appears in the Puruṣhasūkta, a hymn in Book 10 of the Ṛigveda. Over a period of time, these four social categories (varṇas) came to be associated with specific roles and tasks. The brāhmaņas were mainly expected to study and teach the Vedas and other sacred texts, perform and officiate yajñas, and give and receive dāna (gifts). Rajanya (Kṣhatriyas) were tasked with warfare, protecting people, and administering justice. They were also expected to study the scriptures, sponsor yajñas, make donations, and uphold social order. Vaiśhyas were associated with economic activities, such as agriculture, pastoralism, and trade, while also participating in scriptural study, sacrificial rituals, and acts of charity. Śhūdras were expected to assist the other varṇas. However, practically, the Śhūdras were also engaged in various economic activities such as agriculture, animal husbandry, trade, and arts and crafts.
+
+Thus, the concept of varṇa was based on a system of values in which knowledge was given the highest status, followed by political power and wealth. Therefore, it is important to remember that the division of the four varṇas was a functional one. For instance, the Buddhist text Sutta Nipāta states that, “No brāhmaņa is such by birth. No outcaste is such by birth but only by his deeds. A brāhmaņa is such by his deeds.” Over time, however, this flexibility in social roles gradually got reduced.
+
+Endogamy: The practice of marrying within one’s own social group, community, clan or tribe. It is a social custom in which people are expected to choose marriage partners from within the same group.
+
+Gradually, a distinct social structure called jāti emerged due to various factors, including intermarriage among the varṇas, migrating communities becoming endogamous, and territorial differences. While the number of varṇas was fixed at four, there
+
+5 – State and Society up to 1000 CE
+
+was no restriction on the number of jātis. As new social groups and occupations developed, the number of jātis continued to grow.
+
+Social Mobility
+
+Varṇa and jāti were not always rigid social categories, and there was considerable social mobility within and across these categories. For example, several rulers came from diverse social backgrounds including the Nandas, Mauryas, Śhuṅgas, Satavāhanas, Vākāṭakas, Guptas, and Puṣhyabhūtis.
+
+There are also instances of occupational mobility within social groups. For instance, the Mandsaur Stone Inscription (473 CE) mentions a guild of silk weavers who migrated from Lata in Gujarat to Dashapura in Madhya Pradesh during the Gupta period. This guild was proficient not just in weaving but also in archery, astrology, and other occupations. Likewise, there are several inscriptions, such as the Karitalai copper- plate inscriptions of Mahārāja Jayanātha (late 5th century CE), which record brāhmaṇas as land managers.
+
+Fig. 5.7. Karitalai copper plate of Mahārāja Jayanātha
+
+Sangam literature like the Tolkappiyam refers to four-fold division of society and mentions different groups such as Arasar (kings), Vanigar (traders/ merchants), and Velar (farmers). We also find references to Antanar (brāhmaṇas), who were often patronised by ruling elites and the kings. However, the varṇa classification mentioned in the Tolkappiyam seems to be premised on occupation, and the four-fold varṇa classification was marked by fluidity. For instance, the Pattinappalai describes a prosperous, dynamic, trade-oriented society where different occupational groups such as merchants, salt-makers, fishermen, artisans, agriculturists, and warriors, interacted actively. This suggests that society was organised more on the basis of occupation and economic functions than on a rigid varṇa classification.
+
+Family and Society
+
+In Vedic society, the kula (family) formed the smallest and the most basic social unit. It was connected to the larger political structure
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 – Part 1
+
+Brahmacharya, stage of studentship Gṛihastha, stage of the householder
+
+Vānaprastha, life in the forest Saṁnyāsa, renunciation
+
+Fig. 5.8. The four āśhramas
+
+Patrilineal: A social system wherein family identity and inheritance, are passed down strictly through the male line.
+
+through the village, or grāma, which consisted of several families. A group of grāmas together formed a viśha, headed by a viśhapati. Above the viśha was the jana, with the rājā serving as the chief protector of the jana, or the people. In this way, the family or kula was inseparable from the jana. During the later Vedic period, the term kula came to denote a household comprising several members bound by kinship. The concept of gotra referred to a patrilineal lineage or clan traced to a common ancestor, traditionally linked to a Vedic sage (ṛiṣhi). Gotra affiliation often played an important role in regulating marriage practices as well. Everyone was expected to perform the duties appropriate to their varṇa and stage of life (āśhrama). This division of one’s life into the four āśhramas (Fig 5.8) and their respective dharmas, in principle, provides fulfilment to the person in their social, moral, and spiritual aspects, which would lead to harmony and balance in society. All the stages of life were accompanied by numerous rituals and ceremonies, particularly the ṣhoḍaśha saṁskāras, or the ‘sixteen rites of passage’.
+
+5 – State and Society up to 1000 CE
+
+Apart from the āśhramas, the concept of the four goals of life or puruṣhārthas was also significant. These were (1) righteousness (dharma); (2) material well-being (artha); (3) fulfilment of desires (kāma); and (4) liberation from all worldly ties (mokṣha). The fulfilment of these four ends of life is important for every human being. In this framework, dharma and mokṣha hold particular significance from an ethical point of view, as they provide direction and purpose to human life. For instance, the pursuit of wealth (artha) is a desirable objective, provided it is guided by dharma, that is, aligned with the welfare of society.
+
+Role of Women
+
+The Vedic period is often described as a period during which women held a high and respectful position in society. Women participated in scholarly learning and, in certain contexts, performed rituals alongside their male counterparts. Textual references also indicate that women took part in activities such as chariot races and attended social gatherings, including the sabhā. Several hymns of the Ṛigveda are traditionally attributed to women sages—most notably Apālā, Viśhvavārā, Ghoṣhā, and Lopāmudrā—highlighting women’s active engagement in intellectual and religious life. In addition, goddesses such as Uṣha, the goddess of dawn, and Aditi, the mother of the gods, occupied significant and revered positions in Vedic culture. The tradition of respect for women is evident in texts composed after the Vedic period, too. For instance, Manu-smṛiti mentions:
+
+Yatra nāryastu pūjyante ramante tatra devatāḥ ǀ
+
+Yatraitāstu na pūjyante sarvās tatrāphalāḥ kriyāḥ ǀǀ
+
+ǀǀ Manu-Smṛiti 3.56 ǀǀ
+
+“Where women, verily, are honoured, there gods rejoice;
+
+where, however, they are not honoured, there all sacred
+
+rites prove fruitless.”
+
+Over time, the position and roles of women fluctuated, even declined, as social and political conditions changed. However, there are many examples of women continuing to contribute to household management, agriculture, crafts, and religious practices.
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 – Part 1
+
+Literary works of the Gupta–Vākāṭaka period (around the 4th to 6th centuries CE) feature female characters who are depicted as highly educated and skilled in the arts. Other historical records also mention queens and royal women who played important roles in governance and religious patronage. For example, as discussed in the Grade 7, Part I textbook, Prabhāvatī Gupta, daughter of the Gupta ruler Chandragupta II, ruled as a regent in the Vākāṭaka kingdom and issued land grants in her own name. Women also appear as donors on several votive inscriptions from the post-Maurya period.
+
+Votive inscription: Text engraved on stone, metal, or other materials, dedicating a gift, sculpture, or structure to a deity or sacred place.
+
+Sangam literature similarly portrays women as active participants in society and the economy. They performed important agrarian tasks such as planting, weeding, husking, winnowing paddy, and were also involved in cattle rearing, spinning, fishing, salt production, and garland selling. Sangam texts further mention influential women such as the celebrated poetesses Avvaiyar and Vennikuyattiyar (woman potter). Similarly the women bards and dancers quite like their male counterparts contributed to the cultural, literary, and social roles of women in early historic southern India. Later, during the Chola period, inscriptions record the activities of royal women such as Sembiyan Mahādevī, who supported temple building and religious institutions.
+
+Religious Life and the Emergence of Bhakti
+
+The Vedic pantheon did not follow a rigid hierarchical structure, and different deities are praised as supreme in different hymns of the Vedas. These deities were invoked through prayers and sacrificial rituals (yajñas), which involved making offerings, most often to the sacred fire. The faith of the Vedic people was intertwined with the worship of nature, as each Vedic deity was associated with an element of nature, such as the sun, rain, fire, earth, dawn, etc. Some of these ancient practices continue today in the form of festivals celebrated across India, for example, the sun worship during Chhath and on Makar Sankranti. Such practices are often understood in the context of early societies’ dependence on nature for survival. As a result, nature was viewed not merely as a resource, but as sacred and powerful. The Vedic worldview, therefore, reflected an early sense of respect for, and responsibility towards, nature.
+
+5 – State and Society up to 1000 CE
+
+DON’T MISS OUT
+
+Around the middle of the first millennium BCE, a discernible trend of renunciants emerged. These individuals advocated non- attachment to material comforts and social relationships, choosing to live as ascetics and wanderers, rather than as householders. Contemporary sources refer to them by different terms, such as parivrājaka (wanderer), bhikṣhu (one who lives by begging alms), or śhramaṇa (one who strives). While Gautama Buddha and Mahāvīra emerged as influential thinkers of this period, the idea of renunciation was already present in the Vedic tradition. As discussed earlier, amongst the four stages (āśhrama) of life, vānaprastha and saṁnyāsa clearly have a renunciatory connotation.
+
+Over time, the Vedic religious tradition evolved towards forms of worship centred on personal deities such as Viṣhṇu, Śhiva, and Śhakti, laying the foundations for later devotional practices. One such practice was ‘Bhakti’, a path that offered a direct connection with the gods without the need for elaborate rituals prescribed in the Vedas, and which was accessible to all, regardless of class or gender.
+
+Bhakti has a long tradition in India, with early references found in texts such as the Mahābhārata. However, the organised and widespread devotional set of practices known as the Bhakti tradition gained prominence in the 6th century Tamil region through the devotional activities of the Āḻvārs and Nāyanmārs. The Āḻvārs were twelve saint-poets who composed hymns in praise of Lord Viṣhṇu. Alongside the Āḻvārs were the sixty-three Nāyanmārs, the Śhaiva saint-poets, who composed hymns in praise of Lord Śhiva. Together, the Āḻvārs and Nāyanmārs created a large body of Tamil Bhakti literature, which represents one of the most significant cultural and religious developments of this period. You will learn more about the Bhakti tradition in the second part of the Grade 9 textbook.
+
+The Quest for Knowledge
+
+In early India, education was an integral part of life, serving a holistic purpose. Truth, patience, regularity, humility, control of senses, purity of self (sattvaśhuddhi), cognition of the underlying unity of life, nature and environment, and reverence for all beings were the inner values cultivated by Indian education. Pupils were trained to live in accordance with dharma—the guiding principle for
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 – Part 1
+
+Fig. 5.9. Representative illustration of a Gurukula
+
+the individual, the family, and society. Dharma required everyone, including students, to fulfil their duties towards parents, teachers, and the gods. Good character and moral conduct were seen as the foundation of society.
+
+Indian education also imparted practical skills across a wide range of subjects. Students studied the Vedas, along with grammar, logic, philosophy, ethics, mathematics, science, medicine, and astronomy. They were also trained in various arts and crafts, including music, dance, painting, physical education, and martial arts such as archery. Alongside their studies, students practised yoga, meditation, and service to the guru, making education a complete preparation for life, not just a path to a career. The teacher–student relationship (guru-śhiṣhya paramparā) was regarded as sacred. The teacher (guru or āchārya) was highly respected and seen as a guide who helped students move from the darkness of ignorance to the light of knowledge. The teacher’s home served as the centre of the gurukula, and the relationship between the teacher and student was close and mutually supportive, with the student treated as a member of the teacher’s family. Students living in the gurukula followed a
+
+5 – State and Society up to 1000 CE
+
+disciplined life marked by self-control, obedience, and devotion. Education was treated as a critical part of life, which was imparted holistically.
+
+LET’S EXPLORE
+
+Compare your school life with the life of a student in a gurukula in early India. Think about aspects such as daily routine, subjects studied, relationship with teachers, discipline, and living arrangements. What advantages and challenges do you think each system of education might have for students?
+
+65°E 70°E 75°E 80°E 85°E 90°E 95°E
+
+N
+
+Śhāradā Pīṭha
+
+W
+
+E
+
+S
+
+Takṣhaśhilā
+
+Mithilā
+
+Ahichchhatra
+
+Nālandā Odantapurī
+
+Jagaddalā
+
+Ujjayinī Vārāṇasī
+
+Sompura
+
+Vikramśhilā
+
+Vallabhī
+
+Puṣhpagiri
+
+Saloṭgī
+
+Nāgārjunakonḍā
+
+BAY OF BENGAL ARABIAN
+
+SEA
+
+Kānchīpuram
+
+Ennayiram
+
+35°N 30°N 25°N 20°N 15°N 10°N
+
+35°N 30°N 25°N 20°N 15°N 10°N
+
+Thrissur
+
+500 km 250 0 LEGEND
+
+Ancient centres of learning
+
+Anurādhāpura
+
+65°E 70°E 75°E 80°E 85°E 90°E 95°E
+
+Fig. 5.10. Some of the prominent universities and advanced centres
+
+Understanding Society:
+
+of learning in early India
+
+India and Beyond
+
+Grade 9 – Part 1
+
+Fig. 5.11. Panoramic view of the ruins of Takshashila. It was a large campus with very well- organised urban systems, including various types of housing, drainage, and waste management.
+
+India’s long tradition of learning and intellectual activity is reflected in the establishment of several important centres of education before the second millennium CE. Historical and literary sources indicate that during this period, institutions of higher learning emerged across the Indian subcontinent, attracting students from both India and other regions.
+
+Over several millennia, India produced a vast and diverse body of literature spanning subjects, such as philosophy, grammar, medicine, astronomy, mathematics, culinary practices, agriculture, architecture, and various aspects of everyday life. Notably, despite the rise and fall of kingdoms and political changes over time, many of these knowledge traditions and practices persisted.
+
+Literary Heritage of Early India
+
+Classical Works on Medicine
+
+Foundational Texts for Sanskrit Grammar
+
+Smṛiti Literature– Dharma, Law and Ethics
+
+Charakasamhitā and
+
+Manu-smṛiti, Yājñavalkya
+
+Suśhrutasamhitā
+
+Smṛiti, Nārada Smṛiti,
+
+Pāṇini’s Aṣhṭādhyāyī, Piṅgala’s Chhandaśhāstra,
+
+Viṣhṇu Smṛiti
+
+Patañjali’s Mahābhāṣhya
+
+Tamil Literature
+
+Sanskrit poetry
+
+and Kāvya Tiruvalluvar’s Tirukkural; the Tamil epics Silappadikāram and
+
+Maṇimēkalai; the vast body of Sangam texts covering a wide range of themes including love (akam), war or public life (puram),
+
+Kālidāsa’s Raghuvaṃśha and
+
+political organisation, social structures, and economic activities
+
+Kumārasambhava
+
+5 – State and Society up to 1000 CE
+
+Economy
+
+Agriculture and Land Revenue
+
+The Mauryan state developed an elaborate administrative system to regulate and supervise economic activities. Agricultural land within villages was divided into individual holdings, while common resources such as pastures were maintained for grazing cattle. Villages also included groves on their outskirts. The state encouraged agricultural expansion by clearing forests, although certain categories of forests were protected by law. The basic tax on land was a fixed proportion of the produce, generally one-sixth. For the purpose of revenue assessment, land was classified into different categories. Kauṭilya provides a detailed description of various types of village land, including cultivated land, wasteland or fallow land, high and dry land, sown fields, and groves. A wide range of crops were cultivated in different regions. These included several varieties of rice, pulses, wheat, linseed, mustard, saffron, sugarcane, vegetables, and fruits.
+
+The economic foundations laid during the Mauryan period continued to develop in the post-Mauryan period. Agriculture remained the backbone of the economy, sustaining both rural livelihoods and state revenue. The Milindapañho, a Buddhist text traditionally attributed to Nāgasena, describes eight stages of agricultural operations, ranging from preparing and weeding the fields to harvesting and winnowing crops, indicating a detailed understanding of farming practices.
+
+During this period, the expansion of agriculture in the Deccan likely contributed to increased cotton cultivation, as the region’s black soil was particularly suitable for this crop. The Amarakoṣha, a standard Sanskrit lexicon, includes a special chapter on forest, crops, plants, and manure. Agricultural life in southern India is further documented in the Sangam literature, which highlights the land’s fertility and the abundance of agricultural produce. Sangam texts refer to the Chera region as rich in commodities such as jackfruit, pepper, and turmeric, and vividly describe the cultivation of crops such as ragi and sugarcane.
+
+Irrigation
+
+Understanding Society:
+
+Agriculture was closely dependent on irrigation, and considerable importance was placed on the construction and maintenance of structures such as reservoirs, canals, and dams. You may remember
+
+India and Beyond
+
+Grade 9 – Part 1
+
+that earlier in this chapter, we discussed the Junagadh inscription of Rudradaman I (see Fig. 5.5). This inscription records that Puṣhyagupta, a governor appointed by Chandragupta Maurya, constructed a dam on Sudarshana Lake near Girnar in Saurāṣhṭra (or the Kathiawad region in Gujarat). This inscription highlights the active role of the Mauryan state in developing irrigation infrastructure. Facilitation of agriculture continued to be a major preoccupation of the state because it was one of the major sources of revenue.
+
+LET’S RECALL
+
+The Cholas were builders of irrigation systems that included canals, lakes, and tanks with connecting channels. Do you remember reading in your previous grades about the Grand Anicut (Kallanai) built by Karikala Chola? Such irrigation structures helped store and distribute water, supported agriculture, and encouraged the growth of settlements. The Grand Anicut continued to be used and repaired by later rulers and administrations over many centuries, showing the lasting importance of irrigation works undertaken by Cholas. Remarkably, it remains in use even today.
+
+THINK ABOUT IT
+
+Why do you think irrigational structures like dams and canals were considered so important that their construction was recorded in inscriptions?
+
+Trade: Trade Routes and Ports
+
+One of the most significant features of economic development during this period was the expansion of trade and commerce. The emergence of well-structured states provided the necessary infrastructure and conditions for trade to flourish. The Arthaśhāstra identifies trade as one of the major economic activities and notes that Magadha traded textiles, gems, coral, pearls, metals, and minerals with various parts of northern, central, and southern India. Salt was another important commodity, and its production was strictly regulated by the state. The state also ensured the safety of trade routes and took measures to prevent the adulteration of goods and protect consumers from unfair practices. As we learnt in previous grades, trade networks within the Indian subcontinent, as well as those extending beyond it, had been developing since the times of the Harappans. By around the 6th century BCE, two major land routes—Dakṣhiṇāpatha and
+
+5 – State and Society up to 1000 CE
+
+65°E 70°E 75°E 80°E 85°E 90°E 95°E
+
+N
+
+E
+
+W
+
+S
+
+31 32
+
+16
+
+30
+
+29
+
+21
+
+14 15
+
+13
+
+6 7
+
+24
+
+19 20
+
+9 10 11 12
+
+36
+
+4 5
+
+3
+
+25 26
+
+28
+
+2
+
+22 23
+
+1
+
+8
+
+27
+
+18
+
+35
+
+15 16 17
+
+34
+
+13
+
+33
+
+14
+
+ARABIAN
+
+11 12
+
+BAY OF BENGAL
+
+SEA
+
+37
+
+LEGEND
+
+10
+
+9
+
+Early Historical Cities Major Trade Routes of Early Historical India
+
+7
+
+39
+
+Dakṣiṇāpatha
+
+5
+
+6 8
+
+4
+
+38
+
+1
+
+Uttarāpatha
+
+2
+
+35°N 30°N 25°N 20°N 15°N 10°N
+
+35°N 30°N 25°N 20°N 15°N 10°N
+
+3
+
+Other Routes
+
+500 km 250 0 250
+
+Important Ports and Cities
+
+INDIAN OCEAN
+
+65°E 70°E 75°E 80°E 85°E 90°E 95°E
+
+14
+
+27
+
+1
+
+Sopārā
+
+Muziris 1
+
+Rājagr̥iha
+
+Bhīṭā
+
+Sāmbhar 9
+
+2
+
+2
+
+15
+
+28
+
+Madurai
+
+Bhārukachchha
+
+Champā
+
+Prahalādpura
+
+Baṭeśhwara 10
+
+3
+
+16
+
+29
+
+11
+
+3
+
+Korkāī
+
+Dwārkā
+
+Thuna
+
+Jhūsī
+
+Sonkha
+
+4
+
+17
+
+30
+
+4
+
+12
+
+Uraiyūr
+
+Māhiṣhmatī
+
+Shibipura
+
+Śhringaverapura
+
+Noha
+
+5
+
+18
+
+31
+
+5
+
+13
+
+Puhār
+
+Ujjayinī
+
+Takṣhaśhilā
+
+Sohgaurā
+
+Atranjīkheḍā
+
+6
+
+19
+
+32
+
+6
+
+14
+
+Kovalūr
+
+Virāṭa
+
+Puṣhkalāvatī
+
+Kuśhīnārā
+
+Jakheḍā
+
+7
+
+20
+
+33
+
+7
+
+15
+
+Kāñchīpuram
+
+Mathurā
+
+Kalinganagara
+
+Piprāhwā
+
+Ahichchhatra
+
+8
+
+21
+
+34
+
+8
+
+16
+
+Karūr
+
+Hastināpura
+
+Tāmralipti
+
+Vidiśhā
+
+Rūpaḍ
+
+9
+
+22
+
+35
+
+Suvarṇagiri
+
+Kauśhāmbī
+
+Chandraketugarh
+
+10
+
+23
+
+36
+
+Masulipaṭnam
+
+Kāśhī
+
+Prāgjyotiṣhapura
+
+11
+
+24
+
+37
+
+Potanā
+
+Śhrāvastī
+
+Thāṭon
+
+12
+
+25
+
+38
+
+Pratiṣhṭhāna
+
+Vaiśhālī
+
+Kāveripaṭṭinam
+
+Understanding Society:
+
+13
+
+26
+
+39
+
+Bhojakaṭa
+
+Pāṭaliputra
+
+Arikameḍu
+
+India and Beyond
+
+Grade 9 – Part 1 Fig. 5.12. Major trade routes of early historical India
+
+Uttarāpatha—had emerged and were later maintained and expanded by successive dynasties. Over time, these routes served as important trans-regional networks, linking different parts of the subcontinent. They facilitated the movement of goods, people, and ideas, connecting inland regions with coastal ports and thereby integrating overland and maritime trade systems.
+
+Indian ports also played a significant role in facilitating trade and commerce, attracting both Indian and foreign traders. Trade links between the Harappans and the Mesopotamians already existed, involving ports along the western coast of India, the Persian Gulf, and other regions. Over time, these networks expanded as major ports such as Muziris, Kāveripaṭṭinam, Arikameḍu, and Masulipaṭnam, developed and grew. [Note: Some of these ports have been marked on the map (Fig. 5.12) to help you locate them geographically.] Maritime trade utilised both coastal routes and long-distance overseas routes across the Indian Ocean. By the early centuries of the Common Era, India’s trade with Rome had expanded significantly, conducted through both sea routes and overland connections via Central Asia. We will learn more about India’s trade interactions with different regions in a chapter titled ‘India and the World – 1’ in part 2 of this textbook.
+
+LET’S RECALL
+
+In previous grades, we studied the Silappadikāram, which mentions two important routes in the Tamil region that also extended into northern India. The first route linked Kanchipuram to the famous port of Poompuhar (Kaveripattinam), and the second connected Kanchipuram to Kanyakumari.
+
+Guilds
+
+The early Indian economy was supported by collective organisations of traders, artisans, and merchants known as guilds (śhreṇīs), which were associations of people engaged in the same profession, craft, or occupation. These guilds played a significant role in the expansion of trade and commerce, especially after the rise of territorial states in the form of the mahājanapadas (6th century BCE). Metallic coins, beginning with silver punch-marked coins, also came into circulation during this period. The Jātaka literature refers to eighteen types of guilds, indicating that they were well-established and influential institutions in the economic life of early India. Guilds regulated the quality of goods and often fixed prices to protect both artisans and consumers.
+
+5 – State and Society up to 1000 CE
+
+The conduct of their members was supervised through guild courts, which enforced professional standards and discipline. In addition, guilds functioned as banks, financiers, and trustees.
+
+DON’T MISS OUT
+
+Guilds as Financial Institutions
+
+Fig. 5.13. Nashik cave inscription
+
+The Nāśhik cave inscription (2nd century CE) of the Śhaka king Nahapāna and his son-in- law, Uśhavadāta, sheds light on the economic role of guilds in early India. It records that monetary donations were deposited with professional guilds (śhreṇīs), which were obligated to pay a fixed rate of interest on these endowments. The interest generated was used to maintain Buddhist monasteries and caves. This indicates that guilds were not merely associations of craftspersons and traders but also functioned as banking and credit institutions, capable of securely investing funds and generating a steady income.
+
+The economic prosperity achieved during the pre-Gupta period laid a strong foundation for the cultural and economic developments of later periods. Industries continued to expand, supported by the availability of raw materials and the skill and enterprise of artisans and craftspersons. Literary and archaeological sources refer to a wide variety of textiles, including silk, cotton, wool, and linen. Diverse weaving techniques were in use, and centres such as Mathurā, Kāśhī, and Kāmarūpa emerged as important hubs of textile production. References to guilds of silk weavers further indicate the organised nature of the textile industry. Merchants of various categories figure prominently in literary and epigraphical sources, highlighting the growing importance of trade.
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 – Part 1
+
+DON’T MISS OUT
+
+An inscription on the southern gateway of the Great Stupa at Sanchi refers to the benevolent and welfare activities carried out by the guild of ivory workers from Vidiśhā. These ivory workers were responsible for carving the stone sculptures on the gateways and railings surrounding the stūpa, indicating the active role of craft guilds in both artistic production and religious patronage.
+
+In this chapter, we explored the foundations of state and society in early India, while tracing the development of political institutions, social structures, economic life, and cultural traditions. From the culture of the Vedic period to the robust administration of vast empires, social and political ideas evolved over time while maintaining a remarkable continuity. The chapter also highlighted the dynamic nature of early Indian society and its intellectual and cultural achievements. On the whole, the developments of this period laid the groundwork for many enduring traditions that continue to shape the Indian subcontinent’s social and cultural life even today.
+
+Before we move on...
+
+Æ Indian civilisation demonstrates a remarkable continuity in its cultural, social, and political traditions.
+
+Æ The structures of social, cultural, and political life in India evolved from Vedic period and took various forms across space and time.
+
+Æ The rise of powerful states such as Magadha and empires like the Mauryas and Guptas led to the emergence of structured systems of administration, taxation, military organisation, and governance.
+
+Æ Early political organisation evolved from clans (janas) led by a rājā to larger kingdoms and republics (gaṇas or saṁghas) and later to powerful empires such as the Mauryas, Guptas, and Cholas. The economy was largely based on agriculture, supported by irrigation works, while trade networks, ports, and guilds played a vital role in the growth of commerce and crafts. Despite political changes, knowledge traditions, trade networks, cultural, and devotional practices such as Bhakti continued to flourish across regions.
+
+5 – State and Society up to 1000 CE
+
+Questions and activities
+
+1. How did political organisation change from the Vedic period to the age of large empires such as the Mauryas and the Guptas? Explain the administrative system of the early Indian states.
+
+2. Describe the role of the king, important officers, and the methods used to govern large territories.
+
+3. After studying this chapter, what do you think were the most important features of the state and society in India before 1000 CE?
+
+4. What do early texts such as the Ṛigveda, Arthaśhāstra, and the Mahābhārata reveal about political and social life?
+
+5. What can we learn from early Indian society about varṇa and the role of women?
+
+6. Explain how assemblies like sabhā and samiti limited the power of the rājā. Which modern institutions perform similar functions today?
+
+7. What do the terms varṇa and jāti refer to in early Indian society? How were they different, and what factors may have contributed to the formation of various jātis?
+
+8. Why do you think education in early India emphasised both knowledge and moral values? How might this have benefited society?
+
+9. Look at the major trade routes of early India (Fig 5.12). How do you think these routes helped people in the exchange of goods, skills, beliefs, and cultural practices.
+
+10. What might have been the advantages and challenges of ruling a large empire in the absence of modern communication systems?
+
+11. Many ideas about governance come from texts composed by scholars and advisors of the king. What might be some limitations of relying only on such sources?
+
+12. Read the source and answer the questions:
+
+The Nāśhik cave inscription (2nd century CE) of Uṣhavadāta records:
+
+“Uṣhavadāta, son of Dinika, son-in-law of king Nahapāna … has bestowed this cave on the Saṁgha generally; he has also given a perpetual endowment, three thousand—3000 kāhāpaṇas,
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 – Part 1
+
+which, for the members of the Saṁgha of any sect, and any origin dwelling in this cave, will serve as cloth money and money for outside life (kuśhaṇa); and those kāhāpaṇas have been invested in guild dwelling at Govadhana—2000 in a weavers’ guild, interest one pratika (monthly) for the hundred, (and) 1000 in another weaver’s guild, interest three quarters of a paḍika (monthly) for the hundred.”
+
+a. What does this source tell us about the economic role
+
+of guilds?
+
+b. Why were guilds trusted with money deposits?
+
+c. Identify the donor and the donees from the given source.
+
+13. Mark and locate on the map of India the following important centres: Pāṭaliputra, Nāśhik, Ujjayinī, Vikramśhila, Kānchipuram, Mathurā, Rājgṛiha.
+
+14. Prepare a short presentation or poster on one of the following—
+
+a. Life in the Vedic society
+
+b. Early education system (gurukula)
+
+c. Trade and guilds in early India
+
+d. Role of women in early Indian society
+
+5 – State and Society up to 1000 CE
+
+Notes
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 – Part 1

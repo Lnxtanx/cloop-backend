@@ -1,0 +1,618 @@
+# CLASS-7 - SOCIAL-SCIENCE - CHAPTER 02
+# Source: gees102.pdf
+
+CHAPTER
+
+Understanding the Weather
+
+2
+
+A change in the weather is sufficient to create the world and oneself anew.
+
+Marcel Proust, French novelist
+
+Fig. 2.1
+
+The Big
+
+1. How can we measure and monitor the weather around us?
+
+Questions
+
+India and the World: Land and the People
+
+2 – Understanding the Weather
+
+2. How do weather predictions help us prepare for events like heavy rain, storms, drought and heat waves?
+
+27
+
+Weather and its Elements
+
+You wake up one winter morning and shiver. You reach for thick clothes to keep yourself warm. In the summer, you choose clothes that keep you cool and comfortable. You are responding to your body’s signals; your body is sensing the weather.
+
+What is weather?
+
+Stratosphere
+
+Tropopause Ozone Layer
+
+Troposphere
+
+Fig. 2.2
+
+Weather is a state of the Earth’s atmosphere at a particular time and place. But what is an atmosphere? In simple terms, it is the layer of gases that surround some planets — in the case of our Earth, we call these gases ‘air’. The Earth’s atmosphere may be compared to a cake with several layers. The layer closest to the surface of the Earth is called the ‘troposphere’, and that is where all land-based plants and animals (including humans!) live and breathe. It is also where almost all weather phenomena, which we will explore in this chapter, take place. The troposphere extends to a height of 6 to 18 kilometres from the ground; it is less thick at the poles (where the cold air contracts) and thicker in the tropical zone (where the warmer air expands). You will study more about the other layers in your Science classes.
+
+We use many words to describe the weather — hot, cold, rainy, cloudy, humid, snowy, windy, and so on. They describe the different ways in which we experience the elements of weather.
+
+LET’S EXPLORE
+
+Exploring Society: India and Beyond | Grade 7 Part 1
+
+What are some of the words in your local language that you use to describe the weather? Hot, cold, warm, chilly, crisp, pleasant, and so on, are commonly used terms in English.
+
+28
+
+The elements of weather are:
+
+Sleet: Frozen or partly frozen rain.
+
+Hail: Small, hard balls of ice that fall from the sky like rain.
+
+Temperature: How hot or cold the atmosphere is. Precipitation: Any form of water, such as rain, snow, sleet or hail, that falls from the sky. Atmospheric Pressure: The weight of the air above us, felt on the Earth’s surface. Wind: The movement of air, including its speed and direction. Humidity: The amount of water vapour in the air.
+
+THINK ABOUT IT
+
+Water vapour: Water vapour is water in gaseous instead of liquid form.
+
+Let us imagine that Krishnan from Chennai is speaking with Amir in Kashmir. Krishnan tells Amir that it has become chilly in Chennai after it rained the previous night. Amir asks him how cold it is. How will Krishnan explain to Amir how cold it is? After all, what is cold for Krishnan may be quite pleasant for Amir!
+
+As you can see, it would be difficult for Krishnan to convey his sense of chillness to Amir unless there is a commonly agreed way to measure the temperature. It is the same with other elements of the weather. In this chapter, we will learn how we measure the weather using common standards.
+
+LET’S EXPLORE
+
+What do you think could be some other reasons to measure the weather more precisely? (Hint: Think how knowing the weather a few hours or a few days in advance would help you plan some activities.)
+
+India and the World: Land and the People
+
+2 – Understanding the Weather
+
+Forecast: To predict or find out in advance (in our case, the weather).
+
+29
+
+From early times, humans have closely observed Nature and learnt to read her signals to forecast the weather. Observing birds flying low, ants carrying eggs, squirrels gathering nuts, frogs croaking loudly, or even the opening and closing of pine cones, provided valuable information about coming rain or storms. This knowledge has been passed down from generation to generation. Even today, in many parts of India, people use traditional ways to predict the weather, especially the arrival of the monsoon.
+
+Observing Nature’s clues
+
+Fig. 2.3.1. Ants shifting their eggs to higher ground is a natural behaviour
+
+that indicates an expected change in
+
+the weather, especially heavy rain.
+
+Fig. 2.3.2. A frog croaking in a forest of
+
+the Western Ghats, in
+
+expectation of rain.
+
+Meteorology:
+
+Meteorology
+
+Fig. 2.3.3. The opening and closing of pine
+
+is the systematic
+
+study of weather and its evolution.
+
+cones are natural mechanisms driven by environmental humidity. Pine cones close in humid conditions to protect their seeds, and open in dry conditions to release them, ensuring they spread in favourable weather.
+
+This study is the basis for weather forecasting.
+
+LET’S EXPLORE
+
+Talk to elders in your neighbourhood and ask them how they predict the weather. What signs do they observe? Document any sayings in your regional language that refer to weather prediction.
+
+Exploring Society: India and Beyond | Grade 7 Part 1
+
+In the last few centuries, scientists have worked out methods to measure and monitor the elements of the weather with great precision. Based on those inputs, meteorologists try to predict how the weather will behave in a particular region after a few hours or a few days, or even a few weeks. How do they do it? Do they just look up at the sky and guess? No, they’ve got some cool gadgets, a few of which we will now look at.
+
+30
+
+Weather Instruments
+
+a) Temperature
+
+LET’S REMEMBER
+
+In your Grade 6 Science textbook, Curiosity, you read about different types of thermometers used for measuring the temperature — the clinical thermometer and the laboratory thermometer. You also learnt about temperature scales. One of them is the Celsius scale; another is the Fahrenheit scale. If, for instance, we have a cool temperature of 15 degrees Celsius (noted as 15°C), it is the same as 59 degrees Fahrenheit (noted as 59°F).
+
+Fig. 2.4.2. Cloudy weather ―it’s
+
+getting cold. Fig. 2.4.1. Snow melts quickly when it’s warm.
+
+India and the World: Land and the People
+
+2 – Understanding the Weather
+
+Fig. 2.4.4. Curd takes longer
+
+Fig. 2.4.3. In winter, coconut oil turns solid.
+
+to set in cold weather.
+
+31
+
+Ambient:
+
+Of the immediate surroundings.
+
+Statistics: The technique
+
+There are several types of thermometers. Some simply measure the ambient temperature; others record the maximum and minimum temperatures during a day. Thermometers often use a coloured liquid which expands when the temperature increases. However, more and more, digital thermometers are preferred as they are more precise and can record more data.
+
+of gathering and analysing
+
+information
+
+Indeed, temperature recordings can be used to collect some useful statistics, including:
+
+or data in order to be able to detect
+
+patterns, understand events or make
+
+predictions.
+
+Range of temperature or the maximum temperature minus the minimum temperature during a particular period of time (usually 24 hours). Mean daily temperature or the maximum temperature plus the minimum temperature of the day divided by two.
+
+DON’T MISS OUT
+
+Æ The India Meteorological Department was set up in 1875. Its motto is ādityāt jāyate vriṣhti, which means, “From the sun arises rain.” The phrase comes from the ancient text Manusmṛiti, and the complete sentence reads, “From the sun arises rain, from rain comes food, and from food, living beings originate.”
+
+Fig. 2.5
+
+Æ Can you think of a reason why rain arises from the sun?
+
+LET’S EXPLORE
+
+Æ Here’s a chart of the temperatures of a city in Madhya Pradesh. What is the maximum temperature recorded in the week shown here? What is the minimum? Calculate the range.
+
+Exploring Society: India and Beyond | Grade 7 Part 1
+
+32
+
+Minimum Temperature
+
+Date
+
+Maximum Temperature
+
+(in ℃)
+
+(in ℃)
+
+28.02.2025 29 16
+
+01.03.2025 30 15
+
+02.03.2025 31 17
+
+03.03.2025 32 18
+
+04.03.2025 30 17
+
+05.03.2025 28 14
+
+06.03.2025 29 15
+
+Æ Remember the conversation between Krishnan and Amir? If Krishnan said it was 20°C in Chennai and he was feeling a little cold, he and Amir would have a measure they could understand. What do you think Amir’s reaction to Krishnan’s statement might be?
+
+b) Precipitation
+
+collecting
+
+funnel
+
+If the news says that a particular place received 30 mm of rainfall in a day, what does it mean? How is rainfall measured?
+
+10
+
+9
+
+8
+
+7
+
+measuring
+
+6
+
+scale
+
+5
+
+4
+
+3
+
+2
+
+measuring
+
+1
+
+tube
+
+India and the World: Land and the People
+
+2 – Understanding the Weather
+
+Fig. 2.6. Rain gauge
+
+The amount of rainfall is measured with the help of an instrument called a rain gauge (Fig. 2.6). When it rains, the water falls into a funnel and is collected in a cylinder. A scale is attached to the cylinder to measure the depth of rainwater collected. For example, when the height of the water collected is 5 mm, we say that the area received 5 mm of rainfall.
+
+33
+
+LET’S EXPLORE
+
+Make a rain gauge as shown in the diagram above. Place the rain gauge in an open area, away from objects that might obstruct rain. Ensure that the rain gauge is on a flat surface and will not tilt or topple with the wind. Using the measuring scale, record the amount of rainwater collected at the same time every day, for a month. (If there is snow, allow it to melt before taking the measurement.) Calculate the average rainfall for every week in that month and comment on the variation from week to week.
+
+c) Atmospheric pressure
+
+Our bodies are quite aware of temperature and rainfall. But you may also have experienced that the weather sometimes feels ‘heavy’, as before a thunderstorm. This is related to atmospheric pressure, which is the pressure exerted by the weight of the air above and around us.
+
+The atmospheric pressure is higher near the sea coast and lower as we go higher up into the mountains. When you climb a mountain, the air gets thinner than in the plain below. As a result, the air pressure is lower, and there is less oxygen available for
+
+lower pressure (cooler air)
+
+higher pressure (warmer air)
+
+Exploring Society: India and Beyond | Grade 7 Part 1
+
+Fig. 2.7
+
+34
+
+your lungs to take in. With less oxygen getting into your blood, your body has to work harder to keep you moving! That’s why people sometimes feel breathless, dizzy or tired at high altitudes.
+
+This does not mean that the atmospheric pressure is always high in the plains below or on the coast. In fact, it sometimes drops dramatically, resulting in what meteorologists call a ‘depression’ or ‘low-pressure system’, which can sometimes develop into a storm or even a cyclone.
+
+THINK ABOUT IT
+
+Why do you think it would be important to measure atmospheric pressure? Who are the people most likely to use such measurements?
+
+The instrument used to measure atmospheric pressure is called a barometer. As with thermometers, there are several types of barometers. The unit they display is generally the millibar (abbreviated as mb). The normal atmospheric pressure at the sea coast is around 1013 mb; a pressure below 1000 mb indicates a depression.
+
+THINK ABOUT IT
+
+Acclimatise: Adjust to a new climate or new condition
+
+India and the World: Land and the People
+
+2 – Understanding the Weather
+
+Fig. 2.8
+
+​People who journey to places at a high altitude are advised to make pauses on the way to allow the body to acclimatise. Our army personnel serve in high-altitude places like Khardung la in Ladakh, which is over 5600 metres above sea level. It is hard to imagine how they live and work in places where the oxygen level is so low — the atmospheric pressure there is generally about 650 millibars!
+
+35
+
+d) Wind
+
+Wind is the movement of air from areas of high pressure to areas of low pressure. Speed and direction are two important factors when we describe the wind.
+
+THINK ABOUT IT
+
+Have you seen seeds like these flying in the wind? What would happen to the seeds if there was no wind?
+
+Fig. 2.9
+
+The wind is an important element of the weather. Its direction and speed help in weather forecasting. Besides, air pilots and sailors need to be aware of wind data, as the wind has a great influence on flying or sailing. Farmers also use the wind direction to predict where rain might come from. Also, a greater wind speed will cause the soil to dry faster.
+
+Exploring Society: India and Beyond | Grade 7 Part 1
+
+So, how do we measure this direction and speed? A wind vane (or weather vane) has a rotating arm with a pointer at one end and a tail at the other. When the wind blows, the tail is pushed, and the pointer turns in the direction of the wind. It responds even to a light breeze.
+
+36
+
+Fig. 2.10. Left: Wind vane on the tarmac. Right: Anemometer
+
+This wind vane on the tarmac is called a ‘wind sock’. It gives pilots an indication of the direction of the wind during take-off and landing. Similar socks are used in industries that release ash or gases.
+
+The simplest instrument to measure the wind direction and speed is the anemometer. It has three or four metal cups that rotate on a vertical shaft when the wind blows — the stronger the wind, the faster the rotation. A meter attached at the bottom counts how many times the anemometer spins in a certain period of time and calculates the wind speed in kilometres per hour (km/h).
+
+e) Humidity
+
+Humidity is the last element of the weather on our list. It refers to the amount of water vapour present in the air. It also depends on factors like temperature, wind, pressure and location.
+
+LET’S EXPLORE
+
+India and the World: Land and the People
+
+2 – Understanding the Weather
+
+Where do you think humidity is likely to be more, Kochi or Jaipur? You might guess that Kochi has higher humidity than Jaipur because it is located near the sea. But how will we know for sure? If we had to compare the humidity level between Kochi and Mangaluru, how would we do it? Discuss with your classmates.
+
+37
+
+We can answer these questions more precisely by learning how to measure humidity.
+
+Before we move forward, we need to remember our Science lesson from Grade 6 about the states of water. This will help us to understand how humidity is measured.
+
+LET’S REMEMBER
+
+Æ When water evaporates, it causes a cooling effect.
+
+Æ If the amount of water in the air is already high (more humidity), water evaporates slowly. That is typically the case on a rainy day.
+
+Humidity of the air is measured as relative humidity: air that would contain absolutely no water vapour (which is impossible in natural conditions) is rated at 0%, while air saturated with water vapour will have a humidity of 100%. In practice, dry weather has a relative humidity range between 20% and 40%, while humid weather usually falls between 60% and 80% relative humidity.
+
+THINK ABOUT IT
+
+If the humidity in Delhi is at 52% while in Kochi it is 84%, in which of the two places are wet clothes likely to dry faster? And where are you likely to sweat more, assuming the temperature is the same in both places?
+
+But how do we measure such numbers? This is done through an instrument called a hygrometer. Again, there are several types of hygrometers, depending on the principle they are based on. The measurement of humidity is of great importance in many industrial processes, such as food processing. Museums also monitor humidity as they need to maintain a dry environment to preserve their exhibit.
+
+Exploring Society: India and Beyond | Grade 7 Part 1
+
+38
+
+Weather Stations
+
+As you can see, we need several instruments to measure the weather at a particular place and time. A weather station brings all these instruments together, making it easy to measure and track the weather. Readings of all the measurements are taken at regular intervals, which helps in mapping and forecasting the weather.
+
+Fig. 2.11
+
+An automated weather station
+
+An Automated Weather Station (AWS) is a self-operating system that uses various sensors to measure and record weather data, such as temperature, humidity, wind speed and direction, precipitation, and atmospheric pressure. Such stations are widely used in fields like agriculture, aviation, navigation, environmental monitoring, and so on, providing accurate and timely weather information without the need for human intervention.
+
+DON’T MISS OUT
+
+In 2023, the National Disaster Management Authority set up an AWS at a glacial lake of Sikkim at an altitude of more than 4800 metres above sea level. The AWS provides early information about upcoming weather conditions.
+
+Fig. 2.12. AWS at a glacial lake of Sikkim
+
+Predicting the Weather
+
+India and the World: Land and the People
+
+2 – Understanding the Weather
+
+Meteorologists collect data using these instruments over long periods of time. They study the data and use scientific
+
+39
+
+methods to try and predict the weather. Such predictions are very important nowadays, as climate change makes extreme weather, such as droughts, floods, cyclones, etc., more frequent.
+
+Fog
+
+Heat Wave
+
+Heavy Rain
+
+Cold Wave
+
+SUBDIVISION COLOUR
+
+Very Heavy Rain
+
+Cold Day
+
+No Warning
+
+Extremely Heavy Rain
+
+Ground Frost
+
+Watch (Be Updated)
+
+Heavy Snow
+
+Strong Surface Winds
+
+Alert (Be Prepared)
+
+Hailstorm
+
+Thunder & Lightning
+
+Exploring Society: India and Beyond | Grade 7 Part 1
+
+Dust Storm
+
+Warning (Take Action)
+
+Hot and Humid
+
+Fig. 2.13. India: weather warning for India on 19 May 2024
+
+40
+
+Accurate predictions help us to be ready for such events. They also enable local governments to mobilise resources and prepare for any disasters. For example, if stormy weather is expected at sea, fishermen are warned about venturing out in their boats, or an entire coastal area might have to be evacuated if a cyclone is expected.
+
+LET’S EXPLORE
+
+Discuss, in pairs, different situations in which weather predictions are helpful. Make a list, and after you have completed it, share it and discuss it with the pair sitting next to you. How many different categories of situations have you been able to identify?
+
+Look carefully at the map of India above. This map was issued by the India Meteorological Department on 19 May 2024. Study the icons and connect them to the conditions shown on the map.
+
+LET’S EXPLORE
+
+Æ What do you observe happening on that day? What are the various weather conditions that the IMD is alerting people to?
+
+Æ Which states have warning signs?
+
+Æ Which parts of India are likely to be free from severe weather?
+
+Æ Which states are likely to face heat wave conditions?
+
+Æ What are the causes for warning in Tripura and Lakshadweep?
+
+Before we move on ...
+
+Æ Temperature, humidity, precipitation, wind and atmospheric pressure together define the weather at a particular place.
+
+India and the World: Land and the People
+
+2 – Understanding the Weather
+
+Æ The condition of these elements is measured using special instruments. Data collected from these help us to monitor and predict the weather.
+
+41
+
+Æ In different times or situations, one of the elements is dominant — for example, rainfall in July, the temperature in May and December, atmospheric pressure when a cyclone is moving, and wind when a loo (strong, hot and dusty winds that blow in north India in summers) is blowing, or forest fires are spreading.
+
+Æ Weather is closely linked to climate. We will discuss this in the next chapter.
+
+Questions and activities
+
+1. Match the instrument with the weather element it measures.
+
+Instrument used Element of the Weather
+
+(1) Hygrometer (a) Precipitation
+
+(2) Anemometer (b) Atmospheric pressure
+
+(3) Barometer (c) Wind direction and speed
+
+(4) Thermometer (d) Humidity
+
+(5) Rain gauge (e) Temperature
+
+2. Jyotsna is deciding what clothes to pack for her school trip to Mumbai in June. She looks at the weather forecast, which predicts 29°C and 84% humidity. What would be your advice to her?
+
+3. Imagine that a small group of students is setting up a rain gauge.
+
+Here are some options for the site.
+
+1. The school vegetable garden.
+
+2. The terrace of the school building.
+
+3. Open ground with elevated platform.
+
+Exploring Society: India and Beyond | Grade 7 Part 1
+
+4. Compound wall of school.
+
+42
+
+5. Verandah of the school laboratory.
+
+Discuss in your group and finalise the site. Write down the reasons for your decision.
+
+4. Below is a chart taken from IMD, Jammu and Kashmir. Looking at the data available, write a short script to report the weather conditions in different parts of Jammu and Kashmir on the date shown. (Hint: Cover the temperature range, maximum and minimum temperatures, humidity, precipitation, etc.)
+
+Daily Weather Parameters
+
+Jammu & Kashmir (EVENING)
+
+DATE: 01-02-2024
+
+max temperature
+
+min temperature
+
+relative humidity
+
+of date
+
+of date
+
+from 0830 to 1730 hrs
+
+(mm/cm)
+
+Station
+
+24 hrs R/F ending 0830 of date (mm/cm)
+
+ACT
+
+NOR
+
+DEP
+
+ACT
+
+NOR
+
+DEP
+
+(°C)
+
+(°C)
+
+(°C)
+
+(°C)
+
+(°C)
+
+(°C)
+
+0830 (%)
+
+1730 (%) R/F (mm)
+
+S/N (cm) R/F S/N
+
+SRINAGAR 
+6.5 
+8.9 –2.4 0.2 –0.7 0.9 TR 0.0 13.4 
+2.4 89 89
+
+QAZIGUND 
+3.2 
+8.5 –5.3 –0.4 –2.1 1.7 11.8 
+10.0 36.2 22.0 97 90
+
+PAHALGAM 
+1.1 
+5.6 –4.5 –4.1 –6.1 2.0 
+6.0 
+8.0 19.4 23.0 96 96
+
+KUPWARA 
+5.1 
+8.5 –3.4 –0.7 –2.3 1.6 0.5 0.0 21.9 10.0 97 94
+
+KUKERNAG 
+2.6 
+6.6 –4.0 –1.4 –2.4 1.0 12.0 
+8.0 35.2 30.0 96 97
+
+GULMARG 
+–2.6 1.4 –4.0 –7.6 –7.6 0.0 
+8.2 
+6.35 35.2 35.0 76 100
+
+MUZAFARABAD 
+8.5 
+– 
+– 
+5.6 
+– 
+– 
+– 
+– 25.8 
+– 93 
+–
+
+Note: ACT means actual; NOR means normal; DEP is departure from normal; R/F is rainfall; S/N is snowfall; TR means trace amount.
+
+India and the World: Land and the People
+
+2 – Understanding the Weather
+
+43
+
+Exploring Society: India and Beyond | Grade 7 Part 1
+
+*‘Noodles’ is our abbreviation for ‘Notes and Doodles’!
+
+44

@@ -1,0 +1,446 @@
+# CLASS-9 - SOCIAL-SCIENCE - CHAPTER 08
+# Source: iest108.pdf
+
+Chapter 8
+
+Building Blocks in Economics: The Problem of Choice
+
+The Big Questions
+
+1. What does economics deal with?
+
+2. What are the key questions in economics?
+
+3. How do different economic systems address these questions?
+
+If you had to choose, would you spend your pocket money on snacks or save it for a new pair of shoes? If your school library had only five copies of a new storybook but 20 students wanted to read it, who should get the book first? Can the students share them or should the school buy more copies? Which type of crop should a farmer grow based on the condition of the soil, rainfall, and market demand? Should an enterprise employ more labour or capital in the production process? Should the government spend more on building highways or hospitals?
+
+Market: A place where buying and selling of products and services takes place. It could be a physical market or a virtual one on the internet.
+
+These are not random questions; rather, these are examples of economic choices that individuals, enterprises, and governments have to make.
+
+Some of our preferences are needs, such as essentials like food, water, and shelter, while others are wants, like gadgets, vacations, or luxury items. Human wants are unlimited and keep changing; for instance, people may want to upgrade from a bicycle to a motorbike and then to a car.
+
+Needs
+
+Wants
+
+Fig. 8.1. Needs vs wants
+
+LET’S EXPLORE
+
+Æ List three things your parents bought this month. Can you classify them into needs or wants?
+
+Æ Do you think having too many wants may create problems? Why or why not?
+
+Choices and Limited Resources
+
+Resources:
+
+Factors used for the
+
+production of goods and services. These
+
+can be natural,
+
+like water and coal, or human-made, like capital and
+
+technology.
+
+Medical equipment
+
+Resources are required to satisfy human needs and wants. In Grade 8, you have learnt about factors of production—land, labour, capital, and technology—which are used for the production of goods and services. However, both natural and human-made resources are limited in quantity. They can be put to many alternative uses such as allocating money to buy fruit or a pair of shoes. Not just households, economies also have to decide how to use their scarce resources in the best possible way to meet unlimited wants and improve people’s quality of life. For example, pictures in Fig. 8.2 show the alternative uses of steel.
+
+Aircraft manufacturing
+
+Refrigerator manufacturing
+
+When one alternative is chosen, the other options are given up. The value of what is given up is known as the opportunity cost. Let us understand this through an example. Imagine that a farmer has a piece of land and can choose to grow either barley or wheat on it. With limited land, water, and labour, the farmer must decide how much of each crop to produce. Consider the following table, which
+
+Fig. 8.2. Alternative uses of steel
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 – Part 1
+
+shows various combinations of quantities of barley and wheat that can be grown by the farmer.
+
+Combination Barley (in kg) Wheat (in kg)
+
+A 0 100
+
+B 25 90
+
+C 50 70
+
+D 75 40
+
+E 100 0
+
+When these combinations are plotted on a graph (Fig. 8.3), where the x-axis represents the quantity (in kg) of barley grown, and the y-axis represents the quantity (in kg) of wheat grown, a downward sloping curve is derived.
+
+y-axis
+
+A
+
+100
+
+B
+
+80
+
+C
+
+60
+
+D
+
+Wheat (in kg)
+
+40
+
+20
+
+E
+
+x-axis
+
+0
+
+20 40 60 80 100
+
+Barley (in kg)
+
+Fig. 8.3. Production Possibility Curve
+
+Production Possibility Curve (PPC): The curve showing different combinations of goods that can be produced using all available resources.
+
+This is called the Production Possibility Curve (PPC), which shows the trade-off between barley and wheat produced. As the farmer moves from point A to E, they produce more barley and lesser wheat. However, to grow more barley, some wheat must be sacrificed—this is the opportunity cost of growing barley. All the points on the PPC show the maximum output that can be produced through efficient use of resources by avoiding wastage. This helps in better planning and decision-making by enterprises and the governments.
+
+8 – Building Blocks in Economics: The Problem of Choice
+
+LET’S EXPLORE
+
+Æ Ask your parents about how they make choices for everyday purchase. What is the opportunity cost of making a particular decision?
+
+Æ How do you decide to spend your time? Is time a scarce resource?
+
+What does Economics Deal with?
+
+Economy: The state of a country or region
+
+in terms of the production and
+
+consumption of goods and services, and the
+
+flow of money.
+
+The word Economics comes from the Greek word oikonomia, which in turn is composed of two words: oikos, which is usually translated as ‘household’; and nemein, which is best translated as ‘management’. So, economics refers to household management. In the case of limited resources and unlimited wants, not just families but also nations must plan how to use their resources efficiently.
+
+Economic entities: One who participates
+
+in an economic
+
+activity, for
+
+example, producers, consumers, government, and
+
+enterprises.
+
+Data: Facts and statistics
+
+Since resources have competing uses, individuals, enterprises, and governments must decide how to best allocate them, as these decisions affect the well-being of people and society as a whole. The discipline of Economics deals with how choices are made by optimising the use of limited resources to satisfy the needs and wants. It explains how different economic entities—consumers, producers, governments, and financial institutions—interact in an economy. For example, how people work and earn wages, how wealth and resources are distributed, how prices are determined in the market, how education and technology drive investment, and how government policies and trade influence prices in the market, employment, and so on.
+
+collected together for reference or
+
+analysis.
+
+Surveys: A systematic
+
+method for collecting and analysing data
+
+related to the economic conditions and
+
+behaviours of
+
+populations.
+
+Understanding Society:
+
+However, good decisions rely on data and analysis, not guesswork. For example, families allocate their money for essential items (such as food, medicines, and school supplies), non-essential items (such as jewellery, entertainment, and restaurant meals) and savings. Governments use revenue from taxation to plan expenditure on infrastructure and welfare programmes. Enterprises study market trends and new innovations to better serve customers and maximise profits. Economists study the available alternatives, associated opportunity costs, and potential outcomes to help individuals, enterprises, and institutions make decisions. They use data from government reports such as economic surveys and financial statements of companies, and their analysis helps to understand the potential risks and opportunities. The scope of their work includes:
+
+India and Beyond
+
+Grade 9 – Part 1
+
+Policy- making:
+
+Guiding governments
+
+on taxation
+
+or welfare
+
+Business consulting: Helping firms plan growth or improve efficiency.
+
+spending.
+
+Research and
+
+education:
+
+Studying economic trends and
+
+Finance: Advising investors on where to invest.
+
+teaching
+
+others.
+
+Fig. 8.4. Scope of work of Economists
+
+Economic Survey: A Report on Indian Economy
+
+Policy: A course or principle of action adopted or proposed by organisations or individuals.
+
+The Economic Survey of India is an important annual document prepared by the Ministry of Finance and presented in Parliament before the Union Budget. It reviews the country’s economic performance during the past year and analyses various sectors of the economy such as agriculture, industry, services, and other areas like employment, inflation, education, health, infrastructure, etc. It discusses future challenges and opportunities for the economy. This helps people understand how the Indian economy is performing and what steps the government may take to improve growth and development. It also acts as a blueprint for the upcoming Union Budget by providing crucial insights for policymakers while making policy-related decisions. It is also useful for citizens as it explains economic data in a clear manner.
+
+You can have a look at the latest economic survey at:
+
+https://www.indiabudget.gov.in/economicsurvey/
+
+8 – Building Blocks in Economics: The Problem of Choice
+
+Key Questions in Economics
+
+Any mismatch between unlimited wants and limited resources gives rise to three key questions that the discipline of economics seeks to address.
+
+Unlimited
+
+Limited Resources
+
+Wants
+
+SCARCITY
+
+CHOICES
+
+What to Produce How to Produce For Whom to Produce
+
+Fig. 8.5. Key questions that economics seeks to address
+
+What to Produce and for Whom?
+
+Economy:
+
+System of production, distribution,
+
+trade, and consumption of goods and services within
+
+a specific area such as a
+
+country.
+
+This fundamental question concerns which goods and services, and in what quantities, should be produced to meet the needs of the economy over a given period. For instance, should farmers produce water-intensive crops such as sugarcane and paddy, or drought- resistant crops such as millets and pulses? Producing sugarcane yields high profits and supports industries such as sugar, whereas producing millets and pulses saves water, improves soil health, and promotes sustainable agriculture. Here, the opportunity cost of producing sugarcane is the forgone gains from saved water and improved soil health. This type of decision reflects the trade-off between short-term economic gains and long-term sustainability by accounting for the opportunity costs of various alternatives. Similar trade-offs have to be made by companies, governments, and consumers.
+
+The question of ‘for whom to produce’ delves into the purpose of goods and services produced, how they are produced and distributed, and who benefits from their production. Since resources are limited
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 – Part 1
+
+and people have different needs, income levels, tastes, and lifestyles, producers decide which group of consumers they want to serve. For example, shoes are a common product, but different types of shoes are produced for different groups of people depending on their needs and purchasing power.
+
+School shoes are produced for students. They are usually simple in design, durable, and affordable. Office-wear shoes are made for working professionals. These shoes focus on comfort, formal appearance, and quality, often using leather or polished materials. Sports shoes are produced for athletes and fitness enthusiasts. They are designed using special rubber soles and lightweight materials to provide grip, flexibility, and support. Casual shoes or slippers are produced for daily use by people and need to be comfortable yet affordable.
+
+The decision of ‘for whom to produce’ also affects the materials used. For instance, leather shoes are generally targeted at office-goers and high-income customers, whereas rubber or synthetic shoes are aimed at sports players, factory workers, or people who need affordable and durable footwear. Producers analyse what consumers like, how much money they have, and how much demand there is, before deciding what to make. This makes sure that limited resources are used well and not wasted.
+
+THINK ABOUT IT
+
+Should the government allocate more funds to healthcare and education or to defence and space exploration? Why or why not?
+
+How to Produce?
+
+After deciding what to produce, the next question is how to produce it—which methods, resources, and technologies should be used. For example, whether a manufacturer should automate processes or employ more labour for producing goods.
+
+To answer this question, producers must select the right mix of factors of production—land, labour, capital, and technology. Production can be labour-intensive (using more workers and less machinery) or capital-intensive (using more machines and technology and less workers). Usually, economic activities related to agriculture and handicrafts rely more on labour, whereas industries such as steel and automobile manufacturing depend more on machinery.
+
+8 – Building Blocks in Economics: The Problem of Choice
+
+Labour
+
+Land
+
+Factors of Production
+
+Capital Technology
+
+Fig. 8.6. Factors of production
+
+However, the choice of the production technique employed depends on the cost of capital, choice of technology, and the nature of the product. The availability of various factors of production and their relative cost, and the laws as well as regulations in the country determine the decision by enterprises to address this key question. A garment manufacturer must choose between labour-intensive and capital-intensive methods of production. If machines are expensive, the firm will rely more on labour, but if machines become affordable, it may shift to automation. The choice also depends on the level of technology available—advanced technology encourages machine use, while limited technology leads to manual production. The nature of the product is important too, as customised or designer clothes require skilled labour, whereas mass-produced garments are better suited for machines. Additionally, if labour is cheap and easily available, labour-intensive methods are preferred, but if labour is costly or scarce, machines become more efficient. Government laws and regulations, such as labour laws or incentives for machinery, also influence this decision.
+
+Economic Systems and How Choices are Made
+
+In an economy, the answers to these three key questions depend on how the resources used to produce goods and services are organised and who controls the decision-making regarding them. The system that defines the mechanisms for the production, consumption, and distribution of goods, services, and resources is known as the economic system of a country.
+
+Understanding Society:
+
+India and Beyond
+
+The three kinds of economic systems are explained in the following pages.
+
+Grade 9 – Part 1
+
+Planned Economy
+
+Planned economy: An economic system in which the allocation of resources, and prices of goods and services are determined by the government.
+
+In a planned economy, a central planning authority of the government, such as the planning commission, makes all major economic decisions in the market, that is, what and how much will be produced, how they will be produced, and who will get to use them and at what prices. The government has ownership in most resources and sectors like land, factories, banks, and transport. With limited private ownership, enterprises usually follow the central authority’s targets rather than market demand, and are heavily regulated by the government through strict permits and licenses to produce goods and services. However, this prevents a large number of enterprises to operate in the market and thus restricts competition among private enterprises. As a result, there is little motivation among enterprises to improve quality or innovate. Some examples of planned economies are the former Soviet Union, North Korea, and Cuba.
+
+Market Economy
+
+Market economy: An economic system in which the allocation of resources, and the prices of goods and services are determined primarily by market forces. The role of the government is to provide public goods and physical infrastructure.
+
+In a market economy, the questions of what, how, and how much to produce are addressed mainly by the forces of demand and supply with little government intervention. Often, the government acts like a referee in a football match. It ensures safety and law and order, and it does not control prices or production. The ownership of factories, shops, land, and other resources, largely rests with individuals and private companies. Many producers offer similar products, which encourages better quality, lower prices, and innovation in production of goods and services. Some of the prominent examples include the United States of America, Japan, and Hong Kong. However, governments play an important role even in these economies.
+
+LET’S EXPLORE
+
+Æ In your opinion, should the government completely stay out of enterprise decisions?
+
+Æ Can you think of an example where government action helped or harmed an industry or sector?
+
+Government Role Ensures safety and law and order without controlling prices.
+
+Market Economy
+
+Private Ownership Individuals and enterprises own factories, shops, and land.
+
+Fig. 8.7. Role of government and private ownership in a market economy
+
+8 – Building Blocks in Economics: The Problem of Choice
+
+Mixed Economy
+
+Mixed economy: The
+
+market system
+
+of resource
+
+allocation in which the government and
+
+private sector
+
+A mixed economy combines features of both market and planned economies. In this system, private individuals, enterprises, and the government play important roles in making economic choices and decisions. We also find large public sector companies that play a very improtant role in the market. In reality, most economies have features of mixed economic systems that allow the existence of private ownership, with some degree of government regulation.
+
+coexist and compete with
+
+each other in the market. The
+
+A few examples of mixed economies include India (post-1991), China (post-1978), Germany, and Sweden. Even market economies like the United States of America and Singapore have significant government involvement in the market.
+
+private players are regulated by the government.
+
+Almost all economies are
+
+mixed.
+
+Government
+
+Fair Competition Rules
+
+Market
+
+Public goods:
+
+Consumer Protection
+
+Goods and services that are available to
+
+Profit-making Businesses
+
+Transparency
+
+Innovation
+
+Public Goods
+
+all individuals without anyone being excluded. The use of public
+
+Mixed Economy Welfare Programmes Competition
+
+goods by some
+
+people does
+
+Fig. 8.8. The role of government and market in a mixed economy
+
+not prevent others from using them—for
+
+example, parks,
+
+DON’T MISS OUT
+
+roads, police services, street lights, and basic
+
+education.
+
+India’s economic system has also evolved over time in response to changing needs and challenges. In the decades after Independence, India followed a more state-led approach similar to a planned economy. The government played a major role in controlling industries, allocating resources, and regulating production through licenses and permits, while many key sectors, such as banking, transport, and heavy industries were dominated by the public sector. However, by 1991 the country faced serious economic difficulties. As a result, the government introduced major economic reforms that reduced excessive regulations, encouraged private enterprise, opened the economy to global
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 – Part 1
+
+trade and investment, and increased competition. These reforms gradually shifted India towards a more market-oriented system while still retaining an important role for the government. You will study more about these changes in your higher grades.
+
+This chapter has shown that economics is essentially about making choices in a world of scarce resources and unlimited wants. Individuals, enterprises, and governments must constantly decide how to best use available resources, keeping in mind the opportunity cost of each decision. These choices are reflected in the three key economic questions—what to produce, how to produce, and for whom to produce. Different economic systems provide different ways of answering these questions, but most modern economies combine elements of both market and planned economic systems. Understanding these ideas helps us appreciate how everyday decisions, public policies, and economic systems together shape the production, distribution, and use of resources in an economy.
+
+Before we move on...
+
+Æ Economics deals with how individuals and societies make choices to use limited resources to satisfy unlimited wants. Every choice involves an opportunity cost—giving up one option for another.
+
+Æ Every economy faces three central questions—what to produce, how to produce, and for whom to produce—to decide how best to use scarce resources.
+
+Æ Different systems answer these questions differently: market economies rely on private decisions and demand and supply whereas, planned economies depend on government control, and mixed economies combine both.
+
+Questions and activities
+
+1. Why do you think people’s wants keep changing over time? How does this affect production in an economy? Why cannot all our wants be satisfied?
+
+2. ‘Human wants are unlimited and keep changing’. How do you think this constant desire for more creates pressure on the environment? Can the fulfilment of wants and the extraction of resources be balanced?
+
+8 – Building Blocks in Economics: The Problem of Choice
+
+3. Can you think of a resource in your region that is scarce but used wastefully? How could it be managed better?
+
+4. Which economic system—market, planned, or mixed—do you think gives people the most freedom? Which economic system is best suited for promoting innovation? Why?
+
+5. Critically examine why pure economic systems rarely exist in reality. Assess the limitations of such systems and justify why a mixed economy is often considered a more practical and effective approach in real-world contexts.
+
+6. A student has ₹100 and must choose between buying a notebook or saving the money for buying a tennis racket later. Which economic concept best explains this situation?
+
+a.  Demand b.  Opportunity cost
+
+c.  Production d.  Inflation
+
+7. How does understanding opportunity cost improve the quality of economic decision-making?
+
+8. Can effective economic decisions be made without reliable data? Support your answer with an example.
+
+9. Analyse how a country’s present economic choices can shape its long-term future. Why is it important to consider future consequences while making economic decisions today?
+
+10. Identify a news article from any newspaper of your choice about a product or commodity (such as vegetables, fruits, fuel, or electronics) where producers or companies are deciding how much to produce or supply. Write 2–3 sentences explaining the example you found and why the production decision was made.
+
+Notes
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 – Part 1

@@ -1,0 +1,858 @@
+# CLASS-9 - SOCIAL-SCIENCE-PART-2 - CHAPTER 04
+# Source: iest204.pdf
+
+Chapter 4
+
+Governance and Public Policy
+
+The Big Questions
+
+1. What is governance, and how have its meaning and practice evolved over time?
+
+2. What is public policy? How does it affect our day-to-day lives, and what makes it ‘public’?
+
+3. What are the various stages of policy-making and policy implementation?
+
+4. Who are the major contributors to policy-making and implementation?
+
+5. What role do citizens play in shaping public policy and strengthening good governance?
+
+In the chapters ‘Democracy’ and ‘Elections’, we learnt that democracy is a system of self-governance that involves institutions, rules, and practices that enable people to participate in decision-making. However, in a well-functioning democracy, it is not enough to participate only in elections to form the government. A robust democracy requires transparent institutions, responsible representatives, and the continuous participation of people in public life.
+
+Governance
+
+Governance in a democratic system is based on transparency, accountability, participation, and the rule of law. Democratic governance places citizens at the centre of the political process. It is more people-centric and welfare-oriented.
+
+LET’S EXPLORE
+
+Let us see how a government and citizens come together to address various challenges.
+
+Imagine that your town experiences several days of unusually heavy rainfall. Roads become flooded, schools remain closed,
+
+electricity is disrupted in some areas, public health concerns rise, and many people find it difficult to reach schools, workplaces, or even hospitals. During such situations, organisations and individuals come together to help all in need.
+
+The municipal corporation clears drains and removes garbage. The Public Works Department repairs damaged roads. The police manage traffic. School authorities inform parents that schools will remain closed. Health workers prevent the spread of diseases. Local representatives raise people’s concerns, while residents volunteer to help vulnerable neighbours and report on flooded areas. The situation improves with collective efforts of all.
+
+Form groups and discuss the following.
+
+Æ Who are the different people and organisations involved in dealing with this situation?
+
+Æ Why cannot a single department solve the problem on its own?
+
+Æ What would happen if these departments did not communicate or coordinate with one another?
+
+Æ What role can citizens play before, during, and after the heavy rainfall?
+
+Æ What makes the collective response effective?
+
+Fig. 4.1. Collective response to resolve the crisis
+
+Share your ideas with the class. Make a list of the qualities that help the town respond effectively. These qualities are essential whenever governments and society work together to solve public problems.
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 Part 2
+
+Solving public problems requires much more than a government issuing orders. Different institutions and citizens need to work together, make decisions, implement them effectively, and remain accountable. This process is known as governance.
+
+Understanding Government and Governance
+
+Government Governance
+
+Refers to the process of
+
+Refers to the institutions that
+
+decision-making and
+
+exercise political authority
+
+implementation
+
+Includes government, citizens, media, civil society, and private
+
+Includes the Legislature, the Executive, and the Judiciary
+
+organisations
+
+Focuses on who governs Focuses on how governing is
+
+carried out
+
+The terms ‘government’ and ‘governance’ are closely related. However, they are not synonymous. Government refers to the institutions and authorities that exercise political power, while governance refers to the process by which decisions are made, implemented, and monitored in the public interest. The government formulates and implements people-centric policies, and good governance ensures that these policies are transparent, accountable, effective, and responsive to people’s needs. Governance is the system through which decisions are made, implemented, and monitored for the welfare of the people. It refers to the way a country, state, city, village, school, or organisation is managed. Therefore, understanding governance is essential to know how government impacts our lives.
+
+LET’S EXPLORE
+
+Government refers to the institution that has the authority to provide public services. For example, the municipal corporation or panchayat is responsible for installing street lights. Governance is the process by which this street lighting is planned, implemented,
+
+4 – Governance and Public Policy
+
+and maintained, involving people in identifying dark spots, reporting non-functional lights, and providing feedback.
+
+It ensures the continuous delivery of public services—in this case, well-lit streets and greater public safety.
+
+Can you identify more such examples from your day-to-day life to understand the difference between government and governance?
+
+Evolution of Governance in India
+
+In the previous section, we studied that while the government is the institutional aspect, governance refers to its functional aspect. The government’s institutional setup influences the nature of governance, and governance initiatives, in turn, require institutional adaptations to implement policies and schemes.
+
+We are familiar with the structure of government at different levels in India. But the same structure has not always existed as it does now; it has evolved from certain historical experiences. Let us understand this historical context by looking at the ‘big picture’ of the world history.
+
+Do you remember the phenomenon of colonialism that you learnt about in Grade 8? We know that European powers colonised many societies, particularly those in Asia, Africa, and the Americas. Before colonial rulers forced their own models of governance and policy-making on colonised people, these societies governed themselves in accordance with local and organic systems. Although most colonies had become independent by the end of the 20th century, colonial institutions largely persisted, and their structures continued to dominate even in contemporary times. India is not an exception to the historical legacy of colonialism. However, India stands out in two important ways. Firstly, unlike many societies that experienced colonial rule, India has preserved most of its knowledge of its pre-colonial institutions and traditions of governance through texts and practices. Secondly, after Independence in 1947, it was not possible to replace all colonial institutions at once. The leaders of independent India therefore framed the Constitution in the spirit of India’s own values and ideals.
+
+Understanding Society:
+
+Since Independence, Indian institutions have continued to draw upon traditional ideas and values of governance and have adapted them to the needs of a modern democracy. For example, the British ‘Order of the Star of India’ used the phrase, ‘Heaven’s Light, Our Guide’ as its motto but after Independence, we have adopted ‘Satyamev Jayate’
+
+India and Beyond
+
+Grade 9 Part 2
+
+(Truth alone triumphs), from the Munḍaka Upaniṣhad as our national motto. This reflects the continuing importance of Indian ethical values in public life. The motto of the Supreme Court of India was chosen to be ‘Yato Dharmastato Jayaḥ’. This phrase is taken from the Mahābhārata, and it means ‘Where there is Dharma (righteous duty), there is victory’. These changes are not just symbolic or superficial. They signify the core values as well as the ideals of our institutions, which have been bestowed along with the responsibility of ensuring good governance.
+
+LET’S EXPLORE
+
+Fig. 4.2.
+
+Sengol
+
+The Sengol—a cultural marker of rulership and good governance— was placed in India’s newly inaugurated Parliament building in the year 2023 by Prime Minister Narendra Modi. The tradition of using the Sengol as a mark of righteous governance began more than a thousand years ago during the reign of Chola dynasty. To mark the occasion of India’s Independence, at the stroke of midnight on 15th August 1947, the first Prime Minister, Jawaharlal Nehru, received the Sengol from the Adheenam Saints (an old Shaivite tradition) of Tamil Nadu. Try to find out more about the journey of the Sengol through its historic pictures.
+
+Mahatma Gandhi visualised an ideal model of governance as Rām Rājya. Rām Rājya is rooted in the principles of probity, transparency, compassion, welfare, and people-centric orientation in governance and public policy. Gandhi’s views on Rām Rājya reflect the collective imagination of Indians, from their distant past to the present day, that Rām Rājya is one of the best examples of good governance and a good collective life, as enshrined in the Rāmāyaṇa and the sixteenth-century text of Rāmcharitamānas.
+
+From the Vedic period to the Rāmāyaṇa and the Mahābhārata, Indian tradition has consistently viewed governance as a sacred responsibility rather than merely a means of exercising power. Rājadharma, the foremost duty of an ideal king, was to protect the people by upholding Dharma (righteous duty) and promote the welfare of society. Good governance was measured not only by the ruler’s authority but by the peace, prosperity, justice, and well-being in society. Kauṭilya’s Arthaśhāstra says the following:
+
+4 – Governance and Public Policy
+
+प्रजासुखे सुखं राज्ञ: प्रजानां च हिते हितम्
+
+Prajāsukhe sukhaṁ rājñaḥ prajānāṁ cha hite hitam
+
+(In the happiness of the people lies the happiness of the ruler, and in the interest of the people lies the interest of the ruler.)
+
+LET’S RECALL
+
+You have read in the first part of this textbook that the Ṛigveda refers to the Sabhā and Samiti as important institutions where matters of governance and public welfare were discussed.
+
+Good Governance
+
+Governance affects many aspects of our daily life. It helps maintain law and order so that people can live safely and peacefully. It protects the rights and freedom of citizens, which are essential in a democratic society. It also helps people access important public services, such as education, healthcare, transport, and so on.
+
+Good governance promotes justice and fairness and ensures that people are treated equally before the law. It also helps build trust between citizens and the government.
+
+Governance is the government’s responsibility, but good governance depends on how different sections of society and government perform their responsibilities and work with one another. For example, the government makes laws and policies and provides public services. Citizens elect their representatives, follow the law, and participate in public life. The media helps people understand public issues and brings important matters to public attention. Civil society organisations work with communities and raise awareness about social concerns. The private sector contributes through economic activity and innovation.
+
+Therefore, features of good governance include responsiveness, transparency, participation, the rule of law, accountability, effectiveness, and inclusiveness.
+
+When people and institutions perform their responsibilities honestly and work together, governance becomes more effective and public welfare is achieved.
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 Part 2
+
+RULE OF LAW
+
+Everyone is equal
+
+before the law ACCOUNTABILITY
+
+PARTICIPATION
+
+Public officials are
+
+Citizens take part in
+
+responsible for
+
+decision-making
+
+their actions
+
+TRANSPARENCY
+
+EFFECTIVENESS
+
+Public resources
+
+Government decisions are open
+
+are used wisely
+
+and accessible
+
+RESPONSIVENESS INCLUSIVENESS
+
+Every citizen
+
+Government
+
+has equal opportunities
+
+addresses people’s needs
+
+Good governance is a partnership between the government and citizens. When we work together, we build a just, peaceful, and prosperous nation.
+
+Fig. 4.3. Features of good governance
+
+LET’S EXPLORE
+
+Select two cities (one should be from a region other than yours) in India that have received awards for being the cleanest city. Make a visual presentation (chart paper or slideshow) to explain the ‘good governance model’ used in those cities by looking into the role played by government agencies (local, state, and national), residents, market associations, civil society organisations, etc. Also look into the steps they are taking to continue being clean cities.
+
+4 – Governance and Public Policy
+
+LET’S EXPLORE
+
+Form pairs or groups and assign one State or Union Territory to each group. Prepare a short classroom discussion paper on:
+
+1. Good governance initiatives being implemented.
+
+2. Suggestions for further improving governance.
+
+Challenges to Good Governance
+
+The task of governance is always ongoing. With time, the needs, desires, and aspirations of people also evolve, creating new challenges to which the government and the institutions have to respond. For example, weak coordination between different institutions and departments can affect the implementation of government programmes. At the same time, unequal access to public services can leave some groups or communities behind, particularly those who face social, economic, geographical, or other barriers. Malpractices and misuse of public offices can prevent resources and benefits from reaching the people. Misinformation and fake news also pose a serious challenge to good governance. Addressing these challenges requires effective institutions, responsible officials, active citizens, and a continued commitment to the principles of good governance. The initiative of e-governance has contributed significantly towards good governance. Let us understand details about e-governance in the following section.
+
+LET’S EXPLORE
+
+Did you know that 25th December is celebrated as National Good Governance Day? Can you find out why this date was chosen? How is National Good Governance Day celebrated in your district? Discuss in your class.
+
+E-Governance: Technology for Better Governance
+
+Today, digital technology has changed the way the government interacts with people. E-governance refers to the use of information and communication technology by governments to provide public services, share information, communicate with citizens, receive feedback, and improve administrative processes. It can make
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 Part 2
+
+governance more transparent, accessible, and convenient and quick for the citizens. E-governance substantially reduces paperwork and allows people to access services without visiting government offices.
+
+LET’S EXPLORE
+
+Below is a chart of a few e-governance initiatives. Complete the chart and also add two such initiatives undertaken by your state government.
+
+Initiative Objective
+
+UMANG
+
+Aadhaar
+
+GeM (Government e-Marketplace)
+
+DigiLocker
+
+CPGRAMS
+
+APAAR
+
+E-governance is particularly valuable in a large country like India, as it enables governments to deliver public services more efficiently, transparently, conveniently, and quickly to citizens across vast geographical areas.
+
+However, e-governance is only effective when people have access to digital devices, reliable internet, and the skills needed to use them. Therefore, while technology can strengthen good governance, the government must also ensure that digital services remain inclusive and accessible to everyone.
+
+4 – Governance and Public Policy
+
+LET’S EXPLORE
+
+Let us try to understand the quality of life of citizens before and after e-governance. Form five groups and interview your seniors, teachers, security guards, administrative staff, and parents regarding the issues listed below. Did they have access to the internet and a smartphone or computer to make use of these e-governance facilities? Find out what problems they had faced before e-governance and whether they felt the same issues were easily handled after e-governance.
+
+1. Obtaining a birth certificate
+
+2. Obtaining a admit card
+
+3. Collecting and storing marksheets
+
+4. Receiving salary
+
+5. Booking rail/flight tickets
+
+6. Registering a vehicle
+
+So far, we have understood that governance is the process through which decisions affecting people are made, implemented, and monitored with governments, institutions, both public and private, and citizens playing an active role in the process. But governance ultimately needs concrete instruments to address public problems and meet people’s needs. Public policy provides that link; it translates governance into planned action by turning public concerns and government priorities into programmes, decisions, and solutions.
+
+Public Policy
+
+The Meaning of Public Policy
+
+Every day, we experience the impact of public policies, often without even noticing it. The roads we travel on, the traffic signals that help us cross safely, the clean drinking water supplied to our homes, the electricity that lights our classrooms, the public parks where we play, and the waste collected from our neighbourhood are all examples of public services made possible through public policies. These policies help make our daily lives safer, healthier, and more convenient.
+
+Suppose your school notices that many students bring single-use plastic bottles and wrappers in their lunchboxes and schoolbags
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 Part 2
+
+every day. As a result, a large amount of waste is generated, and the campus becomes dirty, leading to environmental degradation in the long run. To address this problem, the principal discusses the issue with teachers, students, and parents. Together, they decide to introduce a ‘Plastic- Free Campus Policy’. Under this policy, students are encouraged to carry reusable water bottles; plastic bags are discouraged; dustbins for waste segregation are placed around the campus; monthly awareness programmes are organised; and teachers are assigned with the responsibility of monitoring the campaign. These decisions form a policy because they provide a planned course of action to solve a problem and achieve a sustainable goal.
+
+Similarly, governments make public policies to address problems that affect society as a whole. Public policy is a result of a course of action adopted by the government to solve public problems, meet people’s needs, and promote the welfare of society. Through this course of action, governments decide what should be done, why it should be done, who will do it, how it will be implemented, and how its success will be measured. Further, public policy is monitored and evaluated through a feedback loop, and necessary changes are made to the policy if required.
+
+What is ‘Public’ about Public Policy?
+
+The word ‘public’ refers to all the people living in a society or community. A policy becomes public policy when it is made for the public benefit, implemented by public institutions, and often financed with public money collected through taxes. Public policies address issues that concern society as a whole, such as education, healthcare, transportation, sanitation, environmental protection, and public safety.
+
+Public policy is about responding to the needs and aspirations of the people. Therefore, people play an important role in shaping them. People identify issues, express their concerns, participate in consultations, provide suggestions, and share feedback after a policy is implemented. Governments use this feedback to improve policies over time.
+
+4 – Governance and Public Policy
+
+Exists for Everyone
+
+PUBLIC POLICY
+
+Formulated by
+
+Promotes Public Welfare
+
+What makes
+
+Government
+
+it ‘public’?
+
+Uses Public
+
+Resources Citizens Participate
+
+However, not every policy is a public policy. Schools, companies, hospitals, sports clubs, and even families often have their own policies to guide the way they function. For example, a school may have a policy on the use of mobile phones, a company may have a work-from-home policy, or a housing society may have rules for parking vehicles. These policies apply only to a particular organisation or a limited group of people. Public policies, on the other hand, are formulated by governments to address issues that affect society on a larger scale. Fig. 4.4. Public policy: What makes it ‘public’?
+
+LET’S EXPLORE
+
+Read each of the following examples carefully. Identify whether they are a policy or a public policy. Give a reason for your answer.
+
+Example Policy/ Public
+
+Policy Why?
+
+The government introduces a sports policy.
+
+The government launches a campaign to provide safe drinking water to every household.
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 Part 2
+
+Example Policy/ Public
+
+Policy Why?
+
+A company allows employees to work from home twice a week.
+
+A municipality introduces waste segregation in the city.
+
+A housing society fixes visiting hours for guests.
+
+The government introduces free vaccination for children.
+
+Participants in the Public Policy Process
+
+Have you ever wondered who decides whether new schools are to be built, roads are to be repaired, and taxes are to be decreased or increased? Is it only the government? No, it takes the combined efforts of many individuals, organisations, officials, and even ordinary citizens in identifying issues, providing solutions, and putting them into action.
+
+4 – Governance and Public Policy
+
+Table 4.1. Key Stakeholders in Policy-making and Implementation
+
+Contributors What do they do? Example
+
+Citizens
+
+Residents request a zebra crossing near a school.
+
+Identify problems, vote, participate, give suggestions, and provide feedback.
+
+Elected representatives (MPs, MLAs, and local representatives)
+
+An MLA raises the issue of drinking water shortage in the Assembly.
+
+Represent people, raise public issues, participate in law-making, and approve budgets.
+
+Government officials, departments, and ministries (Central, State and Local Governments)
+
+Prepare and implement policies and programmes, coordinate departments, deliver public services, and monitor their progress.
+
+A district collector coordinates the implementation of a government scheme in the district.
+
+Civil society organisations, NGOs, experts, researchers, and the media
+
+Study problems, suggest solutions, create awareness, monitor programmes, and provide feedback.
+
+An NGO conducts a water-conservation campaign, and the media highlights pollution concerns.
+
+Private sector
+
+A company installs solar panels in government schools through a public-private partnership.
+
+Facilitate technical know how, innovation, resources, and expertise, often working with the government.
+
+International organisations
+
+Bring in international experience, facilitates technical know how and financial support.
+
+The World Health Organization (WHO) assists countries in controlling infectious diseases.
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 Part 2
+
+LET’S EXPLORE
+
+Your school’s main gate faces a road that connects residential areas and a major market area. There is heavy traffic congestion on the road, especially during morning and afternoon hours. Pedal rickshaws, electric rickshaws, school buses, private vehicles, and pedestrians—all struggle to get their way.
+
+Form groups in your class and choose a course of action from the options given below.
+
+1. Form a group of volunteers to regulate traffic in rush hours.
+
+2. Write an application to the principal about the issue.
+
+3. Meet the principal, along with all the class representatives of the school, to discuss the gravity of the situation and then impress upon the principal the need to take up the issue with the local people’s representative so that a traffic signal can be installed.
+
+4. Request the school management to construct and open another gate on the other side of the school.
+
+5. Suggest that the school shift its pick-up and drop-off point to a location slightly away from the main gate.
+
+6. Change school timings so that the school’s opening and closing hours do not coincide with the busiest traffic hours in the market.
+
+Answer the following based on the information given above.
+
+Æ Which option did you choose and why?
+
+Æ Can you suggest a better solution to address the given problem? Compare your suggestion with other options.
+
+4 – Governance and Public Policy
+
+Æ Which stakeholders would be involved in solving this problem in your suggested solution? Explain their role in solving the problem.
+
+Æ Suggest a feedback loop to ensure that the problem does not recur.
+
+Case Study—A Ramp to Better Healthcare
+
+Smt. Shanti Devi, a 72-year-old woman, visits the hospital for a health check-up. On arriving the hospital, she finds that she has
+
+to climb stairs to reach the Outpatient Department (OPD). There is no ramp or handrail to support her. At the same time, a man in a wheelchair arrives but is unable to enter the building because the entrance has only steps, with no wheelchair-accessible ramp. A visually impaired person may be able to climb the steps to enter the hospital but finds it difficult to locate different hospital departments because there are no tactile paths or Braille signs.
+
+Many patients and their family members realise that the hospital infrastructure is not accessible to everyone. They decide to raise this issue with the hospital authorities and local representatives. A local disability rights organisation also highlights the problem through newspapers and social media. The district administration takes note of the issue and asks the Public Works Department (PWD) and the Health Department to inspect the hospital. After consulting doctors, hospital staff, architectural experts, organisations working with persons with disabilities (PwDs), senior citizens, and residents, a plan is prepared to make the hospital more accessible. The government approves the funds needed to construct ramps, lifts, handrails, tactile pathways, and accessible toilets, and to install clear signboards. Once the work is complete, the hospital becomes easier to use for older persons, persons with disabilities, pregnant women, patients, and children.
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 Part 2
+
+This is an example of how a public policy moves from identifying a problem to implementation.
+
+LET’S EXPLORE
+
+Read the case study and follow the journey of the issue from identifying the problem to implementing a solution. As you read, identify the problem, the people and institutions involved, the actions taken, and the steps through which the solution was developed and implemented. Then, answer the questions below:
+
+1. Arrange the various stages of the policy process in sequence for upgrading the hospital to be more patient-friendly.
+
+2. Which stakeholders were involved in solving this problem? Identify at least three.
+
+3. Can you think of any public building in your locality that could be made more accessible? What improvements would you suggest?
+
+The Making of a Public Policy
+
+A public policy is developed through a systematic process rather than a single decision. It usually begins when citizens, government officials, researchers, or civil society organisations realise that a new need has to be met, an existing problem has to be resolved, or a facility has to be made better in the interest of the people. Then the government studies the issue, collects information, and consults experts, stakeholders, and the public to understand different viewpoints and possible solutions. Based on these discussions, the government authorities prepare, review, and approve a draft policy. Once the policy is approved by the concerned authorities, it is translated into programmes and schemes, which provide a clear framework for different ministries, departments, and local governments to take specific action. The implementation of any policy is continuously monitored and evaluated to assess whether it is achieving its objectives. Feedback from citizens and other stakeholders is used to improve the policy over time. Thus, public policy is a continuous cycle of problem identification, consultation, policy formulation, implementation, monitoring, evaluation, and improvement. This process helps the government respond effectively to the changing needs of society.
+
+4 – Governance and Public Policy
+
+Prioritising
+
+Policy
+
+Deciding which
+
+issues need to be addressed on
+
+Policy Formulation
+
+priority basis.
+
+Policy Desirability
+
+Consultation with various
+
+What needs and problems
+
+are to be addressed?
+
+stakeholders, drafting the policy and assessing
+
+financial feasibility.
+
+Policy Adoption
+
+The Policy
+
+Framing the
+
+legislation (laws governing
+
+the policy), and regulations (rules and
+
+Process: Key Stages
+
+guidelines).
+
+Policy Implementation
+
+Policy Evaluation
+
+Assessing results and
+
+Putting the policy into action through government
+
+the impact of the policy and generating
+
+Policy Monitoring
+
+feedback.
+
+officials, local bodies, civil societies, private organisations,
+
+Measuring the policy’s
+
+and citizens.
+
+progress, ensuring
+
+accountability, and identifying
+
+shortcomings.
+
+Fig. 4.5. Exemplar of a policy cycle
+
+DON’T MISS OUT
+
+National Education Policy (NEP) 2020: A Collaborative Journey
+
+Understanding Society:
+
+The National Education Policy (NEP) 2020 is an excellent example of how public policy is developed through consultation, expert advice, and public participation. India’s previous National Policy on Education was introduced in 1986.
+
+India and Beyond
+
+Grade 9 Part 2
+
+Over time, society changed rapidly. These changes created a need to rethink India’s education system.
+
+Recognising this need, the Government of India initiated the process of developing a new education policy in 2015. For drafting this policy, the government set up an expert committee in 2017, which was chaired by renowned scientist Dr K. Kasturirangan. The committee included experts from education, science, technology, social sciences, and public administration. A unique feature of NEP 2020 was the large-scale public consultation. The draft policy was made available for feedback by citizens and all stakeholders. During the formulation of the policy, 2.5 lakh Gram Panchayats, 6600 blocks, 6000 Urban Local Bodies, and 676 districts were consulted, and about 2 lakhs suggestions were received. The expert committee carefully examined the suggestions. Several recommendations from citizens and institutions were incorporated before the final policy was prepared. After discussions within the Government of India, the National Education Policy 2020 was approved by the Union Cabinet in July 2020.
+
+Stakeholder Role-Play
+
+Divide the class into groups. Each group represents one of these stakeholders:
+
+The Union Government, a state government, a school principal, a teacher, a parent, a student, an NGO, and a journalist
+
+Discuss how the stakeholder group you belong to can contribute to the successful implementation of the NEP. Present your ideas to the class. You can access the policy document at https://static.pib.gov.in/WriteReadData/userfiles/ NEP_Final_English_0.pdf
+
+THINK ABOUT IT
+
+If any step in policy-making and implementation is skipped, what would be the implications? Discuss with a suitable example.
+
+For a policy to be implemented effectively, it is always further organised into programmes and schemes. A policy is a broad goal
+
+4 – Governance and Public Policy
+
+or direction adopted by the government to address an important public issue. It tells us what the government wants to achieve and why. A programme explains the plan or approach for achieving that goal. A scheme is a specific action or initiative through which the programme is implemented so that its benefits reach the people. In simple terms, policy provides direction, programmes provide the plan, and schemes put the plan into action. Let us understand this through the example of the National Health Policy 2017, given in the following infographic.
+
+POLICY, PROGRAMMES, AND SCHEMES
+
+NATIONAL HEALTH POLICY 2017
+
+Goals
+
+Universal access to good quality healthcare. 1
+
+2 Strengthening public healthcare systems.
+
+Policy
+
+3 Equity, affordability, and accountability.
+
+Sets the direction
+
+and goal.
+
+4 Preventive and promotive care.
+
+PROGRAMMES
+
+Programme
+
+Universal
+
+Digital healthcare and
+
+Preventive and promotive
+
+Strengthening the healthcare
+
+Translate policy goals into strategies
+
+information
+
+healthcare
+
+access to comprehensive
+
+system
+
+and action areas.
+
+system
+
+healthcare
+
+SCHEMES
+
+Scheme
+
+Health and
+
+Ayushman Bharat Pradhan
+
+wellness
+
+Mission Indradhanush
+
+Janani Suraksha
+
+Provide concrete benefits and services
+
+centres
+
+Yojana
+
+Mantri Jan Arogya Yojana
+
+(AB-PMJAY)
+
+to specific target groups and locations.
+
+KEY TAKEAWAY: Policy gives the direction. Programmes show the path. Schemes are the course of action. Together, they ensure that public services reach every citizen.
+
+Understanding Society:
+
+India and Beyond
+
+Fig. 4.6. Difference between a policy, programme, and scheme
+
+Grade 9 Part 2
+
+CENTRAL GOVERNMENT
+
+Policy Coordination: Key to Good Governance
+
+• Provides policy framework
+
+• Provides funding
+
+STATE GOVERNMENT
+
+Public policymaking and implemen- tation require multi-level planning and decision-making. This exercise becomes more complex and challenging in a country as vast and diverse as India.
+
+• Hosts national games
+
+• Builds infrastructure
+
+BLOCK LEVEL
+
+• Organises sports events and camps
+
+• Supports local talent and facilities
+
+SPORTS PROMOTION INSTITUTIONS
+
+• Provide coaching and training
+
+• Offer equipment and facilities
+
+PRIVATE ORGANISATIONS AND INDIVIDUALS
+
+• Provide funding and sponsorships
+
+• Invest in research and better equipment
+
+CITIZENS
+
+• Encourage children, especially girls
+
+• Provide feedback and support local talent
+
+Let us try to understand this with an example. The Government of India, recognising the transformative power of sports in nation-building and holistic development, launched the Khelo Bharat Niti in 2025 with the aim of transforming India’s sports landscape. The government may plan a policy, but its success depends on many stakeholders—in this case, states, districts, local bodies, schools, coaches, families, and athletes. They all have different yet important roles to play. Families need to support a sports career for their children, especially their daughters; national or state governments need to encourage students, including specially abled students to take up sports; local authorities have the responsibility to maintain sports grounds or parks; scientists and innovators are expected to conduct research on better nutrition or equipment; and the Central Government has to visualise the importance of sports for holistic health as well as for international diplomacy.
+
+Fig. 4.7. Khelo Bharat Niti: A policy coordination
+
+exemplar
+
+Thus, the success of a policy, like Khelo Bharat Niti 2025, depends on the coordination between various
+
+stakeholders. The policy document of Khelo Bharat Niti says, “Strengthening the sporting culture and ecosystem from the block level to the national level is a key focus of the Khelo Bharat Niti 2025”. At the national level, the role of the Union Government is primarily focused on providing the larger policy framework, including the policy objectives. Also, it is supposed to provide funding as well as identifying the sources of funding for its agencies located at lower vertical levels of states, districts and blocks. Khelo Bharat Niti mandates state governments to strengthen sporting ecosystems through initiatives such as ‘Model Sports State’. State governments are expected to host major national games and tournaments and attract private investments through the public-private partnership (PPP) model to build sports infrastructure. Similarly, individual districts are encouraged to become ‘Model Sports Districts’ by enhancing their sports capabilities. Further at the level of blocks, sporting programmes are to be organised on a regular basis to attract mass participation and facilitate talent scouting.
+
+Apart from the role of the government and its agencies, the Khelo Bharat Niti 2025 seeks an active role of private organisations and individual citizens as well. Private organisations can come forward to sponsor sportspersons and sports teams. They can invest in supporting scientific research programmes to develop better nutrition and equipment, and better medical facilities for sportspersons.
+
+LET’S EXPLORE
+
+1. As a student, what role can you play in the successful implementation of Khelo Bharat Niti 2025?
+
+2. Your school is designated as the ‘state’s sports ambassador’. What actions should it take to fulfil its role as sports ambassador?
+
+3. Which ministries of the government can contribute towards the success of Khelo Bharat Niti 2025? How?
+
+Understanding Society:
+
+India and Beyond
+
+Governance may sound like government, but it is more about how decisions are made, implemented, and connected to people’s everyday lives. Public policy provides an important link between governance and public life. Through public policies, governments decide how resources should be used and how public services should be provided. Elected representatives, government officials, local institutions, civil society organisations, researchers, the media, the
+
+Grade 9 Part 2
+
+private sector, and people, all have different but connected roles in good governance. People, therefore, have an important contribution to make in the process of governance. By voting, following laws, raising concerns, participating in public affairs, and giving feedback on government services, they can help improve the way public institutions function. In a democratic country like India, governance is guided by the constitution, which lays down the framework for governing the nation.
+
+Good governance is essential to strengthening democracy, promoting sustainable development, and ensuring national progress. It depends on transparent institutions, accountable leadership, active citizen participation, and a strong commitment to the rule of law. Public policy is integral to good governance. Good governance and public policy are crucial foundations for achieving national development goals. Good governance is, therefore, an ongoing effort that will help realise the vision of making India a developed, prosperous, and self-reliant nation.
+
+Before we move on…
+
+Æ Governance refers to the process of making, implementing, and monitoring decisions for the welfare of people, while government refers to the institutions that exercise political authority to govern.
+
+Æ Good governance is based on principles such as participation, transparency, accountability, the rule of law, responsiveness, and efficiency, ensuring that public institutions serve the people effectively.
+
+Æ India’s understanding of governance has evolved from the ideas and values reflected in Sabhā and Samiti, Rām Rājya, and Rājadharma to the modern democratic system based on the Constitution and citizen participation.
+
+Æ Public policy consists of decisions and actions taken by the government to solve public problems and promote the welfare of the people. Effective public policies are developed, implemented, monitored, and improved through a systematic policy process.
+
+Æ Governance and public policy involve the combined efforts of many actors, including the government, institutions, civil society organisations, private sector, the media, and citizens, each performing complementary roles.
+
+4 – Governance and Public Policy
+
+Æ Policy coordination among different government departments, institutions, and stakeholders is essential for addressing public problems, responding to emergencies, and delivering public services efficiently.
+
+Æ Active citizen participation through voting, providing feedback, obeying laws, community involvement, and holding public authorities accountable strengthens democracy and promotes good governance.
+
+Questions and activities
+
+1. “Good governance is the responsibility of the government alone.” Do you agree with this statement? Give reasons to support your answer.
+
+2. Do you think students can contribute to good governance? Write a short note describing any five ways in which students can become more responsible and active citizens.
+
+3. Choose any one public policy [for example, Right to Education (RTE), Swachh Bharat Mission, PM POSHAN, Ayushman Bharat, Digital India, or Jal Jeevan Missio] and prepare a chart showing the following aspects:
+
+The problem it addresses
+
+The major stakeholders involved
+
+How different actors coordinate
+
+The role of citizens in its success
+
+Present your findings to the class.
+
+4. Answer the following in one or two sentences.
+
+a. What is governance?
+
+b. How is governance different from government?
+
+c. What is meant by public policy?
+
+d. Name any four principles of good governance.
+
+5. Compare the following and present your answer in a tabular form.
+
+a. Government and governance
+
+b. Policy and public policy
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 Part 2
+
+6. Imagine you have been appointed to advise the district administration on improving governance. You have proposed six points (given below), but the administration decides to prioritise only three areas for improvement. Which three would you recommend as priority areas, and which one out of the three do you feel is the most important?
+
+a. Improve drinking water facilities in schools.
+
+b. Improve sanitation and public toilets in schools and market areas.
+
+c. Provide tricycles for orthopaedically challenged students.
+
+d. Install open-area swings and open-air gym in public parks.
+
+e. Ensure the vaccination of stray dogs to prevent rabies.
+
+f. Ensure distribution of iron and folic acid tablets for female students in schools.
+
+7. Match the policy action point to its corresponding stage in the policy cycle.
+
+S. no. Policy action point Stage of policy cycle
+
+1. Assessing the impact of the policy Policy implementation
+
+2. Putting the policy into action Policy evaluation
+
+3. Framing the legislation Policy adoption
+
+Policy formulation
+
+4. Multi-dimensional consultation with stakeholders
+
+5. Addressing a new need of the people
+
+Policy desirability (problem identification)
+
+8. Read the following case and answer the given questions.
+
+The government launches a programme to plant one lakh trees in a city. Funds are allocated, but only a few saplings survive because they are not watered or protected.
+
+4 – Governance and Public Policy
+
+a. Which stage of the policy cycle appears to be weak?
+
+b. Which organisations should coordinate to improve the programme?
+
+c. Suggest two measures that could improve the outcome.
+
+9. Read each statement carefully. Do you agree or disagree? Give
+
+reasons for your answer.
+
+a. A good public policy can fail if it is not implemented properly.
+
+b. Citizen participation sometimes makes decision-making slower, but it can improve governance.
+
+c. Technology alone cannot ensure good governance.
+
+10. Design a public policy.
+
+You are a member of your school’s student representative body. Identify one issue, for example, plastic waste, water wastage, road safety, energy conservation, or littering in public places. Prepare a simple policy proposal that includes the following aspects of policymaking:
+
+The reason for selecting the issue
+
+Your proposed solution
+
+Who should implement it?
+
+How will students participate?
+
+How will you know whether the policy has succeeded?
+
+Present your proposal to the class as a chart or slideshow presentation.
+
+Notes
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 Part 2

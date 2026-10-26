@@ -1,0 +1,494 @@
+# CLASS-8 - SCIENCE - CHAPTER 13
+# Source: hecu113.pdf
+
+Our Home: Earth, a Unique Life Sustaining Planet 13
+
+Probe and ponder
+
+• What do you think Earth would look like if there were no life
+
+on it at all?
+
+• Life on Earth has survived for billions of years. What allows it
+
+to keep going despite major changes and disasters?
+
+• Why don’t dogs lay eggs? Or hens give birth to live chicks?
+
+• If a spaceship carried soil and water to Mars, could plants start
+
+growing there?
+
+Share your questions
+
+?
+
+We have now reached the final chapter of this book, the concluding chapter in our scientific journey through the middle stage. It is time to put together all that we have seen and learnt and try to understand why our home, planet Earth, is like no other place in the known universe. As you have learnt in Curiosity, Grades 6 and 7, the Earth is a planet orbiting the Sun. However, it is not just any planet. It is a planet that sustains life — full of diverse landscapes, from towering mountains and vast oceans to endless deserts and lush forests. Today, our satellites allow us to take amazing pictures of our planet. The image in the beginning page was taken by an Indian Space Research Organisation (ISRO) Earth Observation Satellite and made by combining nearly 3000 smaller images, like pieces of a mosaic. Although it looks beautiful, it’s a false colour image, where scientists use different colours to show different types of information. These satellite images help us study plants on land and tiny organisms in the ocean, and can even detect things like ocean temperature, oil spills, and wind direction. In this chapter, we will uncover the unique conditions that make Earth the perfect home for living beings.
+
+13.1 Why Is Earth a Unique Planet?
+
+What makes the Earth so special? While there are perhaps billions of planets in the universe, Earth is the only one where life, as we know today, exists and thrives in all its forms.
+
+Crust
+
+Upper mantle
+
+Lower mantle
+
+crust
+
+Outer core
+
+Inner core
+
+Fig. 13.1: The Earth’s crust is like the thin skin of an apple
+
+Have you ever wondered where all life on Earth actually exists? All the mountains, rivers, forests, animals, and people are found on just a very thin layer on the surface of our planet. From the tallest mountain to the deepest ocean trench, the crust, where all of life exists, is tiny compared to the size of Earth. If Earth were the size of an apple, the crust would be as thin as the apple’s skin as shown in Fig. 13.1. This delicate, life supporting layer is what makes Earth truly special.
+
+I wonder what makes the Earth unique for living beings to grow and survive!
+
+Let us conduct an activity to list out some features of the Earth that you think make it special.
+
+Activity 13.1: Let us find out
+
+• List some features of the Earth that we often take for
+
+granted, but are interesting and important to us. Write them in Table 13.1. We have filled in a few for you.
+
+Table 13.1: Interesting features about the Earth
+
+S.No. Interesting features of the Earth
+
+1. The air we breathe doesn’t fly off and disappear into space. (We learnt in Chapter 7 that the particles of a gas move freely, and gases do not have a fixed volume)
+
+2. We can stand on the ground held by gravity (as we learnt in Chapter 5), but our heart can pump blood up to our head.
+
+3.
+
+4.
+
+Discuss the features you have listed with your teacher and friends. You may realise that the Earth is interesting and important to us in many ways. It provides us with the air that we breathe, the water that we drink, and the soil that helps in growing crops. The Earth also provides us materials like rock and timber with which we build our homes, buildings, and roads. You must be curious to know what makes the Earth a unique planet which not only allows life like us to exist but also sustains it.
+
+13.2 What Do the Planets of Our Solar System Look Like?
+
+In Curiosity, Grade 6, you had studied the solar system in the chapter ‘Beyond Earth’. Let us recall some of the things we had learnt. Our solar system has eight planets that go around the Sun in nearly circular orbits. In order of their increasing distance from the Sun, they are Mercury, Venus, Earth, Mars, Jupiter,
+
+Saturn, Uranus, and Neptune. Out of all these planets, Mercury, Venus, Earth, and Mars, are relatively small and rocky planets, while Jupiter, Saturn, Uranus, and Neptune are large planets, mostly made of gases.
+
+Let us find out more about the planets in the solar system by performing Activity 13.2.
+
+Activity 13.2: Let us find out
+
+• Collect information about the temperature and size of
+
+the planets in the solar system, and check if they have an atmosphere.
+
+• You may collect this information from books in your school
+
+library, trusted websites, or discuss with your teachers.
+
+• Fill out the missing information in Table 13.2.
+
+Table 13.2: Planets in our solar system
+
+S.No. Planet
+
+Average temperature
+
+Radius, compared to
+
+Has an atmosphere?
+
+(oC)
+
+the Earth
+
+1. Mercury 170 No
+
+2. Venus 450 0.95 Yes
+
+3. Earth 15 1 Yes
+
+4.
+
+5. 11
+
+6.
+
+7.
+
+8. 
+–200 4
+
+We know that all planets in the solar system get their energy from the Sun. Thus, when a planet is close to the Sun, it would be very hot. As we move away from the Sun, planets should get colder. Is this what you found in Table 13.2? This is generally correct, except that Venus, the second planet from the Sun has the highest average temperature and is the hottest planet. Why is this so?
+
+Venus is the hottest planet not because it is the closest to the Sun, but because its thick atmosphere traps heat.
+
+Fig. 13.2: Schematic of greenhouse
+
+effect on Earth
+
+The air on Venus is almost entirely made up of carbon dioxide gas, which does not let the heat escape. This is called the greenhouse effect, and it makes Venus even hotter than Mercury, which is relatively closer to the Sun. On the Earth also, gases like carbon dioxide in the atmosphere trap heat by absorbing the radiation given off by the Earth, after it gets warmed by the Sun. Thus, greenhouse effect plays an important role in maintaining just the right temperature on Earth (Fig. 13.2).
+
+A step further
+
+Fig. 13.3: Greenhouse for plants
+
+The greenhouse effect that causes a planet like Venus and Earth to trap heat does not work the same way as a greenhouse for growing plants in a cool climate. On Venus or Earth, gases like carbon dioxide in the atmosphere trap heat by absorbing the radiation given off by the Earth, after it gets warmed by the Sun. A plant greenhouse, on the other hand, traps warmed air simply because it is a closed space, usually with glass walls (Fig. 13.3). It heats up during the day, but the air stays in and the heat does not escape easily. So while both keep things warm, they do it differently!
+
+13.3 What Makes the Earth Suitable for Life to Exist ?
+
+13.3.1 Position of the Earth
+
+Habitable zone
+
+Too hot Just right
+
+Too cold
+
+around a star
+
+The most important reason why the Earth can support life is its distance from the Sun. It is just at the right distance, where the temperature allows water to exist in a liquid form. If the Earth were closer to the Sun, it would be too hot and all the water would evaporate; if it were farther away, it would be too cold, and all the water would freeze. In such extreme conditions, it would have been impossible for most life forms — especially plants, animals, and humans — to grow and thrive on Earth. Although some microbes, like certain Fig. 13.4: The habitable zone
+
+bacteria, can survive in frozen environments, from what we know so far, liquid water is essential for life to evolve. Earth’s distance from the Sun allows water to remain mostly in liquid form, which is essential for the development and sustenance of life in all its form. The range of distances from the Sun (or another star) over which water remains liquid is called the habitable zone, or sometimes also called the ‘Goldilocks zone’ (Fig. 13.4).
+
+Fig. 13.5: Earth — The blue planet
+
+As you have also studied in Social Science, most of Earth’s surface is covered with water. Thus, when seen from space, the Earth looks blue because of the vast amount of water—hence the name Blue Planet (Fig. 13.5).
+
+A step further
+
+Did Mars ever support life?
+
+Mars lies at the edge of the Sun’s habitable zone. Several spacecrafts have been sent to Mars, rovers have landed and explored its surface, but no proof of life has been found yet. However, scientists think that in the past, Mars may have had liquid water — maybe even some lakes — and conditions that could support simple life forms (Fig. 13.6).
+
+This is one reason Mars continues to interest scientists. It also reminds us that science doesn’t always have final answers. As we explore more, we may find new clues—or even new kinds of life. Science stays open to change when we learn more.
+
+Fig. 13.6: Mars
+
+Is the temperature or distance from the Sun, the only factor that makes the Earth habitable?
+
+What would happen if the size of the Earth were too small or too big?
+
+13.3.2 Size of the Earth There are some other important factors that make the Earth habitable. In our solar system, the orbits of most planets, including the Earth are almost circular. This keeps the amount of
+
+sunlight and heat nearly steady throughout the year, preventing extreme summers and winters at most places.
+
+However, moderate temperature due to the right distance from the Sun isn’t the only factor that makes the Earth habitable. The planet is also the right size to support an atmosphere. As you learnt earlier, the atmosphere is the layer of gases that surrounds the Earth, and it plays a major role in sustaining life. You also learnt in Chapter 5 that the Earth’s gravity pulls objects towards it. If Earth were much smaller (but with the same average density), its gravity would have been too weak to hold on to the gases in our atmosphere, and they would have escaped into space. On Mars, the atmosphere is 100 times thinner than on Earth, and Mercury has no atmosphere at all.
+
+On the other hand, if the planet was too large, and gravity was much stronger, it would perhaps pull us down to the planet with such a large force that our bones could get crushed! Due to the right size of the Earth, it is able to support atmosphere which is essential for life.
+
+The presence of oxygen in the Earth’s atmosphere allows us to breathe, and is needed by almost all forms of life on Earth. But oxygen has another important role. Some of the oxygen in our atmosphere, gets converted to another form called ozone (a three-atom oxygen molecule), and forms an important part of the atmosphere called the ozone layer. This layer acts like a shield, blocking harmful ultraviolet (UV) rays from the Sun that can damage living cells.
+
+Our scientific heritage
+
+Fig. 13.7: Mangalyaan
+
+India’s Mangalyaan (Mars Orbiter Mission), launched in 2013 by Indian Space Research Organisation (ISRO), was a big step in exploring Mars (Fig. 13.7). It carried tools to study the planet’s atmosphere, surface, and signs of past water. Some of these sensors help scientists ask big questions — like was Mars ever suitable for life? Mangalyaan showed the world that India could do space science with smart, low-cost technology — and it helped bring Mars closer to all of us.
+
+13.3.3 Magnetic field of the Earth
+
+Does the magnetic field of the Earth have any role in sustaining life on Earth?
+
+In Curiosity, Grade 6, we learnt that a freely suspended magnet always settles in a fixed direction. This is because the Earth itself behaves like a giant magnet. You have also seen in Chapter 4 that the region around a magnet where its effect is felt has a magnetic field. It is believed that the movement of molten iron in Earth’s core may be the origin for Earth’s magnetic field.
+
+Earth is constantly hit by tiny, high-energy particles that come from space. Some come from far across the universe and are called cosmic rays. Other particles come from the Sun and are called the solar wind. These particles can be harmful as they can damage the atmosphere, reduce the ozone layer, and let in more harmful UV rays, which can affect life on Earth.
+
+Thankfully, the Earth’s magnetic field acts like a protective shield. It pushes many of these harmful particles away from the Earth, keeping our atmosphere, and hence life on our planet safe.
+
+Earth’s unique position in the solar system — allows the presence of liquid water — along with its size, atmosphere, and magnetic field, all help make it a planet where life can emerge and thrive.
+
+But, how is life supported and sustained on Earth?
+
+13.4 What Allows Life to Be Sustained on Earth?
+
+Earth has the right conditions for life, but it is the beautiful connections between living and non-living things that help life to thrive. In Curiosity, Grades 6 and 7, you learnt about key natural resources, such as, air, water, sunlight, soil, and minerals. You also learnt about the important life processes in plants and animals. Now, let us explore how all these elements interact to support and sustain life on Earth.
+
+13.4.1 Air, water, and sunlight We know that the atmosphere contains oxygen, which humans, animals, and plants use for respiration. In the presence of sunlight, plants take carbon dioxide from the air and water from
+
+the soil to prepare food by photosynthesis. In the process, oxygen is released, which is needed for respiration.
+
+We have learnt, radiation from the Sun heats the Earth. Some of this heat is trapped by the atmosphere due to the greenhouse effect. This effect though mild, keeps the temperature just high enough for water to remain in the liquid state. In Curiosity, Grade 7, you also learnt about heat transfer by radiation. Without an atmosphere, the Earth would lose heat to space and become too cold. So the greenhouse effect helps keep the Earth warm.
+
+Water is essential for life. You have learnt that it covers about 70 per cent of the Earth’s surface and is found in ponds, lakes, rivers, springs, seas, oceans, and groundwater. All this water forms the hydrosphere. In Chapter 7, you learnt that water is a good solvent. In Curiosity, Grade 7, we learnt how water transports nutrients from soil to leaves in plants. In animals, it regulates body temperature, aids digestion, and ensures hydration, all essential for health and life.
+
+Fig. 13.8: Life in water
+
+Though much of Earth is covered by water, we still know little about what lives deep in the oceans. The hydrosphere is home to millions of life forms, from tiny planktons to giant whales, many still being discovered. Oceans, lakes, and rivers provide rich environments for aquatic life (Fig. 13.8). Freshwater is also needed to grow crops and support people around the world.
+
+Water vapour in the air forms clouds and brings rain or snow. This refills rivers, lakes, and underground water. Rainfall affects the kinds of plants and animals that can live in a place. Moving air also shapes weather and rainfall — which influence farming, water supply, and life on land.
+
+13.4.2 Soil, rocks, and minerals Beneath our feet lies something remarkable — the Earth’s crust, made of rocks, soil, and minerals. It may seem hard and lifeless, but it provides almost everything life needs to grow and survive. From soil that helps plants grow to minerals that give us salt, coal, oil, and metals like iron and copper — this outer layer support both ecosystems and human life. The solid parts of the Earth, including materials like rocks, soils, and minerals are known as the geosphere.
+
+Soil may look like simple dirt, but it is rich in nutrients like nitrogen and potassium that plants need to grow. These nutrients come from the slow breakdown of rocks and the remains of plants and animals.
+
+There are various types of landforms, rocks, soils, etc., on Earth. This variety along with the processes that shape and alter them is called geodiversity (Fig. 13.9). It helps create unique habitats where different types of life can thrive. The non-living parts of nature, like soil, rocks, and water, aren’t just a background — they help shape the story of life itself.
+
+Fig. 13.9: Geodiversity
+
+13.4.3 Plants, animals, and microorganisms From the chapter on microbes to the chapter on ecology, we have seen that the Earth is full of life — from trees, shrubs, herbs, to animals, insects, and tiny organisms invisible to the naked eye. All living beings, along with the places where they live, make up the biosphere. This includes land, water, and air, where life interacts with its surroundings to survive and grow.
+
+As you learnt in Chapter 12, living beings depend on one another and their environment. Plants make food through photosynthesis, animals eat plants or other animals, and decomposers break down dead matter and return nutrients to the soil. Nature works together as a system to support life.
+
+13.4.4 The importance of balance Have you ever wondered how so many things on Earth stay in balance? Earth is like a giant teamwork project between nature, weather, and life itself. It is a vast, living system where land, air, water, and living things support and affect one another. Even a small change in one part — like cutting down a forest — can impact rainfall, soil, air quality, and the animals that live there. Life on Earth survives not because of just one thing, but because everything works together in balance. It is this balance that keeps our planet habitable. That’s why preserving and protecting clean air, water, soil, and all forms of life isn’t just important but essential for keeping Earth healthy for the future.
+
+13.5 What Keeps Life from Disappearing?
+
+If plants and animals didn’t reproduce, life would eventually disappear from Earth. Reproduction ensures that each type of organism continues to exist, maintaining the continuity of life.
+
+We usually expect that animals will produce young ones that resemble them — cows have calves, and cats have kittens. This happens because parents pass on instructions to their offspring about how to develop from a single cell. These instructions,
+
+called genetic material or genes, are stored inside every cell of a living being. You can think of genes as a detailed instruction manual inside each cell. Some instructions tell the cell how to make blood, while others guide the formation of bones, muscles, or skin. Together, these instructions ensure that a calf grows into a cow, or a kitten grows into a cat.
+
+But reproduction does more than just create more of the same kind of living beings. It also allows for small changes in the instructions that are passed down from parents to offpsrings. Sometimes, these changes help a plant or animal survive better in a new environment. For example, over time, camels developed humps to store fat and survive in deserts. Even microbes evolve — some bacteria, as you learnt in the chapter on health, have become resistant to antibiotics, helping them persist. Over many generations, such changes can lead to new features — or even completely new types of living beings. So, reproduction not only keeps each kind continuing, but also helps life adapt change, and continue in new forms (Fig. 13.10).
+
+But how can the same process lead both to similarity (an animal gives birth to similar individual, such as a cow gives birth to a cow) and variation (shows different characteristics like difference
+
+in colour and height of individuals of some kind)? That is a fascinating puzzle. There are two types of reproductive processes — one in which the young are almost exactly like their parent and another in which they look slightly different from their parents.
+
+Fig. 13.10: Development of calf to cow
+
+In asexual reproduction, a single parent produces new individuals that are exact copies of itself (exact in terms of the instructions inside the cell). In sexual reproduction, instructions from two parents combine to create offspring that are not exactly like either of the parent. They share some traits with both parents, but also have differences. This mixing helps keep useful features while allowing new ones to appear. Over many generations, these small differences can add up — leading to big differences, and even new life forms.
+
+Let’s explore how reproduction takes place in plants and animals, and how it helps living beings develop special features and sometimes change over time.
+
+13.5.1 Asexual reproduction Many plants can reproduces when any part of the plants — leaf, stem, or root — is planted in soil. This kind of reproduction is called vegetative propagation.
+
+How do bamboo and sugarcane grow into new plants? I have never seen their seeds.
+
+Can you observe and list some plants around you that grow this way?
+
+Activity 13.3: Let us find out
+
+• Take some parts of plants like stem cutting of a money plant,
+
+the ‘eyes’ of a sprouted potato, or a piece of ginger (Fig. 13.11b).
+
+• Plant each of them separately in moist soil (not too deep). For
+
+money plant, you can just put a cutting in a glass container which makes it easy to observe.
+
+(a)
+
+• Make sure they get all the conditions they need to grow—like
+
+water, air, and sunlight.
+
+• Watch them every day and note how many days it takes for
+
+roots stem and leaves to appear. Also observe when the first new leaf appears.
+
+(b)
+
+Ever heard of ...
+
+Fig. 13.11: Vegetative
+
+propagation — (a) Ginger; (b) Potato
+
+Not just plants — microbes and simple animals also reproduce asexually. For example, single-celled organisms like bacteria and amoeba divide into two identical individuals. Some multicellular organisms like algae can regrow from small cut parts. Hydra, another simple animal, grows tiny buds on its body that breaks off and grow into new individuals.
+
+Not just plants – microbes and simple animals also reproduce asexually. For example, single-celled organisms like bacteria and amoebae divide into two identical individuals. Some multicellular organisms like algae can regrow from small cut parts. Hydra, another simple animal, grows tiny buds on its body that break off and grow into new individuals.
+
+Planaria (Fig. 13.12), a type of flatworm, can regrow from a fragment of its body! Scientists study this organism to understand regeneration in animals.
+
+Planaria, a type of flatworm, can regrow from just a small piece of their body! Scientists study them to understand regeneration in animals.
+
+Fig. 13.12: Planaria
+
+13.5.2 Sexual reproduction In this type of reproduction, two parents are involved — usually called male and female. This is easy to observe in animals, but did you know even flowering plants have male and female parts? Some microorganisms like bacteria and yeast also have two ‘mating types’ that act like the two parents.
+
+Special cells for reproduction You might wonder if both parents pass on their genetic material for making a new organism, won’t the child end up with double the amount of instructions? And would not this keep doubling every generation?
+
+This does not happen because each parent makes specialised reproductive cells, called gametes. These carry only half of the parent’s genetic material . When male and female gametes join, they form a new cell with a complete set of instructions — half from each parent.
+
+Babies do not look exactly like their mother or father. Even brothers and sisters in the same family can look different from each other. This is because every baby gets a mix of genetic information from both parents through gametes. Each gamete carries a different set of instructions for things like eye colour, hair type, and more. These instructions mix in different ways when the sperm and eggs joins to form a baby. These instructions mix in different ways each time, so each child is unique. No wonder one child may ‘inherit’ a nose similar to mother and another may inherit eyes similar to father. It all depends on which pieces of the parent’s ‘instruction book set’ came together.
+
+Anther
+
+Ovule
+
+Fig. 13.13: A flower
+
+Sexual reproduction in plants Plants use different parts of their flowers to produce male and female gametes. Pollen grains found inside the anther of a flower are the male gametes, while ovules, found deep inside the flower, are the female gametes. Pollen is carried to another flower by wind, insects, or animals — this process is called pollination. When the male and female gametes combine, it is called fertilisation, forming a zygote that becomes the seed. The fleshy part of the flower around the ovule develops into a fruit (Fig. 13.13).
+
+When birds or animals eat the fruit, the seeds often get dropped far from the original plant — a helpful way for plants to spread. That’s how a banyan seed, dropped by a bird that ate a fruit and excreted the seed, might sprout in a crack in a wall after the rains. When seeds get water, they use stored nutrients to grow roots and shoots. Remember in Grade 6 you had studied the germination of seeds where you observed tiny shoots and the first leaves appear.
+
+Sexual reproduction in animals
+
+Egg cell
+
+Zygote
+
+Fertilisation
+
+In animals, gametes are called sperm (male) and eggs (female). Fertilisation may take place in water, for example, male and female fish or frogs eject sperm and eggs, respectively, into the water where they combine to form the zygote. In these animals, the development of the zygote into an embryo also takes place in water (Fig. 13.14).
+
+Sperm cell
+
+Fig. 13.14: Formation of zygote
+
+In birds and mammals, including humans, sperm are deposited inside the body of a female and fertilisation takes place when the sperm swim towards the egg produced by the female. After this step, birds and mammals follow different processes.
+
+In birds, the fertilised egg (zygote) is ‘laid’ by the female. The development of the zygote into an embryo happens after the egg is laid during the hatching process. Think about how much ‘food’ the female parent has to put into each egg — it has to last for the developing embryo until it hatches. This is one strategy to ensures supply of nutrition to the embryo.
+
+In most mammals, the development of the zygote into an embryo takes place inside the body of the female. The mother’s body provides all the food and oxygen the baby needs to grow until it is born. This is a different way of giving nutrition to the developing baby, compared to animals like birds that lay eggs. What are the advantages and disadvantages of giving birth to young ones vs. laying eggs? Do you think animals like dogs, cows, or humans could lay eggs like birds? Why or why not?
+
+13.6 What Are the Threats to Life on Earth?
+
+We know that life on Earth depends on a delicate balance of living and non-living things working together. But human actions are disturbing this balance. Even small changes in global temperature, oxygen levels, or the ozone layer can put life at risk.
+
+Today, the biggest environmental challenges that we face are climate change, biodiversity loss, and pollution — together known as the triple planetary crisis.
+
+Burning fossil fuels like coal and oil releases greenhouse gases like carbon dioxide and methane. These trap even more heat in the atmosphere which causes global warming. Normally, Earth keeps a balance since trees, plants, and even tiny ocean planktons absorb carbon dioxide as they grow. But when we burn fossil fuels, we release extra carbon that has been locked underground for millions of years. The Earth cannot absorb this fast enough, so the heat builds up. Even a small increase in temperature can melt ice caps, raise sea levels which could flood many coastal cities, cause extreme weather conditions, and lead to many plants and animals disappearing. These long-term changes in temperature, rainfall, and weather patterns are called climate change.
+
+When natural habitats are destroyed, plants and animals may disappear, upsetting ecosystems. For example, as we saw in Chapter 12, if grasses vanish, animals that feed on them like deer or grasshoppers struggle to survive. And without herbivores, predators like tigers or foxes lose their food too. Every type of living thing has a role, and losing even a few weakens nature’s ability to support life.
+
+Pollution adds to the problem. Air pollution from factories, vehicles, and burning fuels harms both people and the nature. It can cause breathing problems, damage crops, and lead to smog and acid rain (Fig. 13.15).
+
+Fig. 13.15: Air pollution
+
+Climate change affects everything—from crop growth and water supply to wildlife habitats and human health. To protect life on Earth, we need to cut pollution, use cleaner energy, and make wiser choices. We have also learnt that life on Earth flourishes within a delicate balance supported by interdependent natural systems. However, this balance is increasingly threatened by human actions. For example, a little less or more of oxygen in air, or a little lower or higher temperature of the Earth, or a little less of ozone in the atmosphere, could endanger life on the Earth.
+
+Ever heard of ...
+
+Countries around the world have made global agreements to protect the environment. The Montreal Protocol (1987) helped reduce harmful chemicals like Chlorofluorocarbons (CFCs), allowing the ozone layer to slowly recover. The Earth Summit (1992) led to international efforts on climate change and biodiversity. Later, the Kyoto Protocol (2005) and Paris Agreement (2015) committed countries to reduce greenhouse gas emissions. The Paris Agreement set a goal to limit global warming to below 1.5 °C, but as of 2025, the world is not on track to meet that goal. Much more action is needed to avoid any more adverse effects of climate change.
+
+Water and soil pollution are serious threats to life (Fig. 13.16). Factory, farm and plastic waste harm aquatic life and make water unsafe. Excess fertilisers and poor waste disposal pollute soil, reduce crop yield, and spread harmful substances through the food chain. Protecting them requires
+
+better waste management and sustainable farming practices.
+
+We have seen above that all the Earth system, such as hydrosphere, biosphere, atmosphere and geosphere are connected — so damage to one can affect the others. Protecting the climate means cutting down on greenhouse gases by using renewable energy like solar and wind, improving energy use, and choosing environmentally friendly ways to travel. At the same time, preserving Fig. 13.16: Water pollution
+
+biodiversity is key as diverse ecosystems are stronger and more balanced. Local communities can play a big role in using natural resources sustainably.
+
+Everyone can help. Reusing, repairing, and recycling items like clothes and plastic reduce pollution and waste. Small actions like saving energy and water add up. Learning more, sharing ideas, and encouraging others also makes a difference.
+
+In conclusion, sustaining life on Earth needs action from all of us — from local communities to global leaders. By working together and living responsibly, we can protect this unique planet and its future.
+
+Snapshots
+
+Our Earth is a unique planet in the solar system as it supports life.
+
+Earth orbits the Sun at a distance where the temperature is neither too hot nor too cold, which allows water to exist in liquid form. This region is called the habitable zone or Goldilocks zone.
+
+Further, the Earth orbits the Sun in a nearly circular orbit ensuring that the Earth is not too hot or too cold during any part of the year.
+
+The Earth’s gravity is just enough to not let atmosphere escape into space. It is also not too high where creatures would be crushed by their own weight.
+
+Presence of ozone in the atmosphere prevents harmful ultraviolet rays from reaching the surface of the Earth.
+
+The magnetic field of the Earth shields it from high-energy particles that would otherwise hit the Earth and destroy life.
+
+The atmosphere (consisting of air), hydrosphere (consisting of water), geosphere (consisting of the solid part of the Earth), and biosphere (consisting of life) interact and together sustain life on the Earth.
+
+Reproduction is essential to ensure the continuity of life on Earth.
+
+Reproduction can be either asexual or sexual.
+
+In asexual reproduction, a single parent produces new individuals that are exact copies of itself.
+
+Sexual reproduction make it possible for new features to appear in the following generation.
+
+In different animals, the development of the zygote into an embryo takes place either inside or outside the body.
+
+Climate change, biodiversity loss, and pollution are threatening life on Earth. Together, these challenges are known as the triple planetary crisis.
+
+Keep the curiosity alive
+
+1. What is one major reason Mars cannot currently support life like Earth?
+
+(i) It has too many volcanoes. (ii) It is too close to the Sun. (iii) It lacks a thick atmosphere and liquid water.
+
+(iv) Its magnetic field is too strong. 
+2. Which of these is an example of geodiversity? (i) Variety of bird chirping in a forest. (ii) Different landforms like mountains, valleys, and deserts. (iii) Changing weather during monsoons.
+
+(iv) Number of different types of fish in a pond. 
+3. If the Earth were smaller with the same density, what might happen to its atmosphere?
+
+(i) It would become thicker and hotter. (ii) It would escape into space due to weaker gravity. (iii) It would become frozen.
+
+(iv) It would cause stronger winds. 
+4. In sexual reproduction, why are offspring different from their parents?
+
+(i) They grow in different climates. (ii) They eat different food. (iii) They acquire new instructions after birth.
+
+(iv) They get mixed instructions (genes) from both parents. 
+5. You notice tiny green plants growing in cracks on your school wall after the monsoon. Where do you think the seeds came from? What conditions helped these plants grow there? 
+6. A city has recently cut down a large patch of forest to build new roads and buildings. Discuss the possible effects this could have on the local climate and biodiversity? How might this affect water availability or quality in the area? 
+7. A friend says, “The Earth has always had climate changes in the past, so today’s global warming is nothing new.” How would you respond using what you’ve learnt in this and other chapters of your science book?
+
+Prepare some questions based on your
+
+Why? When?
+
+Why not?
+
+learnings so far ...
+
+Where?
+
+How long?
+
+.....................................................................................
+
+8. Imagine Earth’s magnetic field suddenly disappeared. What kinds of problems could arise for life on Earth? Explain. 
+9. You are tasked with designing a new settlement for humans on Mars. Name three things you would need to recreate from Earth to support human life there. Which of these do you think is the hardest to replicate, and why? 
+10. In a village, the temperature has been increasing and rainfall has become unpredictable over the past few years. What could be causing this change? Suggest two ways the village could adapt to these new conditions. 11. If there were no atmosphere on the Earth, would it affect life, temperature, and water on the planet? Explain. 12. Discuss five examples of vegetative propagation.
+
+Discover, design, and debate
+
+• Design an ‘Earth Survival Kit’. Imagine you’re building a
+
+tiny model of Earth for another planet. What must it have to support life, and why?
+
+• India is planning for a challenging lunar mission,
+
+Society Science
+
+Chandrayaan-4, which will bring back samples of soil from the Moon. If the Moon had water, could plants grow in that soil? Think of some experiment that could help you explore whether plant growth is possible on the Moon.
+
+• Flowers are often brightly coloured and have a pleasant smell.
+
+Inter- disciplinary
+
+How do you think these features help the plant reproduce?
+
+Projects
+
+• Why do animals like fish and frogs lay hundreds or even
+
+thousands of eggs at a time, while other animals lay only a few? What might be the advantages and disadvantages of laying so many eggs?
+
+• Birds like sparrows build nests and care for their eggs and
+
+chicks, while reptiles like snakes usually lay their eggs and leave them without protection. How might this difference in parental care affect the chances of survival for the young ones in each case?
+
+Reflect on the questions framed by your
+
+I think ...
+
+Shouldn’t it
+
+be ...
+
+friends and try to answer ...
+
+But we thought ... Maybe ...
+
+.....................................................................................
+
+It's never the end, my friend!
+
+And we have arrived at the final page of our Grade 8 science journey. But remember, this is not the end of your exploration. Throughtout the year, we hope you have learnt to ask deeper questions, design investigations, and think like real scientists do. Whether you wondered about how forces work, explored the remarkable balance of our planet, or investigated how ecosystems are connected, you’ve already entered the Investigative World of Science.
+
+If you noticed, we left space in every chapter for you to ask your own questions. What are the things around you that puzzled you? Perhaps you noticed how water droplets on a leaf act like a lens, or wondered why different birds have different flight patterns. Things that you notice, and the questions you ask about them are the very beginning of scientific investigation. This textbook has been designed to guide you — rooted in real observations, yet lifting your imagination to fly as high as a kite. But the real adventure belongs to you: keep asking, keep experimenting, keep sharing your findings with your friends and teachers.
+
+As you close this book, remember that next year, you will enter the secondary stage, where we will go deeper into the world of science. The story will continue with more detailed investigations, bigger challenges, and greater discoveries. So never stop wondering, never stop experimenting, and never stop believing that your curiosity can change the world. We’ll meet you again on those pages 
+— because in science, it is never the end, my friend!
+
+Exploration
+
+Inquiry
+
+Curiosity

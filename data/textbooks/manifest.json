@@ -1,0 +1,803 @@
+[
+  {
+    "class": "class-10",
+    "subject": "english",
+    "chapter_no": 1,
+    "pdf_name": "jeff101.pdf",
+    "out_file": "textbooks\\class-10\\english\\chapter-01.txt",
+    "characters": 21678,
+    "paragraphs": 214
+  },
+  {
+    "class": "class-10",
+    "subject": "english",
+    "chapter_no": 2,
+    "pdf_name": "jeff102.pdf",
+    "out_file": "textbooks\\class-10\\english\\chapter-02.txt",
+    "characters": 25494,
+    "paragraphs": 255
+  },
+  {
+    "class": "class-10",
+    "subject": "english",
+    "chapter_no": 3,
+    "pdf_name": "jeff103.pdf",
+    "out_file": "textbooks\\class-10\\english\\chapter-03.txt",
+    "characters": 20643,
+    "paragraphs": 188
+  },
+  {
+    "class": "class-10",
+    "subject": "english",
+    "chapter_no": 4,
+    "pdf_name": "jeff104.pdf",
+    "out_file": "textbooks\\class-10\\english\\chapter-04.txt",
+    "characters": 26862,
+    "paragraphs": 247
+  },
+  {
+    "class": "class-10",
+    "subject": "english",
+    "chapter_no": 5,
+    "pdf_name": "jeff105.pdf",
+    "out_file": "textbooks\\class-10\\english\\chapter-05.txt",
+    "characters": 28042,
+    "paragraphs": 279
+  },
+  {
+    "class": "class-10",
+    "subject": "english",
+    "chapter_no": 6,
+    "pdf_name": "jeff106.pdf",
+    "out_file": "textbooks\\class-10\\english\\chapter-06.txt",
+    "characters": 24590,
+    "paragraphs": 213
+  },
+  {
+    "class": "class-10",
+    "subject": "english",
+    "chapter_no": 7,
+    "pdf_name": "jeff107.pdf",
+    "out_file": "textbooks\\class-10\\english\\chapter-07.txt",
+    "characters": 25393,
+    "paragraphs": 218
+  },
+  {
+    "class": "class-10",
+    "subject": "english",
+    "chapter_no": 8,
+    "pdf_name": "jeff108.pdf",
+    "out_file": "textbooks\\class-10\\english\\chapter-08.txt",
+    "characters": 15693,
+    "paragraphs": 128
+  },
+  {
+    "class": "class-10",
+    "subject": "english",
+    "chapter_no": 9,
+    "pdf_name": "jeff109.pdf",
+    "out_file": "textbooks\\class-10\\english\\chapter-09.txt",
+    "characters": 39435,
+    "paragraphs": 261
+  },
+  {
+    "class": "class-10",
+    "subject": "english-supplementary",
+    "chapter_no": 1,
+    "pdf_name": "jefp101.pdf",
+    "out_file": "textbooks\\class-10\\english-supplementary\\chapter-01.txt",
+    "characters": 10695,
+    "paragraphs": 67
+  },
+  {
+    "class": "class-10",
+    "subject": "english-supplementary",
+    "chapter_no": 2,
+    "pdf_name": "jefp102.pdf",
+    "out_file": "textbooks\\class-10\\english-supplementary\\chapter-02.txt",
+    "characters": 9553,
+    "paragraphs": 58
+  },
+  {
+    "class": "class-10",
+    "subject": "english-supplementary",
+    "chapter_no": 3,
+    "pdf_name": "jefp103.pdf",
+    "out_file": "textbooks\\class-10\\english-supplementary\\chapter-03.txt",
+    "characters": 8552,
+    "paragraphs": 54
+  },
+  {
+    "class": "class-10",
+    "subject": "english-supplementary",
+    "chapter_no": 4,
+    "pdf_name": "jefp104.pdf",
+    "out_file": "textbooks\\class-10\\english-supplementary\\chapter-04.txt",
+    "characters": 9078,
+    "paragraphs": 66
+  },
+  {
+    "class": "class-10",
+    "subject": "english-supplementary",
+    "chapter_no": 5,
+    "pdf_name": "jefp105.pdf",
+    "out_file": "textbooks\\class-10\\english-supplementary\\chapter-05.txt",
+    "characters": 9702,
+    "paragraphs": 59
+  },
+  {
+    "class": "class-10",
+    "subject": "english-supplementary",
+    "chapter_no": 6,
+    "pdf_name": "jefp106.pdf",
+    "out_file": "textbooks\\class-10\\english-supplementary\\chapter-06.txt",
+    "characters": 14079,
+    "paragraphs": 87
+  },
+  {
+    "class": "class-10",
+    "subject": "english-supplementary",
+    "chapter_no": 7,
+    "pdf_name": "jefp107.pdf",
+    "out_file": "textbooks\\class-10\\english-supplementary\\chapter-07.txt",
+    "characters": 14702,
+    "paragraphs": 101
+  },
+  {
+    "class": "class-10",
+    "subject": "english-supplementary",
+    "chapter_no": 8,
+    "pdf_name": "jefp108.pdf",
+    "out_file": "textbooks\\class-10\\english-supplementary\\chapter-08.txt",
+    "characters": 14917,
+    "paragraphs": 96
+  },
+  {
+    "class": "class-10",
+    "subject": "english-supplementary",
+    "chapter_no": 9,
+    "pdf_name": "jefp109.pdf",
+    "out_file": "textbooks\\class-10\\english-supplementary\\chapter-09.txt",
+    "characters": 20107,
+    "paragraphs": 139
+  },
+  {
+    "class": "class-10",
+    "subject": "english-workbook",
+    "chapter_no": 1,
+    "pdf_name": "jewe201.pdf",
+    "out_file": "textbooks\\class-10\\english-workbook\\chapter-01.txt",
+    "characters": 21097,
+    "paragraphs": 326
+  },
+  {
+    "class": "class-10",
+    "subject": "english-workbook",
+    "chapter_no": 2,
+    "pdf_name": "jewe202.pdf",
+    "out_file": "textbooks\\class-10\\english-workbook\\chapter-02.txt",
+    "characters": 17850,
+    "paragraphs": 265
+  },
+  {
+    "class": "class-10",
+    "subject": "english-workbook",
+    "chapter_no": 3,
+    "pdf_name": "jewe203.pdf",
+    "out_file": "textbooks\\class-10\\english-workbook\\chapter-03.txt",
+    "characters": 20305,
+    "paragraphs": 264
+  },
+  {
+    "class": "class-10",
+    "subject": "english-workbook",
+    "chapter_no": 4,
+    "pdf_name": "jewe204..pdf",
+    "out_file": "textbooks\\class-10\\english-workbook\\chapter-04.txt",
+    "characters": 16844,
+    "paragraphs": 217
+  },
+  {
+    "class": "class-10",
+    "subject": "english-workbook",
+    "chapter_no": 5,
+    "pdf_name": "jewe205.pdf",
+    "out_file": "textbooks\\class-10\\english-workbook\\chapter-05.txt",
+    "characters": 20912,
+    "paragraphs": 270
+  },
+  {
+    "class": "class-10",
+    "subject": "english-workbook",
+    "chapter_no": 6,
+    "pdf_name": "jewe206.pdf",
+    "out_file": "textbooks\\class-10\\english-workbook\\chapter-06.txt",
+    "characters": 24536,
+    "paragraphs": 352
+  },
+  {
+    "class": "class-10",
+    "subject": "english-workbook",
+    "chapter_no": 7,
+    "pdf_name": "jewe207.pdf",
+    "out_file": "textbooks\\class-10\\english-workbook\\chapter-07.txt",
+    "characters": 20595,
+    "paragraphs": 328
+  },
+  {
+    "class": "class-10",
+    "subject": "english-workbook",
+    "chapter_no": 8,
+    "pdf_name": "jewe208.pdf",
+    "out_file": "textbooks\\class-10\\english-workbook\\chapter-08.txt",
+    "characters": 18348,
+    "paragraphs": 259
+  },
+  {
+    "class": "class-10",
+    "subject": "english-workbook",
+    "chapter_no": 9,
+    "pdf_name": "jewe209..pdf",
+    "out_file": "textbooks\\class-10\\english-workbook\\chapter-09.txt",
+    "characters": 22624,
+    "paragraphs": 261
+  },
+  {
+    "class": "class-10",
+    "subject": "maths",
+    "chapter_no": 1,
+    "pdf_name": "jemh101.pdf",
+    "out_file": "textbooks\\class-10\\maths\\chapter-01.txt",
+    "characters": 15759,
+    "paragraphs": 170
+  },
+  {
+    "class": "class-10",
+    "subject": "maths",
+    "chapter_no": 2,
+    "pdf_name": "jemh102.pdf",
+    "out_file": "textbooks\\class-10\\maths\\chapter-02.txt",
+    "characters": 16630,
+    "paragraphs": 237
+  },
+  {
+    "class": "class-10",
+    "subject": "maths",
+    "chapter_no": 3,
+    "pdf_name": "jemh103.pdf",
+    "out_file": "textbooks\\class-10\\maths\\chapter-03.txt",
+    "characters": 21808,
+    "paragraphs": 306
+  },
+  {
+    "class": "class-10",
+    "subject": "maths",
+    "chapter_no": 4,
+    "pdf_name": "jemh104.pdf",
+    "out_file": "textbooks\\class-10\\maths\\chapter-04.txt",
+    "characters": 16776,
+    "paragraphs": 211
+  },
+  {
+    "class": "class-10",
+    "subject": "maths",
+    "chapter_no": 5,
+    "pdf_name": "jemh105.pdf",
+    "out_file": "textbooks\\class-10\\maths\\chapter-05.txt",
+    "characters": 34517,
+    "paragraphs": 509
+  },
+  {
+    "class": "class-10",
+    "subject": "maths",
+    "chapter_no": 6,
+    "pdf_name": "jemh106.pdf",
+    "out_file": "textbooks\\class-10\\maths\\chapter-06.txt",
+    "characters": 30579,
+    "paragraphs": 480
+  },
+  {
+    "class": "class-10",
+    "subject": "maths",
+    "chapter_no": 7,
+    "pdf_name": "jemh107.pdf",
+    "out_file": "textbooks\\class-10\\maths\\chapter-07.txt",
+    "characters": 19883,
+    "paragraphs": 292
+  },
+  {
+    "class": "class-10",
+    "subject": "maths",
+    "chapter_no": 8,
+    "pdf_name": "jemh108.pdf",
+    "out_file": "textbooks\\class-10\\maths\\chapter-08.txt",
+    "characters": 25345,
+    "paragraphs": 447
+  },
+  {
+    "class": "class-10",
+    "subject": "maths",
+    "chapter_no": 9,
+    "pdf_name": "jemh109.pdf",
+    "out_file": "textbooks\\class-10\\maths\\chapter-09.txt",
+    "characters": 14597,
+    "paragraphs": 173
+  },
+  {
+    "class": "class-10",
+    "subject": "maths",
+    "chapter_no": 10,
+    "pdf_name": "jemh110.pdf",
+    "out_file": "textbooks\\class-10\\maths\\chapter-10.txt",
+    "characters": 14171,
+    "paragraphs": 152
+  },
+  {
+    "class": "class-10",
+    "subject": "maths",
+    "chapter_no": 11,
+    "pdf_name": "jemh111.pdf",
+    "out_file": "textbooks\\class-10\\maths\\chapter-11.txt",
+    "characters": 8034,
+    "paragraphs": 138
+  },
+  {
+    "class": "class-10",
+    "subject": "maths",
+    "chapter_no": 12,
+    "pdf_name": "jemh112.pdf",
+    "out_file": "textbooks\\class-10\\maths\\chapter-12.txt",
+    "characters": 15931,
+    "paragraphs": 169
+  },
+  {
+    "class": "class-10",
+    "subject": "maths",
+    "chapter_no": 13,
+    "pdf_name": "jemh113.pdf",
+    "out_file": "textbooks\\class-10\\maths\\chapter-13.txt",
+    "characters": 37553,
+    "paragraphs": 695
+  },
+  {
+    "class": "class-10",
+    "subject": "maths",
+    "chapter_no": 14,
+    "pdf_name": "jemh114.pdf",
+    "out_file": "textbooks\\class-10\\maths\\chapter-14.txt",
+    "characters": 26620,
+    "paragraphs": 304
+  },
+  {
+    "class": "class-10",
+    "subject": "physical-education",
+    "chapter_no": 1,
+    "pdf_name": "jehp101.pdf",
+    "out_file": "textbooks\\class-10\\physical-education\\chapter-01.txt",
+    "characters": 23558,
+    "paragraphs": 113
+  },
+  {
+    "class": "class-10",
+    "subject": "physical-education",
+    "chapter_no": 2,
+    "pdf_name": "jehp102.pdf",
+    "out_file": "textbooks\\class-10\\physical-education\\chapter-02.txt",
+    "characters": 20231,
+    "paragraphs": 180
+  },
+  {
+    "class": "class-10",
+    "subject": "physical-education",
+    "chapter_no": 3,
+    "pdf_name": "jehp103.pdf",
+    "out_file": "textbooks\\class-10\\physical-education\\chapter-03.txt",
+    "characters": 23165,
+    "paragraphs": 210
+  },
+  {
+    "class": "class-10",
+    "subject": "physical-education",
+    "chapter_no": 4,
+    "pdf_name": "jehp104.pdf",
+    "out_file": "textbooks\\class-10\\physical-education\\chapter-04.txt",
+    "characters": 24788,
+    "paragraphs": 251
+  },
+  {
+    "class": "class-10",
+    "subject": "physical-education",
+    "chapter_no": 5,
+    "pdf_name": "jehp105.pdf",
+    "out_file": "textbooks\\class-10\\physical-education\\chapter-05.txt",
+    "characters": 43989,
+    "paragraphs": 333
+  },
+  {
+    "class": "class-10",
+    "subject": "physical-education",
+    "chapter_no": 6,
+    "pdf_name": "jehp106..pdf",
+    "out_file": "textbooks\\class-10\\physical-education\\chapter-06.txt",
+    "characters": 52527,
+    "paragraphs": 535
+  },
+  {
+    "class": "class-10",
+    "subject": "physical-education",
+    "chapter_no": 7,
+    "pdf_name": "jehp107.pdf",
+    "out_file": "textbooks\\class-10\\physical-education\\chapter-07.txt",
+    "characters": 39717,
+    "paragraphs": 372
+  },
+  {
+    "class": "class-10",
+    "subject": "physical-education",
+    "chapter_no": 8,
+    "pdf_name": "jehp108..pdf",
+    "out_file": "textbooks\\class-10\\physical-education\\chapter-08.txt",
+    "characters": 55249,
+    "paragraphs": 493
+  },
+  {
+    "class": "class-10",
+    "subject": "physical-education",
+    "chapter_no": 9,
+    "pdf_name": "jehp109.pdf",
+    "out_file": "textbooks\\class-10\\physical-education\\chapter-09.txt",
+    "characters": 36514,
+    "paragraphs": 183
+  },
+  {
+    "class": "class-10",
+    "subject": "physical-education",
+    "chapter_no": 10,
+    "pdf_name": "jehp110.pdf",
+    "out_file": "textbooks\\class-10\\physical-education\\chapter-10.txt",
+    "characters": 22869,
+    "paragraphs": 208
+  },
+  {
+    "class": "class-10",
+    "subject": "physical-education",
+    "chapter_no": 11,
+    "pdf_name": "jehp111.pdf",
+    "out_file": "textbooks\\class-10\\physical-education\\chapter-11.txt",
+    "characters": 21927,
+    "paragraphs": 136
+  },
+  {
+    "class": "class-10",
+    "subject": "physical-education",
+    "chapter_no": 12,
+    "pdf_name": "jehp112.pdf",
+    "out_file": "textbooks\\class-10\\physical-education\\chapter-12.txt",
+    "characters": 18690,
+    "paragraphs": 89
+  },
+  {
+    "class": "class-10",
+    "subject": "physical-education",
+    "chapter_no": 13,
+    "pdf_name": "jehp113..pdf",
+    "out_file": "textbooks\\class-10\\physical-education\\chapter-13.txt",
+    "characters": 20396,
+    "paragraphs": 87
+  },
+  {
+    "class": "class-10",
+    "subject": "science",
+    "chapter_no": 1,
+    "pdf_name": "jesc101.pdf",
+    "out_file": "textbooks\\class-10\\science\\chapter-01.txt",
+    "characters": 30495,
+    "paragraphs": 311
+  },
+  {
+    "class": "class-10",
+    "subject": "science",
+    "chapter_no": 2,
+    "pdf_name": "jesc102.pdf",
+    "out_file": "textbooks\\class-10\\science\\chapter-02.txt",
+    "characters": 37599,
+    "paragraphs": 371
+  },
+  {
+    "class": "class-10",
+    "subject": "science",
+    "chapter_no": 3,
+    "pdf_name": "jesc103.pdf",
+    "out_file": "textbooks\\class-10\\science\\chapter-03.txt",
+    "characters": 41521,
+    "paragraphs": 400
+  },
+  {
+    "class": "class-10",
+    "subject": "science",
+    "chapter_no": 4,
+    "pdf_name": "jesc104.pdf",
+    "out_file": "textbooks\\class-10\\science\\chapter-04.txt",
+    "characters": 44837,
+    "paragraphs": 299
+  },
+  {
+    "class": "class-10",
+    "subject": "science",
+    "chapter_no": 5,
+    "pdf_name": "jesc105.pdf",
+    "out_file": "textbooks\\class-10\\science\\chapter-05.txt",
+    "characters": 51630,
+    "paragraphs": 251
+  },
+  {
+    "class": "class-10",
+    "subject": "science",
+    "chapter_no": 6,
+    "pdf_name": "jesc106.pdf",
+    "out_file": "textbooks\\class-10\\science\\chapter-06.txt",
+    "characters": 30062,
+    "paragraphs": 140
+  },
+  {
+    "class": "class-10",
+    "subject": "science",
+    "chapter_no": 7,
+    "pdf_name": "jesc107.pdf",
+    "out_file": "textbooks\\class-10\\science\\chapter-07.txt",
+    "characters": 37041,
+    "paragraphs": 174
+  },
+  {
+    "class": "class-10",
+    "subject": "science",
+    "chapter_no": 8,
+    "pdf_name": "jesc108.pdf",
+    "out_file": "textbooks\\class-10\\science\\chapter-08.txt",
+    "characters": 15507,
+    "paragraphs": 93
+  },
+  {
+    "class": "class-10",
+    "subject": "science",
+    "chapter_no": 9,
+    "pdf_name": "jesc109.pdf",
+    "out_file": "textbooks\\class-10\\science\\chapter-09.txt",
+    "characters": 56352,
+    "paragraphs": 401
+  },
+  {
+    "class": "class-10",
+    "subject": "science",
+    "chapter_no": 10,
+    "pdf_name": "jesc110.pdf",
+    "out_file": "textbooks\\class-10\\science\\chapter-10.txt",
+    "characters": 24867,
+    "paragraphs": 110
+  },
+  {
+    "class": "class-10",
+    "subject": "science",
+    "chapter_no": 11,
+    "pdf_name": "jesc111.pdf",
+    "out_file": "textbooks\\class-10\\science\\chapter-11.txt",
+    "characters": 44193,
+    "paragraphs": 334
+  },
+  {
+    "class": "class-10",
+    "subject": "science",
+    "chapter_no": 12,
+    "pdf_name": "jesc112.pdf",
+    "out_file": "textbooks\\class-10\\science\\chapter-12.txt",
+    "characters": 29153,
+    "paragraphs": 180
+  },
+  {
+    "class": "class-10",
+    "subject": "science",
+    "chapter_no": 13,
+    "pdf_name": "jesc113.pdf",
+    "out_file": "textbooks\\class-10\\science\\chapter-13.txt",
+    "characters": 19681,
+    "paragraphs": 138
+  },
+  {
+    "class": "class-10",
+    "subject": "geography",
+    "chapter_no": 1,
+    "pdf_name": "jess101.pdf",
+    "out_file": "textbooks\\class-10\\geography\\chapter-01.txt",
+    "characters": 26632,
+    "paragraphs": 183
+  },
+  {
+    "class": "class-10",
+    "subject": "geography",
+    "chapter_no": 2,
+    "pdf_name": "jess102.pdf",
+    "out_file": "textbooks\\class-10\\geography\\chapter-02.txt",
+    "characters": 13204,
+    "paragraphs": 69
+  },
+  {
+    "class": "class-10",
+    "subject": "geography",
+    "chapter_no": 3,
+    "pdf_name": "jess103.pdf",
+    "out_file": "textbooks\\class-10\\geography\\chapter-03.txt",
+    "characters": 22772,
+    "paragraphs": 126
+  },
+  {
+    "class": "class-10",
+    "subject": "geography",
+    "chapter_no": 4,
+    "pdf_name": "jess104.pdf",
+    "out_file": "textbooks\\class-10\\geography\\chapter-04.txt",
+    "characters": 24175,
+    "paragraphs": 148
+  },
+  {
+    "class": "class-10",
+    "subject": "geography",
+    "chapter_no": 5,
+    "pdf_name": "jess105.pdf",
+    "out_file": "textbooks\\class-10\\geography\\chapter-05.txt",
+    "characters": 31293,
+    "paragraphs": 221
+  },
+  {
+    "class": "class-10",
+    "subject": "geography",
+    "chapter_no": 6,
+    "pdf_name": "jess106.pdf",
+    "out_file": "textbooks\\class-10\\geography\\chapter-06.txt",
+    "characters": 24914,
+    "paragraphs": 180
+  },
+  {
+    "class": "class-10",
+    "subject": "geography",
+    "chapter_no": 7,
+    "pdf_name": "jess107.pdf",
+    "out_file": "textbooks\\class-10\\geography\\chapter-07.txt",
+    "characters": 26114,
+    "paragraphs": 167
+  },
+  {
+    "class": "class-10",
+    "subject": "civics",
+    "chapter_no": 1,
+    "pdf_name": "jess401.pdf",
+    "out_file": "textbooks\\class-10\\civics\\chapter-01.txt",
+    "characters": 25998,
+    "paragraphs": 148
+  },
+  {
+    "class": "class-10",
+    "subject": "civics",
+    "chapter_no": 2,
+    "pdf_name": "jess402.pdf",
+    "out_file": "textbooks\\class-10\\civics\\chapter-02.txt",
+    "characters": 32803,
+    "paragraphs": 208
+  },
+  {
+    "class": "class-10",
+    "subject": "civics",
+    "chapter_no": 3,
+    "pdf_name": "jess403.pdf",
+    "out_file": "textbooks\\class-10\\civics\\chapter-03.txt",
+    "characters": 34019,
+    "paragraphs": 222
+  },
+  {
+    "class": "class-10",
+    "subject": "civics",
+    "chapter_no": 4,
+    "pdf_name": "jess404.pdf",
+    "out_file": "textbooks\\class-10\\civics\\chapter-04.txt",
+    "characters": 35421,
+    "paragraphs": 184
+  },
+  {
+    "class": "class-10",
+    "subject": "civics",
+    "chapter_no": 5,
+    "pdf_name": "jess405.pdf",
+    "out_file": "textbooks\\class-10\\civics\\chapter-05.txt",
+    "characters": 24445,
+    "paragraphs": 154
+  },
+  {
+    "class": "class-10",
+    "subject": "history",
+    "chapter_no": 1,
+    "pdf_name": "jess301.pdf",
+    "out_file": "textbooks\\class-10\\history\\chapter-01.txt",
+    "characters": 57497,
+    "paragraphs": 359
+  },
+  {
+    "class": "class-10",
+    "subject": "history",
+    "chapter_no": 2,
+    "pdf_name": "jess302.pdf",
+    "out_file": "textbooks\\class-10\\history\\chapter-02.txt",
+    "characters": 52988,
+    "paragraphs": 233
+  },
+  {
+    "class": "class-10",
+    "subject": "history",
+    "chapter_no": 3,
+    "pdf_name": "jess303.pdf",
+    "out_file": "textbooks\\class-10\\history\\chapter-03.txt",
+    "characters": 58419,
+    "paragraphs": 341
+  },
+  {
+    "class": "class-10",
+    "subject": "history",
+    "chapter_no": 4,
+    "pdf_name": "jess304.pdf",
+    "out_file": "textbooks\\class-10\\history\\chapter-04.txt",
+    "characters": 51489,
+    "paragraphs": 272
+  },
+  {
+    "class": "class-10",
+    "subject": "history",
+    "chapter_no": 5,
+    "pdf_name": "jess305.pdf",
+    "out_file": "textbooks\\class-10\\history\\chapter-05.txt",
+    "characters": 57629,
+    "paragraphs": 328
+  },
+  {
+    "class": "class-10",
+    "subject": "economics",
+    "chapter_no": 1,
+    "pdf_name": "jess201.pdf",
+    "out_file": "textbooks\\class-10\\economics\\chapter-01.txt",
+    "characters": 38205,
+    "paragraphs": 260
+  },
+  {
+    "class": "class-10",
+    "subject": "economics",
+    "chapter_no": 2,
+    "pdf_name": "jess202.pdf",
+    "out_file": "textbooks\\class-10\\economics\\chapter-02.txt",
+    "characters": 52396,
+    "paragraphs": 304
+  },
+  {
+    "class": "class-10",
+    "subject": "economics",
+    "chapter_no": 3,
+    "pdf_name": "jess203.pdf",
+    "out_file": "textbooks\\class-10\\economics\\chapter-03.txt",
+    "characters": 38384,
+    "paragraphs": 237
+  },
+  {
+    "class": "class-10",
+    "subject": "economics",
+    "chapter_no": 4,
+    "pdf_name": "jess204.pdf",
+    "out_file": "textbooks\\class-10\\economics\\chapter-04.txt",
+    "characters": 46876,
+    "paragraphs": 259
+  },
+  {
+    "class": "class-10",
+    "subject": "economics",
+    "chapter_no": 5,
+    "pdf_name": "jess205.pdf",
+    "out_file": "textbooks\\class-10\\economics\\chapter-05.txt",
+    "characters": 41995,
+    "paragraphs": 264
+  }
+]

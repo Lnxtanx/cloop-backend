@@ -1,0 +1,1779 @@
+# CLASS-9 - MATHS - CHAPTER 06
+# Source: iemh106.pdf
+
+Measuring Space: Perimeter and Area
+
+6
+
+In Fig. 6.1, you see athletes assembled at the start of a 4 × 100 m relay race. The tracks are laid out, and the athletes are all set to go racing down the tracks. Do you notice that the athletes are not at the same starting line?
+
+Fig. 6.1: Athletes at the start of 4 × 100 m relay race
+
+Those in the outer lanes seem to be starting ahead of those in the inner lanes while the finish line is the same for all of them. What could be the reason for this? The distance between the starting points of adjacent lanes is called the ‘stagger’. Notice that the stagger continues all the way to the outermost lane. Do you think the stagger gives anyone (those in the outer lanes or in the inner lanes) an unfair advantage? Why or why not? On what basis can the organisers work out the length of the stagger between lanes?
+
+Think and Reflect
+
+In my school, the playground is too small to have a 400 m track, so the school constructed a 200 m track instead. Does this mean that we need a smaller stagger for the race tracks in my school (i.e., smaller than the stagger used in the Olympics), for the same 4 × 100 m relay race?
+
+To answer the question about the lane staggers required on a 4 × 100 m athletics track, we need to know how to find the length around a circle.
+
+Measuring Space: Perimeter and Area 119
+
+6.1 Perimeter of a Shape
+
+Given any shape, its perimeter is the total length around its border. Imagine a tiny insect going for a walk around its border, never turning around, till it returns to its starting point. The perimeter of the shape is the total distance it travels.
+
+a units
+
+a units
+
+So, a square with side a units has perimeter 4a units. An equilateral triangle with side a units has perimeter 3a units.
+
+Fig. 6.2 B
+
+Fig. 6.2 A
+
+The perimeter of a rectangle with length a units and width b units is 2(a + b) units. Note that the formula for the perimeter of a square is a ‘special case’ of the formula for the perimeter of a rectangle with a = b.
+
+r
+
+Here we see a circle with radius r units. What is its perimeter? How do we find out?
+
+Fig. 6.3
+
+Think and Reflect
+
+What is the connection between this question and the one about the 400 m athletics track?
+
+To answer the question about the perimeter of the circle, we must go step by step.
+
+side = 2 units
+
+side = 4 units
+
+perimeter = 8 units perimeter = 16 units
+
+What happens to the perimeter of a square if we double its side? It doubles too. The ratio of perimeter to the side is 4:1; this is so for all squares. As the side of the square gets larger (or smaller), the ratio of perimeter to side stays fixed at 4:1.
+
+Fig. 6.4: Ratio of perimeter to side is 4:1
+
+Ganita Manjari | Grade 9 | Part I 120
+
+For equilateral triangles, the ratio of perimeter to the side is 3:1. As the side of the equilateral triangle gets larger (or smaller), the ratio of perimeter to side stays fixed at 3:1.
+
+C
+
+C
+
+C
+
+D D D
+
+What about a circle? What is its perimeter (usually called the circumference) in terms of its diameter?
+
+Fig. 6.5
+
+Is the ratio of circumference (C) to diameter (D) the same for circles of all sizes (Fig. 6.5)? What do you think?
+
+6.2 Perimeter of a Circle — The C/D Ratio
+
+In ancient days people realised that the ratio of the circumference to the diameter of the circle does not change if we change the size of the circle.
+
+Let’s call this ratio the ‘C/D ratio’ of the circle. What is the value of the C/D ratio? How would you estimate this ratio?
+
+HOME MEASUREMENT You can do a simple measurement at home to estimate the C/D ratio. Take a cotton reel with thin thread around it. Measure the diameter D of the reel as accurately as possible. Unwrap and then tightly wrap the thread around the reel 20 times. Unwrap it again; measure its length L,
+
+and calculate L
+
+20 D . This is the ratio we want. For accuracy, the thread
+
+should be very thin. Please do the experiment! Do you get a ratio between 3 and 4? Between 3.1 and 3.2?
+
+It is also possible to estimate the C/D ratio using pure geometry, i.e., without any measurements at all! Can you imagine how?
+
+C/D’s Adventurous Journey: From Ancient Approximations to the Exact Formula of Mādhava
+
+Mathematicians have been fascinated by circles, and the C/D ratio, since ancient times and across geographical regions. This constant,
+
+Measuring Space: Perimeter and Area 121
+
+which we now call π (we say ‘pi’ as in ‘pie’ and not as in ‘pizza’), represents a bridge between many different areas of mathematics, and connects the straight-edged world of polygons with the infinite curves of nature. While early civilisations relied on practical, ʻgood-enoughʼ values for construction and trade, the pursuit of this ratio eventually became an important pastime of mathematicians that helped to benchmark the sophistication of mathematical theories.
+
+In Mesopotamia (c. 1900 BCE), mathematicians moved beyond the crude integer value of 3. They realised that a circle had a perimeter that was slightly larger than the hexagon inscribed within it. They concluded that π should therefore be larger than 3, and they set the value of π to
+
+be 3 + 1
+
+8 = 3.125.
+
+r = 1 O
+
+Fig. 6.6 The Mesopotamian Hexagon-to-Circle comparison.
+
+Can you see why this shows that π > 3?
+
+By 250 BCE, Archimedes of Syracuse brought a new level of rigor to the problem. He ‘trapped’ the value of π between the perimeters of inscribed and circumscribed polygons. By using both an inscribed and circumscribed hexagon, Archimedes showed that π is between 3 and 2 3 ≈ 3.46. Working his way up to 96-sided polygons, Archimedes found
+
+that 3 10
+
+71 < π < 3 1 7 .
+
+a
+
+a
+
+r = 1
+
+a
+
+Fig. 6.7: Archimedes’ method utilising inscribed and circumscribed
+
+polygons. Can you see why this diagram of an inscribed and circumscribed hexagon tells us that π is between 3 and 2 3 ?
+
+(Hint: Use the Baudhāyana–Pythagoras Theorem.)
+
+Ganita Manjari | Grade 9 | Part I 122
+
+In about 150 CE, Ptolemy of Alexandria refined Archimedes computations for use in his astronomical tables, giving the ratio
+
+3.14167 for π.
+
+377 120 ≈
+
+Shortly thereafter, in China, a ‘circle-cutting method’ of Liu Hui (263 CE) laid the groundwork for two breakthroughs due to Zu Chongzhi (480 CE). Zu pushed the polygon approximation method to 24,576 sides! He used this to discover the Yuelü (Approximate Ratio)
+
+3.1415929
+
+of 22
+
+7 ≈ 3.1428 for π, and also the Miü (Close Ratio) of 355 113 ≈
+
+for π. The rational fraction 355
+
+113 is so close to π that it remained the most
+
+accurate value for π in the world for over 800 years; it is now known
+
+that no single rational fraction with denominator less than 15,000 can be as close to π as this fraction!
+
+In 499 CE, Āryabhaṭa provided a value of 62832
+
+20000 = 3.1416 for π.
+
+Crucially, he described this value as asanna, i.e., ‘approaching’ or ‘approximate’ — a profound insight suggesting that the ratio could not be given exactly as one simple fraction. Meanwhile, Brahmagupta (628 CE) suggested the use of the value 10 ≈ 3.1622 for π; while slightly less accurate, he chose it for its mathematical elegance and the ease with which it could be manipulated in equations, a preference that saw
+
+10 become the dominant approximation in the Arab world and medieval Europe for centuries after.
+
+Over the ensuing years, many great mathematicians studied π, including its approximations; but no approximation was as accurate as
+
+Zu’s 355
+
+113 — or as algebraically simple as 22 7 , 3.1416, and 10 — until the
+
+work of Mādhava of Sangamagrāma, who changed the game forever. Mādhava realised that π was not just a number to be approximated by fractions and other finite algebraic expressions, but a limit to be reached. Mādhava thereby discovered the first exact formula for π:
+
+4 = 1 – 1 3 + 1 5 – 1 7 + …
+
+π
+
+Is that not a beautiful formula? Mādhava’s formula — given in the form of an ‘infinite series’ — was a tectonic shift for mathematics. By moving from the geometric cutting of circles to the analytical summing of numbers, Mādhava birthed the area of mathematics
+
+Measuring Space: Perimeter and Area 123
+
+known as calculus. His infinite series enabled him to calculate π to 11 decimal places (3.14159265358), proving that the relationship between a circle’s circumference and its diameter was a window into an entirely new area of mathematics.
+
+Better and better infinite series were developed over time that gave more and more digits of π even more quickly. The key breakthroughs on the problem after Mādhava were due to Nīlakaṇṭha (c. 1500), Machin (1706), Ramanujan (1914), and the Chudnovsky brothers (1988) who skilfully extended the ideas of Ramanujan. Today, using their algorithms, we now know π to neels (100s of trillions) of digits! We will learn more about the area of calculus in later grades.
+
+In 1706, the Welsh mathematician William Jones used the Greek symbol π to denote the C/D ratio, because π is the first letter of the Greek word perimetros for perimeter. The symbol was made popular by the Swiss German mathematician Leonhard Euler (pronounced ‘oiler’). We continue to use the same symbol today!
+
+6.3 π Is Irrational
+
+The digits of π go on forever, with no visible pattern. You already know that fractions give rise to decimal expansions with a rhythmic pattern, e.g.,
+
+1 3 = 0.33333..., 1 11 = 0.09090909..., 1 7 = 0.142857 142857...
+
+But for π, there is no such pattern! It turns out that π cannot be written as a ratio of two integers. Such numbers are called irrational. Remember: A rational number is a number that can be written as a
+
+fraction a
+
+b where a, b are integers with b not equal to 0, e.g., numbers
+
+such as 12
+
+3 , –7 11 and 1.4.
+
+In Grade 8, you learned that 2 is an irrational number. From their writings, it seems that Āryabhaṭa and Zu Chongzhi regarded π as irrational. Centuries later (1761), the mathematician Lambert showed that this is so; π is irrational. But to prove this requires more advanced mathematics, which we will learn much later.
+
+Ganita Manjari | Grade 9 | Part I 124
+
+Since π is irrational, there is no ‘best fraction’ for π. If there is any fraction that is close to π, we can find another fraction that is closer.
+
+The well-known fraction 22
+
+7 is good enough for most practical uses.
+
+But it is important to note that π is not equal to 22
+
+7 (they are ‘close but
+
+not equal’). So we write π ≈ 22
+
+7 and also π ≠ 22 7 . In the same way, we can
+
+write 2 ≈ 1.414 and also 2 ≠ 1.414.
+
+As noted earlier, a much better approximation for π is 355
+
+113 .
+
+Fun Fact
+
+Here’s a fun way to remember the first few digits of π:
+
+How I wish I could recollect pi.
+
+Count the number of letters in each word (3, 1, 4, 1, 5, 9, 2) and you
+
+get the digits of π! So, π ≈ 3.141592…
+
+Since π ≈ 3.14 and also π ≈ 22
+
+7 , March 14 (written ‘3 - 14’ in North
+
+America) is celebrated each year as Pi Day, and 22 July (written ‘22-7’ in
+
+Measuring Space: Perimeter and Area 125
+
+India) is celebrated each year as Pi Approximation Day.
+
+6.4 Length of an Arc of a Circle
+
+r
+
+A B O
+
+The circumference of a circle of diameter d is π d. Since the diameter is twice the radius, we can also write the circumference of a circle as 2πr, where r is the radius.
+
+What will be the length of a semicircle with the same radius r (see Fig. 6.8)?
+
+Fig. 6.8: Two semicircles making
+
+a full circle
+
+If we reflect the circle in the diameter AB, the red semicircle and the blue semicircle exchange places. This means that they have equal length, which is 2πr ÷ 2 = πr.
+
+Instead of reflecting the figure in the diameter AB, we can also imagine rotating the whole figure around the centre O through an angle of 180°, i.e., through a half-turn. The effect is the same, and we get the same formula for the length of the semicircular arc.
+
+B
+
+What will be the length of a quarter circle with the same radius (Fig. 6.9)?
+
+O C
+
+A
+
+Imagine rotating the entire figure through 90°, clockwise or anticlockwise. Each quarter circle moves and covers another quarter circle. So each quarter circle has the same arc length, and this is equal to
+
+D
+
+Fig. 6.9: Four quarter circles
+
+2πr ÷ 4 = πr 2 .
+
+make a full circle
+
+Note the following:
+
+• The formula for the length of a semicircle may also be written
+
+as 2πr × 180o
+
+360o .
+
+Ganita Manjari | Grade 9 | Part I 126
+
+• The formula for the length of a quarter circle may also be written
+
+as 2πr × 90o
+
+360o .
+
+From these, we can guess the formula for the length of an arc of a circle in terms of the angle it makes (i.e., the angle it ‘subtends’) at the centre of the circle.
+
+B
+
+If the arc is AB, and it subtends an angle θ° at the centre O of the circle,
+
+θ°
+
+.
+
+the length of the arc is 2πr × 360
+
+°
+
+θ°
+
+A
+
+O
+
+Fig. 6.10: Length of an arc
+
+of a circle
+
+A Closer Look at a 400 m Athletics Track
+
+Fig. 6.11: Schematic diagram of a 400 m athletics track
+
+Measuring Space: Perimeter and Area 127
+
+Fig. 6.11 depicts a 400 m athletics track. You can see two straight sections of length 84.39 m each, and two curved portions, which are semicircles with a common centre (points A and B); the innermost semicircle on each side has radius 36.5 m. The width of each lane is 
+1.22 m. Let an athlete make one complete circuit of the track. What is the total distance she runs?
+
+• Let us assume that she runs at a distance of 0.3 m from the inner border.
+
+• She runs two straight sections of length 84.39 m each, a total of 168.78 m.
+
+• She also runs two semicircles of radius (36.5 + 0.3) m, i.e., 36.8 m.
+
+• The two semicircles together make up a complete circle.
+
+• Its circumference is 2 × π × 36.8 = 2 × 3.1416 × 36.8 = 231.22 m.
+
+• The total distance run by the athlete is therefore 168.78 + 231.22 = 400 m.
+
+Now consider two runners, one in the innermost lane, the other in the second lane. On the straight stretch the two runners run the same distance. But on the curved portions the runner in the second lane runs a greater distance, because her semicircle has a larger radius. It is to compensate for this that staggers are needed.
+
+Think and Reflect
+
+What is the difference in radius between the first and second lanes? Use the Fig. 6.11 to find the stagger needed by the runner in the second lane. Will an equal stagger be needed between the third and second lanes?
+
+6.5 Problems, Puzzles, and Paradoxes on Perimeter
+
+We close this section by looking at a sprinkling of interesting problems around the theme of perimeter.
+
+Example 1: Two circles of equal radius are located such that each circle passes through the centre of the other circle (Fig. 6.12).
+
+Given that the radius of each circle is r units, find the perimeter of the shape formed by the two circles in terms of r units. (Ignore the dotted portions that lie within the circles.)
+
+Ganita Manjari | Grade 9 | Part I 128
+
+C
+
+A B
+
+Here, we have two congruent circles centered at A and B. Each one passes through the centre of the other one. The circles intersect at C and D. We need to find the total length of the two red arcs shown here, in terms of the radius r unit.
+
+D
+
+Fig. 6.12
+
+Consider the triangle with vertices A, B, C. Since AB = r, AC = r, BC = r, the triangle is equilateral, hence ∠CAB = 60° = ∠CBA.
+
+Similarly ∠BAD = 60° = ∠ABD. It follows that ∠CAD = 120° = ∠CBD.
+
+Hence, each dotted arc is 1
+
+3 of the circumference of the circle on
+
+which it lies. Hence, the total length of the two red arcs is 2 2 3 2 8 3 × × = π π r r.
+
+a
+
+c
+
+P Q
+
+d
+
+b
+
+Fig. 6.13
+
+Example 2: In Fig. 6.13, we see points P and Q and two paths connecting them. The first path is made up of the semicircle a. The other path is made up of three semicircles (b, c and d). Which path is longer? Choose one: (i) Path a is longer. (ii) Path b + c + d is longer. (iii) The two paths have equal length. (Try to answer this before reading on.)
+
+Let us solve the problem using algebra. Let the radii of the semicircles a, b, c, d be denoted by a', b', c' and d'. Then the length of
+
+semicircle a is1
+
+2 (2π) a' = πa'. Similarly, the lengths of the semicircles
+
+b, c, and d are πb', πc' and πd'. So, the length of the second path is π(b' + c' + d'), and that of the first path is πa'.
+
+Which is bigger, b' + c' + d' or a' ? Do you see that neither one is bigger? They are equal! Because, the length of PQ is 2a' and it is also equal to 2b' + 2c' + 2d'. It follows that a' = b' + c' + d'. Hence, the two paths have equal length!
+
+Measuring Space: Perimeter and Area 129
+
+Exercise Set 6.1
+
+Unless stated otherwise, use the approximation 22
+
+7 for π.
+
+1. The perimeter of a circle is 44 cm. What is its radius? 
+2. Calculate, correct to 3 significant figures, the circumference of a
+
+circle with: (i) radius 7 cm (ii) radius 10 cm (iii) radius 12 cm. 
+3. Calculate the length of the arc of a circle if: (i) the radius is 3.5 cm
+
+and the angle at the centre is 60°, and (ii) the radius is 6.3 m and the angle at the centre is 120°. 
+4. Find the perimeter of a sector (i.e., the curved portion as well as the
+
+two straight portions) of a circle of radius 14 cm and sector angle 75°. 
+5. Find the perimeters of the following shapes (taking the arcs to
+
+be quarter or half or three-quarters of a circle, as appropriate) (Fig. 6.14i to 6.14ix):
+
+(i)
+
+(iii)
+
+(ii)
+
+60 m
+
+8 cm
+
+80 m
+
+10 cm
+
+12 cm
+
+(iv)
+
+(v)
+
+(vi)
+
+14 cm
+
+12 cm
+
+28 cm
+
+(vii)
+
+(viii)
+
+(ix)
+
+6 cm
+
+10 cm 10 cm
+
+4 cm 4 cm 4 cm
+
+8 cm
+
+Fig. 6.14
+
+Ganita Manjari | Grade 9 | Part I 130
+
+6. If the diameter of a car tyre is 56 cm, then: (i) How far does
+
+the car need to travel for the tyre to complete one revolution? (ii) How many revolutions does the tyre make if the car travels 10 km?
+
+7. Find the total perimeter of all the petals in each of the given flowers.
+
+(i) (ii)
+
+42 cm
+
+14 cm
+
+Fig. 6.15B: The centres of the arcs
+
+Fig. 6.15A: The centres of the arcs are the
+
+are the vertices of the hexagon
+
+midpoints of the sides of the square
+
+8. The ratio of the perimeters of two circles is 5:4. What is the ratio of
+
+their radii?
+
+6.6 Area of a Rectangle
+
+From perimeter, we move to area, i.e., to the ‘amount of space’ occupied by a two-dimensional region in a plane.
+
+Measurement is always relative to something we call a unit. For area, the unit is a 1 × 1 square; its area is taken to be 1 unit2 (also written as 1 sq. unit). You know from Grade 8 that the area of a rectangle with sides a units and b units is ab sq. units (Fig. 6.16).
+
+b units
+
+a units
+
+1 unit
+
+b
+
+a units
+
+a units
+
+1 unit
+
+1 unit
+
+Area = b sq. units
+
+Area = 1 sq. units
+
+Area = ab sq. units
+
+Area = a2 sq. units
+
+Fig. 6.16: Area of square and rectangle
+
+6.7 Area of a Parallelogram
+
+You also know from Grade 8 the formula for the area of a parallelogram.
+
+Measuring Space: Perimeter and Area 131
+
+D'
+
+E A' F
+
+A D
+
+h
+
+Height, h
+
+C' Base, b
+
+B'
+
+C B
+
+Fig. 6.17: Area of a parallelogram. Here, A'B'C'D' is a copy of ABCD.
+
+Fig. 6.17 shows how to transform a parallelogram ABCD into a rectangle EB'C'F (at right; here, parallelogram A'B'C'D' is a copy of ABCD) with the same base b and same height h. Though the two shapes are different, their areas are the same. So, the area of the parallelogram is equal to base × height = bh.
+
+Think and Reflect
+
+A
+
+D
+
+B C
+
+What happens if the parallelogram is ‘thin’ (Fig. 6.18) and the foot of the perpendicular from C to AD does not lie on side AD? The construction then does not seem to work. How do we fix this ‘gap’? Fig. 6.18
+
+Here is a hint on how the problem of the ‘thin parallelogram’ can be solved.
+
+D D' A A'
+
+B C
+
+Fig. 6.19: The thin parallelogram
+
+Select a point D' on DA, close to D, and a point A' on DA extended, with A'A = D'D (Fig. 6.19). Then A'BCD' is a parallelogram, and since ΔCDD' ≅ ΔBAA', its area is the same as that of ABCD. Now repeat this step as many times as needed.
+
+Think and Reflect
+
+The area of a rectangle can be found when we know the lengths of its sides. Is the same true for a parallelogram? That is, can we find the area of a parallelogram when we know the lengths of its sides? Why or why not?
+
+Ganita Manjari | Grade 9 | Part I 132
+
+(Hint: What happens to the area of a parallelogram if we decrease or increase the angle between the adjacent sides while keeping the lengths fixed?)
+
+6.8 Area of a Triangle
+
+Next, we work out a formula for the area of a triangle. (You have seen the formula in Grade 8, but we will go over the idea again, briefly.) One way to proceed is to first consider the case of a right-angled triangle and then other triangles. In both cases, we enclose the triangle in a rectangle; then we use the formula for area of a rectangle. (See Fig. 6.20A. Notice that FG = FJ + JG and so b = b1 + b2.) We find as a result that the area of a triangle with base b units and height h units is half the area of the rectangle with base b units and height h units. That is,
+
+the area is equal to 1
+
+2 bh sq. units.
+
+You may wonder, like earlier, is there a gap in our argument? What would we do if angle EFG is obtuse and the triangle were shaped like triangle EFG in Fig. 6.20B? Please work out the answer to this question.
+
+E I H A D
+
+E
+
+Height, h Height, h
+
+Base, b2 Base, b1 Base, b
+
+F G
+
+F J G
+
+C B
+
+Fig. 6.20B
+
+Fig. 6.20A: Area of a triangle
+
+A nicer way of working out the formula for the area of a triangle is by seeing that two congruent copies of a triangle can be fitted together to make a parallelogram.
+
+C' B'
+
+D
+
+A
+
+A
+
+A'
+
+B C
+
+In Fig. 6.21A, triangles ABC and A'B'C' are congruent. They fit together as in Fig. 6.21B to make a parallelogram.
+
+B C
+
+Fig. 6.21B
+
+Fig. 6.21A
+
+Measuring Space: Perimeter and Area 133
+
+Do you see why the two triangles fit together to make a parallelogram? (If you study the angles in the figure (e.g., ∠B'C'A' and ∠BCA), you will see why this is so. Keep in mind the criterion by which we check whether two lines are parallel.)
+
+We already know, area of a parallelogram: base × height = bh.
+
+So, the formula for the area a triangle is 1
+
+2 (base × height) = 1 2 bh.
+
+A property of the median of a triangle. From the above formula we reach a simple but beautiful conclusion about any of the medians of a triangle.
+
+A
+
+A median is the line segment joining a vertex of the triangle to the midpoint of the opposite side. In Fig. 6.22, AD is a median of ΔABC.
+
+Height h
+
+C
+
+Consider ΔABD and ΔACD. Their bases are equal (BD = DC), and they have equal height h. Using the formula for the area of a triangle, we see that they have equal
+
+B D Base, BC = 2a units
+
+area ah
+
+2 sq. units!
+
+Fig. 6.22
+
+We state this as a theorem.
+
+Theorem: A median of a triangle divides it into two triangles with equal area.
+
+Does this come as a surprise? It should! After all, ΔABD and ΔACD are (in general) differently shaped (i.e., not congruent to each other). But we have just proved that they have the same area!
+
+Think and Reflect
+
+Since ΔABD and ΔACD have equal area, you may wonder — Can we divide ΔABD using straight cuts into two or more pieces that we can then rearrange to exactly cover ΔACD? What do you think? Is it possible?
+
+We shall spoil the surprise by revealing that it is possible. But we will not tell you the least number of pieces required. Try to find the answer!
+
+Ganita Manjari | Grade 9 | Part I 134
+
+Think and Reflect
+
+Suppose we are given two polygons P and Q with equal area. Will it always be possible to divide one of them using straight cuts into two or more pieces and then rearrange the pieces to exactly cover the other polygon? Try this out for familiar shapes, e.g.,
+
+1. A square and non-square rectangle with equal area,
+
+2. Two triangles with different shapes but equal area,
+
+3. A triangle and a square with equal area. Formulate a conjecture of your own about this.
+
+Think of various rectangles with perimeter 40 units (the sides do not have to be integers).
+
+1. How many such rectangles are there?
+
+2. Among them, is there one whose area is the largest? What are its dimensions?
+
+3. Among all these rectangles, is there one whose area is the smallest? What are its dimensions? Do either of these answers come as a surprise to you?
+
+6.8.1 Heron’s formula
+
+You already know a formula for the area of a triangle (half base times height). Are there other formulas for the area of a triangle? There are several. For now we mention Heron’s formula, discovered by the Greek mathematics and inventor, Heron. He taught at the Museum in Alexandria, a city in ancient Egypt located on the banks of the Nile.
+
+The formula states that if ΔABC has side lengths BC = a, CA = b, and AB = c, then its area can be found as follows. First, we compute the
+
+semi-perimeter, s which is half the perimeter: s a b c = + + 1 2( ). Then the area (∆ABC) is given by
+
+s s a s b s c ( )( )( ). − − −
+
+I am sure you will find the formula extremely surprising and strange looking! Let us test it against some known cases.
+
+Example 3: An equilateral triangle with side a units.
+
+Measuring Space: Perimeter and Area 135
+
+All three sides have length a, so the semi-perimeter is
+
+s a a a a = + + = 1 2 3 2 ( ) units. Heron’s formula now yields,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+= 3 2 1 2 1 2 1 2 3 4
+
+2 a a a a a sq. units
+
+area of triangle = 
+
+A
+
+Let us check this against the ‘half base times height’ formula. Let h units be the height of the triangle. Then, by the Baudhāyana–Pythagoras theorem,
+
+a a
+
+a h a h a h a 2 2 2 2 2
+
+h
+
+4 3 4 3 2 − = ∴ = ∴ = , , .
+
+So the area is 1
+
+2 × × = a a a sq. units.
+
+2 3 2 3 4
+
+C
+
+Same formula!
+
+B D a 2 a 2
+
+Fig. 6.23
+
+Note: Notice the symbol ‘∴’. This symbol is used regularly by mathematicians; it means and is read as ‘therefore’.
+
+Example 4: An isosceles triangle with equal sides a units and base 2b units.
+
+The semi-perimeter is s = 1
+
+2 2 a a b a b + + ( ) = + units. Heron’s formula now yields,
+
+area of the triangle = + + − + − + − = − ( )( )( )( ) a b a b a a b a a b b b a b 2 2 2 sq. units.
+
+A
+
+a a
+
+Let us check this against the ‘half base times height’ formula. Let h units be the height of the triangle. Then, by the Baudhāyana–Pythagoras theorem,
+
+h
+
+2 2 2 2 2 2 2 2 , , . a h b h a b h a b
+
+So the area is 1
+
+C
+
+B D b b
+
+2 2 2 2 2 2 × − × = − a b b b a b
+
+sq. units, the same as earlier.
+
+Fig. 6.24
+
+Ganita Manjari | Grade 9 | Part I 136
+
+Example 5: A triangle with sides 3 units, 4 units and 5 units.
+
+The semi-perimeter is s = + + = 1 2 3 4 5 6 ( ) units. Heron’s formula now yields,
+
+area of triangle = × − × − × − = × × = 6 6 3 6 4 6 5 6 3 2 6 ( ) ( ) ( ) sq. units.
+
+A
+
+Let us check this against the ‘half base times height’ formula. See Fig. 6.25; note that 32 + 42 = 52. Therefore, by the converse of the Baudhāyana–Pythagoras hypotenuse theorem, ΔABC is right-angled at B. So,
+
+5 4
+
+base = 3 units, height = 4 units,
+
+so the area is 1
+
+2 1 2 3 4 6 ( ) ( ) base height × = × = sq. units,
+
+3
+
+B C
+
+the same as earlier.
+
+Fig. 6.25
+
+We get the correct result in each case. You may wonder how Heron’s formula is proved. There are many proofs known; one of them uses the Baudhāyana–Pythagoras theorem and repeated use of the ‘difference-of-two-squares’ formula a2 – b2 = (a – b)(a + b). We will study some of these proofs in Grade 10.
+
+There are two other such formulas for the area of a triangle. Both have a connection with circles. See Fig. 6.26.
+
+Given any triangle ABC, there is exactly one circle that passes through its three vertices. This is called the circumcircle of ∆ABC.
+
+There is also exactly one circle that fits tightly in the triangle, touching its three sides. This is called the incircle of ∆ABC.
+
+A
+
+Circumcircle Radius R
+
+b c
+
+Let the sides of ΔABC be a, b, and c. Let the radius of the circumcircle be R. Let the radius of the incircle be r. Then we have the following two formulas for the area:
+
+Incircle Radius r
+
+R 4
+
+C
+
+a
+
+B
+
+Area of ∆ = ABC abc
+
+Fig. 6.26
+
+Area of ∆ = + + ABC r a b c ( ) 2
+
+Measuring Space: Perimeter and Area 137
+
+Both formulas have a beautiful symmetry about them! The proof of the second formula requires a result that you will study in Grade 10.
+
+Brahmagupta’s Formula for the Area of a Cyclic 4-gon
+
+We have seen how to find the area of a triangle given the lengths of its three sides. The natural question then is: how can we find the area of a 4-gon given the lengths of its four sides? Earlier we asked, can we find the area of a parallelogram if we know only the lengths of its sides? The answer is: No. In the same way we ask: can we find the area of a 4-gon if we only know the lengths of its sides? The figures below reveal the answer to this question.
+
+The problem (Fig. 6.27) is about a 4-gon whose sides are known to be 3, 3, 3, 3 (it is a ‘rhombus’). As you can see, the areas of the three figures are different. (We drew the figures using GeoGebra and found the areas using the ‘Area’ tool. Please try this exercise yourself, or by using four rods joined together at their ends.)
+
+A
+
+D
+
+D
+
+A
+
+A
+
+D
+
+Area = 9
+
+Area = 8.01
+
+Area = 5.41
+
+B
+
+C
+
+B
+
+C
+
+B
+
+C
+
+Fig. 6.27: The area of a 4-gon cannot be found only
+
+from the lengths of its sides
+
+So we cannot find the area of a 4-gon only from the lengths of its four sides; we need more information. This could be one angle of the 4-gon, or the length of one diagonal, or the angle at which the diagonals cut each other, etc.
+
+Or it could be a key geometric property of the figure. One such property is that the 4-gon is a cyclic 4-gon. In 628 CE, Brahmagupta (598–668 CE) discovered a wonderful formula for the area of a cyclic 4-gon.
+
+Ganita Manjari | Grade 9 | Part I 138
+
+D
+
+d
+
+A
+
+The formula states that if the sides of the cyclic 4-gon have lengths a, b, c, d, and the
+
+semi-perimeter s is s a b c d = + + + ( ) 1 2 , then:
+
+a c
+
+Areaof4-gon = − ( ) − ( ) − ( ) − ( ) s a s b s c s d .
+
+b
+
+B C
+
+It is an amazing and beautiful formula!
+
+Does it not remind us of Heron’s formula for the area of a triangle?
+
+Fig. 6.28: A cyclic 4-gon
+
+We can verify that the formula works out correctly in various special cases.
+
+Example 6: Verify Brahmagupta’s formula for the case of a rectangle. All rectangles are cyclic, so Brahmagupta’s formula should apply.
+
+Let the sides of the rectangle be a, b. Then s a b a b = + ( ) = + 1 2 2 2 , so the formula yields:
+
+Area = + − ( ) + − ( ) + − ( ) + − ( ) = ⋅ = a b a a b b a b a a b b ab ab ab,
+
+which is correct. Please check out the formula against other special cases.
+
+Example 7: Verify Brahmagupta’s formula for the case of an isosceles trapezium.
+
+A
+
+B 2a
+
+c c h
+
+All isosceles trapezia are cyclic, hence the formula should apply. The perimeter is 2a + 2b + 2c, so s = a + b + c. Hence, the area as given by the formula should be
+
+s a s b s c s c − ( ) − ( ) − ( ) − ( ) 2 2 .
+
+D C
+
+2b
+
+Fig. 6.29: Isosceles trapezium
+
+Since s – 2a = c + b – a, s – 2b = c + a 
+– 2b, s – c = a + b the above formula simplifies to
+
+a b c b a c a b a b c b a + ( ) + − ( ) + − ( ) = + ( ) − − ( ) 2 2 .
+
+Measuring Space: Perimeter and Area 139
+
+If we imagine a perpendicular dropped from B to the base CD, its
+
+length (recall the Baudhāyana–Pythagoras theorem) is c b a 2 2 − − ( ) . Hence, the area is (a + b)h. We get exactly the same formula if we recall that the area of an isosceles trapezium is half the sum of the parallel sides times the distance between the parallel sides.
+
+Special Cases and Generalisation in Mathematics
+
+The notion of a ‘special case’ occurs often in higher mathematics. A special case results from a general result whenever we apply some extra condition. We list a few such examples.
+
+The general result is also called a generalisation of the special case. The process of generalisation is an extremely important part of mathematics.
+
+Example: A square is a special case of a rectangle.
+
+So, the formula for the area of a square (A = a2) is a special case of the formula for the area of a rectangle (A = ab) obtained by putting b = a.
+
+Similarly, the formula for the perimeter of a square is a special case of the formula for the perimeter of a rectangle.
+
+Example: An isosceles right-angled triangle is a special case of a right-angled triangle.
+
+So, from any theorem about all right-angled triangles, we can extract a special case that applies to isosceles, right-angled triangles.
+
+Take a right-angled triangle ABC with ∠C = 90°; then we have a2 + b2 = c2
+
+(this is the Baudhāyana–Pythagoras theorem). Let us take a special case of this with a = b (this corresponds to the triangle being isosceles). We get
+
+a2 + b2 = c2, i.e., c2 = 2a2 and so c a = 
+2. The general theorem
+
+(a2 + b2 = c2) has reduced to this special case ( c a = 2) for isosceles
+
+right-angled triangles (with a = b).
+
+Here is another example. Compare the following identities from algebra:
+
+2 2 2 2 ,
+
+a b a b ab + = + + ( )
+
+2 2 2 2 2 2 2 .
+
+a b c a b c ab bc ca + + = + + + + + ( )
+
+Can you see that the first identity is a special case of the second one (put c = 0 in the second identity), and the second identity is a generalisation of the first one?
+
+You will meet many examples of special cases and generalisation in later years.
+
+Ganita Manjari | Grade 9 | Part I 140
+
+Brahmagupta’s Formula Generalises Heron’s Formula
+
+The similarity in appearance between Heron’s formula and Brahmagupta’s formula is not an accident. How? Brahmagupta’s formula generalises Heron’s formula. That is, we can think of Heron’s formula as a special case of Brahmagupta’s formula.
+
+A triangle with sides a, b, c can be regarded as a ‘special case’ of a 4-gon ABCD whose fourth side d has zero length (d = 0). So we have AB = a, BC = b, CD = c, which means in effect that vertices A and D coincide.
+
+(If the vertices represent planets, then this would be a case of two planets colliding with each other and forming a single large planet! This actually happened in the early history of the solar system.)
+
+Since any triangle is cyclic (given any three points not in a straight line, we can draw a circle through them), this 4-gon is cyclic too. So, Brahmagupta’s formula must apply to this 4-gon.
+
+Let us see what emerges from this. We first compute the semi-perimeter of the 4-gon (keep in mind that d = 0):
+
+s a b c a b c = + + + ( ) = + + ( ) 1 2 0 1 2 .
+
+We see that s is the same as the semi-perimeter of the given triangle. Now we apply Brahmagupta’s formula:
+
+Areaoftriangle = − ( ) − ( ) − ( ) − ( ) s a s b s c s d
+
+= − ( ) − ( ) − ( ) s s a s b s c since d = 0.
+
+This is Heron’s formula!
+
+Brahmagupta’s formula may thus be viewed as a generalisation of Heron’s formula.
+
+6.9 Squaring a Rectangle
+
+In ancient times, to ‘square a given shape’ meant to ‘construct a square equal in area to that shape’. The shape could be a rectangle or a triangle or a circle. Here, we show how the ancient Indian mathematician Baudhāyana squared a rectangle. The construction, from his Śhulbasūtra (800 BCE), shows how to square a rectangle with sides a units and b units where a > b. This means that we must construct
+
+Measuring Space: Perimeter and Area 141
+
+a square with area ab sq. units. Here is a slightly simplified form of Baudhāyana’s construction (Fig. 6.30).
+
+• Given: rectangle ABCD with AD = a, AB = b where a > b.
+
+H P G
+
+• Locate E on AD so that AE = AB.
+
+• Locate the midpoint F of ED.
+
+B
+
+C K
+
+• Draw square AFGH with side AF and vertex H on AB produced.
+
+b
+
+• Draw arc AG with centre H. Let arc AG cut side BC at K.
+
+S Q
+
+D F E A
+
+a
+
+• Draw a line through K parallel to AH. Let it cut GH at P.
+
+Fig. 6.30: Rectangle ABCD with
+
+AD = a, AB = b
+
+• Draw square HPQS with HP as side. Then square HPQS has the same area as rectangle ABCD.
+
+Try to work out why this method works. You will find that it is a
+
+
+
+
+
+geometrical translation of the formula a b a b ab + 
+
+2 2 .
+
+
+
+− − 
+
+
+
+= 2 2
+
+*Why does this method work?
+
+Refer to Fig. 6.30. From AE = b we get AF AE AD = + = + 2 2 a b .
+
+Hence, HG HK = + = a b 2 as HK is a radius of the circle.
+
+Next, BH AH AB AF AB = − = − = + − = − a b b a b 2 2 .
+
+Now consider the right-angled triangle HKP. Using the Baudhāyana– Pythagoras theorem we get
+
+a b a b
+
+HP HK BH 2 2 2 2 2
+
+ =
+
+= − = +  
+
+ − −  
+
+2 2 2 2 2 2
+
++ + − − + =
+
+2 4 2 4
+
+a ab b a ab b ab ab ab 2 2 + = .
+
+Therefore square HPQS has the same area as rectangle ABCD.
+
+Ganita Manjari | Grade 9 | Part I 142
+
+Think and Reflect
+
+What procedure would you use to square a given triangle? Here, the task is to construct a square whose area is equal to the area of some given triangle. Think carefully. How would you proceed?
+
+Exercise Set 6.2
+
+1. Find the area of triangle ADE in Fig. 6.31.
+
+A
+
+B
+
+E
+
+8 cm
+
+D
+
+C
+
+10 cm
+
+Fig. 6.31
+
+2. The parallel sides of a trapezium are 40 cm and 20 cm. If its
+
+non-parallel sides are both equal, each being 26 cm, find the area of the trapezium.
+
+3. Find the area of a triangle, given that its sides are 8 cm and 11 cm
+
+long, and its perimeter is 32 cm.
+
+4. The sides of a triangular plot are in the ratio 3: 5: 7; its perimeter is
+
+300 m. Find its area.
+
+5. One diagonal of a rhombus is twice as long as the other diagonal. If the
+
+rhombus has area 128 cm2, find the length of the shorter diagonal.
+
+6. ABCD is a parallelogram. P and Q are any two points on side AB.
+
+What can you say about the ratio area (∆PCD): area (∆QCD)?
+
+7. O is any point on the diagonal PR of a parallelogram PQRS. Prove
+
+that the areas of triangles PSO and PQO are equal.
+
+8. If the mid-points of the sides of a 4-gon (also known as a
+
+quadrilateral, but we prefer to call it a ‘4-gon’) are joined in order, prove that the area of the parallelogram thus formed will be half of the area of the given 4-gon. (You may wonder whether
+
+Measuring Space: Perimeter and Area 143
+
+the 4-gon thus formed is always a parallelogram, and if so, why? These questions will be tackled and answered in the chapter on quadrilaterals.) 
+9. In ∆ABC, the midpoint of BC is D (Fig. 6.32). Median AD is drawn. P is
+
+any point on AD. Show that area (∆ABP) = area (∆ACP).
+
+D
+
+A A
+
+P
+
+P
+
+C
+
+B
+
+B D C
+
+Fig. 6.32 Fig. 6.33
+
+10. Given a square ABCD, let P be a point within it. Join PA, PB, PC, PD
+
+(Fig. 6.33). What is the ratio of the areas of the red region (∆PAB and ∆PCD) and the green region (∆PBC and ∆PDA)? 11. In ∆ABC, D is the midpoint of AB. P is any point on BC, and Q is a
+
+point on AB such that CQ || PD. PQ is joined (Fig. 6.34). Prove that
+
+Area (∆BPQ) = 1
+
+2 Area (∆ABC).
+
+A
+
+Q
+
+D
+
+B P C
+
+Fig. 6.34
+
+6.10 Area of a Circle
+
+A circle is an extremely basic shape; it is easy to draw if we have a rope and a peg to which the rope can be tied. Human beings have used the circular shape in their settlements, buildings and tools for thousands of years.
+
+Ganita Manjari | Grade 9 | Part I 144
+
+Think and Reflect
+
+Why were human beings so fond of using circular shapes? Was this only for practical reasons, or could there have been other reasons too? What kinds of uses have human beings found for the circular shape?
+
+Early on, human beings faced the challenge of finding the area A enclosed by a circle. They may have needed, for example, to work out how much grain can be kept in a cylindrical tower (which has a circular cross section), or how much area is occupied by a circular garden or a circular building. They needed such data for planning out their cities, for tax purposes, etc.
+
+Early societies understood very well that the area A must be proportional to the square of the circumference C. Let’s see why this is so.
+
+• Suppose we are given a square. Let its side be a. It has perimeter P = 4a and area A = a2. So the ratio P2 : A = (4a2) : a2 = 16a2 : a2 = 16 : 1. So the ratio P2 : A is 16 : 1 for all squares; the ratio does not depend on the size of the square — it is the same for all squares. 
+• Consider an equilateral triangle with side a. Its perimeter is P = 3a
+
+and its area is A a = 3 4
+
+2. So P2 : A = ( ) : : : 3 3 4 9 3 4 36 3 2 2 2 2 a a a a = = .
+
+So the ratio P2 : A is 36 3 : for all equilateral triangles; the ratio does not depend on the size of the equilateral triangle — it is the same for all equilateral triangles.
+
+• Similarly, for various shapes, as we change the scale, the ratio P2 : A stays fixed. The value of the ratio depends only on the shape, not on its scale.
+
+Such reasoning suggests that for a circle too, if C = circumference and A = area, the ratio C2 : A must be some fixed constant. But what is this constant?
+
+Well before 1500 BCE, the Babylonians had found through actual measurement that the constant is close to 12; that is, C2 : A ≈ 12 : 1. So,
+
+their formula for the area of a circle was A ≈ C2
+
+12 .
+
+Around 1500 BCE, the ancient Egyptians came up with another such formula which resembles the one described above but is much more
+
+
+
+accurate: A d ≈
+
+2 where d is the diameter of the circle. Since d = 2r,
+
+
+
+ 8 9
+
+Measuring Space: Perimeter and Area 145
+
+
+
+
+
+this may also be written as A r ≈
+
+2.
+
+
+
+ 64 81 4 2, i.e., A r ≈
+
+
+
+ 256 81
+
+Amazingly, the same formula appears in the Baudhāyana Śhulbasūtra (800 BCE) via a geometric method for constructing a square with (approximately) the same area as a circle.
+
+The Familiar Formula in Use Today
+
+The ancient Greeks also knew that A
+
+r2 is some constant — but did not
+
+know what that constant was. Two different civilisations approximated
+
+it to be 256
+
+81 .
+
+Finally, in c. 250 BCE, Archimedes showed that the constant is exactly π (i.e., the same constant that occurs in the formula for perimeter of a circle!); so, A = πr2. He expressed the formula this way: “The area of a circle is equal to the area of a right angle triangle with sides equal to the radius and the circumference of the circle”. That is,
+
+Areaofcircle circumference radius = × × = × × = 1 2 1 2 2 2 π π r r r .
+
+The proof given by Archimedes is very clever. It is based on a property shared by all regular polygons: The area enclosed by a regular polygon is equal to half the perimeter × the radius of the circle that fits tightly within the polygon (Fig. 6.36). (The proof of this formula is an extension of the proof of the formula of the area of a triangle in terms of the radius of its incircle.)
+
+O
+
+O
+
+O
+
+r
+
+r
+
+r
+
+Fig. 6.36: Area of a regular polygon = 1
+
+2 × perimeter of the polygon × radius
+
+Ganita Manjari | Grade 9 | Part I 146
+
+Archimedes did a ‘thought experiment’; he asked himself what happens if the number of sides of the regular polygon gets larger and larger. Working out the details, he arrived at the result A = πr2.
+
+Here perhaps is the most visual and easy-to-understand explanation for why the area of a circle of radius r has area πr2. This beautiful visual explanation for the area of the circle was first discovered by Nīlakaṇṭha Somayājī (c. 1500) in his commentary on the Āryabhaṭīya:
+
+(A) (B)
+
+Fig. 6.37: The slices can be rearranged to form a
+
+parallelogram-like structure
+
+As the slices become smaller and smaller, the arcs in Fig. 6.37B become more and more closer to a line. This makes the figure more and more closer to a parallelogram with
+
+base = half the circumference (why?) = πr,
+
+height = radius r.
+
+This gives a way to argue that the area of the circle is equal to the area of a parallelogram!
+
+Area of the circle = Area of the parallelogram = base × height = πr2.
+
+6.10.1 Area of Sector of a Circle
+
+B
+
+θ° O
+
+A sector of a circle is the region bounded by an arc and the two radii containing the endpoints of the arc.
+
+A
+
+Fig. 6.38: Sector of a circle
+
+The area within a sector of a circle may be found the same way that we found the length of a circular arc. Examine Fig. 6.39 and Fig. 6.40.
+
+Measuring Space: Perimeter and Area 147
+
+By symmetry, we see that the area of a
+
+th
+
+
+
+r
+
+semicircular disc is 180
+
+of the area
+
+360 1 2 
+
+A B O
+
+
+
+ =
+
+of the circle, i.e., 1
+
+2 πr2.
+
+We could use the reflection symmetry of the circle to understand this result.
+
+Fig. 6.39: Area of a
+
+semi-circular disc
+
+B
+
+By symmetry, we see that the area of a
+
+th
+
+of the area
+
+O
+
+quarter circular disc is 90 360 1 4  
+
+  =
+
+A
+
+C O
+
+of the circle, i.e., 1
+
+4 πr2.
+
+D
+
+We could also use the quarter-turn symmetry of the circle to understand this result.
+
+Fig. 6.40: Area of a quarter
+
+circular disc
+
+Examining the above, we immediately obtain the desired formula for a general sector:
+
+Formula for the area of a sector of a disc in terms of the angle it subtends at the centre of the circle
+
+If the arc is AB, and it subtends an angle of θ° at the centre O of the circle (see Fig. 6.38), then the area of the sector is
+
+
+
+π θ r 2
+
+.
+
+360 ×
+
+Note how we have used the rotational symmetry of a circle in deducing these formulas.
+
+Related to a sector, there is a part of the circular region called a segment. A segment of a circle is the region bounded by an arc of the circle and the chord joining the endpoints of the arc.
+
+Ganita Manjari | Grade 9 | Part I 148
+
+Exercise Set 6.3
+
+Unless stated otherwise, use the approximation 22
+
+7 for π. 
+1. Find the area of a sector of a circle with radius 7 cm if the angle of
+
+the sector is 60°.
+
+2. Find the area of a quadrant of a circle whose circumference is 44 cm.
+
+3. The length of the minute hand of a clock is 7 cm. Find the area
+
+swept by the minute hand in 10 minutes.
+
+4. A chord of a circle of radius 10 cm subtends 90° at the centre. Find
+
+the area of the corresponding: (i) minor sector (that subtends 90° at the centre), and (ii) major sector (that subtends 270° at the centre). (Use π ≈ 3.14.)
+
+5. A chord of a circle of radius 15 cm subtends an angle of 60° at the
+
+centre of the circle. Find the areas of the corresponding minor and major segments of the circle. (Use π ≈ 3.14 and 3 ≈ 1.73.)
+
+6. A car has two wipers which do not overlap. Each wiper has a blade
+
+of length 28 cm and sweeps through an angle of 120°. Find the total area cleaned at each sweep of the blades.
+
+*7. A chord of a circle of radius r subtends an angle of 60° at the
+
+centre of the circle. Show that the area of the corresponding minor
+
+
+
+segment of the circle is equal to πr2 1
+
+6 3 4 − 
+
+ .
+
+ 
+
+*8. An equilateral triangle is inscribed in a circle of radius r. Show
+
+that the ratio of the area of the triangle to the area of the circle is
+
+equal to 3 3
+
+4π ≈ 0.413.
+
+*9. A square is inscribed in a circle of radius r. Show that the ratio of
+
+the area of the square to the area of the circle is equal to 2
+
+π ≈ 0.637.
+
+*10. A hexagon is inscribed in a circle of radius r. Show that the ratio
+
+of the area of the hexagon to the area of the circle is equal to
+
+3 3 2π ≈ 0.827. Can you see why the answer is exactly twice the
+
+answer to Question 8?
+
+Measuring Space: Perimeter and Area 149
+
+End-of-Chapter Exercises
+
+In the problems below, unless stated otherwise, use the approximation
+
+22 7 for π.
+
+1. Identities in algebra can sometimes be shown as area relationships. For example:
+
+a b
+
+a2 a
+
+ab
+
+The figure shown corresponds to the identity
+
+(a + b)2 = a2 + 2ab + b2.
+
+Do you see how?
+
+b
+
+ab
+
+b2
+
+Fig. 6.41: Area model of
+
+an identity
+
+Draw figures corresponding to the identities (a + b)(a – b) = a2 – b2 and (a + b + c)2 = a2 + b2 + c2 + 2ab + 2bc + 2ca.
+
+2. An isosceles triangle has perimeter 40 cm; the equal sides are 15 cm each. Find the area of the triangle.
+
+3. An isosceles triangle has base 10 cm, and its area is 60 cm2. What are the lengths of the equal sides?
+
+4. The area of a right-angled triangle is 54 sq. cm. One of its legs has length 12 cm. Find its perimeter.
+
+5. The sides of a triangle are in the ratio 2: 3: 4, and its perimeter is 45 cm. Find its area.
+
+6. The sides of a triangle have lengths 7 cm, 24 cm, 25 cm. Find the area of the triangle in two different ways.
+
+7. If the wheel of a bicycle has a diameter of 60 cm, find how far a cyclist will have travelled after the wheel has rotated 100 times.
+
+Ganita Manjari | Grade 9 | Part I 150
+
+8. Find the area of a quadrant of a circle whose circumference is 66 cm.
+
+9. The wheel of a car has an outer radius of 28 cm. Calculate how far the car travels after one complete turn of the wheel, and how many times the wheel turns during a journey of 1 km.
+
+*10. Two rectangles have the same area and the same perimeter. Does
+
+this mean that they are congruent to each other?
+
+11. You know that the area of a parallelogram is base × height. Using
+
+this and the figure, show that the area of a trapezium is half the
+
+sum of the parallel sides × height, i.e., 1
+
+2(a + b)h.
+
+a
+
+h
+
+b Fig. 6.42: Trapezium: sides a and b, height h
+
+12. By dividing a trapezium into two triangles show that its area is,
+
+half the sum of the parallel sides multiplied by the height (the same formula as the one given above).
+
+13. Show how we can use two identical copies of a trapezium to make
+
+a parallelogram. How will this give us the formula for the area of a trapezium?
+
+14. Show that the area of a kite is half the product of its diagonals.
+
+Show this: (i) using algebra, and (ii) using geometry.
+
+15. Three problems about fitting congruent shapes together:
+
+(i) Rectangle ABCD has sides a, b, and rectangle PQRS has sides
+
+2a, 2b. Show that PQRS has 4 times the area of ABCD. Does this mean that 4 copies of rectangle ABCD will fit into rectangle PQRS? Check and see!
+
+Measuring Space: Perimeter and Area 151
+
+(ii) ∆ABC has sides a, b, c, and ∆PQR has sides 2a, 2b, 2c. Show
+
+that ∆PQR has 4 times the area of ∆ABC. Does this mean that 4 copies of ∆ABC will fit into ∆PQR? Check and see!
+
+(iii) ∆ABC has sides a, b, c, and ∆PQR has sides 3a, 3b, 3c. Show
+
+that ∆PQR has 9 times the area of ∆ABC. Does this mean that 9 copies of ∆ABC will fit into ∆PQR? Check and see!
+
+*16.
+
+Fig. 6.43: What fraction of the
+
+Fig. 6.44: What fraction of the
+
+triangle is shaded?
+
+square is shaded?
+
+17.
+
+Fig. 6.46: What fraction of the rectangle is covered by
+
+Fig. 6.45: What fraction of the rectangle is covered by
+
+the circles?
+
+the circles?
+
+18. Use the above to make a conjecture about the area occupied by
+
+circles fitted into a rectangle in the manner shown. Test your conjecture for particular cases: 10 circles; 20 circles; 50 circles. Then prove your conjecture!
+
+*19.
+
+Fig. 6.47: Nine identical rectangles
+
+The figure shows nine identical rectangles fitted together to make a large rectangle whose area is 72 cm2. Find the perimeter of each small rectangle.
+
+stacked together
+
+Ganita Manjari | Grade 9 | Part I 152
+
+*20.
+
+Show that the areas of the shaded blue triangle and the shaded red triangle are equal.
+
+Fig. 6.48: Lines from a vertex to
+
+the points of trisection of the
+
+Find a way of cutting up the blue triangle into some number of pieces and rearranging the pieces to cover the red triangle.
+
+opposite side
+
+*21.
+
+B
+
+A
+
+The figure shows a quarter circle in a square. Its centre is at one vertex, and it passes through two adjacent vertices. There are two semicircles on two adjacent sides as diameters. They create the shaded regions A and B .
+
+Fig. 6.49: A quarter circle and two
+
+Show that A and B have equal area.
+
+semicircles
+
+*22. 2
+
+2
+
+In Fig. 6.50, four semicircles have been drawn within the given square whose side is 2 units. The centres of these semicircles are the midpoints of the sides. They create a 4-petalled flower (shown in blue). Find the perimeter and the area of this flower.
+
+Fig. 6.50
+
+*23. BC = l
+
+B C A
+
+O
+
+In Fig. 6.51 we see two concentric circles with a common centre O. A chord BC of the larger circle is drawn, touching the smaller circle at A. The length of BC is l. Show that the area of the green region enclosed between the
+
+two circles is 1
+
+4 πl 
+2.
+
+Fig. 6.51
+
+Measuring Space: Perimeter and Area 153
+
+*24. In Fig. 6.52, semicircles have been drawn on all the sides of a
+
+right-angled triangle as shown. Show that Area (A) + Area (B) = Area (C).
+
+C
+
+A B
+
+D
+
+Fig. 6.52 Fig. 6.53: Two congruent circles, radius r
+
+*25. Fig. 6.53 shows two circles passing through each other’s centres.
+
+Find the area of the region enclosed by the two circles in terms of the common radius r.
+
+*26. In Fig. 6.54, we see three triangles within a rectangle.
+
+C A
+
+The areas of the triangles are
+
+B
+
+A, B, C, as marked. Show that the area of the rectangle is
+
+2 A C B C
+
++ ( ) + ( ).
+
+C
+
+Fig. 6.54
+
+*27. In the figure we see two shaded regions formed by a quarter circle,
+
+a semicircle, and a triangle.
+
+B
+
+E
+
+F
+
+D
+
+C O A
+
+Fig. 6.55
+
+Show that the areas of the two shaded regions are equal.
+
+Ganita Manjari | Grade 9 | Part I 154
+
+Chapter Summary
+
+• π is the constant circumference to diameter ratio for all circles,
+
+and is approximately equal to 22
+
+7 or 3.14.
+
+• The circumference of a circle is given by C = 2πr, where r is the radius of the circle.
+
+• The arc length of a circle is given by l = 2πr × θ° 360° , where θ is the central angle.
+
+• The area of a triangle is given by A = 1 2 base times height.
+
+• Heron’s formula for the area of a triangle in terms of its sides a, b, c:
+
+area = s s a s b s c ( )( )( ). − − − where s = s a b c = + + 1 2( ).
+
+• The area of a circle is given by A = πr2.
+
+• Estimates for π: Archimedes: 3 10 71 < π < 3 1 7;
+
+Chongzhi: π ≈ 355
+
+113; Āryabhaṭa: π ≈ 3.1416; Mādhava’s exact
+
+3 + 1 5 – 1 7 + …).
+
+• π is an irrational number.
+
+formula: π = 4 (1 – 1
+
+• The area of a sector of a circle is given by area = πr2 × θ° 360° ,
+
+where θ is the central angle.
+
+• Brahmagupta’s formula for the area of a cyclic quadrilateral in terms of its sides a, b, c, d:
+
+area s a s b s c s d . where s a b c d = + + + ( ) 1 2 .

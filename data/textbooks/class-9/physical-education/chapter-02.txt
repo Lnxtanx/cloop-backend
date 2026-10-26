@@ -1,0 +1,1571 @@
+# CLASS-9 - PHYSICAL-EDUCATION - CHAPTER 02
+# Source: iehp102.pdf
+
+T
+
+I
+
+N
+
+U
+
+Science and Sports
+
+2
+
+This unit delves into the scientific understanding of the human body and its systems, emphasising their role in physical activity and sports. It explores anatomy, physiology, and movement science, helping students understand how the body functions during movement. The unit highlights the importance of maintaining a healthy body through proper care of bones, muscles, joints, and the cardiovascular and respiratory systems. It also introduces concepts like cellular respiration, the structure and function of the heart, and the circulatory system, emphasising their role in physical performance. The unit explains the classification of joints, muscles, and their movements, providing insights into how the body generates force, strength, and power. It also discusses the types of levers in the body and their role in movement. Students are encouraged to observe and analyse their own physical activities, such as kicking or throwing a ball, to identify the muscles and joints involved. This hands-on approach helps students connect theoretical knowledge with practical applications. Additionally, the unit highlights the effects of exercise on the body, comparing short-term and long-term changes in various systems. It emphasises the importance of warm-up and cool-down exercises, proper breathing techniques, and understanding the body's adaptation to physical activity. Through engaging activities and exercises, students learn how to optimise their physical performance and maintain holistic well-being.
+
+Chapter 5
+
+Understanding Our Body
+
+In the previous unit, we learned a couplet from the epic of Kumārasaṃbhavam describing that all the duties in life or all the actions and skills in sports are only performed through our body. Therefore, it is necessary to understand the structures, systems, and mechanisms of our body, which include the bones, the muscles, and various other systems. While performing physical activities on the ground, we witnessed some extra tension in the muscles, panting, relaxing, heating, etc. Why do these and other similar changes occur in the body? We will study this in the present unit.
+
+India stands out for developing one of the oldest medical systems in the world through Vedic philosophy and the Ayurvedic tradition.
+
+One of the greatest figures in this field was Maharṣhi Suśhruta, who is remembered as the ‘Father of Surgery’.
+
+Maharṣhi Suśhruta lived and learned with his teacher, observing and practising medicine in real-life situations. His studies were deeply rooted in Ayurveda, known as the ‘science of life’. From a young age, Maharṣhi Suśhruta was also trained in herbal medicine, gaining both theoretical and practical knowledge.
+
+Maharṣhi Suśhruta’s contributions laid the foundation for modern medicine and surgery. His teachings spread to China, Arabic, Persian, and European countries, influencing later physicians and scientists. Many of his techniques, such as rhinoplasty (nose reconstruction), are still used in modified forms today. His life and work remind us that science and compassion must go hand in hand.
+
+Activity
+
+Straighten up your legs and grip your thighs to feel the muscles while sitting on the bench in the classroom. Identify which movement is related with squeezing and releasing the tension of the muscles of your thighs.
+
+The scientific study of the structure of the human body is known as human anatomy. It is about understanding ‘what’ our body parts are and ‘where’ they are located. Physiology, on the other hand, is the study of how different organs and systems of the human body function to maintain life. While anatomy shows us the ‘what’ and ‘where’, physiology explains the ‘how’ and ‘why’ of bodily functions.
+
+Activity
+
+Perform controlled movements such as wrist rotation, knee bends, toe raise and arm swing. For each movement, identify the joint being used (shoulder, knee, ankle, or neck) and describe the type of movement it allows. Then perform gentle dynamic stretches and observe how the joint moves more easily after warming up. This activity helps students understand how joints allow movement and why proper warm-up is important for joint safety and performance.
+
+Wrist rotation Knee bend Toe raise and arm swing
+
+Fig. 5.1
+
+Bone
+
+Bone is a ‘strong and rigid’ type of connective tissue that makes up most of skeleton and gives the body its structure. The types of bones are shown in Fig. 5.2. It is active and always repairing and rebuilding itself. If a bone is injured, it can usually heal and function normally again, depending on the severity of the injury.
+
+31 Understanding Our Body
+
+Activity
+
+Let us play a game. Make a group of five members, and prepare five chits with one bone type written on each chit. Each member will pick a chit and indicate the location of the mentioned bone on their body.
+
+Flat Bones 
+• Flat and thin 
+• Possibly curved 
+• Protect internal organs For example, Cranial bones, Scapula, some facial bones
+
+Long Bones 
+• Tubular in shape 
+• Long axis 
+• Two ends that articulate with other bones For example, Humerus, Femur
+
+Irregular Bones 
+• Complex shapes For example, Vertebrae
+
+Sesamoid Bones 
+• Unique 
+• Lie within tendons For example, Patella, Scaphoid
+
+Short Bones 
+• Cuboidal in shape For example, Carpal bones
+
+Fig. 5.2: Skeletal system
+
+Cartilage
+
+Cartilage
+
+A cartilage is a tough yet flexible connective tissue that helps protect bones and joints by absorbing shock. They are indicated in Fig. 5.3. The cartilage found at the end of bones minimises friction and keeps them from grinding against each other during movement. In some areas of the body, cartilage also serves as the primary tissue, giving those structures form and shape. Cartilage damage can occur suddenly from injuries such as sports injuries or trauma, but it can also develop gradually over time (overuse injuries).
+
+Fig. 5.3: Cartilage
+
+32 Khel Praveen
+
+Activity
+
+1. Why do you think the calf muscles tendon which is inserted into the calcaneus is called Achilles tendon? After your teacher narrates the story behind this name, discuss the values you learned from it, and identify a similar story from the Indian epic Mahābhārata.
+
+2. With the pinch grip, try to hold and feel the texture of your Achilles Tendon below the calf muscle and above the heel bone, as shown in Fig. 5.4 Is it similar to what you feel when you touch your ear? Discuss the similarities and differences with your peers.
+
+Fig. 5.4
+
+Tendon
+
+Gastrocnemius muscle (calf)
+
+Achilles tendon
+
+Metatarsal bones
+
+Calcaneus (heel bone)
+
+A tendon is a tough, flexible band of tissue that attaches muscles to bones, allowing your limbs to move. It also helps protect muscles from injury by absorbing part of the impact that occurs during activities such as running, jumping, landing or other movements.
+
+Fig. 5.5: Tendon
+
+DID YOU KNOW?
+
+The total amount of movement that occurs in a joint in a particular direction is known as ‘range of motion’.
+
+Ligaments
+
+Cartilage
+
+Ligament
+
+Tendon
+
+Ligaments are strong, fibrous bands of connective tissue that link bones to one another and help stabilise key structures in the body, including joints and certain organs. They connect bones to maintain the integrity of the skeleton, secure the ends of bones within a joint, guiding and limiting their movement, strengthening the joints, and reducing the risk of injuries.
+
+Fig. 5.6: Ligament
+
+33 Understanding Our Body
+
+At the beginning of the chapter, we had activities involving various movements that use different joints. Let’s recall those movements and try to understand the different types of joints.
+
+JOINT
+
+A joint (also called an articulation) is a location where two or more bones meet to form a connection that allows movement. Joints in the human body function as hinges, pivots, and sliding mechanisms, providing mobility and enabling human locomotion. Joints also provide structural support and stability to the skeletal system. They are classified below on the basis of structure and function.
+
+Classification of Joints
+
+Structural Classification
+
+• Fibrous joint is a type of joint in the body in which bones are connected by a dense fibrous connective tissue, like collagen which provides strength and stability (for example, skull), with no direct movement (head protection in contact sports like boxing). Fig. 5.7: Fibrous joint
+
+(Immoveable joint)
+
+• Cartilaginous joints are a type of joint where bones are connected by cartilage, allowing for some movement but less than that in synovial joints (for example, vertebrae). It provides pelvic stability during sprinting.
+
+Fig. 5.8: Cartilaginous joint
+
+(Semi-moveable joint)
+
+• Synovial joints are freely movable joints characterised by a fluid-filled cavity covered by a membrane known as the synovial membrane between articulating bones (for example, knee, shoulder, etc.). It helps in wrist gliding in gymnastics.
+
+Fig. 5.9: Synovial joint (Freely moveable joint)
+
+34 Khel Praveen
+
+Skull suture Functional Classification
+
+• Immoveable joints are a type of joint that allow for no movement under normal conditions. These joints are characterised by the close proximity of the articulating bones, which are held together by fibrous connective tissue or cartilage, with no joint cavity (for example, skull).
+
+Fig. 5.10: Immoveable joint
+
+Pubic symphysis
+
+• Slightly moveable joints are a type of joint that allow for a limited range of motion. These joints are characterised by bones connected by cartilage or fibrous connective tissue, enabling some degree of movement while maintaining stability (for example, vertebrae or spine, etc.).
+
+Fig. 5.11: Slightly moveable
+
+joint
+
+• Freely moveable joints are a type of joint in the human body characterised by a joint cavity containing synovial fluid, which allows for a wide range of motion. These joints are crucial for enabling activities like walking, running, and grasping. They are mostly found in the limbs, facilitating various movements (for example, shoulder, hip, knee, elbow, wrist, etc.).
+
+Fig. 5.12: Freely moveable joint
+
+Activity
+
+Types of Lever-Joints
+
+In your physics class, you have read about three types of lever—1st class, 2nd class and 3rd class levers. Recall the concept and discuss whether these types of lever are present in our body.
+
+35 Understanding Our Body
+
+• Synovial joints are further classified into the following types:
+
+(a) Ball and Socket Joints: They allow movements in all
+
+directions (for example, hip, shoulder, etc.)
+
+(b) Hinge Joints: They allow movements of flexion and
+
+extension only(for example, knee, elbow, etc.)
+
+(a) Pivot joint
+
+(between C1 and C2 vertebrae)
+
+(f) Hinge joint
+
+(elbow) (b) Ball and
+
+socket joint (hip joint)
+
+(e) Saddle joint
+
+(between trapezium carpal bone and 1st metacarpal bone)
+
+(c) Gliding joint
+
+(between tarsal bones)
+
+(d) Condyloid joint
+
+(between radius and carpal bones of wrist)
+
+Fig. 5.13: Types of synovial joints
+
+36 Khel Praveen
+
+(c) Pivot Joints: They allow rotational movement (for example,
+
+atlanto-axial joint in neck, radio-ulnar joint in forearm, etc.)
+
+(d) Gliding Joints: They allow sliding movements (for example,
+
+wrist, ankle, etc.)
+
+(e) Saddle Joints: They allow movement in two planes (for
+
+example, thumb, etc.)
+
+(f) Condyloid Joints: They allow movements in all directions
+
+but not rotation (for example, knuckles, etc.)
+
+Muscles
+
+Muscles are tissues in the body that produce movement, maintain posture, and circulate blood by contracting and shortening. The structure of the muscles is shown in Fig. 5.14.
+
+Muscle Fibre Muscle Bundle
+
+Tendon
+
+Endomysium
+
+Bone
+
+Blood Vessel
+
+Fig. 5.14: Structure of muscles
+
+Classification of Muscles
+
+There are three main types of muscles— skeletal (voluntary movement), smooth (involuntary functions like digestion), and cardiac (heart function).
+
+37 Understanding Our Body
+
+Activity
+
+Study the image and try to identify and feel the muscles and joints while jumping.
+
+Muscles
+
+Trapezius
+
+Joints
+
+Shoulder joint
+
+Bones
+
+Deltoids
+
+Triceps
+
+Biceps
+
+Clavicle
+
+Humerus
+
+Pectoralis major
+
+Pelvis
+
+Rectus abdominis
+
+Gluteus medius
+
+Quadriceps group
+
+Patella
+
+Knee joint
+
+Gluteus maximus
+
+Tibia
+
+Hamstring group
+
+Femur
+
+Gastrocnemius
+
+Soleus
+
+Ankle joint
+
+Fig. 5.15: Functional classification of muscles, bones and joints
+
+38 Khel Praveen
+
+Skeletal Muscles
+
+These types of muscles are attached to bones. They allow movement and maintain body posture. They are long, cylindrical, multinucleated, and striated in shape. Since they consciously control body parts’ movement, they are also called voluntary muscles (for example, biceps, quadriceps, deltoids, etc.).
+
+LET US RECALL
+
+There are 206 bones in the human body but it is not only the bones which ensure our body movement. Recall plank and other exercises from the previous classes, and how nearly 639 muslces in the human body help in performing various actions. Try to jump, hop, and leap for a few minutes; then when you stretch, the sensation in your limbs is actually originating in the muscles. Can you help your parents and peers learn the names and know the locations of some muscles?
+
+Smooth Muscles
+
+This type of muscles are found in the walls of hollow internal organs of the human body, like the stomach, blood vessels, intestines, etc. They are spindle-shaped, single-nucleus and non-striated. They are primarily controlled by the Autonomic Nervous System (ANS) and regulate involuntary functions, such as iris of the eye, heart rate, digestion, and blood pressure of the human body.
+
+Cardiac muscle Skeletal muscle Smooth muscle
+
+Fig. 5.16: Classification of muscles
+
+39 Understanding Our Body
+
+DID YOU KNOW?
+
+How are different skeletal muscles in the body named? In previous grades, we’ve read about different muscles. Let us recall and associate them with the following:
+
+• Shape: Deltoid (triangular), Quadratus (square), Rhomboid (diamond-shaped), Teres (round), Gracilis (slender), Rectus (straight), and Lumbrical (worm-like)
+
+• Size: Major, Minor, Longus (long), Brevis (short), Latissimus (broadest), and Longissimus (longest)
+
+• Number of heads or bellies: Biceps (two heads), Triceps (three heads), Quadriceps (four heads), and Digastric (two bellies)
+
+• Depth: Superficialis (superficial), Profundus (deep), Externus/externi (external), and Internus/Interni (internal)
+
+• Attachment: Sternocleidomastoid— from one bone to another bone (from sternum and clavicle to mastoid)
+
+• Position: Anterior, Posterior, Medial, Lateral, Superior, Inferior, Supra-Interosseus, Infra-Interosseus (between bones), Dorsi (of the back), Abdominis (of the abdomen), Pectoralis (of the chest), and Brachii (of the arm), Femoris (of the thigh), Oris (of the mouth), and Oculi (of the eye)
+
+• Action: Extensor, Flexor, Abductor, Adductor, Levator, Depressor, Supinator, Pronator, Constrictor, and Dilator
+
+Cardiac Muscles
+
+Cardiac muscles are a specialised type of muscles found only in the walls of the heart. It forms the thick middle layer of the wall of the heart known as the myocardium. Its structure is branched, striated and has a single central nucleus. These muscles possess autonomic function with self-stimulating properties, enabling heart to pump blood throughout the body continuously till death.
+
+Factors Influencing Movement
+
+Complexity of Form
+
+How complicated or simple a movement is can be determined by the complexity of form. Some movements are simple, like walking, while others are more complex, like sporting activities.
+
+40 Khel Praveen
+
+• Joint complexity — Some joints allow simple movement (like the hinge motion of the elbow), while others allow more complex movement (like the ball and socket joint in the shoulder or hip).
+
+Fig. 5.17: Bone-to-bone movement
+
+We have often seen, that lifting an object from the ground or table with an improper body mechanics or movement, results in lower back pain. Fig 5.18 helps us understand the dynamics of force application and it’s translation.
+
+Fig. 5.18
+
+Degrees of Freedom
+
+The various directions or ways a joint can move are called the degrees of freedom of that joint. A shoulder joint has more degrees of freedom than an elbow joint.
+
+Types of joint movement
+
+The different ways in which our joints allow motion are:
+
+• Translation: Straight-line movement (for example, sliding your hand across a table).
+
+• Flexion: Bending a joint (for example, bending your elbow), when two joint angles are reduced.
+
+• Abduction and adduction: Moving a body part away from the midline (abduction) or towards it (adduction).
+
+• Axial rotation: Rotating around an axis (for example, turning your head from side to side).
+
+• Circumduction: Moving in a circular motion (for example, circling your arm).
+
+41 Understanding Our Body
+
+Force and Range of Contraction
+
+Muscles can generate more force (strength) and allow more range of motion.
+
+Force, strength and power
+
+• Force is the push or pull that muscles create.
+
+• Strength is how much force a muscle can produce to overcome
+
+resistance.
+
+• Power is strength combined with speed (like sprinting or jumping) and may also be known as explosive strength.
+
+Actions of muscles Muscles work in pairs and groups to create movement. They can act in different ways:
+
+• Isometric: The muscle contracts but does not change length (like holding a plank or pushing against a wall).
+
+• Isotonic: The muscle changes length while overcoming a resistance (like lifting weights or throwing an object).
+
+• Concentric: The muscle shortens (for example, while bending the elbow, the biceps shortens).
+
+• Eccentric: The muscle lengthens under control (for example, while straightening the elbow, biceps lengthen).
+
+• Isokinetic: The muscle changes length at a constant speed, usually with special equipment (like an isokinetic dynamometer).
+
+We have practised kicking the ball from Grades 3 to 8 and we also tried to develop expertise in sending the grounded or lofted ball to desired places as shown in Fig. 5.19. The key principle of success in this skill is the force applied by the muscles and the angle of the kick.
+
+When a soccer ball is kicked, it moves through the air. The displacement (d) is how far the ball is from where it started. Displacement has two parts: x = how far the ball moves forward (horizontal) y = how high the ball goes (vertical)
+
+42 Khel Praveen
+
+The ball is kicked with an initial velocity (v) at an angle θ to the ground.
+
+The ball moves forward and upward at the same time, and together these movements determine its path through the air (Fig. 5.19).
+
+Y
+
+d
+
+y
+
+θ
+
+X
+
+x
+
+Fig. 5.19: Path of the ball through the air
+
+Exercises
+
+1. In the Preparatory and Middle Stages, you practised different physical activities, including warm-up and cool-down exercises. List five activities that help improve the mobility and function of specific joints.
+
+2. Perform heel raises in both a standing position and a mid-squat position. Try to feel the difference in tension in your calf muscles and identify the muscles involved.
+
+3. Observe the movements while kicking and throwing a ball. Identify and list the joints and muscles that contribute to each movement.
+
+43 Understanding Our Body
+
+Chapter 6
+
+Cardiorespiratory System
+
+In this chapter, let us understand what changes occur in our body and which systems are involved in the change in breathing and pulse rate.
+
+Let us measure the breathing and pulse rate of students in the classroom, as you have learned in Grade 8 during your Physical Education and Well-being period. Record it in your notebook as a baseline breathing and pulse rate. Now, perform jumping jacks for 2 minutes and measure your breathing and pulse rate again and note it down. After 3 minutes of relaxation, measure your breathing and pulse rate again and then run for 4 minutes. Record the breathing and pulse rate separately for each activity in your notebook. Measure it again after 3 minutes. You will notice changes in the baseline breathing and pulse rate after each activity and after rest. These changes occur due to the adaptations that take place in your body.
+
+Activity
+
+Activity Breathing Rate
+
+(Breaths/Min) Pulse Rate
+
+Jogging
+
+Running (for 3 minutes)
+
+Running Jumping jack
+
+Jumping jacks (for 2 minutes)
+
+Anuloma- viloma
+
+Jogging
+
+Anuloma-viloma
+
+Breathing and Respiration
+
+Breathing (also called ventilation) is the physical act of inhaling oxygen and exhaling carbon dioxide. It involves your lungs, chest muscles, and diaphragm. For example, when you take a deep breath before running, that’s breathing.
+
+Respiration, on the other hand, happens at the cellular level. It is the chemical process in your cells where oxygen is used to release energy from food, producing carbon dioxide and water as waste products. This energy fuels your muscles during exercise.
+
+While performing vigorous activities like running or jumping, our breathing becomes faster and deeper. Our body tries to take in more oxygen for cellular respiration, so that muscles can keep working.
+
+Air expelled from lungs
+
+Volume of Thorax decreased
+
+Volume of Thorax increased
+
+Air entering lungs
+
+Ribs and sternum returned to original
+
+position
+
+Ribs and sternum raised
+
+Rib cage
+
+Diaphragm
+
+contracted
+
+Diaphragm relaxed and arched upwards
+
+Fig. 6.1: Mechanism of breathing
+
+Activity
+
+Galen, a Roman and Greek physician, surgeon, and philosopher said “to me it does not seem that all movement is exercise, but only when it is vigorous … The criterion of vigorousness is change of respiration; those movements that do not alter the respiration are not called exercise … The uses of exercise, I think are two-fold, one for the evacuation of the excrements, the other for the production of good condition of the firm parts of the body.”
+
+After reading the above paragraph, the teacher divided the students into two groups— one in favour and another against, and asked them to debate on the topic:
+
+Do you agree that only vigorous activity is real exercise?
+
+45 Cardiorespiratory System
+
+For normal, quiet breathing, the diaphragm does most of the work, and the intercostal muscles also assist. When you breathe in (inspiration), the diaphragm contracts and moves downward, making the chest cavity larger and allowing the lungs to expand. When you breathe out (expiration), the diaphragm relaxes.
+
+Sternocleidomastoids
+
+Elevate the sternum
+
+Rotate head
+
+Internal Intercostals Depress rib cage
+
+Scalenes Elevate the upper ribs
+
+Abdomen
+
+Compresses the abdominal cavity and pushes diaphragm upward
+
+External Intercostals
+
+Elevate rib cage
+
+External Obliques Contralateral rotation of torso
+
+Abdominal Rib cage
+
+Rectus Abdominis Flexes vertebral column
+
+Diaphragm Primary muscle of respiration flow generator
+
+Transversus Abdominis
+
+Internal Obliques Ipsilateral rotation
+
+Fig. 6.2: Muscles used for breathing
+
+The natural spring-like recoil of the lungs, chest wall, and abdominal structures squeezes the lungs, pushing air out. During heavy breathing, these natural elastic forces are not strong enough for quick exhalation. In this case, the abdominal muscles help by squeezing the abdominal organs upward against the diaphragm, forcing more air out of the lungs. Respiration can be classified into the following types:
+
+External Respiration (Gas Exchange in Lungs)
+
+Once air reaches the alveoli in the lungs, oxygen (O2) moves from the alveoli into the blood, and carbon dioxide (CO2) moves from the blood into the alveoli to be exhaled. This exchange happens because gases move from areas of higher concentration to lower concentration (diffusion).
+
+46 Khel Praveen
+
+Internal Respiration (Gas Exchange in Tissues)
+
+As blood circulates through the body, oxygen moves from the blood into the body’s cells, and carbon dioxide moves from the cells into the blood.
+
+Cellular Respiration
+
+Glucose + O2
+
+ne
+
+ra
+
+CO2 + H2O
+
+mb
+
+e
+
+m
+
+ll
+
+e
+
+C
+
+Mitochondrion
+
+Energy
+
+Inside each cell, oxygen is used in the mitochondria to break down glucose and release energy in the form of ATP (adenosine triphosphate). Carbon dioxide and water are produced as waste products. This is the final step that actually powers muscle movement, nerve function, and all body activities. This energy is stored in the form of ATP (adenosine triphosphate), which is used for performing all the activities of the cell.
+
+Fig. 6.3: Cellular respiration
+
+Structure and Function of Heart
+
+The human heart works like two pumps. The right side takes in blood from the rest of the body and sends it to the lungs, while the left side
+
+Aorta (carries blood to body)
+
+Pulmonary Artery (carries blood to lungs)
+
+Superior Vena Cava (carries blood to heart)
+
+Right Atrium
+
+Pulmonary Veins (carries blood from lungs)
+
+Left Atrium
+
+Left Ventricle
+
+Right Ventricle
+
+Inferior Vena Cava (carries blood to heart)
+
+Fig. 6.4: Structure of the heart
+
+47 Cardiorespiratory System
+
+takes oxygen-rich blood from the lungs and sends it back to the body. Each side has two parts— an atrium and a ventricle. The atria act as entryways and help fill the ventricles with blood. Then, the ventricles squeeze, pushing blood out with enough pressure to move it through the body. The heart also has a special system that controls its steady beat and sends signals to make the heart muscles work together.
+
+The function of the circulatory system is to meet the needs of the body’s tissues. It transports nutrients to them, removes waste products, carries hormones to different parts of the body, and helps maintain balanced conditions in the fluids present in the tissue so that cells can survive and work effectively.
+
+Physical Characteristics of Circulation
+
+Humans have a double circulatory system, meaning blood passes through the heart twice during one complete trip around the body. This ensures that oxygen-rich blood (oxygenated) is separated from oxygen-deficient blood (deoxygenated) and reaches the tissues efficiently. The circulatory system is divided into two main parts:
+
+Capillaries in the lung
+
+Pulmonary artery Pulmonary vein
+
+Pulmonary circulation
+
+Aorta (main artery)
+
+Vena cava (main vein)
+
+Right atrium
+
+Heart Left atrium
+
+Right ventricle
+
+Left ventricle
+
+Systemic circulation
+
+Capillaries in the body
+
+Red: Oxygen-rich blood Blue: Oxygen-deficient blood
+
+Fig. 6.5: Circulation
+
+48 Khel Praveen
+
+1. Pulmonary Circulation
+
+• The right side of the heart pumps oxygen-deficient blood to the lungs.
+
+• In the lungs, carbon dioxide is removed and oxygen is added.
+
+• The oxygen-rich blood returns to the left side of the heart.
+
+2. Systemic Circulation (also called peripheral circulation)
+
+• The left side of the heart pumps oxygen-rich blood to all the body’s tissues.
+
+• Cells use oxygen and produce carbon dioxide as waste.
+
+• Oxygen-deficient blood flows back to the right side of the heart.
+
+The main functional parts of circulation are:
+
+Tissue cells
+
+Arteriole
+
+Venule
+
+• Arteries: They carry blood under high pressure from the heart to the tissues. They have strong walls and blood moves through them quickly.
+
+Vein Artery
+
+Capillaries
+
+Fig. 6.6: Blood vessels
+
+• Arterioles: They are the smallest branches of the arteries. They control how much blood goes into the capillaries by tightening (constricting) or relaxing (dilating) their muscular walls, depending on what the tissues need.
+
+• Capillaries: They are tiny blood vessels where the exchange of nutrients, waste products, gases, and other substances happens between the blood and the fluid around the cells. They have very thin walls that allow small molecules to pass through easily.
+
+• Venules: They are small vessels that collect blood from the capillaries and join together to form larger veins.
+
+• Veins: They carry blood back to the heart. They have thin walls, low pressure, and act as storage areas (reservoirs) for blood at the same time allowing blood to flow quickly.
+
+49 Cardiorespiratory System
+
+Circulation is a Complete Circuit
+
+When the left side of the heart contracts, it pumps blood into the systemic circulation through the aorta. The aorta branches into smaller arteries, then into arterioles, and finally into capillaries. Each heartbeat causes blood vessels to expand, because they can stretch or are distensible. When the heart relaxes, the vessels spring back (recoil), keeping blood flowing to the tissues even between beats.
+
+Blood leaving the tissues flows into small veins called venules, which join together to form larger veins. These veins carry the blood back to the right side of the heart.
+
+The right side of the heart then pumps the blood into the pulmonary artery, which branches into smaller arteries, arterioles, and capillaries in the lungs. Here, oxygen is taken into the blood and carbon dioxide is removed. The blood then flows from the lung capillaries into venules, then into larger veins, and finally into the left atrium and left ventricle. From there, it is pumped again into the systemic circulation, completing the circuit.
+
+Sound of the Heart
+
+The normal sound of the heart is a ‘lub-dub’ rhythm, caused by the closing of the heart’s four valves in sequence. The ‘lub’ is the sound of the mitral and tricuspid valves closing, and the ‘dub’ is the sound of the aortic and pulmonary valves closing. An abnormal sound, called a heart murmur, can occur from turbulent blood flow, which can be caused by a leaky or stiff valve or other heart problems.
+
+Lub (S1): The first heart sound, created by the closing of the mitral and tricuspid valves as the heart’s ventricles begin to contract.
+
+Dub (S2): The second heart sound, caused by the closing of the aortic and pulmonary valves as the ventricles finish contracting and relax.
+
+Lub-dub: The regular, repeating pattern doctors listen for when checking a person’s heart health.
+
+50 Khel Praveen
+
+DID YOU KNOW?
+
+• The autonomic nervous system has two main parts. The sympathetic nervous system plays the most important role in controlling blood circulation, while the parasympathetic nervous system helps regulate the function of the heart.
+
+• A change in blood flow in any part of the circulation causes a change in other body tissues, which means whenever we do exercises such as the leg press, the blood flow is much more in the lower body tissues as compared to the upper body.
+
+• Cardiac output is the amount of blood the heart pumps into the aorta every minute. It is also the amount of blood that flows through the body’s circulation, carrying oxygen, nutrients, and other substances to the tissues and removing waste products.
+
+• In an average adult, the cardiac output is about 5 litres per minute. When measured relative to body size (per square metre of body surface area), it is called the cardiac index, which is about 3 litres per minute per square metre.
+
+Activity
+
+Use a stethoscope to listen to the sound of your heartbeat. You will hear two sounds — ‘Lub’ and ‘Dub’. You can perform this activity individually or in groups, either in your school or at a nearby health check-up centre.
+
+Blood Pressure
+
+Blood pressure, also known as arterial pressure is the pressure of the blood inside the arteries. It is created when the heart pumps blood into the arteries, pushing it against the artery walls. This pressure helps move blood through the whole body so oxygen and nutrients can reach the tissues. It is measured in terms of:
+
+• Systolic pressure: It is the pressure when the heart contracts and pushes blood out.
+
+• Diastolic pressure: It is the pressure when the heart relaxes between beats. At the beginning of the chapter, we did activities involving various movements that causes changes in our body. Let us do those movements again and try to understand these changes.
+
+51 Cardiorespiratory System
+
+Effects of Exercise
+
+Table 1 highlights the immediate and long-term effects of exercise on different parts of the body and compares key body changes at rest and during exercise, showing how the body adjusts to meet the increased demands of physical activity in Table 2.
+
+Table 1: Effects of exercise on different parts of the body
+
+Body Parts Immediate Effect Long-term Effect
+
+Heart Beats faster, pumps more blood Larger, stronger, more efficient
+
+Greater capacity and efficiency
+
+Lungs Breathing rate and depth increase
+
+Muscles Use more oxygen, contract more often
+
+Increase in size, strength, and endurance
+
+Blood Vessels Redirect blood to the muscles More capillaries, better circulation
+
+Skin More blood flow for cooling Improved temperature regulation
+
+Bones and Joints
+
+No major immediate change Stronger bones, better joint stability
+
+Table 2: Comparison of key body changes at rest and during exercise,
+
+showing how the body adjusts to meet the increased
+
+demands of physical activity
+
+Key Body
+
+At Rest During Exercise Explanation
+
+Changes
+
+Blood Flow to Muscles
+
+Muscles need more oxygen and nutrients
+
+Low Much higher (15–25 times increase)
+
+2–3 times faster To pump blood more quickly
+
+Heart Rate ~70 beats/ min
+
+Muscle Activity Low High Muscle fibres contract more often and require more energy
+
+Muscle Temperature
+
+Normal Higher Heat helps muscles contract more efficiently
+
+52 Khel Praveen
+
+Cardiac Output ~5 L/min Up to 30 L/min To send more blood to active tissues
+
+Normal Lower Blood is redirected to muscles
+
+Blood Flow to Stomach and Intestines
+
+Low Higher To release heat from the body
+
+Blood Flow to Skin
+
+Oxygen Use Low Much higher For energy production in muscles
+
+Waste Removal Low Higher To remove carbon dioxide and lactic acid
+
+DID YOU KNOW?
+
+• A normal resting heart rate for adults is 70–80 beats per minute, but trained athletes often have a resting heart rate as low as 40–50 beats per minute! This shows how efficient their hearts become. 
+• Elite swimmers and divers can have a vital lung capacity almost twice than that of untrained people. This allows them to hold their breath longer and take in more oxygen per breath. 
+• When you exercise regularly, your body can grow new capillaries in your muscles. This process is called capillarisation and helps improve endurance. 
+• During intense exercise, your breathing rate can rise from about 12–15 breaths per minute at rest to over 40 breaths per minute. 
+• The largest artery in the body, the aorta, can pump almost 20–25 litres of blood per minute in elite endurance athletes during maximal exercise!
+
+Exercises
+
+1. In the Preparatory and Middle stages, you practised different physical activities, including warm-up and cool-down exercises. List five activities that help improve cardiovascular endurance.
+
+2. Measure your heart rate while stair climbing and cycling. Compare the changes in heart rate and breathing rate for both activities by creating a chart and recording the differences.
+
+3. Do one activity each using your upper body and one using your lower body. Identify and explain the differences in muscle use, tiredness, and heart rate between the two activities.
+
+53 Cardiorespiratory System
+
+Chapter 7
+
+Growth, Development,
+
+and Maturation
+
+Have you ever noticed that after the same exercise, some of your classmates recover quickly while others take longer to catch their breath? Let us find out why.
+
+Perform an activity such as skipping or jogging for one minute at a steady pace. After the activity, observe and record how your body responded — your breathing rate, heart rate, sweating, and muscle fatigue. Compare your responses with your classmates and discuss why different individuals may respond differently to the same activity.
+
+In this chapter, you will study how differences in growth, maturation, and development affect strength, endurance, coordination, and recovery, and why these changes occur at different rates for each person.
+
+Growth
+
+The changes that occur in the size and composition of the body or in the dimensions of a specific body part are termed as growth. For example, as children, your bones lengthen and muscles grow, making you taller and heavier. Growth is the most significant biological activity in the first two decades of life.
+
+Fig. 7.1
+
+Development
+
+Development is not limited to size or the body composition; it can be both behavioural and biological. Such as the development of motor skills, or learning teamwork or controlling emotions during sports. Development is shaped not only by your biology but also by your experiences.
+
+Maturation
+
+Maturation is the progression of the body towards adulthood. It can happen at different ages, rates and times in almost all individuals. Even within one person, all systems do not mature at the same time—for example, our skeletal system matures much later than our reproductive system.
+
+Table 7.1 below outlines the differences among growth, development and maturation.
+
+Table 7.1: Different aspects of growth, development, and maturation
+
+Aspect Growth Development Maturation
+
+Progression of the body towards adulthood and full functional capacity
+
+Overall change in shape, structure, functioning, skills, and behaviour
+
+Meaning Structural and physical change; increase in size, height, weight and length
+
+Nature of Change
+
+Quantitative (measurable changes in size or weight)
+
+Qualitative (improvement in function, skills, and behaviour)
+
+Qualitative and biological (timing of changes in body systems, for example, puberty, and skeletal maturity)
+
+Relation Part of development, the quantitative aspect of development
+
+Wider term; it includes growth and other qualitative changes
+
+Supports both growth and development by determining when body systems are ready
+
+Continuity Stops after maturity is attained
+
+Throughout life Until full maturity of systems is achieved (different systems mature at different times)
+
+55 Growth, Development, and Maturation
+
+Measurement Measurable (height,
+
+weight, and organ size)
+
+Hard to measure; assessed through skills, behaviour, and complexity
+
+Indicated by biological markers (puberty, skeletal maturity, and hormonal changes)
+
+Process Cellular (multiplication of cells, and increase in tissue)
+
+Organisational (better coordination, improved skills, and behaviour)
+
+Biological and functional readiness (for example, reproductive maturity, and bone growth completion)
+
+Dependency Growth may or may not bring development
+
+Development is possible even without growth
+
+Maturation sets the pace for growth and development
+
+Example Increase in height and weight
+
+Learning to walk, read, or play sports
+
+Onset of puberty and closure of growth plates in bones
+
+Table 7.2: Factors influencing growth, development, and maturation
+
+Factor Effect on Growth
+
+(Quantitative)
+
+Effect on Development
+
+(Qualitative)
+
+Effect on Maturation (Qualitative)
+
+Genetic or Hereditary
+
+Determines height, body size, and skeletal proportions
+
+Influences motor skills, and cognitive ability potential
+
+Regulates the timing of puberty and system- specific maturation
+
+Deficiency or adequacy affects onset and pace of puberty
+
+Nutrition Adequate nutrients increase body size, muscle mass, and bone density
+
+Balanced diet supports brain function, learning, and motor skill development
+
+Hormonal balance aids proper organ development and function
+
+Sex hormones (estrogen and testosterone) trigger reproductive maturity
+
+Hormones Growth hormones and thyroid hormones regulate cell multiplication and bone growth
+
+56 Khel Praveen
+
+Physical Activity and Exercise
+
+Improves motor coordination, strength, flexibility, and skill acquisition
+
+Enhances readiness of musculoskeletal and neuromuscular systems
+
+Stimulates bone density, muscle hypertrophy, and cardiovascular growth
+
+Health and Medical Care
+
+Illness or chronic disease may stunt physical growth
+
+Preventive care ensures normal and timely biological maturation
+
+Good health supports learning, concentration, and psychosocial development
+
+Environment Pollution or toxins may restrict body growth
+
+Safe surroundings encourage exploration and learning
+
+Poor conditions may delay or disrupt maturation processes
+
+Stress can reduce growth hormone secretion
+
+Psychological and Emotional Domain
+
+Emotional support improves confidence, behaviour, and cognitive development
+
+Stability aids smooth transition through adolescence and puberty
+
+Socio- economic Domain
+
+Access to food and healthcare improves body size and growth
+
+Education and facilities enhance social and intellectual development
+
+Higher socio-economic status often linked with earlier or normal maturation
+
+Cultural and Lifestyle
+
+Diet and lifestyle habits influence growth rate
+
+Traditions shape behavior, learning, and skill sets
+
+Lifestyle choices (sleep, rest, and activity) affect hormonal cycles and maturation speed
+
+Does this mean performance changes in sports are always because of training?
+
+Not necessarily. Physical performance naturally improves as children grow, develop, and mature; therefore teachers must observe these changes carefully. If a young athlete suddenly gets faster or stronger, it could be because of training, or because their body is going through a natural growth spurt. Hence, thorough understanding of these processes is very important.
+
+57 Growth, Development, and Maturation
+
+We often use terms like children, adolescents, youth, and young athletes. These are sometimes used interchangeably because it’s hard to put them in exact age ranges. For example:
+
+• Children— students under 12 years of age.
+
+• Adolescence— This period begins with puberty, which can start early or late, therefore there is no fixed age.
+
+• Youth— often used as a global term for anyone under 19 years.
+
+• Young athletes— A similar age range of students as that of youth, but with a focus on sports participation.
+
+DID YOU KNOW?
+
+Wrist Bones
+
+Wrist joint
+
+Epiphysis
+
+Physis (Growth Plate)
+
+Metaphysis
+
+Diaphysis
+
+Ulna
+
+Radius
+
+Fig. 7.2: Parts of a fully grown bone
+
+Growth Plates — Bone growth plates are areas of cartilage near the ends of children’s and teenagers’ long bones where new bone is added, allowing bones to grow in length and width. They are also called physes and are made of flexible cartilage, but they harden into solid bone (close) after puberty, which marks the end of bone growth. Growth plates are weaker than surrounding ligaments and tendons, making them susceptible to fractures that can affect future bone growth if not properly treated. Age Determination— Growth plates are used to determine the age. The Tanner–Whitehouse 3 (TW3) method is a sports age determination technique that uses an X-ray of the left hand and wrist to assess skeletal maturity. Vertical Load Bearing Exercises should be restricted at pre-adolescent stage as it affects the epiphyseal growth plate (primary ossification centre) and peak height velocity will be compromised.
+
+TRIVIA
+
+Amla Navamī, also known as Akṣhaya Navamī, is a festival celebrated on the ninth day of the bright fortnight in the month of Kartik. It honours the Amla (Indian gooseberry) tree, believed to be sacred and symbolic of health and well-being. The Amla fruit is rich in vitamins, specifically water-soluble Vitamin C and is believed to boost the immune system, enhance liver function, and support digestion, among other benefits and can be consumed in any form.
+
+58 Khel Praveen
+
+Activity
+
+Life Cycle of Bone
+
+Observe your peer group and identify the differences among them related to growth, development, and maturation.
+
+Healthy food and lifestyle choices along
+
+with exercise helps prevent excessive bone
+
+loss with aggeing
+
+Genetic peak bone mass achieved with healthy
+
+lifestyle choices
+
+Genetic peak bone mass not achieved due to
+
+poor lifestyle choices
+
+Osteoporosis
+
+Bone Density
+
+Bone with osteoporosis
+
+Normal bone matrix
+
+0 10 70 60 50 40 30 20
+
+Age in Years
+
+Fig. 7.3
+
+Exercises
+
+1. Explain how biological development, motor skills, and behavioural development help you, giving one example of each.
+
+2. How are heredity and environment responsible for growth?
+
+3. Two students of the same age have different heights. Explain the difference in terms of growth and maturation.
+
+59 Growth, Development, and Maturation
+
+Chapter 8
+
+First Aid
+
+Ma’am, we often get injured while playing. Sometimes we get small cuts, but at other times we feel pain even if there is no bleeding. What should we do in such situations?
+
+That is a very good question, Arnav. Not all injuries cause bleeding — some affect the muscles, joints, or bones underneath the skin. These are called soft tissue injuries, and they are very common in sports. When you fall and twist or pivot suddenly, the tissues around your joints — like muscles, tendons or ligaments — may get stretched or torn. This causes pain, swelling, and bruising even without an open wound.
+
+There’s a simple and effective method to treat such injuries in the first few hours. It’s called the R.I.C.E. principle, which stands for:
+
+Aspect Action Purpose or benefit
+
+R – Rest Stop playing or putting pressure on the injured part.
+
+Prevents further tissue damage and starts healing.
+
+I – Ice Apply ice for 10–15 minutes every 2 hours.
+
+Reduces pain and swelling. Always wrap ice in a cloth.
+
+C – Compression Wrap with an elastic
+
+bandage.
+
+Limits swelling and provides support.
+
+E – Elevation Keep the injured limb raised above heart level.
+
+Helps fluid drain away and reduces swelling.
+
+Ma’am, you told us about R.I.C.E. I noticed something called PRICE, POLICE and PEACE and LOVE while browsing the Internet. Which one is correct?
+
+Good observation, Ishita. R.I.C.E. is the basic version, but sometimes we use an improved method called PRICE — it adds Protection as the first step. For example, if you twist your ankle, stop moving immediately and protect it with a support or brace before applying R.I.C.E.
+
+POLICE and PEACE and LOVE are newer methods used during long-term recovery. But for first aid in school or on the playground, PRICE is simple, effective, and easy to remember.
+
+61 First Aid
+
+DID YOU KNOW?
+
+Protection
+
+P
+
+Avoid activities and movements that increase pain during the first few days after injury.
+
+Elevation
+
+E
+
+Elevate the injured limb higher than the heart as often as possible.
+
+Avoid Anti-Inflammatories
+
+A
+
+Avoid taking anti-inflammatory medications as they reduce tissue healing. Avoid icing.
+
+Compression
+
+Use elastic bandage or taping to reduce swelling.
+
+C
+
+Education
+
+E
+
+Your body knows best. Avoid unnecessary passive treatments and medical investigations and let nature play its role.
+
+and
+
+Load
+
+L
+
+Let pain guide your gradual return to normal activities. Your body will tell you when it’s safe to increase the load.
+
+Optimism
+
+O
+
+Condition your brain for optimal recovery by being confident and positive.
+
+Vascularisation
+
+V
+
+Choose pain-free cardiovascular activities to increase blood flow to repairing tissues.
+
+Exercise
+
+E
+
+Restore mobility, strength, and proprioception by adopting an active approach for recovery.
+
+62 Khel Praveen
+
+DID YOU KNOW?
+
+Protection
+
+Rather than totally resting the injured area, think more about protecting it from further damage. A short period of rest immediately after an injury is helpful to unload the injured area but total rest should be limited and combined with optimal loading.
+
+Optimal Loading
+
+Early activity encourages early recovery. Progressive loading of your injury can help promote optimal healing. It can prevent delays in returning to normal that may develop with prolonged rest such as joint and muscle tightness or muscle wasting.
+
+Ice
+
+Applying ice may help to manage the swelling around your injured muscle or joint and it can help decrease some of the acute pain that you may be experiencing. Icing every few hours for up to 20 minutes at a time is great for the first few days.
+
+Compression
+
+Applying a compression bandage evenly to the affected area, may help reduce any swelling you may have. You can combine this with ice.
+
+Elevation
+
+You can elevate the area during short periods of rest, again to help with swelling and reduce the pain. Make sure the injured part is elevated above the level of your heart.
+
+Activity
+
+Identify and Respond
+
+Form small groups in your class. One student will act as an injured player and the others will act as first aiders. Act out the following scenarios in your group: 
+• A twisted ankle 
+• A fainting student 
+• A nosebleed Use the PRICE method, stay calm, and make sure to call for help when needed. After the activity, discuss with your class — what did you do well and what could you have done better?
+
+63 First Aid
+
+The teacher then picked up the school’s First Aid Box from their desk and said, now that we have learned how to manage injuries, let us understand the most important part.
+
+What is First Aid?
+
+First Aid is the immediate care given to a person who has been injured or become suddenly ill before medical help arrives.
+
+It includes simple actions that can sometimes save a life. The purpose of first aid is not to diagnose or fully treat the problem — it is to provide stability and safety until professional medical care is available. Anyone with basic first aid knowledge can make a difference. In fact, studies show that trained individuals can greatly reduce deaths and disabilities worldwide simply by acting quickly.
+
+Ma’am, so even if we are not medical professionals, we can still save lives?
+
+Exactly, that is the power of First Aid. It is about helping immediately,
+
+calmly, and wisely.
+
+Aims of First Aid
+
+The teacher wrote three big letters on the board: P – P – P and explained,
+
+1. Preserve Life: The first aim is to keep the person alive by ensuring they can breathe, their heart is beating, and bleeding is under control.
+
+64 Khel Praveen
+
+Bandages Gauze roll
+
+Instant cold
+
+Emergency
+
+Adhesive
+
+and pads
+
+pack
+
+Elastic bandages
+
+blanket
+
+tape
+
+Thermometer
+
+First Aid manual
+
+Bandage
+
+Gloves
+
+Emergency contact information
+
+Safety pins Antiseptic wipes
+
+or medical information for
+
+family members Tweezers Scissors
+
+Fig. 8.1: First Aid
+
+2. Prevent Worsening: The second aim is to stop the condition from getting worse — for example, by using the PRICE method for injuries, or by controlling bleeding in case of cuts.
+
+3. Promote Recovery: The third aim is to comfort and reassure the injured person, and help them recover until professional help arrives.
+
+These are called the ‘Three Ps of First Aid’. Remember them always — they guide every step of emergency care.
+
+65 First Aid
+
+Golden Rule of First Aid
+
+The following are the golden rules of the first aid which everyone should follow.
+
+S.No. Golden Rule Explanation or Action
+
+1. Stay Calm and Think Clearly
+
+Panic spreads faster than injury. Stay calm, take a deep breath, assess the situation, and think before acting. A clear mind saves lives.
+
+2. Ensure Safety First
+
+Your safety comes first. Check for danger — like live wires, fire, sharp objects, or traffic — before helping. Never become the second victim.
+
+3. Call for Help Early
+
+Whether the injuries are serious or common, call for medical help immediately. In India, dial 112 for emergency services. While waiting, begin first aid or CPR if needed.
+
+Follow the 3 Ps of First Aid:
+
+• Preserve Life
+
+• Prevent Worsening
+
+4. Give Immediate and Correct First Aid
+
+• Promote Recovery
+
+Use BLS/CPR for breathing or cardiac emergencies.
+
+5. Handle With Care
+
+Never move an injured person roughly. If a head, neck, or bone injury is suspected, keep the person still and wait for trained help.
+
+6. Use What You Have
+
+If a first aid box isn’t nearby, use available materials — clean cloth for bleeding, a folded magazine as a splint, or a towel as a sling. Presence of mind is more important than tools.
+
+7. Stay With the Person
+
+Stay beside the injured person. Talk to them, reassure them, and keep them conscious. Emotional support reduces shock and fear.
+
+Always remember — the goal of first aid is not to fix everything, but to help someone safely until professional help arrives. Your calmness, confidence, and care can save a life.
+
+Ma’am, in the previous explaination you wrote the word ‘CPR’. What is it?
+
+We will discuss about Basic Life
+
+Support in next period.
+
+66 Khel Praveen
+
+Basic Life Support (BLS) and CPR
+
+The next day, during the physical education period, the teacher brought a mannequin and some first aid charts to class. The students were curious.
+
+Understanding Basic Life Support (BLS) and CPR
+
+BLS means giving immediate help to someone whose heart or breathing has stopped, until professional medical help arrives. It includes CPR (Cardiopulmonary Resuscitation) and the use of an AED (Automated External Defibrillator) if available. The teacher explained:
+
+One of the most important life-saving skills is Basic Life Support,
+
+also called BLS. Sometimes, when a person suddenly collapses, stops
+
+breathing, or loses consciousness, what you do in the first few minutes
+
+can save their life.
+
+Aims of BLS and CPR
+
+1. Restore breathing. 
+2. Maintain blood circulation. 
+3. Keep oxygen supply to the brain and vital organs.
+
+The DRSABCD Action Plan
+
+The teacher showed a poster with the letters DRSABCD and explained them step by step:
+
+67 First Aid
+
+Check for Danger
+
+D Ensure the area is safe for— 
+• Yourself • Bystanders • Casualty
+
+Check for Response
+
+R
+
+No Response
+
+Send for help
+
+S
+
+Call (112) or ask another person to call.
+
+Open the Airway
+
+A
+
+Check for airway obstruction. If debris is present, roll the casualty to the recovery position and clear. To open the airway, tilt the head back and lift the chin.
+
+Check Breathing
+
+Look – Listen – Feel for 10 seconds
+
+B
+
+Normal breathing Place in the recovery position and monitor breathing
+
+Not breathing or breathing abnormally
+
+Start CPR 30 Chest Compressions + 2 Breaths
+
+Adult (>8 years) Child (>1 year) Infant (<1 year)
+
+Pressure 2 hands 1 or 2 hands 2 fingers
+
+C
+
+Depth 5+ cm 5 cm 4 cm
+
+Rate Almost 2 compressions per second (100–120/min)
+
+Breath 2 full breaths with head tilt
+
+2 shallow breaths with head tilt
+
+and chin lift
+
+and chin lift
+
+2 puffs with no head tilt with and slight chin lift
+
+D
+
+Attach defibrillator (AED) Where an AED is available, attach it as soon as possible and follow the instructions. Continue CPR and defibrillation until signs of life resume or medical professionals take over.
+
+68 Khel Praveen
+
+Activity
+
+Practising CPR
+
+Form groups in your class. Take turns practising chest compressions on a mannequin. While performing the compressions, say the rhythm aloud: Push, push, push — 1, 2, 3 … Remember to maintain the correct depth and pace with each compression.
+
+Golden Rules of BLS and CPR 
+1. Stay calm — panic wastes time. 
+2. Call for help immediately. 
+3. Start CPR without delay if the person is unresponsive and not breathing. 
+4. Never give up until medical help arrives or the person recovers. 
+5. Always protect yourself — wear gloves if available.
+
+Ma’am, I often get nosebleeds, especially during the summer or when I play outside for a long time. What should I do when that happens?
+
+That’s a good question. A nosebleed is quite common among children and athletes. It usually happens when the tiny blood vessels inside the nose burst due to dryness, heat, injury, or too much pressure from blowing the nose. But don’t worry — it can be easily managed with proper first aid.
+
+69 First Aid
+
+The teacher then explained step by step:
+
+Step 1
+
+Step 2
+
+Step 3
+
+Pinch the fleshy part of the nose just below the bone using your thumb and index finger.
+
+Maintain pressure and posture until the bleeding stops.
+
+Step 4
+
+Sit and rest for at least 10 minutes.
+
+Sit down and lean slightly forward to prevent blood from flowing down the throat.
+
+Fig. 8.2: How to stop nosebleed
+
+If the nosebleed does not stop even after 10–15 minutes, or if it happens often, you should see a doctor. Sometimes, frequent nosebleeds happen due to dryness,
+
+allergies, or weak blood vessels.
+
+Ma’am, can it happen because of
+
+playing too much in the heat?
+
+Yes. Hot, dry air can dry out the lining of the nose, making it fragile. That’s why it’s important to
+
+stay hydrated, avoid picking your nose, and if needed, apply a little petroleum jelly inside the
+
+nostrils during very dry weather.
+
+70 Khel Praveen
+
+Activity
+
+In a group of four to five members, practice the transfer techniques given below and explore when to apply which of the techniques to transfer the injured person. Also, discuss with the teacher about the accuracy of both the transfer and injury.
+
+Transfer Techniques
+
+Transfer techniques in first aid are methods used to move an injured person safely from one place to another without causing further harm. Before transferring a casualty, it is important to ensure that the area is safe, check the person’s condition, and call for medical help. An injured person should not be moved if a spinal or neck injury is suspected, unless there is immediate danger.
+
+There are different transfer techniques depending on the situation. Let us understand those shown in Fig. 8.3.
+
+Exercises
+
+1. A student fell during a football match and injured their ankle. What immediate First Aid steps should be taken?
+
+2. During a sports event, a player becomes unconscious but is breathing. What should you do?
+
+3. What items should be included in a basic First Aid kit?
+
+71 First Aid
+
+Rules of First Aid While Moving
+
+Fracture of Spine
+
+Hold the Head
+
+Extremity Lift
+
+Chair Litter Carry
+
+Handed Seat
+
+Shirt Drag
+
+Neck Drag
+
+Blanket Drag
+
+Fig. 8.3: Transfer Techniques
+
+72 Khel Praveen
+
+an Injured Victim
+
+Roll Victim to Side and Place Blanket Lay Victim Flat on the Blanket
+
+Move Victim by Holding the corners of the Blanket
+
+Flat Lift and Carry Walking Assist Lift and Carry
+
+Fireman’s Carry Pick-a-back Arm Lift
+
+73 First Aid
+
+Check Your Progress
+
+Answer in brief
+
+1. Compare voluntary and involuntary muscles with examples.
+
+2. What happens to muscles when you exercise regularly?
+
+3. What changes occur in breathing and pulse rate when you run
+
+compared to when you rest?
+
+4. Design a circuit training to improve cardiorespiratory fitness.
+
+5. “Growth stops after a certain age, but development continues
+
+throughout life.” Explain the statement.
+
+6. How can lack of sleep affect growth and development?
+
+Answer the following in detail
+
+1. Explain how bones and muscles work together to produce movement.
+
+2. What happens to muscles when you exercise regularly?
+
+3. How does regular physical activity influence growth during
+
+adolescence?
+
+4. Explain how emotional development changes during teenage years.
+
+5. Why is it important to stay calm while giving first aid?
+
+6. Design a simple awareness poster on the importance of first aid in
+
+daily life.
+
+7. Explain how the heart and lungs work together during physical
+
+activity.
+
+8. Why is cardiorespiratory endurance important for overall health?
+
+74 Khel Praveen

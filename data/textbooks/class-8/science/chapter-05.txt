@@ -1,0 +1,638 @@
+# CLASS-8 - SCIENCE - CHAPTER 05
+# Source: hecu105.pdf
+
+Exploring Forces 5
+
+Probe and ponder
+
+. Why does it feel harder to pedal a bicycle when going uphill
+
+than on flat ground?
+
+• Why is it easier to slip on a wet surface?
+
+• Why do we feel ‘light’ or like we are ‘floating’ just after our
+
+swing reaches its highest point and begins to come down?
+
+• Share your questions
+
+?
+
+It was a windy day. Sonali and Ragini were excited to go cycling. Their summer vacation had just begun, and they wanted to explore the beautiful landscapes around their village. After pumping air into their bicycle tyres, they set off. As they rode through the village, the wind rushed past them. “Oh no! The wind is pushing me hard!” said Ragini. Smiling, Sonali replied, “We are riding against the wind. We must push our pedals harder to move faster.”
+
+Their ride took them up a long path to a hilltop. Some parts of the road were rough where they found it hard to pedal, while other parts were smoother. When they reached the top and were enjoying the view, they heard thunder and saw flashes of lightning at a distance. Even though it looked beautiful, they decided to head back immediately. On the way back, while passing a herd of sheep, they pressed their bicycle bells and turned the handles to change direction.
+
+As they were coming down the slope of the hill, they realised that their bicycles were moving down at a great speed even though they were not pedalling! Sonali yelled, “It’s thrilling! It seems something is pulling us downhill, what could it be?”
+
+5.1 What Is a Force?
+
+Let us try to experience the push and the pull.
+
+Activity 5.1: Let us explore
+
+• Take a large cardboard box.
+
+• Try moving the box in as many different ways as you can
+
+think of.
+
+(a) (b) (c)
+
+Fig. 5.1: Moving a box in different ways (a) Pushing; (b) Pulling;
+
+(c) Lifting (pulling up), and carrying
+
+Did you move the box in any other way than shown in Fig. 5.1? In all the ways that you might have used to move the box, you had to apply a push or pull to the box. Generally, the push or pull applied on an object is called force in science.
+
+5.2 What Can a Force Do to the Objects on Which It Is Applied?
+
+We experience push or pull in our daily lives all the time, often without even realising it. Let us recall some of these experiences and analyse them.
+
+Activity 5.2: Let us analyse
+
+• Think of situations where a force (push or pull) is applied
+
+and list them in Table 5.1.
+
+• Analyse each situation and write the effect of the force
+
+in Table 5.1. Some situations and their effects are already listed for you.
+
+Table 5.1: Different actions and their effects
+
+S.No. Action Push/Pull Effect
+
+Pull Stopping or decreasing the speed of the bicycle
+
+1. Your friend holding your moving bicycle from behind to stop it
+
+2. Hitting a moving ball with a bat
+
+Push Changing the direction of a moving ball
+
+3. Pressing an inflated balloon
+
+Push Change in shape of the balloon
+
+………………… ………………… …………………
+
+What do you conclude from these examples? Does a force cause a moving object to stop? Can it change speed, or direction of motion, or change the shape of an object?
+
+Fig. 5.2: Applying force on objects
+
+In everyday life, we come across many situations where a force is applied (Fig. 5.2), for example, opening a drawer, stretching a rubber band, a fielder stopping a ball, kicking a football, applying brakes on a moving bicycle, rolling a chapati, or turning the steering handle of an autorickshaw. What effect can the application of force have on objects?
+
+The force applied on an object may
+
+• make an object move from rest.
+
+• change the speed of an object if it is moving.
+
+• change the direction of motion of an object.
+
+• bring about a change in the shape of an object.
+
+Yes, none of these take place without the action of force.
+
+Does this mean that whenever there is a change in speed or direction, or change in shape, a force is acting on the object?
+
+A step further
+
+Suppose an object is at rest. Does it mean that no force is acting on this object? It means that the forces acting on the object are balancing one another. You will learn about balanced forces in higher grades.
+
+• cause some or all of these effects.
+
+5.3 Are Forces an Interaction Between Two or More Objects?
+
+When you push a table, your hand is one object applying force on another object — the table. Here, we say that your hand and the table are two objects interacting with each other.
+
+Think of all the actions listed in Table 5.1. How many objects are involved in each of the actions? Do you notice that forces result only when two objects are interacting in some way or the other? From these examples, we can infer that at least two objects must interact for a force to come into play.
+
+A force is a push or pull on an object resulting from the object’s interaction with another object. The SI unit of force is newton (written with a small ‘n’) and its symbol is N.
+
+A step further
+
+When you pushed the table with your hand, did you feel a force on your hand too? The moment you stopped pushing, the force on your hand disappeared. Whenever two objects interact, each object experiences a force from the other. As soon as the interaction ceases, the two objects no longer experience the force.
+
+5.4 What Are the Different Types of Forces?
+
+5.4.1 Contact forces In many situations, we find that to apply a force on an object, physical contact is necessary between our body and the object. This contact can be direct, such as using our hands or other body parts, or indirect, such as using a stick or rope. Forces of this type which act only when there is physical contact between the objects are called contact forces.
+
+Muscular force An example of contact force is muscular force. When we perform any physical activity, such as walking, running, lifting, pushing, jumping, or stretching, the force is caused by the action of muscles in our body. The force resulting due to the action of muscles is known as muscular force. Muscular force occurs when muscles contract and elongate while doing any activity.
+
+Animals, birds, fish, and insects use muscular forces for movement and survival (Fig. 5.3).
+
+Fig. 5.3: Use of muscular force by living beings
+
+Humans used the muscular force of some animals to carry out many tasks for a long time (Fig. 5.4).
+
+Fig. 5.4: Use of muscular force of animals to assist with human tasks
+
+Ever heard of ...
+
+Muscular force plays an important role in many functions inside our body too. This force helps us chew food and push it through the alimentary canal during the process of digestion. The expansion and contraction of our heart muscles allows the blood to circulate in our body — a process essential for survival.
+
+Is there any other contact force?
+
+Friction A ball rolling on a flat ground stops on its own after some time. If we stop pedalling our bicycle on a flat road, it slows down and comes to a stop. If the road is rough, it stops sooner than on a smoother road. You must have come across many such experiences. What causes the change in the speed of objects in such situations? We have learnt earlier that a force is essential to change the speed of an object. However, in all these situations no force appears to be acting on the objects, yet their speed gradually decreases and they come to a stop after some time. Is it possible that some force is indeed acting on them? Which force is that?
+
+Activity 5.3: Let us investigate
+
+• Take an object with a flat base (such as an empty lunch box/
+
+geometry box/ a notebook) and place it on a table or floor.
+
+• Gently push it and observe (Fig. 5.5). Does it stop after
+
+travelling some distance? Is there a force acting on it which brings it to rest?
+
+• Now repeat by pushing the object in the opposite direction.
+
+Does it stop again after travelling some distance?
+
+On pushing, the object stops after sliding a certain distance. This must be due to a force acting between the surfaces of the sliding object and the table or floor which are in contact. This force must be acting on the object in a direction opposite to its direction of motion. This force is what brings the object to a stop.
+
+Fig. 5.5: Friction acts between
+
+two surfaces and opposes the
+
+motion of the object.
+
+The force that comes into play when an object moves or tries to move over another surface is called the force of friction or simply friction. Friction always acts in a direction opposite to the direction in which the object is moving or trying to move. The force of friction is a contact force since it arises due to two surfaces in contact.
+
+Friction arises due to the irregularities in the two surfaces in contact. Even surfaces which appear smooth, have a large number of minute irregularities (Fig. 5.6). When placed in contact, the irregularities of two surfaces lock into each other and oppose any effort to move one surface over the other.
+
+Does this mean that the force of friction will be greater if the surfaces are rough?
+
+Fig. 5.6: Friction between two surfaces due to irregularities
+
+Activity 5.4: Let us explore
+
+• Try Activity 5.3 again, but this time place the same object on
+
+different surfaces, such as glass, cloth, wood, ceramic tile, and sand.
+
+• Does the object stop after travelling the same distance as in
+
+Activity 5.3?
+
+• Does the object stop at the same distance on all surfaces?
+
+For different surfaces, the object stops after moving different distances so we can say that the force of friction depends upon the nature of the surfaces in contact. Friction is greater on rough surfaces.
+
+A step further
+
+Does the force of friction act only if the objects are moving on solid surfaces? What about objects moving through liquids and gases? Air, water, and other liquids also exert force of friction on the objects moving through them. Hence the objects, such as aeroplanes, ships, boats, and high-speed trains are designed with specific shapes to reduce the force of friction due to the air or water around them.
+
+Is it essential for an object applying force on another object to always be in contact with it?
+
+5.4.2 Non-contact forces There are forces whose effect can be experienced even if the objects are not in contact. These forces are called non-contact forces. Let us learn about non-contact forces.
+
+Magnetic force Do you remember learning about magnets in the chapter ‘Exploring Magnets’ in Curiosity, Grade 6? We learnt that a magnet attracts objects made of magnetic materials. When two magnets are brought close to each other, like poles (North–North, South–South) repel each other while unlike poles (North–South) attract each other. In an earlier chapter of this book, we also learnt about electromagnets which behave like magnets. Attraction and repulsion between objects are also a form of push and pull, that is, a force. Can you recall that a magnet could exert force on another magnet or a magnetic material without being in contact with it?
+
+Activity 5.5: Let us test
+
+• Take two ring magnets and a wooden stick.
+
+• While holding the stick in a vertical position over a wooden
+
+table, insert one ring magnet onto the stick (Fig. 5.7).
+
+• Now insert the second ring magnet above it such that the like
+
+poles of the two magnets face each other. Does the second magnet stay floating above the first magnet?
+
+• Try pushing the second magnet down gently. Do you feel a
+
+force on it?
+
+• Now, reverse the poles of both the magnets. Does the second
+
+Fig. 5.7: Force between
+
+magnet still remain floating?
+
+two ring magnets
+
+We find that a magnet can exert force on another magnet without being in contact with it.
+
+The force exerted by a magnet on another magnet or a magnetic material is called magnetic force. Since a magnet can exert a force from a distance without being in contact it is called a non-contact force.
+
+Are there more such forces which act from a distance?
+
+Electrostatic force
+
+Activity 5.6: Let us experiment
+
+• Take a plastic scale or a plastic straw, a piece of
+
+polythene, and small pieces of paper.
+
+• Rub plastic scale/straw vigorously with polythene.
+
+• Do not touch the rubbed part with your hand or
+
+any metal object.
+
+• Now, bring it close to the small pieces of paper placed
+
+Fig. 5.8: Charged plastic scale
+
+attracting small paper pieces
+
+on a table, taking care not to touch the paper pieces (Fig. 5.8). Do you notice something surprising?
+
+The paper pieces get pulled towards the plastic scale/straw and stick to it when it is brought close to paper pieces. Why does this happen?
+
+When two objects of certain materials are rubbed together, electrical charges build up on their surfaces. These charges are called static charges as they do not move by themselves. The object that acquires static charges is said to be a charged object. A charged object attracts, that is, exerts a force on uncharged objects made of certain materials, such as small pieces of paper. This force comes into play even when the objects are not in contact.
+
+Let us do another activity with objects made of different materials.
+
+Activity 5.7: Let us experiment
+
+• Take two balloons, a length of thread, and a woollen
+
+cloth.
+
+• Inflate two balloons and hang them in such a way that
+
+they do not touch each other as shown in Fig. 5.9a.
+
+• Rub both balloons with the woollen cloth and release
+
+(a)
+
+them. Be careful not to touch the rubbed balloons with your fingers. What do you observe?
+
+We observe that the balloons move away from each other as if they are repelling each other (Fig. 5.9b).
+
+• Now bring the woollen cloth used for rubbing
+
+(b)
+
+the balloons close to one of the rubbed balloons. What happens?
+
+Fig. 5.9: (a) Two uncharged
+
+balloons; (b) Two charged balloons repelling each other
+
+They move towards each other as if they are attracting each other. What do we infer from these observations?
+
+Does it mean that there are two kinds of electrical charges?
+
+We found that the two similarly charged balloons repel each other whereas a charged balloon and the woollen cloth (with which the balloon was rubbed) attract each other. Does this indicate that the charge on the balloon is of a different kind from the charge on the woollen cloth?
+
+Since the balloons were charged in the same way, we can say that they have acquired similar charges. As the similarly charged balloons repelled each other, we can infer that similar (like) charges repel each other. Both the rubbing object and the rubbed object get charged but they acquire opposite kind of charges. Their attraction shows that opposite kind (unlike) of charges attract each other. The two kinds of static charges are said to be ‘positive’ and ‘negative’.
+
+The force exerted by a charged body on another charged body or an uncharged body is called electrostatic force. It is a non-contact force.
+
+A step further
+
+When the charges move, they constitute an electric current in an electrical circuit. It is the same current which makes a lamp glow or generates a heating effect or a magnetic effect.
+
+Gravitational force
+
+Activity 5.8: Let us observe
+
+• Take a ball and throw it vertically upwards. Does it come
+
+down?
+
+• Now throw it again, but this time harder. Does it still fall
+
+back down to the ground?
+
+Think about different situations around you where any object thrown up in any direction, finally falls or comes back to the ground or floor (Fig. 5.10).
+
+Fig. 5.10: Some objects falling towards the Earth
+
+Is there any force which acts on them? What exerts this force?
+
+Why do all the objects fall towards the Earth?
+
+Since all the objects fall towards the Earth, it means the Earth attracts (pulls) them. The force with which the Earth attracts objects towards itself is called the gravitational force. The gravitational force exerted by the Earth is also called force of gravity or simply gravity.
+
+Since the gravitational force acts without contact with the object it attracts, it is a non-contact force. Gravitational force is always an attractive force, unlike magnetic force or electrostatic force, which can either be attractive or repulsive.
+
+(a) (b)
+
+Fig. 5.11: (a) Dropping an object from a height;
+
+(b) Throwing an object vertically upwards
+
+You might have noticed that when an object is dropped from a height, it takes a straight vertical path downwards before touching the ground (Fig. 5.11a). When an object is thrown vertically upwards, the object moves up straight, slows down, stops momentarily at the top, and then takes a straight vertical path downwards (Fig. 5.11b).
+
+While going up, the speed of the object goes on decreasing till the object comes to a stop, its direction of motion changes and while coming down the
+
+Does the Earth pull every object with equal force?
+
+speed goes on increasing. We say that the object undergoes a vertical motion when it moves in a vertical direction under the influence of the gravitational force.
+
+5.5 Weight and Its Measurement
+
+The force with which the Earth pulls an object towards itself is called the weight of the object. The weight measures how strongly an object is pulled by the Earth. Since the weight is a force, it is measured in the same unit as that of force. Therefore, SI unit of weight is also newton (N).
+
+Let us now try to find out if the Earth pulls every object with equal force.
+
+Activity 5.9: Let us explore
+
+• Take a spring and a few objects of different masses,
+
+such as a pencil box, a tiffin box, and a small stone.
+
+• Hang one end of the spring from a nail (Fig. 5.12a).
+
+(a)
+
+From the other end, hang an object and observe the spring (Fig. 5.12b). Does the spring stretch?
+
+• Now hang the other objects, one by one and notice the
+
+stretch in the spring each time. Is the stretch caused by each object the same?
+
+(b)
+
+Fig. 5.12: (a) A hanging spring;
+
+(b) Two different objects hung
+
+When an object is hung from a spring, the spring stretches due to the force applied on the object by the Earth. We find that the stretch caused in the spring is different for different objects. This indicates that the Earth pulls different objects with different forces, that is, the weight of different objects is different. Can we use the spring to measure the weight of an object?
+
+from the spring
+
+A step further
+
+A spring balance is a simple device used to measure weight (force). It consists of a spring fixed at one end, with a hook attached at the other end. When we hang an object from the hook, the spring stretches, and the amount of stretching gives the weight of the object. There is a scale on the balance which is marked to show the weight (force) in newton. Usually, there is also another scale to show the corresponding values of mass in gram (g). These values have been marked with the assumption that the spring balance is used on the Earth, with the Earth’s gravitational force attracting the object.
+
+Let us learn to measure the weight using a spring balance. But first, let us familiarise ourselves with a spring balance the way we did with thermometer earlier (in the chapter ‘Temperature and Its Measurement’ in Curiosity, Grade 6).
+
+Activity 5.10: Let us observe
+
+• Look at the spring balance shown in Fig. 5.13 carefully. What
+
+is the maximum weight it can measure?
+
+The maximum weight it can measure is 10 N. Thus, this scale has a range of 0 to 10 N.
+
+Let us now try to find the smallest value of weight that can be measured by the spring balance.
+
+Activity 5.11: Let us calculate
+
+• Look at the spring balance shown in Fig. 5.13 and note
+
+down the following:
+
+{ How much is the weight difference indicated between the two bigger marks?
+
+The weight difference indicated between 0 and 01 N or between 01 N and 02 N is 1 N.
+
+{ How many divisions (shown by smaller marks) are there between these two bigger marks?
+
+There are 5 divisions between these marks.
+
+Fig. 5.13: A spring balance and close-up
+
+{ How much weight does one small division indicate?
+
+of its scale
+
+One small division can read
+
+1 N 5 = 0.2 N.
+
+So, the smallest value that the spring balance can read is 0.2 N. Now using this method, calculate the smallest value of weight that can be measured with the spring balance given to you. Your school laboratory may have spring balances for which the range and the value of the smallest division may be different. It is, therefore, always necessary to look carefully at the spring balance (or any other instrument) you are about to use.
+
+Let us now learn how to measure weight using a spring balance.
+
+Activity 5.12: Let us measure
+
+• Take a spring balance and a few objects. Keep in mind that
+
+the objects should not be heavier than the maximum value of weight the spring balance can measure, otherwise it may get damaged.
+
+• Suspend the objects one by one from the hook (Fig. 5.14). Read
+
+the scale for weight carefully and record your observations in the Table 5.2.
+
+Table 5.2: Measuring weight using a spring
+
+balance
+
+S.No. Object Weight (N)
+
+1. Pencil Box
+
+2. Partially filled water bottle
+
+Fig. 5.14: Object suspended
+
+from a spring balance
+
+You can repeat Activities 5.10 to 5.12 for the mass scale shown on the left side on the spring balance (Fig. 5.13) to measure the mass of an object.
+
+A step further
+
+The mass of an object can be measured indirectly by measuring its weight (using a spring balance) or by comparing its weight with the weight of an object of a known mass (using a beam balance). Since the weight of an object remains almost the same everywhere on the Earth, so for all practical purposes it is acceptable to weigh an object to find its mass.
+
+What is the difference between weight and mass?
+
+As we have learnt earlier (in the chapter ‘Materials Around Us’ in Curiosity, Grade 6), mass is the amount of matter in an object and is measured in grams (g) or kilograms (kg). Its value remains the same at every place. Weight, on the other hand, is the gravitational force with which the Earth (or another planet) pulls an object. Since gravitational force can vary very slightly from place to place on the Earth (and can be very different on different planets), weight can change, but mass does not.
+
+A step further
+
+The following table illustrates that although the mass of an object remains the same, its weight is different on the Earth, the Moon, and other planets.
+
+Earth Moon Mars Venus Jupiter
+
+Mass of the object 1 kg 1 kg 1 kg 1 kg 1 kg
+
+Weight of the object 10 N 
+1.6 N 
+3.8 N 9 N 25.4 N
+
+A step further
+
+In everyday life, particularly for the goods we commonly use, we are more interested in the amount of matter in an object (its mass), rather than the force applied by the Earth upon it (its weight). However, though while the units of mass are used, instead of the term mass, the term weight is typically used. For example, it is said that the weight of the wheat bag is 10 kg. But in scientific use, this is not correct and it is important to use the correct terms with their correct units, even if every day language is more casual.
+
+5.6 Floating and Sinking
+
+If we place some objects on water, some of them float, while others fall to the bottom. The gravitational force of the Earth is acting on all objects, then why don’t all objects fall to the bottom?
+
+While taking out water from a bucket filled with water using a mug, do you notice that the mug feels lighter when it is inside water? Let us try to understand this.
+
+Activity 5.13: Let us investigate
+
+• Take an empty bottle (with its lid closed tightly) and a bucket
+
+full of water.
+
+• Push the bottle in the water (Fig. 5.15). Do you feel an upward
+
+push? Release the bottle. Does it bounce up? You would have felt an upward push and the bottle bounces back to the surface of the water. This indicates that water applies a force on the bottle in the upward direction. In fact, all liquids apply a similar force. The force applied by a liquid on an object in the upward direction is known as upthrust or buoyant force.
+
+Fig. 5.15: Bottle in
+
+water
+
+When an object is placed in a liquid, the gravitational force due to the Earth acts on it downwards. But a buoyant force is applied on it by the liquid in the upward direction. If the gravitational force is more than the buoyant force, the object sinks, but if the two forces are equal, the object floats. One of the factors on which the buoyant force depends upon, is the density of the liquid. You will learn about density in a later chapter of this book.
+
+A step further
+
+Archimedes, a famous Greek scientist, discovered that when an object is fully or partially immersed in a liquid, it experiences an upward force which is equal to the weight of the liquid it displaces. This is known as Archimedes’ Principle. If the weight of a liquid displaced by an object is smaller than the weight of the object, the object will sink in the liquid. If the weight of the liquid displaced is equal to the weight of the object, the object will float in the liquid.
+
+Ever heard of ...
+
+There are some rocks which can float on water. One such rock is Pumice, which is formed during volcanic eruptions. When lava with lots of gas and water vapour cools quickly, it traps tiny bubbles of gas inside. This creates a light, porous rock — filled with air pockets which is less dense than water and floats on it.
+
+Snapshots
+
+A force is push or pull on an object resulting from the object’s interaction with another object.
+
+The SI unit of force is newton and its symbol is N.
+
+Forces can act with or without contact.
+
+Muscular force and frictional force are some of the examples of contact forces.
+
+Magnetic force, gravitational force, and electrostatic force are non-contact forces.
+
+Force can change an object’s speed, direction of its motion, or both. Force can also change the shape of an object.
+
+The force which comes into play when an object moves or tries to move over another surface, is called force of friction or simply friction. It acts in a direction opposite to the direction in which the object is moving or trying to move.
+
+The force exerted by a magnet on another magnet or a magnetic material is called magnetic force.
+
+The force exerted by a charged body on another charged body or uncharged body is called an electrostatic force.
+
+The force with which the Earth attracts objects towards itself, is called the gravitational force. It is always an attractive force.
+
+The force with which the Earth pulls an object towards itself is called the weight of the object. The SI unit of weight is newton (N).
+
+The mass of an object remains unchanged whereas its weight may vary from place to place.
+
+When an object is placed in a liquid, the force applied by a liquid on an object in the upward direction is known as upthrust or buoyant force.
+
+Keep the curiosity alive
+
+1. Match items in Column A with the items in Column B.
+
+Column A (Type of force) Column B (Example)
+
+(i) Muscular force (a) A cricket ball stopping on its own just before touching the boundary line
+
+(ii) Magnetic force (b) A child lifting a school bag
+
+(iii) Frictional force (c) A fruit falling from a tree
+
+(iv) Gravitational force (d) Balloon rubbed on woollen cloth attracting hair strands
+
+(v) Electrostatic force (e) A compass needle pointing North
+
+When?
+
+Why not? Prepare some questions based on your
+
+Why?
+
+Where?
+
+learnings so far ...
+
+How long?
+
+.....................................................................................
+
+2. State whether the following statements are True or False. (i) A force is always required to change the speed of motion
+
+of an object. (ii) Due to friction, the speed of the ball rolling on a flat
+
+ground increases. (iii) There is no force between two charged objects placed at
+
+a small distance apart.
+
+3. Two balloons rubbed with a woollen cloth are brought near each other. What would happen and why?
+
+4. When you drop a coin in a glass of water, it sinks, but when you place a bigger wooden block in water, it floats. Explain.
+
+5. If a ball is thrown upwards, it slows down, stops momentarily, and then falls back to the ground. Name the forces acting on the ball and specify their directions.
+
+(i) During its upward motion (ii) During its downward motion (iii) At its topmost position
+
+6. A ball is released from the point P and moves along an inclined plane and then along a horizontal surface as shown in the Fig. 5.16. It comes to stop at the point A on the horizontal surface. Think of a way so that when the ball is released from the same point P, it stops (i) before the point A (ii) after crossing the point A.
+
+P
+
+A
+
+Fig. 5.16
+
+7. Why do we sometimes slip on smooth surfaces like ice or polished floors? Explain.
+
+8. Is any force being applied to an object in a non-uniform motion?
+
+9. The weight of an object on the Moon becomes one-sixth of its weight on the Earth. What causes this change? Does the mass of the object also become one-sixth of its mass on the Earth?
+
+I think ...
+
+Shouldn’t it
+
+Reflect on the questions framed by your
+
+be ...
+
+friends and try to answer ...
+
+But we thought ... Maybe ...
+
+.....................................................................................
+
+1 2 3
+
+10. Three objects 1, 2, and 3 of the same size and shape but made of different materials are placed in the water. They dip to different depths as shown in Fig. 5.17. If the weights of the three objects 1, 2, and 3 are w1, w2, and w3, respectively, then
+
+Fig. 5.17
+
+(i) w1 = w2 = w3 (ii) w1 > w2 > w3 (iii) w2 > w3 > w1
+
+(iv) w3 > w1 > w2
+
+Discover, design, and debate
+
+• Collect objects made of different materials, such as plastic,
+
+wool, silk, rubber, polythene sheet, paper, and metals. Rub one material with another and check if it attracts small pieces of paper or not, that is, whether it gets charged or not. Record your observations in a systematic manner and write a research paper.
+
+Society Science
+
+• Imagine a scenario where the gravity disappears. Develop a
+
+story. Create a cartoon strip to present your story.
+
+Inter- disciplinary
+
+• Organise a discussion in your class on the topic: Friction — a
+
+Projects
+
+necessity or a problem? Make a note of the discussion and state where friction is a necessity and when it is a problem.
+
+• Make your own spring balance with the help of your teacher
+
+and calibrate it using standard weights. Now measure the weights of different objects and calculate the ratio of the weight and mass of different objects. Do you observe a pattern?
+
+• An electroscope is a device which can determine whether
+
+an object is electrically charged. You can make your own electroscope (Fig. 5.18) in your class with the help of your teacher, test the device. Explore in what other ways you may use this electroscope.
+
+Copper wire
+
+Straw
+
+Lid
+
+Jar
+
+Aluminium foil
+
+Fig. 5.18

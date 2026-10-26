@@ -1,0 +1,579 @@
+# CLASS-5 - MATHS - CHAPTER 05
+# Source: eemm105.pdf
+
+Chapter Chapter
+
+5
+
+Far and Near
+
+We have learnt about measuring length and some standard units we use to measure length. In this chapter we will learn some more units of measuring distances and the relationships between different units.
+
+Let Us Find
+
+Identify the appropriate units for measuring each of the following.
+
+Quantity Unit of measurement Metre (m) or centimetre (cm)
+
+Height of India Gate 42
+
+Length of a handkerchief 40
+
+Depth of a well 50
+
+Length of a mobile phone 13
+
+Length of an elephant’s trunk 2
+
+Distance between two buttons on a shirt 5
+
+Different Units but Same Measure
+
+Shikha and Sonu are measuring the lengths of saris and stoles in the village weaving centre. Find which measures represent the same sari or stole. You can take help of the double number line below.
+
+___ cm
+
+100 cm
+
+400 cm
+
+500 cm 700 cm ×2
+
+×100
+
+___ m ___ m ___ m
+
+2 m
+
+1m
+
+204 cm 5 metre 40 cm
+
+540 cm 2 metre 204 cm
+
+750 cm 2 metre 4 cm
+
+240 cm 2 metre 40 cm
+
+404 cm 6 metre 150 cm
+
+Let Us Compare
+
+1. Ritika is comparing the lengths of different rods. Compare them using <, =, > signs. (a) 456 cm ____ 5 m
+
+(b) 55 cm + 200 cm ____ 200 cm + 54 cm
+
+(c) 6 m 5 cm ___ 6 m 50 cm
+
+(d) 2 m 150 cm ___ 3 m 50 cm
+
+(e) 238 cm ____ 138 cm + 1 m
+
+2. World’s tallest statue
+
+(a) What is the difference between the height of the tallest statue in
+
+the world and the Statue of Liberty?
+
+(b) Identify the statues whose heights have the least difference.
+
+(c) Identify the statues whose heights have the largest difference.
+
+91 m The Motherland
+
+108 m Guanyin of Nanshan, China
+
+182 m Statue of Unity, India
+
+Calls, Russia 128 m Spring Temple Buddha, China
+
+93 m Statue of Liberty, USA
+
+38 m Christ the Redeemer,
+
+Brazil
+
+Some of World’s Tallest Statues
+
+(d) The height of which statue will be equal to the height of the Statue of Unity, if it is doubled?
+
+Measuring Long Distances
+
+Here are some ways in which you can measure long distances.
+
+Long Tape
+
+Rangefinder
+
+Laser Distance
+
+Meter
+
+Rodometer — measuring wheel
+
+Let Us Do
+
+Measure 100 m and 200 m on your school playground, or any other place in and around your school, using a Long Tape. Mark these points and draw a straight line. Walk on the lines and count the number of steps. Use this relationship between the number of steps taken and distance walked to find distances around you for at least 3 locations. Wherever possible, walk and find the number of steps. Otherwise, find the distance and estimate the number of steps.
+
+(a) Identify and write the locations that are the nearest and the farthest from your home.
+
+Nearest location _______________________________________________________. Farthest location ______________________________________________________.
+
+(b) Write the distances obtained above in increasing order. _______________, _________________, _________________, __________________.
+
+(c) Name a location that is equal to or more than 1,000 m from your home.
+
+Let Us Explore
+
+Length of rope Number of ropes needed to make 1 km 1,000 m 1
+
+When we walk 1,000 m, we say we have walked 1 km.
+
+100 m
+
+1,000 m = 1 km
+
+10 m
+
+200 m
+
+500 m
+
+Kilo stands for thousand. This unit is used to measure long distances.
+
+250 m
+
+Kilometre Race
+
+Sheena and Jennifer are helping to organise a 3-km race. Help them with the arrangements for the race. 
+1. Water stations are to be arranged after every 500 m. How many water stations must be set up? At what positions from the starting point will these water stations be placed? 
+2. Children need to stand at an interval of 300 m to direct the runners. How many children are needed? At what positions from the starting point will the children be standing? 
+3. Red and blue flags are to be placed alternately at every 50 m. How many red and blue flags are needed till the finish line?
+
+Let Us Do
+
+Longest Train Journey
+
+The longest train journey in India is by The Vivek Express which runs from Dibrugarh in Assam to Kanniyakumari in Tamil Nadu. Look at the stations on the route shown in the table below and answer the questions.
+
+Station number Name of the station Distance from
+
+Dibrugarh
+
+9 Dimapur 306 km
+
+14 Guwahati 556 km
+
+22 Jalpaiguri Road 983 km
+
+34 Bhubaneswar 2,007 km
+
+40 Visakhapatnam 2,450 km
+
+45 Vijayawada JN 2,800 km
+
+55 Coimbatore JN 3,675 km
+
+65 Kanniyakumari 4,187 km
+
+1. The total length of the route from Dibrugarh to Kanniyakumari is _______________ km.
+
+2. The distance between Vijayawada and Jalpaiguri road is _______________.
+
+3. Distance between Vijayawada and Visakhapatnam is _______________.
+
+4. Which two stations are farther apart — Guwahati and Dimapur or Bhubaneswar and Jalpaiguri Road?
+
+5. What is the distance between Guwahati and Coimbatore JN?
+
+Let Us Explore
+
+The World of Small Things
+
+sprout small screws nail
+
+How can we measure small things like the ones shown here?
+
+Let us look at the scale. Do you notice the small marks between 1 cm and 2 cm? Count how many marks are there between 1 cm and 2 cm?
+
+1 2 3 4 5 6 7
+
+One centimetre is divided into ten equal parts. Each part is called
+
+1 millimetre (mm).
+
+1 cm = 10 mm
+
+1 cm = 10 mm
+
+These small marks between any two centimetre marks help us measure the smaller lengths. Thus, it adds to the precision in measurement.
+
+Let Us Measure
+
+Measure the lines in the design and write their measurements in cm and mm.
+
+Let Us Do
+
+Soak some seeds of whole moong or black or white chana overnight. Next morning, take them out and wrap them in a moist cloth to sprout them. Over the next 4 days, take out one seed each day and measure the length of sprout. For ease of measurement, you can either place the seed on a paper and mark the length of the sprout, or use a thread to find its length.
+
+Number of days Length of the sprout (in mm)
+
+Day 1
+
+Day 2
+
+Day 3
+
+Day 4
+
+Let Us Draw
+
+Draw lines of the following lengths in your notebook using a scale. 
+1. 5 cm 5 mm 
+2. 3 cm 6 mm 
+3. 8 cm 3 mm 
+4. 36 mm 
+5. 67 mm
+
+How did you draw lines of lengths 36 mm and 67 mm? Share your thoughts in class.
+
+Relationships between Different Units
+
+10 mm = 1 cm
+
+100 cm = 1 m
+
+1,000 m = 1 km
+
+Let Us Do
+
+1. Fill in the blanks appropriately in the double number lines given below.
+
+(a)
+
+×7
+
+1 cm
+
+7 cm
+
+15 cm
+
+____ cm
+
+____ cm ____ cm 50 cm
+
+×10
+
+×__
+
+10 mm
+
+___ mm
+
+___ mm
+
+250 mm 320 mm 450 mm
+
+____ m
+
+×__
+
+(b)
+
+×4
+
+1 m
+
+4 m
+
+10 m
+
+____ m
+
+____ m ____ m 21 m
+
+×100
+
+×__
+
+____ cm
+
+____ cm
+
+____ cm
+
+____ cm
+
+1,200 cm 1,400 cm 1,700 cm
+
+×__
+
+(c)
+
+×9
+
+1 km
+
+9 km
+
+25 km
+
+____ km
+
+____ km ____ km 82 km
+
+×1,000
+
+×__
+
+1,000 m
+
+____ m
+
+____ m
+
+41,000 m 55,000 m 67,000 m
+
+_____ m
+
+×__
+
+89 mm = 80 mm + 9 mm 89 mm = 80 mm + 9 mm = 8 cm 9 mm = 8 cm 9 mm
+
+2. Use your understanding from above to fill in the blanks appropriately. (a) 4 cm 5 mm = ______ mm (b) 89 mm = ____ cm ____ mm (c) 234 cm = ____ mm (d) 514 mm = ____ cm ____ mm (e) 6 m 34 cm = ____ cm (f) 20 m 12 cm = ____ cm (g) 397 m = ______ cm
+
+5,792 cm = 5,700 cm + 92 cm 5,792 cm = 5,700 cm + 92 cm = 57 m 92 cm = 57 m 92 cm
+
+(h) 5,792 cm = ______m ______ cm (i) 9,108 cm = ______ m ______ cm (j) 34 km = _______ m (k) 6,870 m = ____ km ____ m (l) 10,552 m = ____ km ___ m (m) 29 km 30 m = ____ m (n) 32 km 359 m = ____ m
+
+Adding and Subtracting Lengths
+
+Saji saw on his smartphone that he walked 3 km 450 m in the morning and another 4 km 650 m in the evening. How much did he walk in the whole day? How would you solve this problem? Share your thoughts in class.
+
+m km
+
+I can add similar units.
+
+3
+
+5 4 1
+
+3 km + 4 km = 7 km. 450 m + 650 m = 1,100 m = 1 km 100 m.
+
+0
+
+4
+
+5 6
+
+0
+
++
+
+1 1 1 0
+
+0
+
+7 1,000 m = 1 km 1,000 m = 1 km
+
+7 km + 1,100 m = 8 km + 100 m = 8 km 100 m
+
+m
+
+I can convert everything into
+
+5 4 3 1 1
+
+0
+
+metres and add, that is
+
+3,450 m + 4,650 m
+
++
+
+4
+
+5 6
+
+0
+
+8
+
+1 1 1 0
+
+0 8,100 m = 8,000 m + 100 m 8,100 m = 8,000 m + 100 m = 8 km 100 m = 8 km 100 m
+
+Electricians are changing the cables in a house. They need 63 m of cable
+
+for this purpose. They used 16 m 75 cm cable in the first room.
+
+What is the length of the cable left?
+
+Convert 1 m = 100 cm Convert 1 m = 100 cm
+
+cm
+
+Convert the quantities in cm. Convert the quantities in cm.
+
+6,300 cm – 1,675 cm 6,300 cm – 1,675 cm
+
+0 3 6 5 12 9 10
+
+0
+
+1
+
+6
+
+7
+
+5
+
+--
+
+4
+
+6
+
+2
+
+5
+
+4625 cm = 4600 cm + 25 cm = 46 m 25 cm.
+
+We can also subtract like units, as above.
+
+cm cm m m
+
+0 0 1 1 6 6 3 3 2 12 9 10 5 0
+
+0 0
+
+1 1
+
+6 6
+
+7 7
+
+5 5
+
+-- 
+--
+
+4
+
+6
+
+2
+
+5
+
+Therefore, 46 m 25 cm cable is left.
+
+Note for the Teachers: Lengths can be added and subtracted in different ways. We can orally calculate whenever the numbers are convenient, like 200, 250, 400, 500, or 750, etc. In fact, we should encourage the use of mental strategies so that students can use mathematics for solving daily-life problems. When numbers are not suitable for oral calculations, the learners can choose one of the column strategies provided here based on their comfort. Help learners notice the similarity between operations on numbers and on quantities like length.
+
+Let Us Do
+
+1. Rani has two red-coloured ribbon rolls, one of length 3 m 75 cm and another 2 m 25 cm long. How much ribbon does she have?
+
+2. The distance from Bhopal to Sanchi is 48 km 700 m. Bhadbhada Ghat waterfall is on the way, and 17 km 900 m away from Bhopal. How far is Sanchi from the waterfall?
+
+3. Gulmarg Gondola in Gulmarg, Kashmir is the second longest and second highest cable car in the world. It is divided into two sections. The first section covers 2 km 300 m and the second section covers 2 km 650 m. What is the total distance covered by the cable car?
+
+4. Circle the bigger length and find the difference.
+
+(a) 11 mm and 1 cm Difference — ________________ (b) 26 mm and 2 cm Difference — ________________ (c) 20 cm and 201 mm Difference — ________________ (d) 1,020 mm and 1m Difference — ________________ (e) 2 m and 245 cm Difference — ________________ (f) 5,678 m and 6 km Difference — ________________ (g) 6 km 1,480m and 7 km 479m Difference — ________________
+
+Multiplying and Dividing Lengths
+
+Break the quantity into m and cm Break the quantity into m and cm and multiply. You can also convert and multiply. You can also convert
+
+1. We need a 1 m 80 cm cloth to make a shirt for a 10-year old child. How much cloth will be needed to make shirts for 20 such children? 20 × 1 m 80 cm = 20 × 1 m and 20 × 80 cm = 20 m + 1600 cm = 20 m + 16 m = 36 m.
+
+it into cm and multiply. it into cm and multiply.
+
+2. A shop sells cloth for making bags at ₹100 for 5 m. How much money is needed to buy a 1 m cloth?
+
+If 5 m cloth costs ₹100, then a 1 m cloth costs 100 ÷ 5 = ₹20.
+
+Now, use the double number line to find the cost of the cloth or the length of cloth that we can buy at a particular cost.
+
+5 m
+
+____ m ×__
+
+10 m
+
+20 m
+
+40 m
+
+×__
+
+₹ ____
+
+₹ ____
+
+₹ ____ ₹2000
+
+₹100
+
+×__
+
+3. Anita is making an embroidery on the border of a sari. She needs a 1 m long thread to embroider a 50 cm sari. How much thread would she need for a 5 m sari border?
+
+A 1 m long thread costs ₹50. How much money will be needed to buy the thread?
+
+4. A road 12 km 600 m long is being laid in a town. The workers lay an equal length of road each day, and complete the work in 6 days. How much road-laying work is done on each day?
+
+Let Us Estimate
+
+Height of an electric pole Height of a single-storeyed house
+
+Estimate the following. Share your reasoning in class.
+
+1. The height of the tallest building in your neighbourhood. What did you use as a reference to estimate the height? 
+2. The height of the tallest tree in your neighbourhood. What did you use as a reference? 
+3. The depth of a well or swimming pool in your neighbourhood. How did you find out?
+
+Let Us Explore
+
+In daily life, we use other units of measuring length as well. Height is usually measured in feet and inches. Look at your ruler to see if inches are also marked on it. Find out how many cm and mm equal 1 inch.
+
+centimetres
+
+1 2 3
+
+1 inch
+
+1 inch = 2 cm 5 mm
+
+1 foot = 12 inches or 30 cm.
+
+Measure Your Height
+
+2in
+
+1in
+
+4ft
+
+Stand against a wall and mark your height. Measure the distance between the floor and the marked point in feet and inches.
+
+Similarly, other students in the class can also measure their heights.
+
+Find out who is the tallest student in your class. What is his or her height in feet and inches?
+
+Try This
+
+Put appropriate operation sign (+, –, ×, ÷) such that each row and column and each 4 × 4 box should not repeat the sign.
+
+÷ +
+
+×
+
++
+
+–

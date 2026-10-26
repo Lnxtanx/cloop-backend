@@ -1,0 +1,721 @@
+# CLASS-8 - SCIENCE - CHAPTER 07
+# Source: hecu107.pdf
+
+Particulate Nature of Matter 7
+
+Probe and ponder
+
+• Why is it possible to pile up stones or sand, but not a liquid like
+
+water?
+
+• Why does water take the shape of folded hands but lose that
+
+shape when released?
+
+• We cannot see air, so how does it add weight to an inflated
+
+balloon?
+
+• Is the air we breathe today the same that
+
+existed thousands of years ago?
+
+• Share your questions
+
+?
+
+You might have collected pebbles and stones from the sand while playing on a riverbank or a beach. Where do these pebbles, stones, and sand come from?
+
+In the mountains, rocks gradually break down due to erosion. Rivers flowing through these regions carry along the eroded rock pieces. As the rivers flow, they continue to break down the rocks further into pebbles, stones, sand; and transport large quantities of them to the plains.
+
+The bigger rocks are eventually broken down into finer grains of sand and clay. Is this grain the smallest unit of a bigger rock or can these grains of sand and clay be broken down further? Let us find out!
+
+7.1 What Is Matter Composed of?
+
+Activity 7.1: Let us explore
+
+• Take a stick of chalk (Fig. 7.1a) and break it into two
+
+pieces (Fig. 7.1b).
+
+• Continue breaking the chalk till it becomes difficult
+
+(a)
+
+to break it further by hand.
+
+• Grind the small pieces of chalk thus obtained
+
+(Fig. 7.1c) using mortar and pestle.
+
+• Observe the fine powder of chalk with a magnifying
+
+(b)
+
+glass (Fig. 7.1d).
+
+• What do you observe?
+
+• Each tiny grain you observe is still a speck of chalk.
+
+(c)
+
+(d)
+
+Is every speck of this fine chalk powder still composed of the same substance, or has it changed into something else on breaking or grinding?
+
+Fig. 7.1: (a) A stick of chalk; (b) The chalk stick
+
+broken into two pieces;
+
+(c) A piece of chalk ground into fine powder;
+
+(d) A close-up view of chalk powder under a
+
+magnifying glass
+
+Recall Curiosity, Grade 7 chapter ‘Changes Around Us: Physical and Chemical’— is grinding chalk a physical change or a chemical change? You learnt that the chalk does not change into a new substance on grinding. It is a physical change in which only the size of each speck of chalk has reduced further.
+
+These specks of chalk powder can be broken further into smaller particles by further grinding. Let us imagine that this process of grinding continues. Eventually, we would reach a stage where the chalk particles cannot be broken down any further.
+
+The tiny units obtained at this stage are the basic building blocks that the chalk was made up of.
+
+Are the units of chalk obtained in this manner considered the smallest units of chalk?
+
+This means that one whole piece of chalk was made up of a large number of smaller units. These units are called constituent particles of chalk. A constituent particle is the basic unit that makes up a larger piece of a substance or material. Just like chalk, the grains of sand and clay are not the smallest units of bigger rocks. These are also made up of a large number of their constituent particles. Let us explore further! Recall the dissolution of sugar into water to form a solution. What happens to sugar when it is dissolved in water?
+
+Activity 7.2: Let us perform
+
+• Fill a glass tumbler with
+
+Safety first
+
+drinking water.
+
+• Put two teaspoons of sugar
+
+into it.
+
+• Do not stir the water. Taste a
+
+Perform the activity under the supervision of a teacher or an adult. Never eat or drink anything unless asked to.
+
+small spoonful of water from the top layer.
+
+Does the water taste sweet?
+
+• Now, stir the water until the sugar dissolves completely
+
+(Fig. 7.2).
+
+• Again taste a spoonful of water from the top layer.
+
+What difference in taste do you notice? Does it taste sweet?
+
+Since the top layer of water tastes sweet after dissolving sugar, it must be present in the solution. Do you observe any sugar particles in the solution?
+
+Fig. 7.2: Dissolving
+
+Sugar particles can no longer be observed but their presence can be sensed by taste. When sugar dissolves in water, it breaks up into its constituent particles which cannot be broken down further. Each tiny grain of sugar is made up of millions and millions of such constituent particles.
+
+sugar in water
+
+Activities 7.1 and 7.2 support the idea that matter is composed of a large number of extremely small particles. These particles are so small that they cannot be seen even through an ordinary microscope.
+
+But, where did the sugar go?
+
+The tiny sugar particles separate and occupy the available spaces between the water particles. These spaces between the particles are known as interparticle spaces.
+
+Chalk and sugar can both be broken down into their constituent particles. But how are the constituent particles held together to form the solid pieces we see?
+
+7.2 What Decides Different States of Matter?
+
+The constituent particles of matter are held together through forces which are attractive in nature. These forces are called interparticle attractions. The strength of these attractions depends on the nature of the substance and the interparticle distance. Even a slight increase in the distance decreases the interparticle forces drastically. The strength of these forces ultimately decides the physical state of the substances.
+
+Our scientific heritage
+
+Do you know that since ancient times, people have been thinking about how far things could be broken down and what is matter made up of? Acharya Kanad, an ancient Indian philosopher, first spoke about the idea of a Parmanu (atom). He believed that matter is made up of tiny, indivisible eternal particles called Parmanu. This idea was written in his work called Vaisheshika Sutras.
+
+Let us explore how these attractions vary in different states.
+
+7.2.1 Solid state How are constituent particles held together in solids?
+
+Activity 7.3 : Let us find out
+
+• Collect a few solid objects, such as a piece
+
+of iron or an iron nail, a piece of rock salt, a stone, a piece of wood, a key, and a piece of aluminium (Fig. 7.3).
+
+Rock salt
+
+Stone
+
+Iron nail
+
+• Observe their shapes and sizes.
+
+• Try hammering them.
+
+• In which of the above six objects do
+
+you think particles are strongly held together?
+
+Key
+
+Piece of aluminium
+
+Wooden block
+
+Fig. 7.3: Some solid objects
+
+You must have noticed that all these objects are solids. They have a definite shape and volume. This is due to the fact that in solids, the particles are tightly packed and the interparticle attractions are very strong. These strong forces of attraction hold the particles in fixed positions, preventing them from moving freely (Fig. 7.4a).
+
+The particles can only move to and fro about their positions (vibrate or oscillate) but cannot move past each other.
+
+In the solid state, is there any way to move these particles apart?
+
+When solids are heated, their particles vibrate more vigorously (Fig. 7.4b). A stage is reached when these vibrations become so vigorous that the particles start leaving their respective positions. The interparticle forces of attraction get weakened and the solid gets converted into the liquid state (Fig. 7.4c). The temperature at which this happens is the melting point of the solid.
+
+(b) Particles with increased vibrations (a) Solid (c) Liquid
+
+Fig. 7.4: Magnified schematic pictures of melting of a solid
+
+The minimum temperature at which a solid melts to become a liquid at the atmospheric pressure is called its melting point. Generally, in a liquid state, particles are somewhat farther away from each other as compared to those in the solid state (ice is an exception—its particles are farther apart than those in water).
+
+Some solids have weak interparticle forces of attraction, so their melting points are low. While others have strong attractive forces and have high melting points. Some examples of solids and their melting points are shown in Table 7.1.
+
+Table 7.1: Melting points of some solids
+
+S.No. Material Melting point
+
+1. Ice 0 °C
+
+2. Urea 133 °C
+
+3. Iron 1538 °C
+
+Solids have a definite volume; what about liquids and gases?
+
+7.2.2 Liquid state
+
+Activity 7.4: Let us try and find out
+
+200 mL
+
+B
+
+C
+
+A 200 mL
+
+200 mL
+
+(a)
+
+(b)
+
+(c)
+
+Fig. 7.5: Water placed in containers of different shapes
+
+• Take three clean and dry containers of different shapes.
+
+Label them A, B, and C (Fig. 7.5).
+
+• Mark the 200 mL level in each container using a marker or
+
+by pasting a thin strip of paper.
+
+• Fill Container A with water up to the marked level.
+
+• Carefully transfer the water from Container A to Container B
+
+without spilling, and observe the shape and level of the water.
+
+• Now, transfer the same water from Container B to Container C,
+
+carefully, and observe the shape and its level again.
+
+You will notice that the water takes the shape of the container into which it is poured. So, we can say that the liquids do not have a fixed shape and take the shape of the container they are kept in. This happens because the particles of liquids are free to move. In all three containers, the water level remains at 200 mL and no change in volume is observed. Hence, we can say that liquids have a definite volume. However, if a container is not clean, some water may stick to its walls, causing the water level in the next container to be slightly less than 200 mL after pouring.
+
+Activity 7.4 shows that the particles of liquids can move freely, but only within a limited space. Therefore, we can infer that liquids have no fixed shape but have a fixed volume.
+
+Let us now compare interparticle forces of attraction in liquids and solids. Take some water in a shallow vessel and try to move your finger through it (Fig. 7.6).
+
+Are you able to move your finger through the water? Fig. 7.6: Moving finger through water
+
+You can move your finger through water without breaking or cutting it permanently, which cannot be done in the case of solids. When you try this, you are temporarily displacing water. As soon as you remove your finger, the position of the water is restored. We can say that in liquids, the interparticle attractions are slightly weaker than in solids, but still strong enough to keep the particles close together.
+
+I have seen that spilled water disappears after some time, and it happens at any temperature!
+
+Recall Curiosity, Grade 6 chapter ‘Temperature and Its Measurement’, where you observed the temperature of boiling water (liquid). When a liquid is heated, a stage comes when it starts boiling. The temperature at which a liquid boils and turns into vapour at atmospheric pressure is called its boiling point. The movement of particles becomes so vigorous that they move apart from each other, resulting in a decrease in the interparticle forces of attraction. Eventually, the constituent particles can escape from the liquid state. The liquid is converted into vapour or the gaseous state.
+
+At the boiling point, the formation of vapour is very fast and occurs not only at the surface but also within the liquid. This process is observed as bubble formation in the liquid. However, vapour formation occurs at all temperatures, even below the boiling point, though slowly and only at the surface. This slower process is known as evaporation — about which you have learnt in earlier grades.
+
+7.2.3 Gaseous state
+
+Do gases also have a fixed volume?
+
+Activity 7.5: Let us investigate
+
+Safety first
+
+• Take two transparent gas jars or glass tumblers
+
+and mark them A and B.
+
+Be careful while burning an incense stick.
+
+• Create some smoke by burning an incense stick.
+
+• Hold the Gas Jar A upside down over the smoke (Fig. 7.7a).
+
+• The gas jar should trap the smoke inside.
+
+• Turn it over and cover it with a glass plate (Fig. 7.7b).
+
+• Hold another Gas Jar B upside down and gently place it over
+
+the glass plate covering the Gas Jar A.
+
+Glass
+
+Gas jar
+
+• Remove the glass plate slowly
+
+plate
+
+Smoke collected in
+
+A
+
+the gas jar A
+
+and ensure that both gas jars are close enough and there is no gap for smoke to escape (Fig. 7.7c).
+
+• Observe how the smoke
+
+Burning incense stick
+
+spreads inside the Gas Jar B.
+
+• The smoke fills the entire
+
+(a) Collecting smoke
+
+(b) Covering the gas jar with
+
+a glass plate
+
+Smoke in Gas Jar B
+
+B
+
+space in the Gas Jar B, indicating that gases do not have a fixed volume and tend to occupy the entire available space (Fig. 7.7d). Like liquids, they also acquire the shape of the vessel they are in.
+
+A
+
+Smoke in Gas Jar A A
+
+(c) Placing the Gas Jar B and
+
+(d) Spreading the smoke
+
+removing the glass plate
+
+This illustrates that the particles in gases move freely in all directions and the interparticle attractions are negligible. As a result, gases do not have a fixed shape or volume.
+
+Fig. 7.7: Smoke spreads freely inside the gas jars
+
+In this activity, smoke is used to represent the gaseous state. The tiny particles of smoke suspended in the air are constantly hit by invisible particles of gases, and their movement helps us observe the motion of gas particles.
+
+This activity can also be demonstrated by using iodine vapour instead of smoke from incense sticks.
+
+Safety first
+
+Iodine vapour can be obtained by placing some solid iodine in a closed gas jar for some time, as shown in Fig. 7.8.
+
+Be careful while using solid iodine. Vapours of iodine can cause irritation.
+
+Both liquids and gases flow and do not retain a fixed shape. These properties distinguish them from solids and classify them as fluids.
+
+Iodine
+
+Fig. 7.8: Iodine vapour spread freely inside the gas jar
+
+7.3 How Does the Interparticle Spacing Differ in the Three States of Matter?
+
+What role does the interparticle spacing play in determining the properties of each state (solid, liquid, and gas)?
+
+Let us perform the following activities to find answers to these questions.
+
+Activity 7.6: Let us experiment
+
+• Take a syringe without a needle. Pull the plunger of the
+
+syringe outwards in a fully extended position (Fig. 7.9a).
+
+• Place your thumb over the open end of the syringe to prevent
+
+the air present inside the syringe from escaping (Fig. 7.9b).
+
+• Push the plunger slowly and steadily inward (Fig. 7.9c).
+
+Syringe without a
+
+needle
+
+(c) Pushing the plunger inwards
+
+(a) Pulling the plunger outwards
+
+(b) Placing thumb over the open end
+
+Fig. 7.9: The syringe piston in different positions
+
+• What do you observe?
+
+As you do this, you will notice that the volume of air inside the syringe decreases.
+
+What can we say about the behaviour of gas in the syringe? When you compress the air by pushing the plunger, the particles are forced to come closer. This shows that the gas particles have a lot of space between them in their natural state, and this space can be reduced by applying external pressure.
+
+If you stop pushing the plunger, the gas particles spread, and the plunger moves back to its original position.
+
+Repeat this activity using water and observe. You would observe that water is practically incompressible. Let us perform another activity to learn about the interparticle spaces in liquids.
+
+Activity 7.7: Let us observe
+
+• Take a glass vessel, fill it about half with water, and mark the
+
+level of water A (Fig. 7.10a).
+
+• Add two teaspoons of sugar into it.
+
+• Mark the new water level on the glass vessel B (Fig. 7.10b).
+
+• Stir the water with a glass rod to dissolve the sugar (Fig. 7.10c).
+
+• Predict whether the water level will increase or decrease
+
+with respect to the mark B.
+
+• Mark this water level again as C (Fig. 7.10d).
+
+Glass rod
+
+Glass vessel
+
+B
+
+C B
+
+A
+
+A Dissolving
+
+A
+
+Water
+
+Sugar in water
+
+Water
+
+Sugar dissolved
+
+Sugar
+
+in water
+
+(a) (b) (c)
+
+(d)
+
+Fig. 7.10: Variation in water levels
+
+What difference do you observe in the water levels?
+
+You will observe that initially, when sugar is added, the level of water increases, but after dissolution, it may decrease to some extent. Since the volume of the solution is less than the sum of
+
+the volumes of water and sugar, it indicates that there is some space between the water particles. The particles of the dissolved substance occupy these spaces (Fig. 7.11).
+
+Sugar particle
+
+Water particle
+
+Repeat the Activity 7.7 with some other soluble solids, such as common salt or glucose, and insoluble solids, like sand and stone pieces.
+
+What do you observe in each case? Do the sand particles dissolve? Does the volume of water in the vessel change after mixing, and why?
+
+Fig. 7.11: Magnified schematic picture of distribution of sugar
+
+particles in water
+
+Sugar and sand are both solids. Why does sugar dissolve in water but sand does not?
+
+(a) Solid
+
+Sand is a solid that does not dissolve in water. When added to water, the sand particles settle down and occupy some space in the container, causing the total volume to increase.
+
+What do you think about the interparticle spacing in solids?
+
+(b) Liquid
+
+(c) Gas
+
+Fig. 7.12: Magnified schematic pictures of
+
+interparticle spacing in the three states
+
+You learnt earlier that the constituent particles in solids are held together by strong forces of attraction. So, these particles do not move from one place to another and are closely packed. However, despite close packing, some space is left between the particles as shown in Fig. 7.12a. You might assume that the space between particles is filled with air, but this is not the case. They contain nothing at all. Fig. 7.12 summarises the packing of particles and the interparticle spacing in the three states of matter.
+
+of matter
+
+A step further
+
+Often, we use the term ‘particle’ in different contexts. The meaning of this term changes with the context. For example, while talking about air pollution, the term Suspended Particulate Matter (SPM) is used. This term refers to the tiny dust particles suspended in air and not the constituent particles of matter which are extremely small as compared to the dust particles. In fact, even these tiny dust particles are also made up of a very large number of constituent particles, i.e, atoms and molecules.
+
+7.4 How Particles Move in Different States of Matter?
+
+Let us find out about the movement of particles in the three states of matter.
+
+Activity 7.8: Let us experiment
+
+• Take a glass tumbler containing
+
+Safety first
+
+water and put a few grains of potassium permanganate into it.
+
+• What do you observe?
+
+Do not touch potassium permanganate with your hands. Use a spoon or a spatula to handle it.
+
+• Initially, you will see some streaks of
+
+pink colour spreading out from the grain (Fig. 7.13a).
+
+Glass tumbler
+
+• With the passage of time, the entire bulk of
+
+water will acquire a uniform pink colour (Fig. 7.13b).
+
+• Do you know why this happens?
+
+Potassium permanganate
+
+(a) (b) Fig. 7.13: (a) Streaks of pink colour spreading out; (b) Uniform pink colour in
+
+glass tumbler
+
+This happens because the water particles are in constant motion. First they pull out the particles of potassium permanganate from its grain, and later they hit these particles so that they get spread throughout the liquid. In the case of many substances, the constituent particles are held together strongly that the water particles are unable to pull these out. Such substances, like sand, are insoluble in water.
+
+Think like a scientist
+
+Try it yourself!
+
+Take three clean glass tumblers.
+
+Pour hot water in one of them, water at room temperature in the second and ice-cold water in the third.
+
+Drop a small grain of potassium permanganate into each of them.
+
+Watch carefully and compare. What do you observe?
+
+Water particles move faster in hot water compared to water at room temperature, and even slower in ice-cold water. As a result, the potassium permanganate spreads the fastest in hot water, less quickly in water at room temperature, and the slowest in ice-cold water. Hence, the movement of particles increases when heat is provided.
+
+Try to depict it by drawing a diagram.
+
+How can we demonstrate the movement of gas particles that cannot be seen with the naked eye?
+
+Activity 7.9: Let us find out
+
+• Light an incense stick in one corner of the room (Fig. 7.14).
+
+• Wait for a few minutes and observe.
+
+• Do you notice the fragrance from a distance?
+
+Fig. 7.14: Burning of an incense stick
+
+When an incense stick is burnt in one corner of the room, initially, the fragrance is felt only around the incense stick. Shortly, you can smell the fragrance throughout the room. This happens because the particles of the fragrance spread, filling the entire room. This shows that the particles of air are moving constantly. The air particles hit the particles of the fragrance and help them spread throughout the room.
+
+Oh! Now I know why and how the fragrance of perfume reaches us.
+
+Can you share a few other real-life situations where you have experienced the movement of gas particles?
+
+Ever heard of ...
+
+The particulate nature of matter plays a crucial role in many everyday processes. For example, when we wash clothes stained with oil using soap, numerous soap particles surround the oil particles on the fabric. One end of the soap particle attaches to the oil, and the other mixes with water, thus helping lift the oil off and wash it away (Fig. 7.15). Fig. 7.15: Particles of soap
+
+help in cleaning
+
+Based on our learnings from the chapter, we can say that matter is made up of small particles which are held together by the force of attraction. The strength of attractive forces between particles depends on the distance between them, which in turn depends on their thermal (heat) energy. Thus, it is the thermal energy of the particles that determines the physical state of matter. In the solid state, the thermal energy of particles is low, so they remain close to each other and experience strong interparticle attractive forces. This restricts their motion to only small vibrations.
+
+At the melting point, the thermal energy is used to overcome the attractive forces between particles, allowing the solid to change into a liquid. At this stage, the particles can move away from their fixed positions. The interparticle distance increases slightly, reducing the strength of the attractive forces to a level that allows the particles to move around, though still within a limited space. In the gaseous state, the particles have enough energy to overcome the forces of attraction between them and move freely in all directions. You will learn more about these particles that constitute matter in higher grades. Let us wrap up! Particle nature of the three states of matter–
+
+States of Matter
+
+Solid Liquid Gas
+
+Interparticle spacing
+
+Interparticle spacing little
+
+Interparticle spacing
+
+minimum
+
+more than in solids
+
+maximum
+
+Particles are closely
+
+Particles are free
+
+Particles are a little loosely packed than in
+
+packed
+
+solids
+
+Interparticle attraction
+
+Interparticle attraction is minimum
+
+is maximum
+
+Interparticle attraction is slightly weaker than in solids
+
+(negligible)
+
+Movement of particles in
+
+Movement of particles negligible (only vibrations)
+
+Movement of particles restricted to limited space
+
+all the available space
+
+Snapshots
+
+Matter is composed of extremely small particles.
+
+The particles are held together by interparticle forces of attractions.
+
+The interparticle attractions are the strongest in solids, a little weaker in liquids, and the weakest in gases.
+
+Solids have a fixed shape and size due to strong interparticle attraction, minimum interparticle space, and no free movement of the constituent particles.
+
+The interparticle attraction in liquids is slightly weaker than in solids, enabling the particles to move within a particular space and providing them with a little more interparticle spacing. Therefore, liquids have a definite volume but no fixed shape.
+
+The interparticle attractions in gases are negligible, making their particles completely free to move from one place to another and resulting in maximum interparticle space. Therefore, gases have no fixed shape and volume.
+
+Keep the curiosity alive
+
+1. Choose the correct option. The primary difference between solids and liquids is that the constituent particles are:
+
+(i) closely packed in solids, while they are stationary in
+
+liquids. (ii) far apart in solids and have fixed position in liquids. (iii) always moving in solids and have fixed position in
+
+liquids. (iv) closely packed in solids and move past each other in
+
+liquids. 
+2. Which of the following statements are true? Correct the false statements.
+
+(i) Melting ice into water is an example of the
+
+transformation of a solid into a liquid. (ii) Melting process involves a decrease in interparticle
+
+attractions during the transformation. (iii) Solids have a fixed shape and a fixed volume.
+
+(iv) The interparticle interactions in solids are very strong,
+
+and the interparticle spaces are very small.
+
+When?
+
+Why not? Prepare some questions based on your
+
+Why?
+
+learnings so far ...
+
+Where?
+
+.....................................................................................
+
+How long?
+
+.....................................................................................
+
+(v) When we heat camphor in one corner of a room, the
+
+fragrance reaches all corners of the room. (vi) On heating, we are adding energy to the camphor, and
+
+the energy is released as a smell. 
+3. Choose the correct answer with justification. If we could remove all the constituent particles from a chair, what would happen?
+
+(i) Nothing will change. (ii) The chair will weigh less due to lost particles. (iii) Nothing of the chair will remain. 
+4. Why do gases mix easily, while solids do not? 
+5. When spilled on the table, milk in a glass tumbler, flows and spreads out, but the glass tumbler stays in the same shape. Justify this statement. 
+6. Represent diagrammatically the changes in the arrangement of particles as ice melts and transforms into water vapour. 
+7. Draw a picture representing particles present in the following:
+
+(i) Aluminium foil (ii) Glycerin (iii) Methane gas
+
+(a) (b)
+
+Fig. 7.16
+
+8. Observe Fig. 
+7.16a which shows the image of a candle that was just extinguished after burning for some time. Identify the different states of wax in the figure and match them with Fig. 7.16b showing the arrangement of particles. 
+9. Why does the water in the ocean taste salty, even though the salt is not visible? Explain. 
+10. Grains of rice and rice flour take the shape of the container when placed in different jars. Are they solids or liquids? Explain.
+
+I think ...
+
+Reflect on the questions framed by your
+
+Shouldn’t it
+
+be ...
+
+friends and try to answer ...
+
+But we thought ... Maybe ...
+
+.....................................................................................
+
+Discover, design, and debate
+
+• Fix a balloon over the neck of a bottle and put the bottle in
+
+hot water. Explore what will happen?
+
+• Design and create simple models to represent particles of
+
+solids, liquids, and gases showing interparticle spacing using clay balls, beads, etc.
+
+Society Science
+
+• Pretend to be particles of solids, liquids, and gases, at
+
+Inter- disciplinary
+
+different temperatures—create and perform a role-play/ dance showing particles in motion.
+
+Projects
+
+• Debate in the class — ‘Gases can spread and fill all the available
+
+space’. Is this property of gases beneficial or harmful?
+
+A step further
+
+The tiny particles that make up all matter are atoms and molecules. For example, iron is made up of atoms of iron, and gold is made up of atoms of gold. Atoms of many elements like hydrogen, oxygen, and sulfur are not able to exist independently. In such cases, a certain number of atoms of the same element combine to form a molecule. For example, two atoms of hydrogen combine and form a stable particle called a molecule of hydrogen. A water molecule is made up of two hydrogen atoms and one oxygen atom. You will learn about atoms and molecules in higher grades.

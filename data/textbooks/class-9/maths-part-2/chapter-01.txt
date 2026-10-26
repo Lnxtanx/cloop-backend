@@ -1,0 +1,259 @@
+# CLASS-9 - MATHS-PART-2 - CHAPTER 01
+# Source: iemh201.pdf
+
+Propositions and their Converses
+
+9
+
+Consider the following statement:
+
+Statement 1: If two sides of a triangle are equal, then the angles opposite the equal sides are equal.
+
+Such a statement that is either true or false is called a proposition. Now consider the following proposition:
+
+Statement 2: If two angles of a triangle are equal, then the sides opposite the equal angles have equal lengths.
+
+The first proposition is of the form ‘if X then Y’. The second is of the form ‘if Y then X’. We say that the second proposition is the converse of the first proposition.
+
+The statement ‘if X then Y’ is also written as ‘X implies Y’. We will use both formulations interchangeably.
+
+If a proposition is true, then is its converse always true?
+
+Think and Reflect
+
+We have proved the first statement in an earlier grade. Is the second statement true? Can you prove it?
+
+(Hint: Draw the altitude from the vertex containing the third angle.)
+
+Let us consider some examples of propositions and their converses,
+
+Example 1: 
+• Proposition P: If it rains, then the road is wet. 
+• Converse Q: If the road is wet, then it has rained.
+
+Proposition P is true but its converse, Q, may not be true. For instance, the road may be wet because a tanker spilled water on the road!
+
+A situation that illustrates why a given proposition is not necessarily true is called a counterexample. It refers to an example that contradicts the stated proposition.
+
+2 Ganita Manjari | Grade 9 | Part II
+
+Finding a suitable counterexample is an important ingredient of mathematics because it allows us to show in a short and convincing way that a proposition is false.
+
+Here is a famous example. Fermat claimed that all numbers of the form 2
+
+2n + 1 are prime (n = 0, 1, 2, 3, …); e.g., the number 2 23 + 1 = 257. But Euler disproved this by showing that the number 2
+
+25 + 1 is composite.
+
+Example 2: 
+• Proposition P: If a number is a multiple of 6, then it is a multiple of 3. 
+• Converse Q: If a number is a multiple of 3, then it is a multiple of 6.
+
+Proposition P is true. Justify why this is so. Does this now mean that all multiples of 3 are also multiples of 6? This corresponds to the converse statement Q. Determine if it is true and if not, give a counterexample.
+
+Example 3: In this example, n is any positive integer. 
+• Proposition P: If n is a perfect square, then it has an odd number of factors. 
+• Converse Q: If n has an odd number of factors, then it is a perfect square.
+
+You may recall that we came across these statements in the previous grade. Which of them are true?
+
+Discussion
+
+Consider the following argument.
+
+Each factor of a number has a ‘partner’ factor such that their product yields the given number, e.g., 5 is a factor of 35, and 5 × 7 = 35. Here, 7 is the partner factor of 5, and vice-versa. Let us focus on factor-partner pairs of numbers, e.g., (1, 12), (2, 6), (3, 4) are the pairs for the number 12.
+
+If a number has an odd number of factors, there must be a factor-partner pair in which the same number repeats (e.g., the partner factor of 5 in 25). If not, the given number will have an even number of factors since each factor can be paired with its factor pair.
+
+Thus, if a number has an odd number of factors, then it is a perfect square.
+
+What does this argument prove? Statement P or Q?
+
+3 Propositions and their Converses
+
+To clearly understand this, let us reframe the argument as follows — (i) n has an odd number of factors
+
+which implies (ii) the existence of a factor-partner pair in which the
+
+same number repeats, say (f, f)
+
+which implies (iii) n is a square number: n = f × f
+
+This only proves Q. It doesn’t prove that every square number has an odd number of factors (Proposition P).
+
+Is P true? It is. The argument above can be modified to prove this. We start with (iii). Clearly, (iii) implies (ii). Does (ii) imply (i)? Not necessarily because (ii) does not state the number of pairs with repeating factors. For example, if the number of such pairs is two — say (f, f) and (g, g) — what can we say about the number of factors? In such a case, the given number will have an even number of factors.
+
+However, a number cannot have more than one factor pair with repeating factors. Thus, a square number necessarily has an odd number of factors. Hence Statement P is also true.
+
+In this example, ‘n is a perfect square’ and ‘n has an odd number of factors’ imply each other.
+
+Example 4: 
+• Proposition P: If two triangles have the same area, then they are congruent. 
+• Converse Q: If two triangles are congruent, then they have the same area.
+
+Determine if these statements are true or not. Justify the true statements and give a counterexample for each false statement.
+
+These examples show that a proposition can be true but not its converse. Or it can happen that both the proposition and its converse are true.
+
+Think and Reflect
+
+It can also happen that both the proposition and converse are false! Can you give an example?
+
+4 Ganita Manjari | Grade 9 | Part II
+
+Example 5: Here is a statement of the Baudhāyana–Pythagoras theorem.
+
+Let a, b, c be the sidelengths of a triangle. If the triangle is right-angled, then a
+
+2 + b 2 = c 
+2. What is its converse? To write the converse, we keep the first sentence of the Baudhāyana– Pythagoras theorem as it is, and make the necessary change in the second.
+
+Let a, b, c be the sidelengths of a triangle. If a
+
+2 + b 2 = c 2, then the triangle is right-angled.
+
+2 + b 2 = c 
+2.
+
+Is this converse true? Let ∆ABC be the triangle with sidelengths a, b, c such that a
+
+B
+
+c
+
+a
+
+C A
+
+b
+
+Construct another right triangle ∆XYZ whose perpendicular sides YZ and XZ have sidelengths a and b.
+
+Y
+
+a
+
+Z X
+
+b What can we say about the length of XY? (Hint: Use the Baudhāyana–Pythagoras Theorem.) What can we say about ∆ABC and ∆XYZ? (Hint: Use the SSS criterian for congruence.) We conclude that ∆ABC had to be a right triangle after all. Hence the converse of the Baudhāyana–Pythagoras Theorem is also true!
+
+5 Propositions and their Converses
+
+A Note
+
+We have seen that ‘If X then Y’ can also be written as ‘X implies Y’. These are not the only ways to express this meaning. It can be conveyed through other words and sentence structures as well. For example, ‘Y when X’ also gives the same meaning. The following two statements, for instance, have the same meaning.
+
+Proposition: If a number is a perfect square, then it has an odd number of factors.
+
+Proposition: A number has an odd number of factors when it is a perfect square.
+
+Think and Reflect
+
+1. Identify real-life examples in which a proposition is true but not the converse. Give nice counterexamples! 
+2. Give more examples from geometry as well as number theory in which a proposition is true but not its converse. Give appropriate counterexamples.
+
+Exercise Set 9.1
+
+Frame the converse for each of the propositions in Questions 1–12. Then, determine if each of the two statements is true or not. Justify the true statements and give a counterexample for each false statement.
+
+1. If two lines are parallel, then the corresponding angles formed by a transversal are equal.
+
+2. If a quadrilateral is a square, then all its angles are equal.
+
+*3. Given any ∆ABC, let us bisect the angles at B and C. The bisectors meet at the incentre I of the triangle.
+
+Now extend the bisectors beyond I till they meet the opposite sides at E and F respectively, as shown.
+
+Proposition: If AB = AC, then IE = IF.
+
+Fig. 9.1
+
+6 Ganita Manjari | Grade 9 | Part II
+
+4. If x = y, then a + x = a + y, where x, y and a are any three numbers.
+
+This proposition and its converse are routinely used while solving equations.
+
+5. If a and b are perfect squares, then ab is a perfect square.
+
+In Questions 6 and 7, x and y are real numbers.
+
+6. If x = y, then x
+
+2 = y 
+2.
+
+7. If x = y, then x
+
+3 = y 
+3.
+
+In Questions 8–12, n is a positive integer.
+
+8. If n is divisible by 24, then it is divisible by both 4 and 6.
+
+9. If n is divisible by 60, then it is divisible by both 5 and 12.
+
+10. If n is the square of a prime number, then it has exactly 3 factors.
+
+11. If n is a product of two unequal prime numbers, then it has exactly 4 divisors.
+
+12. If n and n + 3 have no factors in common, then n is not a multiple of 3.
+
+13. There are no known ‘neat’ expressions that generate only primes! Find counterexamples to the following claims.
+
+(i) All numbers of the form 4n
+
+2 + 1 are prime. (ii) All numbers of the form n
+
+2 + n + 11 are prime. (iii) All numbers of the form 4
+
+n + 3 are prime.
+
+14. Find counterexamples to the following statements.
+
+(i) If n is a prime number, then 2
+
+n – 1 is a prime number. (ii) If n is an even number, then 2
+
+n + 1 is a prime number.
+
+15. Consider the statement: ‘If a number is divisible by 8, then it is divisible by both 2 and 4’.
+
+(i) Justify the statement. (ii) Recall the divisibility shortcuts that we have studied for
+
+different numbers. To check whether a given number is divisible by 8, is it enough to check whether it is divisible by 2 and 4? Why or why not?
+
+16. Recall that a shortcut to check whether a given number is divisible by 3 is to add the digits of the number and check if the sum is a multiple of 3. Express the relationship between ‘a number is divisible by 3’ and ‘sum of the digits is a multiple of 3’ using ‘If-then’ sentences.
+
+7 Propositions and their Converses
+
+17. We have identified different types of quadrilaterals — squares, rectangles, parallelograms, rhombi, kites and trapezia. One can identify more types (e.g., we could create a category of quadrilaterals that have equal-length opposite sides).
+
+Suppose we have identified a category of quadrilaterals called Q, and we have to construct a quadrilateral of this type. For this, we are to use two thin sticks, put them together as diagonals so that the quadrilateral obtained by joining their endpoints is of type Q (see the Fig. 9.2).
+
+Fig. 9.2
+
+(i) Suppose Q satisfies the following property. If a quadrilateral is of type Q, then it has equal-length
+
+diagonals.
+
+(a) Should the two sticks be of equal length? Why or why
+
+not? (b) Will it matter how the two sticks are put together?
+
+(ii) Instead of the property mentioned above, suppose Q satisfies
+
+the following property.
+
+If a quadrilateral has equal diagonals, then it is of type Q. What will be your answers to (a) and (b) now?
+
+Chapter Summary
+
+• A proposition is a statement that is true or false.
+
+• The converse of the proposition ‘if P then Q’ is the proposition ‘if Q then P’.
+
+• It can happen that a proposition is true while its converse is false. It can also happen that both the proposition and its converse are true, or both are false.
+
+• Counterexamples are instances that demonstrate the falsity of a given proposition.

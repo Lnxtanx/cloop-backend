@@ -1,0 +1,944 @@
+# CLASS-9 - SOCIAL-SCIENCE - CHAPTER 09
+# Source: iest109.pdf
+
+Chapter 9
+
+The Price Puzzle: What Drives the Market
+
+The Big Questions
+
+1. What are the factors that influence the demand for and supply of goods and services in a market?
+
+2. How are prices of goods and services determined through demand and supply interactions?
+
+3. What is market equilibrium, and does it exist in the real world?
+
+4. How and why does the government intervene in the market?
+
+What happens if the mangoes your parents bought last week are now half the price? Why are vegetables expensive in the morning but are cheaper in the evening? Or why does the price of onions seem to change every few months? Why does the same flight seat cost ₹3,000 on one day but ₹9,000 on another day? Why do shops and malls announce discounts at certain times of the year? Have you ever wondered about the reasons behind these situations in a market?
+
+In the Grade 7 chapter ‘Understanding Markets’, you learnt about the interaction among buyers and sellers and how prices adjust when the seller sets them too high or too low. Prices do not change randomly; they react to what people want, how much is available, the seasons, festivals, trends, and sometimes even rumours. Whether it is snacks, movie tickets, mobile phones, or vegetables, the prices of all goods and services are determined by two powerful forces constantly at work, that is, demand and supply.
+
+This chapter explores the concepts of demand, supply, and price determination and provides a glimpse of the outcomes of their interplay in real-world situations.
+
+Demand
+
+Purchasing
+
+power: It is a measure
+
+of how much
+
+one unit of a particular
+
+As the mango season approaches, the prices of mangoes are generally high, so people tend to buy them in smaller quantities. But when prices start falling, people prefer to buy larger quantities. The quantity of a product that people are willing and able to buy at a particular price, depending on their needs, preferences, season, trend, and income, is called the demand for the product. Demand is not just the desire to buy something; it is the willingness complemented by the ability or purchasing power to buy it.
+
+currency can buy at a particular time.
+
+Q P Q P
+
+Fig. 9.1. P= Price, Q= Quantity
+
+As with mangoes, when the price of any product rises, the quantity demanded decreases, and when the price falls, the quantity demanded increases. This phenomenon is called the Law of Demand, which highlights the inverse relationship between the price of a product or service and its quantity demanded.
+
+Let us understand this with an example. At the beginning of the mango season, the price of mangoes was very high (₹150 per kg). Srivalli, a consumer, bought only 1 kg. As more mangoes became available in the market, over time, the price fell to ₹100, so she bought 2 kg, and later, when the price dropped to ₹50 per kg, she bought 3 kg. The quantity of a good or service that an individual consumer wants to buy at different prices, keeping other factors constant, is known as individual demand. For Srivalli, the individual demand is shown in the table below, which is also known as the ‘demand schedule’. This demand schedule, when represented graphically, is called the ‘demand curve’.
+
+Demand Schedule Demand Curve
+
+A D Y
+
+150
+
+Price of mango
+
+Quantity demanded by
+
+per kg
+
+B
+
+Srivalli
+
+100
+
+₹ 150 1 kg
+
+C
+
+50
+
+₹ 100 2 kg
+
+Price of mangoes (₹)
+
+D’
+
+₹ 50 3 kg
+
+X
+
+0 1 2 3
+
+Quantity of mangoes (kg)
+
+(a) (b)
+
+Understanding Society:
+
+Fig. 9.2. Individual demand schedule (a) and Individual demand curve (b)
+
+India and Beyond
+
+Grade 9 – Part 1
+
+The y-axis in the Fig. 9.2 (b) represents the price of mangoes (in ₹), and the x-axis shows the quantity demanded of mangoes (in kg). Srivalli bought 1 kg of mangoes at ₹150 (represented at point A). As the price fell to ₹100 per kg, she bought 2 kg (at point B). But as the price fell to ₹50, she bought 3 kg (at point C). When the points of intersection, such as A, B, and C, are connected, the downward sloping line DD’ is called the demand curve. The downward-sloping individual demand curve represents the inverse relationship between price and the quantity of a product demanded by the buyer, assuming other factors like income, taste, etc., to be constant.
+
+What happens when others want to buy mangoes too? The total quantity of mangoes demanded by all potential buyers at different prices is known as market demand, that is, the sum of all individual demand. Let us consider two more consumers, Alex and Israt, whose individual demand is given in the schedule below:
+
+Table 9.1. Individual and market demand schedule
+
+Price Q1 (Srivalli) Q2 (Alex) Q3 (Israt) Market Demand (QD)
+
+₹150 1 kg 2 kg 3 kg 6 kg
+
+₹100 2 kg 4 kg 6 kg 12 kg
+
+₹50 3 kg 6 kg 9 kg 18 kg
+
+By summing the demand of all three consumers, Q1+Q2+Q3, the market demand QD is derived. When the market demand is plotted at
+
+Market Demand Curve Demand Curve of all the buyers Individual Demand Curve
+
+Demand Curve of Srivalli
+
+Y
+
+Y
+
+DD
+
+Dm
+
+E
+
+150
+
+A
+
+150
+
+F
+
+100
+
+100
+
+B
+
+G
+
+50
+
+C
+
+50
+
+Price of mangoes (₹)
+
+Price of mangoes (₹)
+
+Dm’
+
+DD’
+
+X
+
+X
+
+1 9 2 10 1112 1314 151617 18 3 4 5 6 7 8
+
+1 2 3 4 5 6 7 8
+
+Quantity of mangoes (kg)
+
+Quantity of mangoes (kg)
+
+Fig. 9.3. Individual demand curve (a) and market demand curve (b)
+
+(b) (a) 9 – The Price Puzzle: What Drives the Market
+
+different prices, we get the market demand curve DmDm’ as shown in Fig. 9.3 (b).
+
+DON’T MISS OUT
+
+Did you notice that the market demand curve is flatter than Srivalli’s individual demand curve? Why is that? Market demand aggregates many consumers, so the same price change creates a larger total quantity response. When the price falls from ₹150 to ₹50, Srivalli’s demand increases by 2 kg, but market demand increases by 12 kg, making the market curve flatter and more responsive.
+
+Other Determinants of Demand
+
+When a new model of a popular smartphone is launched, long queues and pre-bookings indicate the rush to buy it, even if it is more expensive. So, the demand for a product does not necessarily change only because of price. Many other factors influence how much people want to buy, even when the price of the good or service remains the same. Let us see some of these factors at play.
+
+Related goods:
+
+Price of related goods
+
+Products whose
+
+The demand for a good can be affected by changes in the prices of related goods. There are two types of related goods:
+
+demand is interconnected, meaning a change
+
+in the price or availability of one
+
+directly affects the demand for
+
+the other.
+
+a) Substitute goods – These goods can replace each other, like tea and coffee. If tea’s price remains the same while coffee becomes more expensive, people who consume coffee may switch to tea, thereby increasing its demand. If Srivalli cannot afford to buy mangoes at the market price, she may buy bananas. When the price of a good rises, people tend to replace it with another relatively cheaper alternative. Hence, if the price of the substitute good increases, the demand for the other related good will increase.
+
+Understanding Society:
+
+b) Complementary goods – These goods are generally used together to provide utility to the consumer, for instance, smartphones and earphones, or cars and petrol. If the demand for printers increases, the demand for printer cartridges may also rise, even though the price of cartridges remains unchanged. Similarly, if movie tickets become more expensive, people may refrain from going to the cinema, so demand for popcorn sold in cinema halls may also fall.
+
+India and Beyond
+
+Grade 9 – Part 1
+
+Income of the consumer
+
+When household income rises, consumers can afford to buy more or choose higher-quality products. A rise in income generally makes people feel more confident about their ability to spend, so the quantity demanded for several goods rises, even if prices remain the same.
+
+Taste and preference of the buyer
+
+Every consumer has specific tastes and preferences for certain products, which determine their demand. For example, Srivalli likes mangoes and cannot substitute them by oranges, even if oranges are cheaper than mangoes. The demand also depends on the size and composition of the nation’s population. For example, being the most populous nation, India’s domestic consumer demand contributes to its economic growth. In addition, the population’s composition shapes the demand for types of products and services. More children indicate increased demand for sports shoes, more working adults means a higher demand for formal shoes, and more elderly people imply a higher demand for comfortable or orthopaedic shoes.
+
+THINK ABOUT IT
+
+What happens when you consume the first mango? It tastes delicious, right? The second one is good? The third one and so on? You are barely interested in eating mangoes by this point. Why do you think this happens?
+
+This is because the additional utility or usefulness derived from a product declines as more of it is consumed. This is known as the diminishing marginal utility principle in economics. As the utility derived from a successive quantity of products falls, the willingness to pay for the products also decreases, so demand falls.
+
+Seasonality
+
+Have you seen crowded bookshops at the beginning of the new academic session? Or customers flocking to sweet shops during the festive season? Or sweaters and jackets being demanded during the winter season? This is because individuals may demand different products at different times of the year, and these changes often depend on weather, festivals, and cultural habits rather than the price of the good.
+
+9 – The Price Puzzle: What Drives the Market
+
+Future price expectations
+
+Future price expectations influence current demand even when current prices have not changed. If consumers expect prices to fall, they postpone purchases, decreasing present demand. If they expect prices to rise, they buy immediately, increasing present demand. For example, people delay buying durables before Diwali or the New Year, expecting festival discounts.
+
+LET’S EXPLORE
+
+Æ Create your own demand schedule for buying notebooks at different prices. At what price would you buy the most? At what price would you stop buying altogether? What could be the reason behind your choices?
+
+Æ Ask your family members if they postponed or advanced buying any product because of future expectations of changes in price?
+
+Supply
+
+Supply is the quantity of a product that sellers are willing and able to offer at a particular price. As price increases, quantity supplied increases, and as price decreases, quantity supplied falls. This is because higher prices increase profitability, incentivising producers to increase output, and also attract new firms to the market. This is known as the law of supply. Individual supply is the quantity a particular seller offers at different prices.
+
+Supply Curve
+
+S Y
+
+150
+
+Supply Schedule
+
+100
+
+Price of mango
+
+per kg Qs by seller A
+
+₹ 50 1 kg
+
+50
+
+Price of mangoes (₹)
+
+₹ 100 2 kg
+
+X
+
+₹ 150 3 kg
+
+0 1 2 3
+
+Quantity of mangoes (kg)
+
+(b)
+
+(a)
+
+Understanding Society:
+
+Fig. 9.4. Individual supply schedule (a) and
+
+India and Beyond
+
+Individual supply curve (b)
+
+Grade 9 – Part 1
+
+At the start of mango season, supply is low, making mangoes costly. Mid-season, the supply increases and prices fall. This shows how prices depend on the interaction between demand and supply. When supply is less than demand, prices rise; when supply exceeds demand, prices fall.
+
+Market supply is the sum of all individual supplies. For example, when mango prices are ₹50/kg, a seller supplies 1 kg; at ₹100/kg, he supplies 2 kg; at ₹150/kg, the seller supplies 3 kg. This pattern of higher prices leads to greater quantity supplied, which gives an upward-sloping supply curve as shown in Fig. 9.4.
+
+Now consider three sellers, A, B, and C, in the market, who offer mangoes for sale in different quantities at different prices. So, their supply schedule is as follows:
+
+Table 9.2. Supply schedule of sellers
+
+Price Seller A Seller B Seller C Market supply (kg)
+
+(A+B+C=QS)
+
+₹ 50 1 3 2 6
+
+₹ 100 2 4 6 12
+
+₹ 150 3 7 8 18
+
+By combining the quantity supplied by all three sellers (A+B+C), the market supply QS is derived. By plotting the market supply with corresponding prices, the market supply curve is obtained.
+
+Individual Supply Curve
+
+Market Supply Curve
+
+Supply Curve of seller A
+
+Supply Curve of all the sellers (A+B+C)
+
+Y Y
+
+SS’
+
+SM’
+
+150
+
+150
+
+C
+
+C
+
+B
+
+B
+
+100
+
+100
+
+A
+
+A
+
+50
+
+50
+
+Price of mangoes (₹)
+
+Price of mangoes (₹)
+
+SM SS
+
+X X
+
+0
+
+0
+
+1 2 3 4 5 6 7 8 1 9 2 10 11 12 13 14 15 16 17 18 3 4 5 6 7 8
+
+Quantity of mangoes (kg) Quantity of mangoes (kg)
+
+(a) (b)
+
+Fig. 9.5. Individual supply curve (a) and market supply curve (b)
+
+9 – The Price Puzzle: What Drives the Market
+
+Low Wheat Price
+
+High Chickpea Price
+
+₹
+
+₹
+
+Lower Profit Higher Profit
+
+Farmer’s choice
+
+Plant Wheat?
+
+Plant Chickpeas?
+
+More Chickpeas
+
+Next Season?
+
+Fig. 9.6. Prices affecting supply decisions
+
+Other Determinants of Supply
+
+Price of related goods
+
+Suppose a farmer faces two choices. If wheat prices are low but chickpea prices are high, he will grow more chickpeas in the next season. Therefore, the supply of one good depends on the profitability of other alternatives for the supplier.
+
+Number of sellers in the market
+
+If there are more sellers in a market due to higher competition and increased production, the market supply of the product would exceed the demand. As a result, prices would fall. Likewise, if there are fewer sellers in the market, supply would be lower than demand, and prices would rise.
+
+Technology
+
+Understanding Society:
+
+Improvement in technology reduces the cost of production, allowing producers to produce more and supply more and vice versa. For example, with improved techniques such as drip irrigation and weather sensors, crop production may rise, leading to a higher supply. Similarly, the adoption of cold storage facilities in the transportation of mangoes to distant markets, thereby increasing market supply.
+
+India and Beyond
+
+Grade 9 – Part 1
+
+Future expectations
+
+If producers or suppliers expect a boom in the demand for goods in the near future, they will produce more, and supply will rise. Similarly, if the producer is expecting lower demand, they will reduce production, leading to a fall in supply. For instance, if potato wholesalers expect prices to rise during the peak season, they might hold back supply now to sell later at higher prices.
+
+LET’S EXPLORE
+
+What happens to the supply of a product in case of a change in the cost of inputs, discovery of an alternate input, depletion of resources, change in weather, disaster, etc.? Discuss in class using examples of diverse goods and services.
+
+Market Equilibrium
+
+Every market involves negotiation between what buyers are willing to pay and what sellers are willing to accept. Thus, prices are determined by the interaction between demand and supply.
+
+Market equilibrium: Market equilibrium is the point where supply of goods and services equals demand, meaning there is no excess supply (surplus) or excess demand (shortage) in the market, and prices tend to remain stable unless external factors change.
+
+The table below shows the quantities of mangoes demanded and supplied at the selected prices. At a lower price, there is excess demand, whereas at a higher price, there is excess supply.
+
+Table 9.3
+
+Price
+
+Quantity Supplied and
+
+Quantity demanded (Qd) of
+
+Outcome
+
+(₹)
+
+Mangoes (in kg)
+
+Quantity supplied (Qs) of Mangoes (in kg)
+
+Quantity Demanded
+
+40 38 6 Qs<Qd Excess Demand
+
+100 12 12 Qs= Qd Market Equilibrium
+
+150 8 43 Qs > Qd Excess Supply
+
+Equilibrium Price = ₹ 100 Equilibrium Quantity = 12 kg
+
+At a price of ₹100, the quantity demanded equals the quantity supplied. This point is known as the market equilibrium. At this point, there is no pressure for prices to change, and the market is ‘cleared’, which means that there is neither a shortage (excess demand) nor a surplus (excess supply).
+
+9 – The Price Puzzle: What Drives the Market
+
+Y
+
+DM
+
+SM’
+
+Price
+
+₹100
+
+E
+
+SM
+
+DM’
+
+X
+
+Quantity
+
+0 12 kg
+
+Fig. 9.7
+
+On the graph in Fig. 9.7, equilibrium is where the demand curve DMDM’ intersects the supply curve SMSM’, that is, at point E, where the equilibrium price = ₹100 and the equilibrium quantity = 12 kg.
+
+LET’S ANALYSE
+
+Using data from Table 9.3, plot the demand and supply curve at the three prices, i.e., ₹40, ₹100, and ₹150. Identify and mark excess demand and supply on the graph. Think about how equilibrium could be reached in these scenarios.
+
+Does Market Equilibrium Exist in the Real World?
+
+In theory, equilibrium is an intersection point between demand and supply. But in the real world, markets are dynamic with constantly changing conditions. For example, changes in technology, wages, interest rates, as well as wars, political events, pandemics, weather, and natural disasters alter demand and supply. Therefore, ‘equilibrium’ in the real world is never stable and moves all the time, i.e., the market is always in a process of adjusting to a new equilibrium, never fully settling at the previous one. For example, during the COVID-19 pandemic in 2020, the demand for face masks surged rapidly. As a result, the supply could not catch up immediately, and the price of masks rose significantly. Over time, suppliers adjusted to the increased demand and prices fell. Once the pandemic was over, demand reduced further, and the prices reduced to pre-pandemic levels.
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 – Part 1
+
+Tariffs by hotels: An example of dynamic markets
+
+Hotels do not charge the same price (also called tariff) for rooms all the time. Their prices change according to demand, season, and special situations. This shows how markets are dynamic, meaning prices keep changing based on varying conditions.
+
+Suppose a hotel in Goa has 100 rooms. The room tariff changes as follows:
+
+Off-season weekday (Monday in July): ₹1,500 per night Weekend during tourist season (Saturday in December): ₹8,000 per night New Year’s Eve (very high demand): ₹25,000 per night
+
+If a group tour cancels its booking, the hotel may reduce tariff by 40 per cent overnight to quickly fill empty rooms. Hotels may also change tariff several times in a day to earn maximum revenue. These tariff changes depend on other factors such as:
+
+Revenue: Total amount of money a business earns from the sale of goods or services, or other operating activities, before any expenses are deducted.
+
+How fast rooms are getting booked Tariff charged by nearby hotels Festivals, conferences, or events in the area Weather forecasts Number of days left before arrival Past booking trends
+
+This example shows how prices in a market change with changes in demand and supply in real-world markets.
+
+THINK ABOUT IT
+
+Can you think of another real-life example (other than hotels) where prices change frequently? Explain why the prices keep changing.
+
+Our choices today affect future resources. For example, high demand for fast fashion, overfishing and overuse of groundwater can harm future supply. So, should we focus only on short-term gains, or also think about long-term sustainability? How could this affect the market equilibrium?
+
+9 – The Price Puzzle: What Drives the Market
+
+Price ceiling:
+
+Role of Government in the Economy
+
+An imposed price control
+
+that sets the
+
+maximum amount a seller
+
+can charge for
+
+a product or
+
+service.
+
+Today, India is the fourth-largest economy in the world. It is a market-based, regulated economy in which prices depend on demand and supply. However, markets do not always work fairly. Markets allocate goods and services based on willingness and ability to pay. Suppose essential goods like medicines become very expensive, will they be accessible to all? In such cases, fairness and equity in allocation are required, particularly to ensure the welfare of vulnerable and low-income groups.
+
+Price floor: An imposed limit on
+
+how low a price
+
+can be charged
+
+So, the government plays an important role in the economy in the following key aspects.
+
+for a product, good, or service.
+
+For a price floor
+
+Regulation of Unfair Practices
+
+to be effective,
+
+it must be set above the market equilibrium price.
+
+Monopoly:
+
+The government regulates unfair practices to protect consumers, workers, and producers from exploitation and injustice. For example, the government sets maximum prices (price ceiling) for essential goods like medicines to prevent overcharging. Similarly, the government sets a minimum wage to ensure workers earn enough for their hard work. This lower limit is known as the price floor.
+
+A market structure with
+
+a single seller
+
+or producer controlling the entire supply of a unique product
+
+or service, facing no close
+
+Sometimes a single or a few sellers dominate the market; they can charge higher prices and supply less than a competitive market would. This form of monopoly would be detrimental to consumer welfare as it may charge higher prices, provide poorer quality of goods and services, restrict supply, and so on. The government regulates such practices by keeping the prices and quantity supplied in check.
+
+substitutes, allowing them significant power
+
+to set prices and
+
+THINK ABOUT IT
+
+output.
+
+Have you ever seen or heard of the government fixing prices or wages (for example, bus fares, medicines, or minimum wages)? Share an example and why you think it was done.
+
+Many regulators such as the Reserve Bank of India (RBI) for banking, the Central Consumer Protection Authority for violation of consumer rights and unfair trade practices, the Telecom Regulatory Authority of India (TRAI) for the telecommunications sector, the Securities and Exchange Board of India (SEBI) for the securities market, and so on, ensure transparency in the market. Do you remember some regulators from the Grade 7 Social Science textbook
+
+Understanding Society:
+
+India and Beyond
+
+chapter ‘Understanding Markets’?DON’T MISS OUT
+
+Grade 9 – Part 1
+
+During COVID-19, the demand for sanitisers surged, leading to stockouts and sharp price increases. Some shopkeepers began hoarding and black-marketing. The government intervened by declaring sanitisers essential commodities under the Essential Commodities Act, 1955, capping the maximum retail price at ₹100 for 200 ml bottles. Meanwhile, many companies started production, and sanitisers soon became widely available at fair prices. How do such price controls affect suppliers and consumers? While in this case the price control was for an emergency, do you think such controls should be in practice forever?
+
+Provision of Public Goods
+
+Hoarding: Accumulation of goods, commodities, or money by individuals, or firms beyond what is immediately necessary, typically driven by fear of future shortages, anticipated price increases, or speculative motives.
+
+Black marketing: The illegal trade of goods and services that are banned or regulated.
+
+Public goods are goods and services that are provided by the government for the benefit of all citizens, for example, roads, bridges, public parks, and streetlighting are provided for public use; national defence protects the country from external threats; sanitation, and drainage systems improve living conditions, and so on. These goods are usually not provided by private companies because they do not generate direct profit. Suppose your neighbourhood needs a park. Building it is expensive, but many families would benefit from it. If each family contributed ₹5,000, the park could be built. However, many families may think, “If others pay, the park will be built anyway, and I can use it without paying.” Because of this thinking, not enough money is collected, and the park is never built even though everyone needs it. This explains why goods that benefit everyone often require government provision or funding to ensure social welfare, economic development, and equal access to essential services.
+
+LET’S EXPLORE
+
+From your surroundings, list two goods or services that are provided by the government (for example: roads, streetlights, parks, police, and so on.). Choose one of the goods you listed and answer:
+
+Æ Who does benefit from it?
+
+Æ Why would it be difficult for a private company to provide this service on its own? Æ Imagine the government stops providing this good or service, what problems might people in your area face?
+
+9 – The Price Puzzle: What Drives the Market
+
+Limitations of Government Intervention
+
+Although government regulations are required when markets are inefficient, they must be implemented carefully, as excessive government intervention can have adverse effects.
+
+a) Price distortions and reduced producer incentives
+
+When the government fixes prices below market levels, producers may lose motivation to supply goods or services. For instance, if the government sets a maximum price for wheat at ₹20 per kg while the market forces set it at ₹30 per kg, farmers receive less than what they would in a free market. This may lead to reduced production and shortages.
+
+b) Compliance burdens
+
+Ease of doing business: How
+
+simple it is to start, run, and close a business
+
+in a country, measured by
+
+regulations, bureaucratic
+
+efficiency,
+
+Government intervention often requires extensive regulations, licenses, permits, and compliance procedures. This can hurt businesses, especially small enterprises and hamper ease of doing business. For instance, a small restaurant may need multiple permissions related to food safety, fire safety, pollution control, and local clearances. The time and cost involved can discourage small entrepreneurs from starting or expanding businesses.
+
+and legal frameworks.
+
+c) Discourages innovation and entrepreneurship
+
+Heavy regulation and price controls reduce incentives to invest in new ideas or better technology. For example, in the case of price distortions, farmers won’t invest in better seeds, irrigation, or technology, if they cannot earn adequate returns. This reduces long-term productivity and output.
+
+LET’S RECALL
+
+In the chapter ‘Democracy’, you have read that a democratic government is accountable to the people and is expected to act in their interest.
+
+Æ According to you, how should a democratic government decide when and how much it should intervene in markets to protect people’s welfare?
+
+Æ Whose voices should a democratic government consider while making such decisions—consumers, producers, workers, or others? Why?
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 – Part 1
+
+Understanding how these economic systems work and the general principles of economics help to see the logic behind the choices people make, whether it is the price they pay, the jobs they do, or the policies governments implement. It provides the tools to think critically, use resources wisely, and make informed decisions in a world where every choice affects individuals, society, and the economy.
+
+Markets are not machines with fixed equilibria but dynamic systems that constantly adapt, evolve, and respond to changing conditions. The next time you notice a price change—whether it is books, vegetables, or sports equipment—pause and ask, what is really happening here? Is supply changing? Is demand shifting? Is the market moving toward equilibrium or being pushed away from it? Is government intervention helping or hurting? While understanding these forces, you are not merely learning key principles in economics; instead, you are decoding how market dynamics work in real life.
+
+Before we move on...
+
+Æ Demand is the quantity consumers are willing and able to buy at different prices. The Law of Demand shows an inverse relationship, that is, as price falls, quantity demanded rises. Demand is influenced by income, prices of substitutes and complements, tastes, seasonality, future expectations, and population.
+
+Æ Supply is the quantity sellers are willing and able to offer at different prices. The Law of Supply shows a direct relationship— as price rises, quantity supplied increases. Supply depends on prices, related goods’ prices, the number of sellers, technology, input costs, and other factors such as weather.
+
+Æ Market equilibrium occurs when the quantity demanded equals quantity supplied. Fundamental markets constantly adjust toward a new equilibrium as conditions change—weather, trends, technology, income, and so on, create dynamic pricing conditions.
+
+Æ Government intervenes when markets fail and produce unfair outcomes (unaffordable essentials), under-provide public goods, and enable monopolies. However, excessive government regulations may also have adverse effects.
+
+9 – The Price Puzzle: What Drives the Market
+
+Questions and activities
+
+1. An increase in income always leads to a rise in demand for goods. Defend or refute, giving reasons for the same.
+
+2. If petrol prices double, what happens to
+
+a. Demand for diesel cars
+
+b. Demand for electric cars
+
+c. Demand for car accessories
+
+d. Demand for public transport
+
+3. A farmer traditionally irrigates fields manually (labour-intensive). He installs drip irrigation (a technology upgrade) that reduces water use by 40 per cent and increases yield by 30 per cent. How does this affect
+
+a. His cost of production
+
+b. His willingness to supply at different prices
+
+c. The overall market supply if many farmers adopt this technology
+
+4. During online festival sales, the prices of many products are very low. Use the concept of demand and supply to explain why the sellers sell at such a low price. What happens to the equilibrium when the price is lowered? Does this benefit only consumers or sellers as well? Explain.
+
+5. Suppose the government sets a maximum sale price for an essential vaccine below the market-driven price. What is likely to happen? Choose from the options below and elucidate your point.
+
+a. Surplus b. Shortage
+
+c. No effect d. Fall in demand
+
+6. The government levies higher taxes on products such as tobacco and alcohol to promote healthier choices among citizens. Can you find out other goods where price controls have been set in place? What are the reasons for the same?
+
+7. Can excessive government regulation hurt markets? Explain with suitable examples.
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 – Part 1
+
+8. In the table below, different prices of guava are given.
+
+a. Think and write how much guava you will buy at each price.
+
+b. Ask the same question to three of your friends and fill in the table.
+
+c. Also make a graph for each one of you and one final graph for the total quantity.
+
+Price You Friend 1 Friend 2 Friend 3 Total
+
+₹100/kg
+
+₹80/kg
+
+₹50/kg
+
+₹20/kg
+
+9. Visit the nearby vegetable market and try to find answers to the following questions.
+
+a. Who decides the prices of different vegetables in the vegetable market?
+
+b. Sometimes the prices of a few vegetables is too high, and sometimes too low. Why is this?
+
+c. The price of tomatoes is high in the morning and eventually gets lower by the evening. Have you ever noticed this? Comment.
+
+10. Categorise the following combination of goods into substitute goods and complementary goods.
+
+a. Movie ticket in the cinema hall and popcorn
+
+b. Eraser and pencil
+
+c. Laptop and computer
+
+d. Air Conditioner and cooler
+
+e. Notebook and pen
+
+f. Apple and banana
+
+g. Mobile and earphones
+
+9 – The Price Puzzle: What Drives the Market
+
+11. Fig. 9.8 shows the demand curve DD’ and Supply curve SS’. Based on the figure, answer the following questions:
+
+a. What does point E represent in this market?
+
+b. What is the equilibrium price and equilibrium quantity at point E?
+
+c. Point A lies on DD’. Point B lies on SS’. What do the points A and B indicate about demand and supply? What does the gap between A and B (both on the upper dashed price line) represent?
+
+d. Point F lies on DD’. Point C lies on SS’. What do the points F and C indicate about demand and supply? What does the gap between C and F (both on the lower dashed price line) represent?
+
+e. If the price stays at the lower dashed line, what could happen next in a free market?
+
+Y
+
+S’ D
+
+400
+
+B A
+
+300
+
+E
+
+Price(₹)
+
+200
+
+C
+
+F
+
+100
+
+S
+
+D’
+
+X
+
+10 20 30 40 50
+
+Quantity (kg)
+
+Fig. 9.8
+
+Understanding Society:
+
+India and Beyond
+
+Grade 9 – Part 1
+
+12. Draw a market equilibrium graph using the following demand schedule.
+
+Price (₹) 10 20 30 40 50
+
+Q.D. (kg) 5 10 15 20 25
+
+Q.S. (kg) 25 20 15 10 5
+
+a. Plot the demand and supply curve using the above data.
+
+b. Identify the equilibrium price and quantity.
+
+c. Observe the above data and analyse what happens if the price is set at ₹20 or ₹40.
+
+9 – The Price Puzzle: What Drives the Market
+
+JAIPUR
+
+Political Map of India
+
+214
+
+214
+
+Physical Map of India
+
+215
+
+215
+
+Political map of the world, with names of a few countries
+
+216
+
+OCEAN
+
+PACIFIC
+
+AUSTRALIA AUSTRALIA
+
+ANTARCTICA ANTARCTICA
+
+INDIAN OCEAN
+
+AFRICA AFRICA
+
+ASIA ASIA EUROPE EUROPE
+
+ARCTIC OCEAN
+
+SOUTHERN OCEAN
+
+OCEAN
+
+ATLANTIC
+
+Physical map of the world
+
+OCEAN
+
+ATLANTIC
+
+SOUTH SOUTH
+
+AMERICA AMERICA
+
+NORTH NORTH
+
+AMERICA AMERICA
+
+Arctic Circle
+
+Antarctic Circle
+
+OCEAN
+
+PACIFIC
+
+Tropic of Cancer
+
+Equator
+
+Tropic of Capricorn
+
+217
+
+Images and maps from external sources Images and maps from external sources
+
+NCERT thanks the following organisations and individuals for
+
+permission to use their images
+
+1. Organisations and individuals
+
+Fig. 1.1. https://bhuvan-app1.nrsc.gov.in/mhrd_ncert/help/Map_Your_Own_City_Varanasi.pdf Fig. 1.2. Courtesy: National Museum Fig. 1.3. https://commons.wikimedia.org/wiki/File:Tirukkural_manuscript.jpg Fig. 1.4. Courtesy: National Museum Fig. 1.5. Courtesy: National Museum Fig. 1.6. https://commons.wikimedia.org/wiki/File:Kannada_inscription_of_Krishnadeva_Raya_(1509_ AD)_at_the_underground_Shiva_(Prasanna_Virupaksha)_temple_in_Hampi.jpg Fig. 1.7. Courtesy: National Museum Fig. 1.8. Courtesy: National Museum Fig. 1.9. Courtesy: National Museum Fig. 2.5. Courtesy: Indian Express Fig. 2.7. https://fr.wikipedia.org/wiki/Baratang#/media/Fichier:Baratang_mud_volcano.jpg Fig. 2.9.(a) https://commons.wikimedia.org/wiki/File:CSIRO_ScienceImage_4434_Gully_erosion_in_ the_Warren_Catchment_east_of_Adelaide_in_the_Mount_Lofty_Ranges_South_Australia_1992.jpg Fig. 2.13. https://commons.wikimedia.org/wiki/File:Sundarbans_web_ESA362980.jpg Fig. 2.16. https://upload.wikimedia.org/wikipedia/commons/3/38/Bedrock_Weathering_ Pits_%288409974927%29.jpg Fig. 2.20. Courtesy: Hindustan Times Fig. 2.28. Courtesy: ANI Fig. 2.29. https://artsandculture.google.com/asset/naidu-and-gandhi-hulton-archive/ YgHPdHPkD5VJMA?hl=en Fig. 2.30. https://en.wikipedia.org/wiki/Abdul_Ghaffar_Khan Fig. 2.31. https://en.wikipedia.org/wiki/Muhammad_Iqbal#/media/File:Muhammad_Iqbal_in_1931. jpg Fig. 2.32. Public domain Fig. 2.33. Courtesy: Indian Express Fig. 2.34. https://en.wikipedia.org/wiki/Aruna_Asaf_Ali#/media/File:Aruna_Asaf_Ali_1998_stamp_of_ India.jpg Fig. 2.35. https://upload.wikimedia.org/wikipedia/commons/f/f2/Sardar_patel_%28cropped%29.jpg Fig. 2.36. https://upload.wikimedia.org/wikipedia/commons/c/cb/A_refugee_special_train_at_ Ambala_Station_during_partition_of_India.jpg Fig. 3.13. Courtesy: Hindustan Times Fig. 4.1. Seal from Mohenjodaro M375A; p.93 and p.386, Corpus of Indus Seals and Inscriptions 1. Collections in India JP Joshi and Asko Parpola (Eds.) Memoirs of the Archaeological Survey of India No. 86; Annales Academiae Scientiarum Fennicae, Series B 239. Helsinki 1987 Fig. 4.2. Courtesy: Ravi Korisettar Fig. 4.6.(a,b,c,d) Courtesy: Ravi Korisettar
+
+218
+
+Fig. 4.7.
+
+Æ https://commons.wikimedia.org/wiki/File:Bronze_Age_hoard_and_Post-Medieval_material_ found_in_the_vicinity_(FindID_401114).jpg
+
+Æ https://commons.wikimedia.org/wiki/File:Mesolithic_tranchet_axehead,_Tranchet_adze_or_ pick_(FindID_762762).jpg
+
+Æ https://commons.wikimedia.org/wiki/File:Big_Chalcolithic_churn.JPG
+
+Æ https://commons.wikimedia.org/wiki/File:Early_Iron_Age_Bronze_Knives,_700-400_BC.jpg Fig. 4.9. Courtesy: Ajithprasad, Department of Archaeology and Ancient History, The Maharaja Sayajirao University of Baroda) Fig. 4.10. Courtesy: Ajithprasad, Department of Archaeology and Ancient History, The Maharaja Sayajirao University of Baroda) Fig. 4.11.(a) Courtesy: Ravi Korisettar, Robert Bruce Foote Sanganakallu Museum, Ballari, Karnataka Fig. 4.11.(b) Courtesy: Ajithprasad, Department of Archaeology and Ancient History, The Maharaja Sayajirao University of Baroda Fig. 4.12. Courtesy: Ravi Korisettar, Robert Bruce Foote Sanganakallu Museum, Ballari, Karnataka Fig. 4.13. Courtesy: Ajithprasad, Department of Archaeology and Ancient History, The Maharaja Sayajirao University of Baroda Fig. 4.15. Courtesy: Ravi Korisettar, Robert Bruce Foote Sanganakallu Museum, Ballari, Karnataka Fig. 4.16. https://commons.wikimedia.org/wiki/File:Mehrgarh_ruins.jpg Fig. 4.18. https://images.metmuseum.org/CRDImages/as/original/DP702288.jpg Fig. 4.19. Courtesy: Archaeological Survey of India, Govt. of India Fig. 4.20. Courtesy: Dr RS Bisht & ASI Fig. 4.25. Wikimedia Commons: Louvre Museum, Cuneiform tablet 2800BCE. Los Angeles County Museum of Arts (LACMA) Gallery: http://collections.lacma.org/node/228141 Fig. 4.28.
+
+Æ https://www.metmuseum.org/art/collection/search/544184
+
+Æ https://www.metmuseum.org/art/collection/search/549719
+
+Æ https://upload.wikimedia.org/wikipedia/commons/5/5f/Shabti_of_Siptah_MET_DP160300. jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_ unscaled Fig. 4.29. https://en.wikipedia.org/wiki/Papyrus_of_Ani#/media/File:BD_Weighing_of_the_Heart.jpg Fig. 4.33.
+
+Æ https://www.metmuseum.org/art/collection/search/544822
+
+Æ https://www.metmuseum.org/art/collection/search/545130
+
+Æ https://www.metmuseum.org/art/collection/search/548981 Fig. 4.35. https://www.metmuseum.org/art/collection/search/44781 Fig. 4.37.
+
+Æ https://www.metmuseum.org/art/collection/search/74524
+
+Æ https://www.metmuseum.org/art/collection/search/39637
+
+Æ https://www.metmuseum.org/art/collection/search/44781
+
+219
+
+Fig. 5.1. https://commons.wikimedia.org/wiki/File:City_of_Kushinagar_in_the_5th_century_BCE_ according_to_a_1st_century_BCE_frieze_in_Sanchi_Stupa_1_Southern_Gate.jpg Fig. 5.2. https://en.wikipedia.org/wiki/Rigveda#/media/File:1500-1200_BCE_Rigveda,_manuscript_ page_sample_i,_Mandala_1,_Hymn_1_(Sukta_1),_Adhyaya_1,_lines_1.1.1_to_1.1.9,_Sanskrit,_ Devanagari.jpg# Fig. 5.5. Courtesy: ASI Fig. 5.7. https://commons.wikimedia.org/wiki/File:494_CE_Karitalai_copper_plate_inscription,_ Hinduism,_king_Jayanatha,_Sanskrit.jpg Fig. 5.13. https://en.wikipedia.org/wiki/Nasik_Caves#/media/File:Nasik_cave_17.jpg Chapter 6 Title: https://commons.wikimedia.org/wiki/File:View_of_Lok_Sabha_chamber_in_the_ New_Parliament_building,_New_Delhi.jpg Fig. 6.2. https://commons.wikimedia.org/wiki/File:Group_Photograph_of_the_Constituent_ Assembly_Members_1950.jpg Fig. 6.3. https://en.wikipedia.org/wiki/B._R._Ambedkar Fig. 6.6
+
+Æ Courtesy: PIB
+
+Æ Courtesy: ECI Fig. 6.8. https://commons.wikimedia.org/wiki/File:A_Polling_Officer_affixes_indelible_ink_mark_on_ the_fore-finger_of_a_voter_before_allowing_her_to_cast_the_vote_at_a_polling_station_in_Delhi_ on_14_January_1952.jpg Fig. 7.5. https://ecisveep.nic.in/pledge/englishpledge.php Fig. 7.8. Courtesy: ECI
+
+2. Royalty free stock from dreamstime.com
+
+Fig. 2.9.(b), 2.10, 2.11, 2.12, 2.14, 2.15, 2.17, 2.18, 2.19, 2.21, 2.22, 2.23 (a), 2.23 (b), 2.23 (c), 2.24, 
+2.25, 2.26, 2.27, 2.28, 2.29, 2.30 Chapter 3 Title, Fig. 3.1, 3.4, 3.6, 3.9, 3.12, 3.20, 3.23, 3.24, 3.26, 3.31, 3.32, 3.33, 3.37, 3.38, 3.41, 
+3.42, 3.43, 3.45, 3.46, 3.47, 3.48, 3.53, 3.54 Fig. 4.5, 4.7, 4.18, 4.22, 4.23, 4.24, 4.27, 4.31, 4.34, 4.35, 4.36, 4.38 Chapter 5 Title, Fig. 5.1, 5.11 Chapter 7 Title, Fig. 7.2, 7.4 Fig. 8.1, 8.2, 8.5
+
+3. AI generated images
+
+Chapter 1 Title Chapter 2 Title, Fig. 2.6 Chapter 4 Title Fig. 6.7 Chapter 8 Title Chapter 9 Title
+
+220

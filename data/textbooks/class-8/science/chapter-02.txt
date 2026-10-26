@@ -1,0 +1,714 @@
+# CLASS-8 - SCIENCE - CHAPTER 02
+# Source: hecu102.pdf
+
+2 The Invisible Living World: Beyond Our Naked Eye
+
+Probe and ponder
+
+• Have you ever wondered what you might see if the invisible
+
+world around you became visible?
+
+• How do you think your observation of this hidden world might
+
+change the way you think about size, complexity, or even what counts as ‘living’?
+
+• Have you thought how these tiny living beings interact with
+
+each other?
+
+• Share your questions
+
+?
+
+The human eye can only see objects that are above a certain size. For a long time, many tiny things around us remained unknown. Long ago, people discovered that a curved piece of glass could make small things look bigger. The piece of glass was shaped like a lentil seed — thick in the middle and thin at the edge — hence they called it a lens. Over time, lenses were improved to become more powerful. Each new tool, from simple magnifying glasses to microscopes, helped humans see what their eyes could not. The invention of the microscope opened a fascinating hidden world filled with tiny living creatures. We will explore some of these life forms in this chapter.
+
+You have already learnt about the amazing variety of living beings. Just look around — there are so many beautiful plants and animals! They are of all shapes, sizes, and colours. Some living beings are tiny, while others are really big. They differ not only in their structure but also in many other features. All these living beings, whether plants or animals, are called organisms. Have you ever noticed the smallest organism around you that is visible to the naked eye? Think about it — how small a thing can your eyes actually see?
+
+You might have seen some people using reading glasses. How does it help them see better? Or what happens when we use a magnifying glass to observe something?
+
+Activity 2.1: Let us observe
+
+• Take a round-bottom flask made up of glass as shown in
+
+Fig. 2.1. Fill it with water.
+
+• Close the mouth of the flask with a cork.
+
+• Now, place the flask on an open book and look at
+
+the letters through it.
+
+Do you notice something interesting? The letters appear larger when seen through the flask! This happens because the flask filled with water acts like a magnifying glass. Now, use a real magnifying glass to look at small organisms, like an ant. Were you able to see the details of its body more clearly?
+
+For a long time, people were curious to explore the tiny organisms around them, but they could not see them with their naked eyes. So, how did we finally discover this invisible world? Do you know which scientific discovery helped us see the tiny world for the first time? Fig. 2.1: Round-bottom flask
+
+Ever heard of ...
+
+MICROGRAPHIA:
+
+OR SOME
+
+Physiological Descriptions
+
+OF
+
+MINUTE BODIES
+
+In 1665, a scientist named Robert Hooke published a book called Micrographia. He was a careful observer, and a skilled artist. In this book, he showed detailed drawings of tiny things that people had never seen before — things he saw using a tool we now call a microscope.
+
+MADE BY MAGNIFYING GLASSES.
+
+WITH
+
+OBSERVAand INQUIRIES thereupon.
+
+By R. HOOKE, Fellow of the ROYAL SOCIETY
+
+Non poifis oculo quantum contendere Lincent, Non tamen idcirco contemnas Lippus inungi. Horat. Ep. lib. 1.
+
+His microscope made things look 200 to 300 times bigger, than what one could see with the unaided eye. One day, he looked at a thin slice of cork and saw it was made of many small, empty spaces. These compartments reminded him of a honeycomb. He drew what he saw and called each small space a cell. This was the first time the word cell was used in science to describe the basic unit of life.
+
+LONDON, Printed by 7o. Martyn, and 7a. Alleftry, Printers to the ROYAL SOCIETY, and are to be fold at their Shop at the Bell
+
+in S. Paul’s Church-yard. M DC LX V.
+
+Around the same time in 1660s, Antonie van Leeuwenhoek, a Dutch scientist, made better lenses that allowed him to build more useful microscopes. He was the first person to clearly see and describe tiny living things like bacteria and blood cells. Because of this, he is known as the Father of Microbiology.
+
+(a)
+
+(b) (c)
+
+Fig. 2.2: (a) Micrographia book; (b) Microscope of Robert Hooke;
+
+(c) Cork cells as published in the Micrographia
+
+2.1 What Is a Cell?
+
+All living beings are made up of cells. You might wonder what cells actually look like. Let us take a closer look at the basic structure of a cell using a microscope.
+
+Activity 2.2: Let us study a cell (Teacher demonstration activity)
+
+• Take an onion bulb from your kitchen or garden and wash it
+
+thoroughly with water.
+
+• Cut the onion bulb vertically into pieces.
+
+• Take one piece of onion and pull out the thin, transparent
+
+layer from its inner surface with the help of forceps. This layer is called the onion peel.
+
+Fig. 2.3: (a) Removing
+
+• Place the peel in a petri dish containing a few drops of
+
+onion peel from an
+
+onion bulb
+
+safranin (red-coloured stain) for 30 seconds. This will give a pinkish colour to the cells and help us see them clearly.
+
+• With the help of thin brush transfer the onion peel to another
+
+One drop of
+
+Glycerin
+
+petri dish containing water to rinse the peel and remove extra stain.
+
+safranin
+
+Onion peel
+
+• Now, carefully place the stained
+
+(1)
+
+(2)
+
+(3) (4)
+
+onion peel on the glass slide using a thin brush, ensuring it does not break or fold.
+
+• Put a drop of glycerin over the
+
+Microscope
+
+Cover slip
+
+45°
+
+onion peel on the slide. The glycerin will prevent drying of the cells and improve clarity for better visualisation of cells.
+
+(5)
+
+(6)
+
+• Slowly place a coverslip over the
+
+(b)
+
+peel using a needle, such that no air bubbles get trapped.
+
+Cell wall
+
+• Use blotting paper to gently wipe
+
+off any extra glycerin around the edges of the coverslip.
+
+Cell membrane
+
+Nucleus
+
+Cytoplasm
+
+• Observe the slide under a microscope (A simple foldable paper microscope will suffice). Compare it with Fig. 2.3c.
+
+(c)
+
+• What similarities do you find in
+
+(d) Fig. 2.3: (b) Mounting the onion peel in glycerin using a needle; (c) Structure of onion peel under the
+
+Fig. 2.3c and Fig. 2.3d? You will observe nearly rectangular structures under the microscope. These are the cells of the onion peel, which are closely arranged without any space between them. Try to observe the peels of the leaves of different plants around you. You will find that all plants are made up of cells. What do you think the body of an animal is made of?
+
+microscope; and (d) A wall made of brick
+
+Activity 2.3: Let us investigate
+
+• Rinse your mouth with clean water.
+
+• Use the blunt end of a clean toothpick, and gently scrape the
+
+inside of your cheek.
+
+• Place the scraped material in a drop of water on a clean glass
+
+slide and spread it evenly.
+
+• Add a drop of methylene blue (a blue-coloured stain) over
+
+the material on slide. Adding stain improves the visibility of the material under the microscope by increasing contrast.
+
+• After one minute, add a drop of glycerin over the material on
+
+the slide to prevent the cells from drying.
+
+• Now, carefully place a clean coverslip on the material, and
+
+remove the excess glycerin from the edges of the coverslip using blotting paper.
+
+• Observe the slide under a microscope and draw what you
+
+see in your notebook.
+
+Cell membrane
+
+What did you observe? You will observe a polygon- shaped structure as shown in Fig. 2.4. These are cheek cells, which form the inner lining of your mouth.
+
+Cytoplasm
+
+What similarities and differences did you observe between the cells of onion peel in Activity 2.2 and human cheek cells in Activity 2.3?
+
+Nucleus
+
+Fig. 2.4: Mount of human cheek cells
+
+You have observed that cells have three main parts. The outer layer is called the cell membrane. The round structure in the middle is the nucleus, which is also covered by a thin membrane. The space between the cell membrane and nucleus is filled with cytoplasm. These three — cell membrane, cytoplasm, and nucleus — are the basic parts of a cell. Some cells, like onion peel cells, have an extra outer layer called the cell wall. What is the importance of these structures in a cell? What functions do they perform? Are these functions important for the maintenance of life?
+
+The cell membrane encloses the cytoplasm and nucleus. The cell membrane separates one cell from another. It is porous and allows the entry of materials essential for life processes and the exit of waste material.
+
+Cytoplasm contains other components of the cell and compounds, such as carbohydrates, proteins, fats, and mineral salts. Most of the life processes take place within the cytoplasm.
+
+The nucleus regulates all activities that occur within the cell. It also regulates growth.
+
+The cell wall in the plant cell provides rigidity and strength to plants. This is why all cells are arranged compactly with each other and look firm in structure.
+
+A step further
+
+Cells in all parts of a plant have tiny rod-shaped structures called plastids. Some plastids, like chloroplasts, contain chlorophyll, which makes them green and helps in photosynthesis. In non-green parts, they help in the storage of substances. Plant cells also have a large, empty-looking space called a vacuole. This helps the plant cell store important substances, get rid of waste, and maintain the shape of the cell. This gives strength and support to the plant. In animal cells, vacuoles are usually not present, if present, they are usually small. These small vacuoles store certain substances dissolved in water (Fig. 2.5). So, a cell is not just a simple bag of liquid — it is a complex structure made up of many different parts, each with its own special function to allow the cell, and in turn the entire organism to work.
+
+Cell wall Cell membrane
+
+Nucleus
+
+Chloroplast
+
+Cytoplasm
+
+Vacuole
+
+Mitochondria
+
+(a) (b)
+
+Fig. 2.5: A schematic drawing of (a) An animal cell and (b) A plant cell.
+
+(The colours are to show different parts of the cell)
+
+We have now understood the basic structure of cell. And we now also understand that plant and animal cells differ in shape and structure.
+
+Do different animal cells also vary in their shape and structure?
+
+(a) Muscle cell
+
+2.1.1 Variation in shape and structure of cells The muscle cell and the nerve cell of a human are shown in Fig. 2.6a and (b). What are the similarities and differences you see in them?
+
+(b) Nerve cell
+
+Fig. 2.6: Different types
+
+of cells in humans
+
+A muscle cell (Fig. 2.6a) is shaped like a spindle, while a nerve cell (Fig. 2.6b) is very long and has branches. Similarly, some cells are round in shape, while others are long and thin. The number of cells also varies in different organisms. Why do cells look so different from each other? Does the shape and structure of a cell relate to its function?
+
+The unique shape, size, and structure of cells help them carry out their specific functions. But how do these cells help in performing various functions in the body? Let us find out.
+
+You observed in Activity 2.3 that inner cheek cells are thin and flat. They form a protective lining on the inner surface of the cheek. Nerve cells also known as neurons carry messages in our body. The elongated shape and branched structure help them reach different parts of the body and pass on messages quickly. Similarly, plant cells also show variation. In plants, too, cells may be rectangular, elongated, oval, or even tube-like. Some plant cells form long tubes that help carry water throughout the plant.
+
+(a) Cell
+
+You have already studied the digestive system in Grade 7. Different parts of the digestive system are made up of different types of cells. A group of muscle cells are present in the food pipe. These cells contract and relax in a wave-like manner, pushing the food down to the stomach. This movement is possible because muscle cells are thin, flexible, and spindle-shaped. The stomach also has different types of cells for performing different functions. Muscle cells in the stomach wall help churn the food. Other cells in the inner lining of the stomach produce digestive juices and acid that help break down the food. All these cells work together to make digestion possible.
+
+2.2 What Are the Levels of Organisation in the Body of a Living Organism?
+
+(b) Tissue
+
+(c) Organ
+
+The body of a living organism is organised in a complex way. Cell (Fig. 2.7a), is the basic unit of life, just like a brick is the basic unit of wall (Fig. 2.3d). A group of similar cells forms a type of tissue (Fig. 2.7b). Different tissues are organised to form an organ (Fig. 2.7c). Several organs work together to form an organ system that performs a major function of the body (Fig. 2.7d). All the organ systems together make up a complete organism (Fig. 2.7e) — like a plant or an animal. So, the levels of organisations are:
+
+Cell Tissue Organ Organ system Organism
+
+(d) Organ
+
+These levels of organisation help us understand how simple building blocks like cells come together to form a complex living being.
+
+system
+
+(e) Organism
+
+The life of complex living organisms begins with a single cell— ‘egg’. The egg of any organism has an amazing ability to divide repeatedly to form a complete living being made up of many cells. Such living beings are called multicellular organisms. Animals, including humans, and plants are all examples of multicellular organisms.
+
+Fig. 2.7: Levels of organisation of life
+
+Ever heard of ...
+
+The yolk (the yellow part of an egg) of an ostrich egg is a single cell — the largest known cell in the living world — measuring about 130 mm to 170 mm in diameter. The egg contains extra non-cellular material: a shell for protection and a white liquid that nourishes the cell during its continued development.
+
+2.3 What Are Microorganisms?
+
+Some living organisms are made up of just one or very few cells. They are so small that they can not be seen with the naked eye. These are called microorganisms. Some microorganisms, like bacteria and Amoeba, are made of just one cell (unicellular). Others, like some fungi and algae, have many cells (multicellular). They are found all around us — in water, soil, air, and even inside our body! But what do their cells look like? Are they like the plant and animal cells we just learnt about, or are they different? To observe the cells of a microorganism, again, we need to use a microscope which magnifies their size and makes them visible to us. Scientists have also created a low-cost and foldable paper microscope. Such foldable paper microscope may not provide the same level of details like high-powered laboratory microscopes. However, these make microscopic world accessible to many people.
+
+Let us now take a closer look at the fascinating world of microbes.
+
+Activity 2.4: Let us observe pond water/ stagnant water
+
+• Take a container and collect pond or stagnant water in it
+
+with the help of your teacher or elder(s).
+
+• Use a dropper and place a drop of pond or stagnant water on
+
+a microscope slide. Put a coverslip and observe it under the microscope.
+
+• Observe the tiny organisms found in the pond or stagnant
+
+water.
+
+Activity 2.5: Let us observe soil suspension
+
+• Take a beaker and collect some moist soil in it from the
+
+nearby field or garden. Do not touch the soil with your bare hands — use a spoon or gloves.
+
+• Pour some water into the beaker and stir it with a glass rod.
+
+The liquid, which may look dirty, has very fine particles of soil, and is called soil suspension. Keep it aside for some time and let the mixture settle.
+
+• Use a dropper and take a drop of water from the top layer.
+
+Place the drop on a microscope slide.
+
+• Cover it gently with a coverslip and observe it under the
+
+microscope (Fig. 2.8). You may observe small moving organisms similar to those you saw in Activity 2.4. This indicates that even soil suspension contains a variety of tiny creatures that cannot be seen with the unaided eye. The tiny creatures that cannot be seen with the naked eye are called microorganisms (micro means very small; organisms means living beings) or microbes.
+
+Activity 2.6: Let us study
+
+Fig. 2.8: Observation
+
+of soil suspension under the microscope
+
+A group of students studying in Grade 8 performed Activities 
+2.4 and 2.5. They also collected information from the library and internet. They recorded the data obtained after observing pond water in Table 2.1 and the data obtained after observing soil suspension in Table 2.2. They identified the microorganisms as protozoa, algae, fungi, and bacteria. You can also conduct the same activity and record if you find any of these categories of organisms.
+
+Table 2.1: Organisms present in pond water
+
+S.No. Microorganisms
+
+observed Recorded data
+
+1. Amoeba (Protozoa) Single cell, moving, irregular shape
+
+2. Paramecium (Protozoa)
+
+Single cell, moves from one place to another, movement takes place with the help of specialised structures
+
+3. Algae
+
+Single cell, looks green because of the presence of green pigment, movement takes place with the help of specialised structures
+
+Table 2.2: Organisms present in soil suspension
+
+S.No. Diagram Remarks
+
+Bread mould
+
+(Fungi)
+
+1.
+
+Branched filament without chlorophyll having sac-like structure
+
+Mould (Fungi)
+
+2.
+
+Branched filament without chlorophyll having brush-like structure
+
+Algae
+
+3.
+
+Spherical, presence of chlorophyll — a green pigment
+
+Bacteria
+
+4.
+
+Spherical, comma, spiral or rod-shaped, one long hair-like structure and many small hair-like projections around the cell
+
+Did you also observe any of these microorganisms or something different? Record in your notebook and discuss in your class. In Tables 2.1 and 2.2, you have identified a variety of microorganisms. They are everywhere, and we can only see them with a microscope — a device that magnifies them 100 to 400 times. Though microorganisms are small in size, they play an important role in our lives.
+
+Ever heard of ...
+
+Viruses are microscopic and acellular. Viruses multiply when they enter a living cell. They may infect plants, animals, or bacterial cells and may cause a disease.
+
+2.4 How Are We Connected to Microbes?
+
+Fig. 2.9: Fruit with microorganism
+
+growing on it
+
+Can we find microorganisms in other places, too? Let us have a discussion: Have you ever seen a lemon, tomato, orange, or any other food item rot after being left outside for some time? If yes, you may have noticed a powdery or cotton-like growth on them (Fig. 2.9). This happens because they have been infected by microbes. But where did these microbes come from? How did they come in contact with the food? This happens because microorganisms can be found everywhere, be it in water, soil, air, or even in some food items.
+
+But why do microorganisms not infect the pickles and murabbas?
+
+This is because you add many spices with salt or sugar to it which act as preservatives. High concentration of salt or sugar do not allow these organisms to grow on them.
+
+You can use a microscope to explore surfaces of leaves, stems, roots, or any other part to see them. Like plants and animals, microorganisms also show great diversity. Some of them can even be found in extreme climatic conditions, such as hot water springs and snow cold zones as well as at moderate temperatures. You already know some of these organisms live inside our bodies, especially in our gut! You have studied in the chapter ‘Life Processes in Animals’ in Curiosity, Grade 7 that our intestine has many bacteria that help in digestion. Like plants and animals, microorganisms vary in shape, size, and structure. In Tables 2.1 and 2.2, you would have observed microorganisms of different shapes — spherical, rod-shape, or irregular.
+
+How does the diversity of microorganisms play a role in our daily life? How do they help clean the environment?
+
+2.4.1 Key players in cleaning the environment Let us attempt to understand this by doing an activity.
+
+Activity 2.7: Let us do
+
+• Take an empty container and fill it halfway with garden soil.
+
+• Add some fruit and vegetable peels to the container.
+
+Thereafter, put a layer of soil on it and leave it aside.
+
+• After 2–3 weeks, observe the changes
+
+that have taken place.
+
+• Do you observe any difference in the
+
+contents of the container?
+
+You may find that peels of fruits and vegetables have turned into a dark-coloured material. This is manure, which is rich in nutrients and helps increase the fertility of the soil. But how did the peels of fruits and vegetables turn into manure?
+
+Fig. 2.10: Recycling of nutrients by making
+
+manure
+
+In Activity 2.6, you saw that soil contains various kinds of microorganisms. Some of these microorganisms, like fungi and bacteria, act on the plant waste and slowly break it down into simpler, nutrient-rich manure. You may have seen gardeners in your school or in a field near your house collecting dry leaves and plant waste and putting them into pits. Do you now understand why they do this? It is to make natural manure.
+
+Our scientific heritage
+
+Ancient Indian texts, particularly the Vedas, have references of the word ‘Krimi’ which means different tiny entities including ‘Drishya’ (visible) and ‘Adrishya’ (invisible). Various Vedic texts mention their beneficial and harmful effects. Atharvaveda also refers to ‘Krimi’.
+
+If you look around carefully, you might see decaying plants and fallen leaves stored in a container or lying in the garden, disappear after some time from the surroundings. This is because microorganisms breakdown the complex substances of fallen leaves into simpler substances that are rich in nutrients — a process called decomposition. These nutrients go back to the soil and help plants grow better. Microorganisms also decompose bodies of dead animals. So, microbes help recycle the waste and return important nutrients to nature. Manure formation occurs at optimal temperature and appropriate moisture level.
+
+Isn’t it interesting? By now, you must have understood that bacteria and some fungi are types of microorganisms that play an important role in our lives. And guess what, these helpful bacteria can also decompose animal wastes like dung!
+
+From Activity 2.7, we can also infer that microorganisms not only help in plant growth, but also clean our environment by breaking down waste.
+
+Now, think what would have happened if microorganisms did not exist on Earth?
+
+A step further
+
+Microbes as a source of biogas
+
+Many microorganisms, like bacteria and fungi, live in an oxygen- free environment. Some of these bacteria have the ability to decompose plant and animal waste present in the environment or household wastewater. During the process, they release a mixture of gases called biogas primarily composed of carbon dioxide, and a high proportion of another gas, methane. This gas has been used as a fuel source for cooking, heating, generating electricity, and to even run vehicles.
+
+Be a scientist
+
+Ananda Mohan Chakrabarty (1938–2020) was a scientist who studied bacteria. In 1971, he developed a special bacterium that could break down oil spills, helping to clean the environment. His discovery received a patent in 1980. Patent is a copyright given to a person so that no one else can copy, use or sell his/her invention without permission. His work showed how microorganisms could be used to solve environmental problems like pollution. He is remembered for his contributions to science and for protecting the environment using microbes. What are the other problems which you think can be solved with the help of microorganisms?
+
+How does the diversity of microorganisms help in our kitchen?
+
+2.4.2 Microorganisms and food
+
+Let us try to understand by performing activities in the kitchen.
+
+Activity 2.8: Let us perform
+
+(a) Dough in bowl A
+
+• Take two bowls A and B.
+
+• In each, take 200 g of flour (atta or maida) and add a pinch
+
+of sugar.
+
+• Now, in bowl A, add a small amount of yeast powder and mix
+
+it well with the flour.
+
+• In bowl B, do not add any yeast, so that we can compare the
+
+(b) Dough in bowl B
+
+results of the two bowls.
+
+Fig. 2.11: Change in the
+
+• Knead the flour of the two bowls with warm water to make
+
+volume of flour after addition of yeast, sugar, and
+
+soft dough (Fig. 2.11).
+
+warm water
+
+• Cover the dough with a damp cloth and keep it in a warm place.
+
+• Observe both the bowls after 4–5 hours.
+
+Did you find any change in the volume, smell, or texture of the dough? If not, leave the dough for some more time. After some time, you may notice that the dough in bowl A, where yeast was added, has risen slightly, become fluffy, and has a different smell compared to the dough kneaded without yeast. Why does this happen? What is the role of yeast? Why did we add sugar and warm water to the flour?
+
+Yeast is a type of microorganism. It belongs to a group of microorganisms, called fungi. Yeast grows well in warm conditions. You may recall from chapter ‘Life Process in Animals’ in Grade 7 that, like other organisms, yeast also respires and breaks down food to release energy for their growth and carry out life processes. During this process, carbon dioxide is released, which forms bubbles that makes the dough soft and fluffy. Yeast also produces a small amount of alcohol during this process, which gives the dough a slightly different smell. This special property of yeast is used in the process of making breads, cakes, and more! In addition to yeast, some bacteria, such as Lactobacillus, help in fermentation of batter for making idli and dosa, and dough for making bhatura.
+
+Activity 2.9: Let us prepare
+
+• Take two small glass bowls — label them ‘A’ and ‘B’.
+
+• Pour lukewarm milk in bowl A, and cold milk in bowl B.
+
+• Now, add a small spoonful of curd to each bowl and mix well
+
+using a spoon.
+
+• Cover both bowls. Keep bowl A in a warm place and bowl B in
+
+a cool place (like a refrigerator) for a few hours or overnight.
+
+• Observe the changes in the glass bowls. Write your predictions
+
+and observations in Table 2.4.
+
+Table 2.4: Testing for curd formation using milk in different conditions
+
+Change in the appearance of milk
+
+Change in the colour of milk Possible
+
+reason Bowl A Bowl B Bowl A Bowl B
+
+Prediction
+
+Observation
+
+Fig. 2.12: Root nodules of Cowpea
+
+plant which contain Rhizobium
+
+You will observe that in bowl A, the milk has turned into curd after a few hours and has become little sour. Whereas in bowl B, the milk has not curdled, but it might be a little sour. Do you know why this happens? The curd contains several types of bacteria. One of them is Lactobacillus. This bacterium feeds on the sugar in the milk (lactose), multiplies, and ferments the milk to form curd. Instead of producing alcohol (like yeast), these bacteria produce lactic acid, which makes curd sour. These bacteria grow well in warm conditions. That is why curd is formed in bowl A but not in bowl B.
+
+We can categorise the microorganisms into different categories, such as protozoa, fungi, bacteria, some algae, and more. Some bacteria, such as Rhizobium, form the swollen regions called nodules and live in them as shown in Fig. 2.12. Roots of certain legumes, such as beans, peas, and lentils have root nodules that contain Rhizobium bacteria. These bacteria trap nitrogen from the air and make it useful for the plants. This helps plants grow better without chemical fertilisers. That is why farmers grow legumes in rotation with other crops. This naturally increases the nitrogen in the soil and keeps it healthy for the next crop.
+
+2.4.3 Amazing microalgae: tiny helpers in water Microalgae are microscopic plant-like organisms that live in water, soil, air, and even on trees. They make their own food using sunlight. While doing this, they also release oxygen and produce more than half of the Earth’s oxygen supply. They are rich in nutrients and serve as a food source for many aquatic animals. Some, like Spirulina, Chlorella, and Diatoms, are also used by humans as health supplements and medicines. Microalgae also help in cleaning water and are used to make biofuel.
+
+However, pollution, climate change, and habitat destruction are threatening microalgal diversity and abundance. It is important to conserve these tiny organisms to protect the environment and maintain oxygen balance on Earth.
+
+Ever heard of ...
+
+Spirulina, a microalga, is called a superfood because of its health benefits. Spirulina is also a good source of vitamin B12, which is essential for our body. It is rich in protein—more than 60 per cent of its body weight—and only a small amount of fat and sugar. Nowadays, farming of Spirulina is becoming a feasible livelihood opportunity. You can grow Spirulina easily by following these steps: 
+1. Set a clear glass tank in a bright place away from direct sunlight. 
+2. Cover the tank with a shade net, or keep the tank at a place with moderate temperature conditions. 
+3. Fill the tank with pond water. 
+4. Add living Spirulina collected from a pond. 
+5. Stir the growing Spirulina twice a week. 
+6. After 3–6 weeks, Spirulina may be harvested from the tank by filtering it through a fine cloth. Conservation of microalgae is a good practice for ensuring food security and livelihood development.
+
+2.5 Why Is Cell Considered to Be a Basic Unit of Life?
+
+The body of all living organisms are made up of tiny building blocks called cells. A single cell contains various components that help organisms perform various functions. The bodies of all plants and animals are made up of many cells. Therefore, they are called multicellular (many-celled) organisms. In multicellular organisms, cells carry out specialised functions individually but also cooperate with each other to increase the chance of survival.
+
+Nucleoid
+
+Fig. 2.13: A bacterial cell showing the
+
+Some microorganisms, such as bacteria and protozoa, are made up of just one cell. These are called unicellular (single-celled) organisms. They carry out all the functions necessary for their survival in a single cell. Other microbes, like algae and fungi, are made up of one or more cells. For example, yeast is a unicellular fungus while mould is a multicellular fungus.
+
+nucleoid region
+
+Like animal and plant cells, the cells of microorganisms are also surrounded by a cell membrane. Cells of fungi additionally have a cell wall, but they do not have chloroplasts, so they cannot make their own food through photosynthesis. Bacteria do not have a well-defined nucleus and a nuclear membrane. Instead they have a nucleoid. This feature distinguishes them from cells of yeast, protozoa, algae, fungi, plants, and animals.
+
+We have only looked at a few basic cell structures here. The cell has other components about which you will learn in higher classes. For observing subcellular components, we need microscopes with high magnification. An electron microscope magnifies the cell about 10,00,000 times, where we can see more structures present in a cell.
+
+By now, you must have understood that all living beings, including microorganisms, are made up of one or more cells. Their cells differ in size, shape, and structure. Plant and animal cells also have some differences. Understanding these differences helps us learn how these organisms function differently.
+
+In this chapter, we have learnt about the beneficial microorganisms. However, there are some microbes that cause diseases in plants and animals including humans. We will learn about some of the diseases caused by microbes in the next chapter.
+
+Snapshots
+
+Microorganisms are small-sized organisms and are not visible to the unaided eye.
+
+They can live in all kinds of environments, and even in the bodies of plants and animals.
+
+They are either unicellular or multicellular. Bacteria and protozoans are unicellular; fungi can be unicellular or multicellular, while plants and animals are multicellular.
+
+The cell is a basic unit of life.
+
+The body of all living organisms is made up of cells. A cell contains various components which help the organisms perform their functions and survive.
+
+A typical cell is bounded by a cell membrane, filled with cytoplasm and contains a nucleus. Plant, fungal, and bacterial cells have an extra covering, called a cell wall, around the cell membrane. Bacteria lack a well-defined nucleus.
+
+Cells differ in shape and size. Their shape is related to the function performed by them.
+
+Bacteria, fungi, and protozoa are different kinds of microorganisms.
+
+Viruses are also small in size, but they are different from other microorganisms since they reproduce only inside the host organism.
+
+Microorganisms can be beneficial or harmful to us.
+
+Some microorganisms decompose the plant and animal waste into simple substances and clean up the environment.
+
+Some microorganisms reside in the root nodules of legumes, such as peas, beans, and lentils. They trap nitrogen from the air and increase the soil fertility.
+
+Yeasts are fungi which are used in the process of making breads, cakes, pastries, idlis, dosas, and bhaturas.
+
+Lactobacillus is used in the curd formation at home and fermentation process in food industry.
+
+Keep the curiosity alive
+
+Only in Animal Cell
+
+Common to all three cells
+
+Only in Bacterial Cell Only in Plant Cell
+
+1. Various parts of a cell are given below. Write them in the appropriate places in the following diagram. Nucleus Cytoplasm Chloroplast Cell wall Cell membrane Nucleoid 
+2. Aanandi took two test tubes and marked them A and B. She put two spoonfuls of sugar solution in each of the test tubes. In test tube B, she added a spoonful of yeast. Then she attached two incompletely inflated balloons to the mouth of each test tube. She kept the set-up in a warm place, away from sunlight.
+
+(i) What do you predict will happen after 3 – 4 hours? She
+
+observed that the balloon attached to test tube B was inflated. What can be a possible explanation for this?
+
+A B
+
+(a) Water evaporated in test tube B and filled the
+
+balloon with the water vapour. (b) The warm atmosphere expanded the air inside the
+
+test tube B, which inflated the balloon. (c) Yeast produced a gas inside the test tube B which
+
+Fig. 2.14: Experimental
+
+set-up
+
+inflated the balloon. (d) Sugar reacted with warm air, which produced gas,
+
+eventually inflating the balloon. (ii) She took another test tube, 1/4 filled with lime water.
+
+She removed the balloon from test tube B in such a manner that the gas inside the balloon did not escape. She attached the balloon to the test tube with lime water and shook it well. What do you think she wants to find out?
+
+3. A farmer was planting wheat crops in his field. He added nitrogen-rich fertiliser to the soil to get a good yield of crops. In the neighbouring field, another farmer was growing bean crops, but she preferred not to add nitrogen fertiliser to get healthy crops. Can you think of the reasons? 
+4. Snehal dug two pits, A and B, in her garden. In pit A, she put fruit and vegetable peels and mixed it with dried leaves. In pit B, she dumped the same kind of waste without mixing it with dried leaves. She covered both the pits with soil and observed after 3 weeks. What is she trying to test? 
+5. Identify the following microorganisms: (i) I live in every kind of environment, and inside your gut. (ii) I make bread and cakes soft and fluffy. (iii) I live in the roots of pulse crops and provide nutrients
+
+for their growth. 
+6. Design an experiment to test that microorganisms need optimal temperature, air, and moisture for their growth. 
+7. Take 2 slices of bread. Place one slice in a plate near the sink. Place the other slice in the refrigerator. Compare after three days. Note your observations. Give reasons for your observations. 
+8. A student observes that when curd is left out for a day, it becomes more sour. What can be two possible explanations for this observation? 
+9. Observe the set-up given in Fig. 2.15 and answer the following questions.
+
+(i) What happens to the sugar solution in flask A? (ii) What do you observe in test tube B after four hours?
+
+Why do you think this happened? (iii) What would happen if yeast was not added in flask A?
+
+Warm sugar solution + Yeast
+
+Lime water
+
+A B Fig. 2.15 : Experimental set-up
+
+Prepare some questions based on your
+
+When?
+
+Why not?
+
+Why?
+
+learnings so far ...
+
+Where?
+
+How long?
+
+.....................................................................................
+
+Discover, design, and debate
+
+• India has a long history of biogas production. One of our
+
+oldest biogas plant was set up in late 1850s. Find out about the Biogas Program initiated by the Ministry of New and Renewable Energy, Government of India.
+
+Science Society
+
+• Fermented food items like fermented soya bean and
+
+Inter- disciplinary
+
+Projects
+
+fermented bamboo shoots are consumed as traditional food in some parts of India. With the help of your parents and teachers, list some traditional food items from your area that utilise the process of fermentation. Investigate the ingredients used in the preparation of these fermented food items; the method of preparing them; the microorganism responsible for the fermentation of the food, and the cultural and nutritional importance of the fermented food.
+
+• Study the different parts of a macro fungus mushroom using
+
+a magnifying glass and microscope. Take the help of students from senior classes and explore the internal structure of different parts of mushrooms under the microscope in your school laboratory.
+
+• Interact with an entrepreneur and learn the steps for
+
+cultivation of mushroom.
+
+Reflect on the questions framed by your
+
+I think ...
+
+Shouldn’t it
+
+be ...
+
+friends and try to answer ...
+
+But we thought ... Maybe ...
+
+.....................................................................................

@@ -1,0 +1,597 @@
+# CLASS-8 - SCIENCE - CHAPTER 06
+# Source: hecu106.pdf
+
+Pressure, Winds, Storms, and Cyclones 6
+
+Probe and ponder
+
+• Why are winds stronger on some days than on others?
+
+• Why are water tanks usually placed at a height?
+
+• Can air pressure really crush us?
+
+• What causes storms and cyclones? If the Earth stopped rotating,
+
+would cyclones still form?
+
+• Share your questions
+
+?
+
+You must have observed fallen leaves on the ground swirling in the air or being swept away, and trees swaying or even bending when a strong wind blows. Have you ever wondered why fallen leaves rise in the air or trees sway or bend? Does the wind exert force on fallen leaves to make them rise or on trees to bend? Recall other similar effects of the force exerted by wind like slamming of doors or rattling of windows, or fluttering of clothes? How does the force exerted by wind make this happen? The force exerted by wind creates wind pressure which causes these effects. In this chapter, we will explore the relationship between force and pressure, and understand how they shape powerful natural events like thunderstorms and cyclones.
+
+6.1 Pressure
+
+Megha and her brother Pawan are going on a picnic. They walk to the picnic spot, carrying identical items in their bags (Fig. 6.1). On the way, Pawan keeps adjusting his bag, and looks uncomfortable. Megha asks, “Is there a problem with your bag?” Pawan responds, “Yes, it is hurting my shoulders.” Megha says, “Both our bags are equally heavy. Why does your bag hurt, and mine doesn’t?” Pawan reflects for a minute and says, “Perhaps, it is because of the difference in the straps of our bags. My bag has narrow straps while your bag has broad straps.”
+
+Can the shape or size of the straps really make a difference? Let us try to find out.
+
+Fig. 6.1: Megha and Pawan
+
+carrying their bags
+
+When we carry a bag, we feel its weight because of the force of gravity acting on our shoulders. The weight of the bag with narrow straps acts on a smaller area of our shoulders, whereas the weight of the bag with broad straps is spread out over a larger area of our shoulders. It is due to this reason that we feel more comfortable carrying a bag with broader straps than one with narrow straps, although both bags have the same weight. Since the area over which the force acts is involved, we define a quantity called pressure, which is the force per unit area.
+
+So, Pressure = Force
+
+Area
+
+At this stage, we will consider only those forces which act perpendicular to the surface on which the pressure is to be computed.
+
+Broad Narrow
+
+Broad straps reduce the pressure exerted by the bag on our shoulders as compared to narrow straps. Therefore, we feel more comfortable carrying a bag with broad straps.
+
+Fig. 6.2: Buckets with broad
+
+and narrow handles
+
+Can you now understand why it feels easier to lift a water-filled bucket with a broad handle than with a narrow handle (Fig. 6.2)? Similarly, we have seen that when people carry loads like pots or vegetable baskets on their heads, they often place a round piece of cloth under the loads (Fig. 6.3). In both cases, the objective is to reduce pressure by increasing the area over which the weight acts.
+
+Pressure is defined as the force per unit area. The SI unit of force is newton and that of area is metre2. Therefore, the SI unit of pressure is newton/metre2 (N/m2). This unit is also called a pascal, denoted by Pa.
+
+If a force of 100 N is applied on a cardboard of area 2 m2, then the pressure applied on the cardboard will be:
+
+Fig. 6.3: Persons
+
+Pressure = = 50 N/m2 = Force
+
+Area
+
+100 N 2 m2
+
+carrying loads
+
+There are many situations in daily life where pressure plays a role. Conduct the activities given in Table 6.1 and record your observations. Explain how pressure influences the mode of action undertaken for each activity.
+
+Safety first
+
+The activities listed in Table 6.1 should be conducted under the supervision of an adult.
+
+Table 6.1: Record your observations
+
+Activity Modes of action Easy or difficult to perform? Give reasons.
+
+Driving an iron nail
+
+By the pointed end of the nail
+
+By the head of the nail
+
+Cutting an apple with a knife
+
+Using the blunt edge of the knife
+
+Using the sharp edge of the knife
+
+What can you conclude from your observations in Table 6.1? We conclude that when the area over which a force applied is smaller, the resulting pressure is higher, making it easier to do certain tasks. This is why it is easier to drive a nail using its pointed end, and it is easier to cut an apple with the sharp edge of a knife.
+
+You must have seen overhead water tanks (Fig. 6.4) in your locality, or on the rooftops of houses used for water supply. Why are these tanks always placed at a height?
+
+Fig. 6.4: Overhead tank
+
+Do liquids also exert pressure?
+
+Let us find out by conducting the following activity.
+
+Activity 6.1: Let us try and find out
+
+• Take two transparent glass or plastic pipes of the same
+
+length (about 25 cm), but of different diameters, as shown in Fig. 6.5.
+
+• Take two good-quality rubber balloons. Attach
+
+Stand
+
+them to one end of each pipe.
+
+• Clamp the pipes on a stand as shown in Fig. 6.5.
+
+• Now, fill both the pipes with water up to the
+
+Narrow
+
+same level about halfway.
+
+pipe
+
+Broad
+
+• Observe what happens to the balloons.
+
+pipe
+
+Water
+
+• Do both balloons bulge? Do they bulge to the
+
+Balloons
+
+Fig. 6.5: Equal heights of water columns
+
+produce same bulge in balloons
+
+same extent? What can you infer from this activity? You must have observed that the two balloons bulge to the same extent. Why is it so? Notice that because of the different diameters, the weight of water in the two pipes is different. However, the bulge in both the balloons is the same. This means that the weight of water in the pipes could not be responsible for the extent of the bulge of the balloons.
+
+Could it be that the water column is exerting pressure? Yes, it is the pressure exerted by the water column which is responsible for the bulge. That is why equal water column heights produce equal bulges in the balloons, despite their different diameters.
+
+What will happen to the bulge of the balloon if we increase the height of the water column?
+
+Water
+
+More water
+
+Balloon
+
+bulges
+
+bulges out more
+
+out
+
+Pour some more water in any one of the pipes used in Fig. 6.5. Observe the bulge of the balloon. Repeat this process a few times, adding more water each time and noting the extent of bulge as shown in Fig. 6.6.
+
+Fig. 6.6: Higher heights of water column
+
+produce bigger bulge of the balloon
+
+Do you see any relation between the amount of bulge of the rubber balloon and the height of the water column in the pipe? You must have observed that the bulge of the balloon increases as the height of the water column increases. Thus, as the height of the water column in the pipe increases, the pressure at the bottom of the pipe also increases, which causes the balloon to bulge more. So, we can say that the pressure exerted by a liquid in a vessel depends on the height of its column. This is the reason why overhead tanks are placed at a height so that the pressure in the taps is increased, resulting in a good stream of water from the taps.
+
+Suppose you are living on the second floor of a three-storeyed building and an overhead water tank is placed on the top floor. Will you or your friend on the first floor receive a more powerful stream of tap water? Give reasons.
+
+....................................................................................................................
+
+Do liquids also exert pressure on the walls of the container? Let us find out by conducting the following activity.
+
+Activity 6.2: Let us find out
+
+Bottle
+
+• Take a used plastic bottle and remove its cap. Make
+
+Water
+
+Holes
+
+four small holes near the bottom around the sides using a needle or a nail. Make sure that the holes are at the same height from the bottom as shown in Fig. 6.7. (If you find it difficult to make a hole, you can slightly heat the needle and poke it to make holes.)
+
+• Seal the holes with a tape and fill the bottle with water.
+
+• Now, remove the tape from all holes at the same time.
+
+Fig. 6.7: Liquid exerts pressure
+
+• What do you observe?
+
+on the wall of the container
+
+You observe water flowing out through the holes on the sides of the bottle. What can you infer from this observation? It indicates that water also exerts pressure on the sides of a container. Therefore, we can conclude that liquids exert pressure not only at the bottom of the container, but also on its sides. In fact liquids exert pressure in all directions.
+
+You must have seen water spurting out like a fountain from leaking joints or holes in water pipes. Can you explain why this happens? Is it due to the pressure exerted by water on the walls of the pipes?
+
+Ever heard of ...
+
+Fig. 6.8: Dam
+
+Do you know that the base of a dam is much broader than the top? This is because a broad base not only supports the structure of the dam, but also withstands the horizontal water pressure near the bottom (Fig. 6.8). The water stored in the dam, exerts pressure horizontally on the side walls of the dam and vertically on the floor due to the height of the water level. The pressure which acts horizontally, is very large near its bottom. Thus, to withstand the pressure, the base of the dam is made broader.
+
+Let us now try to understand if air also exerts pressure.
+
+6.2 Pressure Exerted by Air
+
+You already know that air is all around us. The envelope of air surrounding the Earth is called atmosphere. The atmospheric air contains nitrogen, oxygen, argon, carbon dioxide, and other gases in small quantities. The atmosphere extends up to many kilometres above the surface of the Earth.
+
+Stick
+
+Let us find out if the atmosphere exerts pressure by performing the following activity.
+
+Paper plate
+
+Activity 6.3: Let us explore
+
+• Take a paper plate, invert it and attach a stick to it as shown
+
+in Fig. 6.9a. Place it on a plain surface.
+
+• Take two identical sheets of chart paper about 70 cm × 56 cm
+
+Fig. 6.9: (a) Inverted
+
+each. Fold one sheet twice and make a hole in the centre of
+
+paper plate setup
+
+the folded chart paper sheet — big enough for the stick to come out. Place the folded sheet on top of the inverted paper plate as shown in Fig. 6.9b.
+
+• Now, try to lift the paper plate covered with a
+
+folded sheet using the stick.
+
+• Observe how much effort is needed to lift it.
+
+• Now, place the second unfolded chart paper
+
+Fig. 6.9: (b) Inverted paper plate
+
+sheet in place of the folded sheet. Make a hole at the centre of this chart paper for the stick to pass through. Cover the paper plate with the unfolded chart paper as shown in Fig. 6.9 c.
+
+with two folds of chart paper
+
+• Lift the paper plate again and feel the effort
+
+needed in doing so.
+
+• In which case is the lifting easier, with the folded
+
+Fig. 6.9: (c) Inverted paper plate
+
+with unfolded chart paper
+
+or the unfolded chart paper covering the paper plate? You would have observed that more effort is needed to lift the paper plate when it is covered with the unfolded chart paper, than with the folded chart paper. When we cover the paper plate with unfolded chart paper, the area of the covering sheet increases. The effort needed to lift the paper plate increases. Notice that the weight of the covering sheet has not changed. What can you infer from this? We can infer from these observations that air exerts force on the covering sheet, which makes it difficult to lift the paper plate. Moreover, this force increases with
+
+increase in the area of covering sheets. It means that the air is exerting a force on the paper plate, which increases as the area of the sheet covering it increases. As force per unit area is pressure, we can conclude that air exerts pressure on the paper sheet. In fact, air exerts pressure on all objects. The pressure exerted by air around us is known as the atmospheric pressure.
+
+Fig. 6.10: A girl blowing a balloon
+
+You must have experienced that when you blow air into a balloon, it gets inflated. Why? This is because the air being filled inside the balloon exerts pressure on the walls of the balloon (Fig 6.10). Can we say that air exerts pressure in all directions? Yes, that is why the balloon expands in all directions. What happens when an inflated balloon is kept without closing its mouth? The air escapes from the balloon. Why does the air escape from the balloon?
+
+Have you ever wondered how large the atmospheric pressure is? Let us get an idea about its magnitude by performing the following activity.
+
+Activity 6.4: Let us perform
+
+• Take a good-quality rubber sucker. Press it firmly against a
+
+smooth flat surface (Fig. 6.11).
+
+• Do you realise that it sticks to the surface?
+
+Fig. 6.11: A sucker
+
+• Now, try to pull it off. Do you find it difficult to pull it off?
+
+When we press the sucker, most of the air between its cup and the surface on which it is placed is pushed out and the air pressure inside it is reduced. The sucker sticks to the surface because the pressure of air surrounding the sucker is higher than the pressure exerted by the air inside the sucker. To pull the sucker off the surface, the applied force should be strong enough to overcome the pressure difference between outside the sucker and inside the sucker.
+
+Do you know how large the atmospheric pressure is? The force exerted by the atmospheric air column over an area 15 cm × 15 cm is nearly equal to the force of gravity on an object of mass 225 kg (2250 N). The reason we are not crushed under this weight is that the pressure inside our bodies is also equal to the atmospheric pressure. This balances the pressure exerted from outside. The pressure inside our body is caused by the movement of fluids and gases in tissues and organs of the body.
+
+A step further
+
+The SI unit of pressure is N/m2, also known as pascal (Pa). However, the practical unit of air pressure is millibar (mb), which is equal to 100 Pa. Air pressure is also expressed in hectopascal (hPa), which is equal to 100 Pa.
+
+6.3 Formation of Wind
+
+You must have noticed that on some days, the wind blows strongly, whereas on other days, it is calm. Sometimes, wind becomes so strong that it causes damage to life and property.
+
+You must have seen that when an inflated balloon is kept without closing its mouth, the air from the balloon escapes. Recall that when there is a puncture in the bicycle tube, the air escapes and the tube collapses. In both of these cases, does air move from a high pressure region to a low pressure region?
+
+How do winds form? Does the difference in air pressure have anything to do with the formation of winds?
+
+Let us find out from the following activity.
+
+Activity 6.5: Let us observe
+
+• Take two similar balloons made of thin rubber,
+
+and a drinking straw.
+
+• Insert one end of the straw into one balloon and
+
+secure it with a rubber band or thread.
+
+• Now inflate the second balloon and hold its mouth
+
+with your fingers, so that air does not escape.
+
+Fig. 6.12: Air moves from a high pressure region to a low
+
+• Insert the free end of the straw into the neck of
+
+pressure region
+
+the inflated balloon and secure it with a rubber band or thread. Make sure that the air does not leak from the balloon as the straw is inserted in it. Now you have one end of the straw inside the inflated balloon and the other end inside the uninflated balloon as shown in Fig. 6.12.
+
+• Predict what would happen to the balloons.
+
+• Observe what happens to both the balloons. Did it happen as
+
+predicted?
+
+• Do you observe any change in the size of the balloons? Write
+
+down your observations.
+
+....................................................................................................................
+
+What can be the reason for the change in the sizes of the balloons? The air pressure in the inflated balloon is higher than that in the uninflated balloon. As a result, some air moves from the inflated balloon to the uninflated balloon, resulting in changes in the size of both the balloons.
+
+Do you notice that after some time both the balloons attain almost the same size and the flow of air stops? Why does the air flow stop? The flow of air continues till the air pressure in the inflated balloon is higher than the air pressure in the uninflated balloon. The air flow stops when the pressure in both balloons becomes equal. At this stage, both balloons are almost of the same size. Thus, we can conclude that air moves from a region of high air pressure to a region of low air pressure.
+
+You can relate this conclusion to the directions of the sea breeze and land breeze, which you studied in Curiosity, Grade 7. As land gets heated faster than water during the day, the air above the land
+
+becomes warmer and lighter. Hence, it rises, creating an area of low pressure. The air from the high pressure region of the sea blows to the low pressure region which develops on the land, resulting in a sea breeze. At night, the water is warmer than the land. Therefore, a low pressure area develops above the sea. As a result, wind blows from the land to the sea, giving rise to land breeze. Thus, the phenomenon of land breeze and sea breeze is mainly due to the pressure differences over the land and the sea.
+
+If we could measure the speed of the escaping air in Activity 6.5, we would find that the speed of the air is higher if the pressure difference is higher.
+
+I have read that high-speed winds can blow off roofs. I wonder how?
+
+6.4 High-Speed Winds Result in Lowering of Air Pressure
+
+Activity 6.6: Let us observe
+
+• Take two balloons of the same size.
+
+• Inflate both balloons and tie strings to them.
+
+• Hang the two balloons from a stick, leaving a
+
+gap of 6–10 cm (Fig. 6.13).
+
+• Now, blow air into the narrow space between
+
+the balloons.
+
+• What happens to the balloons? Note down
+
+your observations.
+
+Fig. 6.13: Blowing between two balloons
+
+• Now blow harder and observe.
+
+When you blow between the two balloons, you observe that they move towards each other. This happens because when you blow air between the balloons, a low pressure area is created between them. The higher air pressure surrounding the balloon pushes them towards each other. You must have observed that blowing harder increases the speed at which the balloons approach each other. What can you infer from this activity? We infer that high speed winds are accompanied by a reduced air pressure.
+
+Fig. 6.14: (a) Roof of a house
+
+blown away
+
+When high-speed winds blow over houses, a low-pressure area is created over them, as high-speed winds are accompanied by a reduced pressure. Therefore, the air pressure above the roofs of the houses is lower than the pressure below them. If the pressure difference is large and the roofs are weak, they may be blown away, as shown in Fig. 6.14 a. That is why it is safer to keep doors and windows of the houses open during storms with high-speed winds. When the same wind moves over the roofs, and through the houses, the pressure difference between inside of the houses and over the roofs is reduced to a large extent. This helps prevent the roofs from being blown off as shown in Fig. 6.14 b.
+
+Fig. 6.14: (b) Roof of a house intact
+
+You must have experienced that when high-speed winds blow during storms, they are sometimes accompanied by thunder and lightning. Let us learn more about them.
+
+6.5 Storms, Thunderstorms, and Lightning
+
+Yes, the sound of thunder is so frightening! Usually there is heavy rainfall too.
+
+Have you heard the sound of thunder and seen lightning during the rainy season?
+
+When land gets heated, the warm and moist air, being lighter, rises, thereby creating a low pressure area. Cooler air from the surrounding high-pressure areas flows to take its place. This air, in turn, gets heated and rises. This results in a continuous process of wind circulation.
+
+Warm air
+
+As the rising air expands, it cools and moisture in it condenses to form water droplets, creating clouds. The water droplets merge to form heavier drops, which come down as rain, hail, or snow. The strong winds accompanied by rain is called a storm. In hot, humid, and tropical regions like India, storms are more frequent. Under certain conditions, warm air rises to great heights that the low temperature there converts water droplets into ice particles.
+
+Cool air
+
+Strong winds blowing upwards and downwards (Fig. 6.15) facilitate rubbing between water droplets Fig. 6.15: Strong winds going
+
+up and down
+
+and ice particles. You have learnt in the chapter ‘Exploring Forces’ that when two objects are rubbed against each other, they get charged. In this case, strong winds blowing upwards and downwards and rubbing against each other cause static electric charges to develop within the clouds.
+
+Fig. 6.16: Lightning
+
+The positively charged lighter ice particles move upwards and occupy the upper part of the clouds. The negatively charged heavier water droplets occupy the lower part of the clouds. Thus, a charge separation within the cloud takes place. Also, when the negatively charged lower part of the cloud moves closer to the ground, it causes the ground and nearby objects, such as trees or buildings, to become positively charged (Fig. 6.16).
+
+Normally, air acts as an electrical insulator and does not let opposite charges meet. But when the build up of charges becomes very large, the insulating property of air breaks down. A sudden flow of charges takes place, producing a bright flash of light called lightning.
+
+Lightning can occur as opposite charges collide within a cloud, between clouds, or between clouds and the ground. Lightning rapidly heats up the air around it, causing the air to expand and produce a loud sound known as thunder. A storm accompanied by lightning and thunder is called a thunderstorm.
+
+A step further
+
+Isolated and localised thunderstorms can sometimes occur in various regions of India. These thunderstorms are known by various names such as Kalboishakhi in West Bengal, Bihar, and Jharkhand and Bordoisila in Assam. They occur before the arrival of the monsoon, thereby helping kharif crops to grow. In Kerala, Karnataka, and Tamil Nadu, they are known as mango showers as they support the ripening of mangoes. Local thunderstorms in Karnataka help in the growth of coffee plants.
+
+Fig. 6.17: Safe position
+
+Lightning can be dangerous! It can ignite fires, damage buildings, and cause severe burns or death in humans and animals. We must take necessary precautions and protect ourselves from lightning. During lightning, stay away from tall objects, find a low-lying open area and crouch down, and minimise contact with the ground. Do not lie down flat. Avoid using an umbrella with a metallic rod. If you are in water, get out of it. If you are inside a bus or a car, you are comparatively safer.
+
+during lightning
+
+Ever heard of ...
+
+Lightning conductor
+
+A lightning conductor is a metallic rod installed along the walls of buildings during their construction. One end of the rod is pointed. This end is kept higher than the highest point of the building (Fig. 6.18). The other end of the rod is buried deep in the ground. The rod provides easy path for the transfer of electric charges into the ground.
+
+Fig. 6.18: A lightning conductor
+
+6.6 Cyclone
+
+Cyclones are large storms that form over warm ocean waters. As the ocean water gets heated, the warm and moist air above it rises. As the moist air rises, the water vapour condenses to
+
+High pressure Low pressure
+
+High pressure
+
+994 mb 996 mb 998 mb 1008 mb
+
+Fig. 6.19: Winds blowing from
+
+high pressure areas to low
+
+pressure areas
+
+form raindrops. We know that during evaporation, water takes up heat to change into vapour. When this water vapour condenses into raindrops, heat is released back into the atmosphere. This causes further warming of the ascending air leading it to rise even further, creating an even lower pressure. Air from the surrounding regions rushes in and it also starts rising. Earth’s rotation causes the moving air to spin (Fig. 6.19). This cycle is repeated, resulting in the creation of a very low-pressure area with high-speed winds revolving around it. This spinning system of clouds, winds, and rain is called a cyclone.
+
+Eye of cyclone
+
+In a cyclone, the region of lowest pressure is at the centre, known as the eye of the cyclone. At the eye of the cyclone, the wind is calm, but the surrounding region experiences strong winds and heavy rainfall. As a cyclone moves from the ocean towards the land, it generates higher wind speeds compared to the wind speeds produced by regular thunderstorms. Once the cyclone reaches land, the source of moist air is cut off and it gradually loses its strength.
+
+Fig. 6.20: A cyclone
+
+Even as a cyclone loses its strength while travelling over land, it leaves behind a trail of destruction that can take months or even years to repair. Cyclones can be extremely destructive. For example, the Amphan cyclone in 2020 had peak wind speeds of 270 km/h.
+
+Strong winds during a cyclone push ocean water towards the shore, creating a wall of water that can be as high as 3–12 metres. This surge of water can flood coastal areas and even areas far from the sea. The heavy rainfall which accompanies a cyclone may cause rivers to overflow and can also trigger landslides.
+
+Seawater that rushes inland can contaminate drinking water sources and damage farmland. The salt in seawater can make soil less fertile, affecting crops. Roads may get blocked due to fallen trees and debris, making it difficult for help to reach the affected areas. Power outages can last for days, disrupting emergency services and daily life.
+
+How can we protect ourselves during cyclones? It is important to stay updated on weather reports and periodic alerts, and warnings issued by the India Meteorological Department (IMD). Thanks to the weather monitoring satellites, today we can track cyclones and predict their path, helping us reduce their impact on life and property. Several national and international organisations work together to monitor cyclone-related disasters. If you live in a cyclone-prone area, keep an emergency kit ready with essential items. During a cyclone, quickly move to a nearby designated cyclone shelter.
+
+Let us wrap up!
+
+Warm air rises, creating a low-pressure area.
+
+Cool air rushes to occupy the low-pressure area.
+
+Warm air rises, cools, and the water vapour condenses to form clouds.
+
+Bigger water drops in the clouds fall to the ground as rain, hail, or snow.
+
+Positive and negative charges are created in the clouds by strong winds blowing upwards and downwards.
+
+When positive and negative charges meet, they cause lightning. Lightning may occur within a cloud, between clouds, or between a cloud and the ground.
+
+Under certain weather conditions, storms may develop into cyclones.
+
+Snapshots
+
+Pressure is defined as force per unit area.
+
+The SI unit of pressure is newton/metre2 (N/m2) and is also called pascal denoted by Pa.
+
+Liquids and gases exert pressure on the walls of a container.
+
+The pressure exerted by the air around us is known as atmospheric pressure.
+
+Differences in air pressure cause winds to blow.
+
+Warm air rises, creating a low-pressure area. Cooler air from surrounding higher-pressure regions moves in to take its place.
+
+Important requirements for the formation of thunderstorms are moisture and strong winds.
+
+Strong winds moving upwards and downwards facilitate rubbing of ice particles with water droplets, causing electric charges to develop in clouds.
+
+Collision of electric charges within a clouds, or between clouds, or between a cloud and the ground causes lightning.
+
+Lightning strikes can cause destruction to life and property.
+
+Lightning conductors protect buildings from the effects of lightning.
+
+The India Meteorological Department (IMD) constantly monitors cyclones and thunderstorms in India.
+
+Keep the curiosity alive
+
+1. Choose the correct statement. (i) Look at Fig. 6.21 carefully. Vessel R is filled with water.
+
+When pouring of water is stopped, the level of water will be ____________________. (a) the highest in vessel P (b) the highest in vessel Q (c) the highest in vessel R (d) equal in all three vessels
+
+P Q R
+
+(ii) A rubber sucker (M) is pressed on a flat smooth surface
+
+Fig. 6.21
+
+and an identical sucker (N) is pressed on a rough surface: (a) Both M and N will stick to their surfaces. (b) Both M and N will not stick to their surfaces. (c) M will stick but N will not stick. (d) M will not stick but N will stick.
+
+(iii) A water tank is placed on the roof of a building at a height
+
+‘H’. To get water with more pressure on the ground floor, one has to (a) increase the height ‘H’ at which the tank is placed. (b) decrease the height ‘H’ at which the tank is placed. (c) replace the tank with another tank of the same height
+
+that can hold more water. (d) replace the tank with another tank of the same height
+
+that can hold less water. (iv) Two vessels, A and B contain water up to the
+
+B A
+
+Fig. 6.22
+
+same level as shown in Fig. 6.22. PA and PB is the pressure at the bottom of the vessels. FA and FB is the force exerted by the water at the bottom of the vessels A and B. (a) PA = PB, FA = FB (b) PA = PB, FA <FB (c) PA < PB, FA = FB (d) PA > PB, FA > FB 
+2. State whether the following statements are True [T] or False [F].
+
+(i) Air flows from a region of higher pressure to a region of
+
+lower pressure. [ ] (ii) Liquids exert pressure only at the bottom of a
+
+container. [ ] (iii) Weather is stormy at the eye of a cyclone. [ ]
+
+(iv) During a thunderstorm, it is safer to be in a
+
+Fig. 6.23 (a)
+
+car. [ ] 
+3. Fig. 6.23 a shows a boy lying horizontally, and Fig. 6.23 b shows the boy standing vertically on a loose sand bed. In which case does the boy sink more in sand? Give reasons. 
+4. An elephant stands on four feet. If the area covered by one foot is 0.25 m2, calculate the pressure exerted by the elephant on the ground if its weight is 20000 N.
+
+Fig. 6.23 (b)
+
+Prepare some questions based on your
+
+When?
+
+Why not?
+
+Why?
+
+Where?
+
+How long?
+
+learnings so far ... ..................................................................................... ..................................................................................... ..................................................................................... ..................................................................................... .....................................................................................
+
+Fig. 6.24
+
+5. There are two boats, A and B. Boat A has a base area of 7 m2, and 5 persons are seated in it. Boat B has a base area of 3.5 m2, and 3 persons are seating in it. If each person has a weight of 700 N, find out which boat will experience more pressure on its base and by how much? 
+6. Would lightning occur if air and clouds were good conductors of electricity? Give reasons for your answer. 
+7. What will happen to the two identical balloons A and B as shown in Fig. 6.24 when water is filled into the bottle up to a certain height. Will both the balloons bulge? If yes, will they bulge equally? Explain your answer. 
+8. Explain how a storm becomes a cyclone. 
+9. Fig. 6.25 shows trees along the sea coast in a summer afternoon. Identify which side is land — A or B. Explain your answer.
+
+A B
+
+Fig. 6.25
+
+10. Describe an activity to show that air flows from a region of high pressure to a region of low pressure. 11. What is a thunderstorm? Explain the process of its formation. 12. Explain the process that causes lightning. 13. Explain why holes are made in banners and hoardings.
+
+I think ...
+
+Shouldn’t it
+
+Reflect on the questions framed by your
+
+be ...
+
+But we thought ... Maybe ...
+
+friends and try to answer ... ..................................................................................... ..................................................................................... ..................................................................................... ..................................................................................... .....................................................................................
+
+Discover, design, and debate
+
+• Hold a strip of paper, 18 cm long and 2 cm wide, between
+
+your thumb and forefinger so that it hangs freely. Predict what you will observe if you blow over the paper. Perform the activity now. Note down your observations and interpret your results.
+
+Science Society
+
+• List three major cyclones which have occured in India in
+
+Inter- disciplinary
+
+Projects
+
+the last 20 years. List two major destruction caused by each of the cyclones. What measures were taken by the local government and communities to reduce the loss of life and destruction of property? Mention two suggestions you would like to propose to the local government.
+
+• Collect data on the strength of thunderstorms for various
+
+regions of India. Compare your findings and identify which regions are more prone to thunderstorms. Can you give reasons for your findings?

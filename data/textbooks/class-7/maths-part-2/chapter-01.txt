@@ -1,0 +1,855 @@
+# CLASS-7 - MATHS-PART-2 - CHAPTER 01
+# Source: gegp201.pdf
+
+GEOMETRIC TWINS 1
+
+1.1 Geometric Twins
+
+The symbol on this signboard needs to be recreated on another board.
+
+How do we do it?
+
+One way is to trace the outline of this symbol on tracing paper to reconstruct the figure. But this is difficult for big symbols. What else can we do?
+
+Can we take some measurements that would allow us to exactly recreate this figure? If yes, what measurements should we take?
+
+Let us name the corner points of this symbol as shown.
+
+A C
+
+B
+
+Are the arm lengths AB and BC sufficient to exactly recreate this figure?
+
+Suppose these lengths are AB = 4 cm, BC = 8 cm. We observe that several such symbols can be constructed with the same lengths.
+
+C
+
+C
+
+C
+
+A
+
+A
+
+A
+
+C A
+
+B
+
+B
+
+B
+
+B
+
+To get the exact replica, would it help to take any other measurement?
+
+The measure of ∠ABC, along with the two arm lengths AB and BC, fix the shape and size of this figure.
+
+Can you draw the symbol if it is known that AB = 4 cm, BC = 8 cm, and ∠ABC = 80°?
+
+These three measurements can help us create an exact replica of the symbol on the signboard. Figures that are exact copies of each other or have the same shape and size are said to be congruent. Congruent figures can be superimposed exactly, one over the other.
+
+Two congruent figures are shown below. You could use a tracing paper to trace the first figure and superimpose it on the second one. You will find that they fit exactly, one over the other.
+
+Note that while checking for congruence, a figure can be rotated or flipped before superimposing it on the other figure. So, the following pairs of figures are also congruent to each other.
+
+Geometric Twins
+
+Let us get back to the symbol we saw on the signboard. Suppose there are two such symbols that look identical and we need to confirm that they are indeed congruent. Can we use their measurements to verify this?
+
+If it is known that both symbols have the same arm lengths, can it be concluded that the two symbols are congruent?
+
+We have seen that there can exist several such non-congruent figures with different angles between the given arm lengths. Fixing the angle determines the shape and size of the figure.
+
+Thus, if both symbols have the same arm lengths and angle, we can be sure that the figures are congruent.
+
+Figure it Out
+
+1. Check if the two figures are congruent.
+
+2. Circle the pairs that appear congruent.
+
+3. What measurements would you take to create a figure congruent to a given:
+
+(a) Circle (b) Rectangle
+
+Using this, state how would you check if two —
+
+(a) Circles are congruent?
+
+(b) Rectangles are congruent?
+
+4. How would we check if two figures like the one below are congruent?
+
+Use this to identify whether each of the following pairs are congruent.
+
+1.2 Congruence of Triangles
+
+Meera and Rabia have been asked to make a cardboard cutout identical to a triangular frame they have in school. They see that the frame is too big to be traced on a paper and replicated.
+
+Geometric Twins
+
+What do you think they can do?
+
+Measuring the Sidelengths
+
+Can certain measurements of the triangle be used for this? Using a measuring tape, the girls measure the sides of the triangle to be 40 cm, 60 cm, and 80 cm. Then, Rabia takes out her protractor to measure the angles. She is stopped by Meera.
+
+Meera: The angles of the triangle are not required! With the side lengths we have measured, we can create a triangle congruent to this one.
+
+Do you agree with Meera?
+
+Instead of the lengths being 40 cm, 60 cm, and 80 cm, suppose the sidelengths had been 4 cm, 6 cm, 8 cm (this triangle can fit on our page).
+
+Is this information sufficient to replicate the triangle with the same size and shape? If yes, can you do so?
+
+Rabia: If I were to construct this triangle, I would first draw a line segment having one of the given lengths, say 6 cm, and then draw circles from each of its end points with radii 4 cm and 8 cm. But the circles would intersect at two points, forming two triangles: ∆ABE and ∆ABF
+
+E
+
+B A
+
+AB = 6 cm
+
+F
+
+Rabia: Do these two triangles have the same shape and size? If not, then we will not be sure which of these would actually be congruent to the original triangle we are trying to replicate.
+
+Examine whether ∆ABE and ∆ABF are congruent.
+
+For this, you could use one or more of the following methods — tracing and comparing, taking a cutout and superimposing, or observing that AB acts as a line of symmetry due to the ‘sameness’ of the act of construction above and below this line.
+
+We see that ∆ABE and ∆ABF are congruent. From this general construction, we can see that all triangles with the same sidelengths are congruent. Hence, Meera was right when she said that the sidelengths are sufficient to construct a congruent triangle.
+
+Thus, we have the following result: If two triangles have the same sidelengths, then they are congruent. We call this the SSS (Side Side Side) condition for congruence.
+
+Conventions to Express Congruence
+
+The two triangles given below are congruent. How can these two triangles be superimposed? Which vertices of ∆XYZ and ∆ABC should we overlap?
+
+This has to be done so that the equal sides overlap. Figure out how.
+
+C
+
+X
+
+Z
+
+A B Y
+
+Overlapping Vertex A over Vertex X, Vertex B over Vertex Y and Vertex C over Vertex Z will ensure that equal sides overlap, making the triangles fit exactly over each other.
+
+Are there other ways of overlapping the vertices so that the triangles fit exactly over each other?
+
+The fact that these triangles are congruent shows that their respective angles are equal:
+
+∠A = ∠X, ∠B = ∠Y and ∠C = ∠Z
+
+Thus, when two triangles are congruent, there are corresponding vertices, sides and angles which fit exactly over each other when the triangles are made to overlap. In this case, they are
+
+(a) Corresponding Vertices: A and X, B and Y, C and Z
+
+Geometric Twins
+
+(b) Corresponding Sides: AB and XY, BC and YZ, AC and XZ
+
+(c) Corresponding Angles: ∠A and ∠X, ∠B and ∠Y, ∠C and ∠Z
+
+To capture this relation that exists when two triangles are congruent, their congruence is written as follows:
+
+∆ABC ≅ ΔXYZ
+
+p
+
+o
+
+n
+
+es
+
+r
+
+d
+
+r
+
+s
+
+o
+
+t
+
+c
+
+o
+
+∆ABC ≅ ΔXYZ
+
+c
+
+o
+
+o
+
+r
+
+t
+
+r
+
+s
+
+e
+
+d
+
+s
+
+n
+
+p
+
+o
+
+o
+
+p
+
+n
+
+s
+
+e
+
+d
+
+r
+
+s
+
+r
+
+o
+
+t
+
+c
+
+o
+
+By writing this, we mean that:
+
+• the first vertex in the name of ΔABC corresponds to the first vertex in the name of ΔXYZ,
+
+• the second vertex in the name of ΔABC corresponds to the second vertex in the name of ΔXYZ, and
+
+• similarly with the third vertices in the names of ΔABC and ΔXYZ.
+
+By this convention, it is incorrect to write for these two triangles that
+
+ΔACB ≅ ΔXYZ.
+
+However, another correct way of saying it is
+
+ΔACB ≅ ΔXZY.
+
+Can you identify a pair of congruent triangles below? Why are they congruent?
+
+A B
+
+D C Fig.1.1
+
+Consider ΔABD and ΔCDB. Since ABCD is a rectangle, we have
+
+AB = CD AD = CB If the remaining sides of ΔABD and ΔCDB have the same length then the SSS condition is satisfied, confirming the congruence of the two triangles. Is this the case?
+
+The remaining side is a common side BD, so the SSS condition holds. Hence, the triangles are congruent.
+
+We know the corresponding sides of the two triangles. We have to identify the corresponding vertices. Can they be the following?
+
+ΔABD ΔCDB
+
+A C B B D D
+
+Verify this by superimposing paper cutouts of the triangles obtained from the rectangle ABCD (Fig. 1.1).
+
+We see that this correspondence lays the side AB of ΔABD over the side CB of ΔCDB. But these sides need not be equal, and hence, this superimposition will not establish congruence.
+
+Identify the correct correspondence of vertices and express the congruence between the two triangles.
+
+Figure it Out
+
+1. Suppose ΔHEN is congruent to ΔBIG. List all the other correct ways of expressing this congruence.
+
+2. Determine whether the triangles are congruent. If yes, express the congruence.
+
+M
+
+R
+
+6 cm
+
+6 cm
+
+5 cm
+
+J
+
+3.5 cm
+
+3.5 cm
+
+5 cm
+
+E D
+
+A
+
+Geometric Twins
+
+3. In the figure below, AB = AD, CB = CD.
+
+Can you identify any pair of congruent triangles? If yes, explain why they are congruent.
+
+Does AC divide ∠BAD and ∠BCD into two equal parts? Give reasons.
+
+A
+
+D
+
+B
+
+C
+
+4. In the figure below, are ΔDFE and ΔGED congruent to each other? It is given that DF = DG and FE = GE.
+
+D
+
+E
+
+F G
+
+Measuring the Angles
+
+Instead of measuring the three sidelengths of the triangular frame, if Meera and Rabia measure the three angles, can they recreate the triangle exactly?
+
+Suppose the angles are 30°, 70°, and 80°. Can we create an exact copy of the frame with this?
+
+As we see, we can draw many triangles with these measurements that are not congruent.
+
+A
+
+A
+
+80°
+
+A
+
+80°
+
+80°
+
+70°
+
+30°
+
+70°
+
+C B 70° 30°
+
+30° B C
+
+C B
+
+These triangles are seen to have the same shape, but not the same size. Hence, two triangles that have the same set of angles need not be congruent.
+
+Measuring Two Sides and the Included Angle
+
+ΔABC and ΔXYZ are two triangles such that
+
+AB = XY = 6 cm, AC = XZ = 5 cm, and ∠A = ∠X = 30°
+
+Are they congruent?
+
+To check this, we need to see if there can exist non-congruent triangles with the given measurements.
+
+These measurements correspond to the case of two sides and the included angle. We have seen how to construct a triangle given these measurements.
+
+Construct a triangle having the above measurements.
+
+Compare it with the triangles constructed by your classmates. Are the triangles all congruent? Explain why all such triangles with these measurements are congruent.
+
+Thus, when two sides and the included angle of two triangles are equal, the two triangles are congruent.
+
+This is referred to as the SAS (Side Angle Side) condition for congruence.
+
+Measuring Two Sides and a Non-included Angle
+
+What if two sides and a non-included angle are equal?
+
+ΔABC and ΔXYZ are two triangles such that
+
+AB = XY = 6 cm, AC = XZ = 4 cm, and ∠B = ∠Y = 30°
+
+Are they congruent?
+
+Can there exist non-congruent triangles having these measurements? Construct and find out.
+
+Geometric Twins
+
+Looking at a rough diagram helps in planning the construction.
+
+R
+
+4 cm
+
+P Q 30°
+
+6 cm
+
+How does one construct a triangle having these measurements?
+
+Step 1: Draw the base PQ of length 6 cm.
+
+Step 2: Draw a line l from P that makes an angle of 30° with PQ.
+
+l
+
+30°
+
+P Q
+
+6 cm
+
+Step 3: Draw a sufficiently long arc from Q of radius 4 cm cutting the
+
+line l.
+
+l
+
+S
+
+R
+
+30°
+
+P Q 6 cm
+
+How do we find the required triangle from this figure?
+
+A point of intersection of the arc and the line l gives the third point of the required triangle. But we see that the arc intersects the line l at two different points R and S.
+
+Both ΔPQR and ΔPQS satisfy the given measurements.
+
+s
+
+4 cm
+
+R
+
+4 cm
+
+P Q 30°
+
+P Q 30°
+
+6 cm
+
+6 cm
+
+Hence, we can draw two non-congruent triangles with the given measurements.
+
+This is called the SSA (Side Side Angle) condition. We have seen that SSA condition does not guarantee congruence.
+
+We have examined cases using two sides and an angle for determining congruence. Can we use two angles and a side? Let us first take the case of two angles and the included side.
+
+Two Angles and the Included Side
+
+ΔABC and ΔXYZ are two triangles with,
+
+BC = YZ = 5 cm, ∠B = ∠Y = 50° and ∠C = ∠Z = 30°.
+
+Are they congruent?
+
+Can there exist non-congruent triangles having these measurements? Construct and find out.
+
+We have seen how to construct a triangle when we are given two angles and the included side.
+
+This construction should make it clear that all the triangles having these measurements must be congruent to each other. Hence, ΔABC ≅ ΔXYZ.
+
+This condition is referred to as the ASA (Angle Side Angle) condition for congruence.
+
+In the figure, Point O is the midpoint of AD and BC. What can one say about the lengths AB and CD?
+
+A C
+
+O
+
+D B
+
+Geometric Twins
+
+We have,
+
+AO = OD (as O is the midpoint of AD)
+
+BO = OC (as O is the midpoint of BC).
+
+Are there any other equal sides or angles?
+
+We also have,
+
+∠AOB = ∠DOC, as they are vertically opposite angles.
+
+We see that the SAS condition (two sides and the included angle) is satisfied, and so we can conclude that the triangles are congruent.
+
+What are the Corresponding Vertices?
+
+As we need AO and OD to overlap, and BO and CO to overlap for the triangles to exactly fit over each other, the corresponding vertices in ΔAOB and ΔDOC are A and D, O and O (vertex common to both the triangles), and B and C. Thus,
+
+ΔAOB ≅ ΔDOC.
+
+AB and DC are corresponding sides as they overlap when the triangles are superimposed. Thus, their lengths are equal.
+
+Figure it Out
+
+1. Identify whether the triangles below are congruent. What conditions did you use to establish their congruence? Express the congruence.
+
+X
+
+A
+
+7 cm
+
+7 cm
+
+47°
+
+47°
+
+B
+
+Z
+
+5 cm
+
+C
+
+5 cm
+
+Y
+
+2. Given that CD and AB are parallel, and AB = CD, what are the other equal parts in this figure? (Hint: When the lines are parallel, the alternate angles are equal. Are the two resulting triangles congruent? If so, express the congruence.)
+
+D
+
+C
+
+O
+
+A
+
+B
+
+3. Given that ∠ABC = ∠DBC and ∠ACB = ∠DCB, show that ∠BAC = ∠BDC. Are the two triangles congruent?
+
+A
+
+C B
+
+D
+
+4. Identify the equal parts in the following figure, given that ∠ABD = ∠DCA and ∠ACB = ∠DBC.
+
+A
+
+D
+
+B C
+
+Measuring Two Angles and a Non-Included Side
+
+The following triangles ΔABC and ΔXYZ are such that ∠A = ∠X = 35°, ∠C = ∠Z = 75°, and BC = YZ = 4 cm. Are the triangles congruent? Give a reason.
+
+Geometric Twins
+
+A
+
+X
+
+35°
+
+35°
+
+75°
+
+75°
+
+B C 4 cm
+
+Y Z 4 cm
+
+Fig.1.2
+
+How do we proceed with this problem? Here is a method.
+
+What are the measures of ∠B and ∠Y?
+
+We know that the sum of the angles of a triangle is 180°. So ∠B + 35° + 75° = 180°, or ∠B + 110° = 180° Thus, ∠B = 70°. Similarly, ∠Y is also 70°. Thus, we have ∠B = ∠Y.
+
+Does this help in showing that ΔABC and ΔXYZ are congruent?
+
+A
+
+X
+
+35°
+
+35°
+
+75°
+
+75° 70°
+
+70°
+
+B C 4 cm
+
+Y Z 4 cm
+
+These two triangles now satisfy the ASA condition with
+
+∠B = ∠Y
+
+BC = YZ ∠C = ∠Z So, ΔABC ≅ ΔXYZ.
+
+In Fig. 1.2, the equalities are between two angles and the non-included side of the two triangles. This condition is referred to as the AAS (Angle Angle Side) condition.
+
+As we have seen, the AAS condition guarantees congruence. We have seen that the SSA condition doesn’t always guarantee congruence. However, there are some special cases when SSA does guarantee congruence. Here is one such important case.
+
+Measuring Two Sides in a Right Triangle
+
+ΔABC and ΔXYZ are right-angled triangles such that BC = YZ = 4 cm, ∠B = ∠Y = 90° and AC = XZ=5cm. Are they congruent?
+
+Can there exist non-congruent triangles having these measurements? Construct and find out.
+
+Looking at the rough diagram helps in planning the construction.
+
+P
+
+5 cm
+
+Q R 4 cm
+
+Step 1: Draw the base QR of length 4 cm. Step 2: Draw a line l perpendicular to QR from Q. Step 3: From R, cut an arc on line l of radius 5 cm. Step 4: Let P be the point at which the arc intersects the line l. Join PR.
+
+P
+
+Q R 4 cm
+
+ΔPQR is the required triangle.
+
+Geometric Twins
+
+Consider the downward extension of line l below QR. Would the arc from R meet this line downwards as well (as in the case of triangle construction when the sidelengths are given)? If so, would this lead to a triangle whose size and shape are different from ΔPQR, and yet has the given measurements?
+
+It can be seen that the other triangle we get below is also congruent to ΔPQR. Why? Therefore, all triangles having these measurements will be congruent to each other.
+
+Thus, we conclude that ΔABC ≅ ΔXYZ. In the case that we have considered, the parts that are equal to their corresponding parts in another triangle are
+
+(a) the right angle
+
+(b) two other sides, one of which is opposite to the right angle. This
+
+side is called the hypotenuse. This is called the RHS (Right Hypotenuse Side) condition, and is one more condition for congruence. Conditions that are sufficient to guarantee congruence
+
+From the discussions so far, we can see that two triangles are congruent if any of the following conditions are satisfied:
+
+(a) SSS condition (b) SAS condition
+
+(c) ASA condition (d) AAS condition
+
+(e) RHS condition
+
+1.3 Angles of Isosceles and Equilateral Triangles
+
+Congruence is a very powerful tool for studying properties of geometric figures. Let us use it to discover an important property of isosceles triangles.
+
+ΔABC is isosceles with AB = AC, and ∠A = 80. What can we say about ∠B and ∠C?
+
+A
+
+80°
+
+B C
+
+Construct the altitude from A to BC.
+
+We have, AB = AC (given) ∠ADB = ∠ADC = 90° (from construction) AD is a common side of the two triangles ΔADB and ΔADC.
+
+A
+
+D B C
+
+Thus, the triangles satisfy the RHS condition. Hence, ΔADB ≅ ΔADC. This shows that ∠B = ∠C, as they are corresponding parts of congruent triangles.
+
+Thus, the angles opposite to equal sides are equal.
+
+Can you use this fact to find ∠B and ∠C?
+
+Angles in an Equilateral Triangle
+
+Equilateral triangles are those in which all the sides have equal lengths.
+
+What can we say about their angles?
+
+We can use the recently discovered fact that angles opposite to equal sides are equal.
+
+A
+
+B C
+
+The sides AB and AC are equal. So ∠B = ∠C.
+
+A
+
+B C
+
+Geometric Twins
+
+Similarly, the sides AB and BC are equal. So ∠A = ∠C.
+
+So, all the three angles of an equilateral triangle are equal, just like their sides.
+
+What could be their measures?
+
+As the three angles should add up to 180°, we have 3 × angle in an equilateral triangle = 180°. So each angle is 60°.
+
+Verify this by construction.
+
+Thus, just using the notion of congruence, we have deduced that the angles of an equilateral triangle are all 60°.
+
+Congruent Triangles in Real Life: Congruent triangles can be seen in various constructions and designs from ancient to modern times. Here are a few examples.
+
+World-famous Louvre Museum
+
+World-famous Egyptian Pyramid of Giza
+
+in Paris
+
+Rangoli design Dome design
+
+Rabindra Setu or Howrah Bridge
+
+Describe the congruent triangles you see in each picture.
+
+Figure it Out
+
+1. ΔAIR ≅ ΔFLY. Identify the corresponding vertices, sides and angles.
+
+2. Each of the following cases contains certain measurements taken from two triangles. Identify the pairs in which the triangles are congruent to each other, with reason. Express the congruence whenever they are congruent.
+
+(a) AB = DE (b) AB = EF BC = EF ∠A = ∠E CA = DF AC = ED
+
+(c) AB = DF (d) ∠A = ∠D ∠B = ∠D = 90° ∠B = ∠E AC = FE AC = DF
+
+(e) AB = DF ∠B = ∠F AC = DE
+
+3. It is given that OB = OC, and OA = OD. Show that AB is parallel to CD. [Hint: AD is a transversal for these two lines. Are there any equal alternate angles?]
+
+A
+
+C
+
+O
+
+D B
+
+Geometric Twins
+
+4. ABCD is a square. Show that ΔABC ≅ ΔADC. Is ΔABC also congruent to ΔCDA?
+
+A
+
+B
+
+D
+
+C
+
+Give more examples of two triangles where one triangle is congruent to the other in two different ways, as in the case above. Can you give an example of two triangles where one is congruent to the other in six different ways?
+
+5. Find ∠B and ∠C, if A is the centre of the circle.
+
+A
+
+120°
+
+C B
+
+6. Find the missing angles. As per the convention that we have been following, all line segments marked with a single ‘|’ are equal to each other and those marked with a double ‘|’ are equal to each other, etc.
+
+D
+
+V
+
+R
+
+C
+
+68°
+
+34°
+
+98°
+
+F
+
+44°
+
+46°
+
+U
+
+34°
+
+90°
+
+56°
+
+30°
+
+44°
+
+56°
+
+34°
+
+A
+
+B
+
+K
+
+L
+
+SUMMARY
+
+• Figures that have the same shape and size are said to be congruent. These figures can be superimposed so that one fits exactly over the other. 
+• While verifying congruence, a figure can be rotated or flipped to make it fit exactly over the other figure via superimposition. 
+• When two triangles have the same sidelengths, we say that the SSS (Side Side Side) condition is satisfied. The SSS condition guarantees congruence. 
+• When two sides and the included angle of one triangle are equal to the two sides and the included angle of another triangle, we say that the SAS (Side Angle Side) condition is satisfied. The SAS condition also guarantees congruence. 
+• When two angles and the included side of one triangle are equal to the two angles and the included angle of another triangle, we say that the ASA (Angle Side Angle) condition is satisfied. The ASA condition guarantees congruence. Congruence holds even if the side is not included between the angles AAS (Angle Angle Side) condition. 
+• In a right-angled triangle, the side opposite to the right angle is called the hypotenuse. 
+• When a side and a hypotenuse of a right-angled triangle are equal to a side and the hypotenuse of another right-angled triangle, we say that the RHS (Right Hypotenuse Side) condition is satisfied. The RHS condition also guarantees congruence. 
+• Two triangles need not be congruent if two sides and a non-included angle are equal. 
+• In a triangle, angles opposite to equal sides are equal. 
+• The angles in an equilateral triangle are all 60°.
+
+Expression Engineer!
+
+Draw lines and split the region consisting of white squares into 6 smaller congruent regions.
