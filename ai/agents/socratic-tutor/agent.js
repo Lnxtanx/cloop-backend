@@ -431,6 +431,7 @@ async function processTurn({
       directive: stateInstruction,
       system_prompt: rawTutorOutput._inspector?.prompt || null,
       academic_boundaries: enrichedTeachingContext.academic_grounding.academic_boundaries,
+      textbook_content: enrichedTeachingContext.academic_grounding.textbook_material || topic.textbook_content || null,
       academic_notes: enrichedTeachingContext.academic_grounding,
       enriched_context: enrichedTeachingContext,
     },

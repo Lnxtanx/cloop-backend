@@ -617,8 +617,9 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 				console.warn('[topic-chats] AKG resolution non-fatal:', akgErr.message);
 			}
 
-			// Generate greeting with goals and AKG prior anchor context
-			const greetingData = await generateTopicGreeting(topic.title, topic.content, topicGoals, userProfile, akgContext)
+			// Generate greeting with goals, authentic NCERT textbook content, and AKG prior anchor context
+			const authenticTextbook = topic.textbook_content || topic.content || '';
+			const greetingData = await generateTopicGreeting(topic.title, authenticTextbook, topicGoals, userProfile, akgContext, authenticTextbook)
 			initialGreeting = greetingData.messages
 
 			console.log('\n✅ Greeting Generated and Will Be Sent to Frontend:');

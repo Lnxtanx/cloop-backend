@@ -41,7 +41,7 @@ function cleanMisconceptions(list) {
     .filter(Boolean);
 }
 
-function buildTutorSnippet({ preceding_anchor, succeeding_teaser, in_scope_concepts, out_of_scope_boundaries }) {
+function buildTutorSnippet({ preceding_anchor, succeeding_teaser, in_scope_concepts, out_of_scope_boundaries, textbook_content }) {
   const parts = [];
   if (preceding_anchor) {
     parts.push(`FOUNDATION: Anchor opening probe in: ${preceding_anchor}`);
@@ -54,6 +54,9 @@ function buildTutorSnippet({ preceding_anchor, succeeding_teaser, in_scope_conce
   }
   if (succeeding_teaser) {
     parts.push(`WRAP TEASER: Tease next topic: ${succeeding_teaser}`);
+  }
+  if (textbook_content && typeof textbook_content === 'string' && textbook_content.trim()) {
+    parts.push(`\nAUTHENTIC NCERT TEXTBOOK MATERIAL (GROUND TRUTH):\n"""\n${textbook_content.trim()}\n"""\nTeach strictly using the authentic examples, scenarios, activities, and definitions from this textbook material above.`);
   }
   return parts.join('\n');
 }
@@ -91,6 +94,7 @@ function buildAkgContext(raw, topic = null) {
     succeeding_teaser,
     in_scope_concepts,
     out_of_scope_boundaries,
+    textbook_content,
   });
 
   const evaluatorSnippet = buildEvaluatorSnippet({
