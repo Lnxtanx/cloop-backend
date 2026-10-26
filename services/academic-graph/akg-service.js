@@ -1,11 +1,14 @@
 const { buildAkgContext } = require('./akg-context-builder');
 const { synthesizeTopicIntelligence, buildFallbackIntelligence } = require('./akg-synthesizer');
 
+const akgMemoryCache = new Map();
+
 /**
  * Resolve academic intelligence for a topic using a Just-In-Time read-through cache:
- * 1. Check topic_academic_intelligence table for topic_id.
- * 2. If present -> return built context directly.
- * 3. If missing -> query sequence context (preceding/succeeding topic), synthesize via LLM,
+ * 1. Check in-memory process cache (0ms).
+ * 2. Check topic_academic_intelligence table for topic_id.
+ * 3. If present -> return built context directly.
+ * 4. If missing -> query sequence context (preceding/succeeding topic), synthesize via LLM,
  *    save to topic_academic_intelligence table, and return built context.
  */
 async function resolveTopicIntelligence(topicOrId, prismaClient = null, options = {}) {
@@ -23,14 +26,21 @@ async function resolveTopicIntelligence(topicOrId, prismaClient = null, options 
     return null;
   }
 
-  // 1. Read-through cache check
+  // 0. Fast in-memory process cache check (0.0ms across turns)
+  if (akgMemoryCache.has(topicId)) {
+    return akgMemoryCache.get(topicId);
+  }
+
+  // 1. Read-through database cache check
   try {
     if (prisma?.topic_academic_intelligence?.findUnique) {
       const cached = await prisma.topic_academic_intelligence.findUnique({
         where: { topic_id: topicId },
       });
       if (cached) {
-        return buildAkgContext(cached);
+        const built = buildAkgContext(cached);
+        akgMemoryCache.set(topicId, built);
+        return built;
       }
     }
   } catch (readErr) {
@@ -247,7 +257,9 @@ async function resolveTopicIntelligence(topicOrId, prismaClient = null, options 
           common_misconceptions: synthesized.common_misconceptions,
         },
       });
-      return buildAkgContext(saved);
+      const built = buildAkgContext(saved);
+      akgMemoryCache.set(topicId, built);
+      return built;
     } catch (saveErr) {
       console.warn(`[AKG Service] JIT persistence failed for topic ${topicId} (non-fatal):`, saveErr.message);
     }
@@ -255,7 +267,11 @@ async function resolveTopicIntelligence(topicOrId, prismaClient = null, options 
     console.warn(`[AKG Service] Degenerate fallback used for topic ${topicId}; skipping DB persistence to prevent caching ungrounded perimeter.`);
   }
 
-  return buildAkgContext(synthesized);
+  const built = buildAkgContext(synthesized);
+  if (!synthesized?.is_fallback) {
+    akgMemoryCache.set(topicId, built);
+  }
+  return built;
 }
 
 module.exports = {

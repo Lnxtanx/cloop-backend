@@ -1,5 +1,5 @@
--- Textbook Content Seed for Class 8 Science - Chapter 5
--- Generated: 2026-10-26T08:14:31.295Z
+-- Textbook Content Seed for Class 8 science - Chapter 5
+-- Generated: 2026-10-26T08:45:20.015Z
 BEGIN;
 
 UPDATE global_topics SET textbook_content = 'Exploring Forces 5

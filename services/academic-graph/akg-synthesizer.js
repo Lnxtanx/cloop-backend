@@ -38,8 +38,8 @@ TARGET TOPIC: "${topic.title}"
 ${chapterContext}
 ${precContext}
 ${succContext}
-TOPIC SYLLABUS:
-${String(topic.content || '').substring(0, 1000)}${goalsContext}
+TOPIC TEXTBOOK CONTENT (NCERT/CBSE GROUND TRUTH):
+${String(topic.textbook_content || topic.content || '').substring(0, 3000)}${goalsContext}
 
 YOUR TASK:
 Determine the exact pedagogical perimeter for ${classLevel}:

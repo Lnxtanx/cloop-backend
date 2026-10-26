@@ -557,7 +557,7 @@ function buildTeachingContext(params) {
   } = params;
 
   const topicTitle = topic?.title || 'Academic Topic';
-  const topicContent = topic?.content || '';
+  const topicContent = topic?.textbook_content || topic?.content || '';
   const totalGoals = Math.max(1, goals.length);
   const currentGoalIdx = Math.min(Math.max(0, goalIndex), totalGoals - 1);
   const currentGoal = goals[currentGoalIdx] || { title: topicTitle, description: topicContent };
@@ -604,6 +604,7 @@ function buildTeachingContext(params) {
       board_name: boardName,
       grade_level: gradeLevel,
       class_level: classLevel,
+      textbook_material: (topic?.textbook_content || topicContent || '').slice(0, 2000),
       current_goal: {
         index: currentGoalIdx + 1,
         total: totalGoals,

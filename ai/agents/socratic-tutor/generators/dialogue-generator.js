@@ -178,6 +178,7 @@ function buildTutorPrompt(params) {
     support_request_kind: supportRequestKind,
     topic_recap: supportRequestKind === 'recap_topic' ? topicFactsFor(params) : null,
     learning_point_id: params.learning_point_id || null,
+    textbook_material: enriched.academic_grounding.textbook_material || null,
     next_goal: {
       title: enriched.academic_grounding.current_goal.title,
       description: enriched.academic_grounding.current_goal.description,
@@ -248,6 +249,7 @@ ${JSON.stringify(turnData)}
 STRICT RULES:
 1. TEACH FROM THE SUPPLIED SOURCE & GRADE SCOPE.
 Use the curriculum, academic notes and current goal.
+If textbook_material is present in TURN DATA, you have authentic NCERT/CBSE textbook ground truth. Teach strictly from this material, using its authentic examples, activities, definitions, and terminology. Do not hallucinate outside the curriculum text.
 Empty definition/mechanism fields mean source facts are unavailable; never fill them with a title-based definition or an invented mechanism.
 Match explanation depth to the student's grade:
 - Class 6: Pure concrete observational phenomena; ZERO algebraic formulas or complex jargon.

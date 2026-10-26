@@ -98,9 +98,10 @@ async function processTutorTurn(params) {
     currentState = null, userProfile = {}, wantsVideo: videoRequestedByCaller = false, akgContext = null, userId = null } = params || {};
   const explicitMedia = mediaRequests(studentMessage);
   const wantsVideo = videoRequestedByCaller || explicitMedia.video;
+  const rawContent = topic.textbook_content || topic.content || '';
   const goalTotal = Math.max(1, goals.length);
   const state = currentState || initialState(goalTotal);
-  const fallbackGoal = { id: 0, title: topic.title, description: topic.content || '' };
+  const fallbackGoal = { id: 0, title: topic.title, description: rawContent };
   const goalForState = st => goals[Math.min(scoredGoalIndex(st) || 0, goalTotal - 1)] || fallbackGoal;
   const currentGoal = goalForState(state);
   const lastQuestionText = findLastQuestion(chatHistory, state);
@@ -125,7 +126,7 @@ async function processTutorTurn(params) {
       phase: state.phase,
       response_mode: state.response_mode || null,
       awaiting_learning_choice: isAwaitingChoice,
-      topicTitle: topic.title, topicContent: topic.content || '', currentGoal,
+      topicTitle: topic.title, topicContent: rawContent, currentGoal,
       goalIndex: scoredGoalIndex(state), totalGoals: goalTotal, classLevel, akgContext, userId });
   }
   const intent = normalizeIntent(evaluatorResult.intent);
@@ -177,14 +178,14 @@ async function processTutorTurn(params) {
 
   const generatorGoal = goalForState(nextState);
   const currentGoalIdx = scoredGoalIndex(nextState);
-  const academicNotes = generatorGoal ? buildAcademicNotes(generatorGoal, topic.content || '') : null;
+  const academicNotes = generatorGoal ? buildAcademicNotes(generatorGoal, rawContent) : null;
   const isRepetitionComplaint = /\b(already\s+asked|same\s+question|asked\s+(this\s+)?before|repeat(ing|ed)?)\b/i.test(studentMessage || '');
   const sameAssessment = !starting && !nextState.assessmentAdvanced && !ending &&
     state.phase === nextState.phase && scoredGoalIndex(state) === currentGoalIdx &&
     !isRepetitionComplaint && !isHelpOrIdk;
   const goalMap = buildGoalMap(goals, currentGoalIdx, nextState.phase);
   const generationContext = { topicTitle: topic.title, currentGoalTitle: generatorGoal.title,
-    currentGoalDescription: generatorGoal.description || '', topicContent: topic.content || '',
+    currentGoalDescription: generatorGoal.description || '', topicContent: rawContent, topicTextbook: topic.textbook_content || '',
     academicNotes,
     previousGoalTitle: currentGoal.title, previousGoalDescription: currentGoal.description || '',
     studentMessage, evaluatorResult, stateInstruction, questionType, phase: nextState.phase,

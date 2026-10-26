@@ -158,8 +158,9 @@ async function processTurn({
   const explicitMedia = mediaRequests(studentMessage);
   wantsVideo = wantsVideo || explicitMedia.video;
   const goalTotal = Math.max(1, goals.length);
+  const rawContent = topic.textbook_content || topic.content || '';
   const state = currentState || initialState(goalTotal);
-  const fallbackGoal = { id: 0, title: topic.title, description: topic.content || '' };
+  const fallbackGoal = { id: 0, title: topic.title, description: rawContent };
   const goalForState = st => goals[Math.min(scoredGoalIndex(st) || 0, goalTotal - 1)] || fallbackGoal;
   const currentGoal = goalForState(state);
   const lastQuestionText = findLastQuestion(chatHistory, state);
@@ -188,7 +189,7 @@ async function processTurn({
       response_mode: state.response_mode || null,
       awaiting_learning_choice: isAwaitingChoice,
       topicTitle: topic.title,
-      topicContent: topic.content || '',
+      topicContent: rawContent,
       currentGoal,
       goalIndex: scoredGoalIndex(state),
       totalGoals: goalTotal,
@@ -291,7 +292,8 @@ async function processTurn({
     topicTitle: topic.title,
     currentGoalTitle: generatorGoal.title,
     currentGoalDescription: generatorGoal.description || '',
-    topicContent: topic.content || '',
+    topicContent: rawContent,
+    topicTextbook: topic.textbook_content || '',
     academicNotes: enrichedTeachingContext.academic_grounding,
     enrichedContext: enrichedTeachingContext,
     previousGoalTitle: currentGoal.title,

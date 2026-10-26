@@ -162,6 +162,7 @@ function buildTutorPrompt(params) {
     support_request_kind: supportRequestKind,
     topic_recap: supportRequestKind === 'recap_topic' ? topicFactsFor(params) : null,
     learning_point_id: params.learning_point_id || null,
+    textbook_material: (params.topicTextbook || params.topicContent || '').slice(0, 1500),
     next_goal: {
       title: currentGoalTitle,
       description: currentGoalDescription,
@@ -219,6 +220,7 @@ ${JSON.stringify(turnData)}
 STRICT RULES:
 1. TEACH ACCORDING TO SYLLABUS & GRADE LEVEL (${classLevel}).
 Use the curriculum, academic notes and current goal matching ${classLevel} syllabus depth.
+If textbook_material is present in TURN DATA, you have authentic NCERT/CBSE textbook ground truth. Teach strictly from this material, using its authentic examples, activities, definitions, and terminology. Do not hallucinate outside the curriculum text.
 Empty definition/mechanism fields mean source facts are unavailable; never fill them with a title-based definition or an invented mechanism.
 Explain the precise definition, terminology and mechanism.
 For Class 9-10 Physics: Use authentic scientific phenomena and formal terms (e.g. magnetic field, field lines, closed continuous loops, North to South outside magnet, magnetic compass deflection, electric current).
