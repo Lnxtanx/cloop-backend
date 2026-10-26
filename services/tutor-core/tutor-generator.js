@@ -162,7 +162,7 @@ function buildTutorPrompt(params) {
     support_request_kind: supportRequestKind,
     topic_recap: supportRequestKind === 'recap_topic' ? topicFactsFor(params) : null,
     learning_point_id: params.learning_point_id || null,
-    textbook_material: (params.topicTextbook || params.topicContent || '').slice(0, 1500),
+    textbook_material: params.topicTextbook || params.topicContent || params.akgContext?.textbook_content || '',
     next_goal: {
       title: currentGoalTitle,
       description: currentGoalDescription,

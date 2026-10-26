@@ -76,7 +76,7 @@ function buildEvaluatorSnippet({ in_scope_concepts, out_of_scope_boundaries, com
   return parts.join('\n');
 }
 
-function buildAkgContext(raw) {
+function buildAkgContext(raw, topic = null) {
   if (!raw || typeof raw !== 'object') return null;
 
   const preceding_anchor = typeof raw.preceding_anchor === 'string' ? raw.preceding_anchor.trim() : null;
@@ -84,6 +84,7 @@ function buildAkgContext(raw) {
   const in_scope_concepts = cleanStringList(safeParse(raw.in_scope_concepts, []));
   const out_of_scope_boundaries = cleanStringList(safeParse(raw.out_of_scope_boundaries, []));
   const common_misconceptions = cleanMisconceptions(safeParse(raw.common_misconceptions, []));
+  const textbook_content = topic?.textbook_content || raw.textbook_content || raw.topic?.textbook_content || '';
 
   const tutorSnippet = buildTutorSnippet({
     preceding_anchor,
@@ -104,11 +105,13 @@ function buildAkgContext(raw) {
     in_scope_concepts,
     out_of_scope_boundaries,
     common_misconceptions,
+    textbook_content,
     tutor_context: {
       preceding_anchor,
       succeeding_teaser,
       in_scope: in_scope_concepts,
       boundaries: out_of_scope_boundaries,
+      textbook_content,
       prompt_snippet: tutorSnippet,
     },
     evaluator_context: {

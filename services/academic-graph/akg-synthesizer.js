@@ -39,7 +39,7 @@ ${chapterContext}
 ${precContext}
 ${succContext}
 TOPIC TEXTBOOK CONTENT (NCERT/CBSE GROUND TRUTH):
-${String(topic.textbook_content || topic.content || '').substring(0, 3000)}${goalsContext}
+${String(topic.textbook_content || topic.content || '')}${goalsContext}
 
 YOUR TASK:
 Determine the exact pedagogical perimeter for ${classLevel}:

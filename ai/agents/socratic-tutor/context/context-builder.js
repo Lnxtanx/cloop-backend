@@ -604,7 +604,7 @@ function buildTeachingContext(params) {
       board_name: boardName,
       grade_level: gradeLevel,
       class_level: classLevel,
-      textbook_material: (topic?.textbook_content || topicContent || '').slice(0, 2000),
+      textbook_material: topic?.textbook_content || topicContent || akgContext?.textbook_content || '',
       current_goal: {
         index: currentGoalIdx + 1,
         total: totalGoals,

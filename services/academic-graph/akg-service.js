@@ -36,9 +36,17 @@ async function resolveTopicIntelligence(topicOrId, prismaClient = null, options 
     if (prisma?.topic_academic_intelligence?.findUnique) {
       const cached = await prisma.topic_academic_intelligence.findUnique({
         where: { topic_id: topicId },
+        include: {
+          topic: {
+            select: {
+              textbook_content: true,
+              content: true,
+            }
+          }
+        }
       });
       if (cached) {
-        const built = buildAkgContext(cached);
+        const built = buildAkgContext(cached, typeof topicOrId === 'object' ? topicOrId : null);
         akgMemoryCache.set(topicId, built);
         return built;
       }
@@ -257,7 +265,7 @@ async function resolveTopicIntelligence(topicOrId, prismaClient = null, options 
           common_misconceptions: synthesized.common_misconceptions,
         },
       });
-      const built = buildAkgContext(saved);
+      const built = buildAkgContext(saved, topicRecord || (typeof topicOrId === 'object' ? topicOrId : null));
       akgMemoryCache.set(topicId, built);
       return built;
     } catch (saveErr) {
@@ -267,7 +275,7 @@ async function resolveTopicIntelligence(topicOrId, prismaClient = null, options 
     console.warn(`[AKG Service] Degenerate fallback used for topic ${topicId}; skipping DB persistence to prevent caching ungrounded perimeter.`);
   }
 
-  const built = buildAkgContext(synthesized);
+  const built = buildAkgContext(synthesized, topicRecord || (typeof topicOrId === 'object' ? topicOrId : null));
   if (!synthesized?.is_fallback) {
     akgMemoryCache.set(topicId, built);
   }
