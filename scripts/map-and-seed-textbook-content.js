@@ -317,7 +317,7 @@ async function main() {
     const itemGrade = item.class.replace('class-', 'Class ');
     const itemSubjectSlug = item.subject;
     const itemChapterNo = item.chapter_no;
-    const chapterFilePath = path.join(BASE_TEXTBOOKS_DIR, '..', item.out_file);
+    const chapterFilePath = path.join(BASE_TEXTBOOKS_DIR, item.class, item.subject, `chapter-${String(item.chapter_no).padStart(2, '0')}.txt`);
 
     if (filterGrade && filterGrade.toLowerCase() !== itemGrade.toLowerCase()) continue;
     if (filterSubject) {
