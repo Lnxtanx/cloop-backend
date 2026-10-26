@@ -390,6 +390,18 @@ function resolveMatchingChapter(chap, dbChapters, rawText) {
     if (match) return match;
   }
 
+  // Class 7 Mathematics Part 2 (order 9-15)
+  if (chap.grade === 'Class 7' && chap.subjectSlug === 'maths-part-2') {
+    const match = candidates.find(dbc => dbc.order === chap.chapterNo + 8);
+    if (match) return match;
+  }
+
+  // Class 9 Mathematics Part 2 (order 9-14)
+  if (chap.grade === 'Class 9' && chap.subjectSlug === 'maths-part-2') {
+    const match = candidates.find(dbc => dbc.order === chap.chapterNo + 8);
+    if (match) return match;
+  }
+
   // 2. Normalized Title Matching from File Header Lines
   const headerLines = rawText.split('\n')
     .map(l => l.trim())
