@@ -94,7 +94,7 @@ function sqlEscape(str) {
   return str.replace(/'/g, "''");
 }
 
-async function mapChapterTextToTopics(chapterTitle, paragraphs, topics) {
+async function mapChapterTextToTopics(chapterTitle, paragraphs, topics, retries = 2) {
   const prompt = `You are an expert curriculum and textbook alignment engine.
 Your task is to cleanly divide and map 100% of an extracted textbook chapter across its curriculum topics.
 
@@ -124,18 +124,25 @@ MAPPING RULES:
 
 Return JSON ONLY. No prose outside the JSON.`;
 
-  const response = await invokeModel(
-    'You are a precise curriculum mapping engine. You output valid JSON only.',
-    [{ role: 'user', content: prompt }],
-    { jsonFormat: true, temperature: 0.1, model: 'deepseek-flash', thinking: 'disabled' }
-  );
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const response = await invokeModel(
+        'You are a precise curriculum mapping engine. You output valid JSON only.',
+        [{ role: 'user', content: prompt }],
+        { jsonFormat: true, temperature: 0.1, model: 'deepseek-flash', thinking: 'disabled' }
+      );
 
-  const parsed = extractJson(response);
-  if (!parsed || !Array.isArray(parsed.mappings)) {
-    throw new Error('AI response did not contain a valid "mappings" array: ' + JSON.stringify(response));
+      const parsed = extractJson(response);
+      if (parsed && Array.isArray(parsed.mappings)) {
+        return parsed.mappings;
+      }
+      throw new Error('AI response did not contain a valid "mappings" array: ' + JSON.stringify(response).slice(0, 150));
+    } catch (err) {
+      if (attempt === retries) throw err;
+      console.warn(`[Retry] Retrying mapping for ${chapterTitle} (attempt ${attempt + 1}/${retries}): ${err.message}`);
+      await new Promise(r => setTimeout(r, 2000));
+    }
   }
-
-  return parsed.mappings;
 }
 
 /**
@@ -269,6 +276,7 @@ async function runPool(tasks, concurrency) {
         const res = await tasks[currentIdx]();
         results[currentIdx] = { status: 'fulfilled', value: res };
       } catch (err) {
+        console.error(`[Task ${currentIdx + 1}] Error:`, err.message || err);
         results[currentIdx] = { status: 'rejected', reason: err };
       }
     }
@@ -402,7 +410,24 @@ function resolveMatchingChapter(chap, dbChapters, rawText) {
     if (match) return match;
   }
 
-  // 2. Normalized Title Matching from File Header Lines
+  // Skip english-workbook so it doesn't overwrite First Flight core textbook
+  if (chap.subjectSlug === 'english-workbook') {
+    return null;
+  }
+
+  // 2. Direct order match for single-part subjects (Science, Maths Part 1, Hindi, English, EVS)
+  const isMultiPart = [
+    'history', 'geography', 'civics', 'economics',
+    'maths-part-2', 'social-science-part-2',
+    'english-supplementary', 'english-workbook'
+  ].includes(chap.subjectSlug);
+
+  if (!isMultiPart) {
+    const orderMatch = candidates.find(dbc => dbc.order === chap.chapterNo);
+    if (orderMatch) return orderMatch;
+  }
+
+  // 3. Normalized Title Matching from File Header Lines (Fallback for multi-part books)
   const headerLines = rawText.split('\n')
     .map(l => l.trim())
     .filter(l => l && !l.startsWith('#') && !l.startsWith('NOTES FOR') && !l.startsWith('SECTION'))
@@ -418,9 +443,8 @@ function resolveMatchingChapter(chap, dbChapters, rawText) {
     }
   }
 
-  // 3. Direct order match for single-part subjects
-  const orderMatch = candidates.find(dbc => dbc.order === chap.chapterNo);
-  if (orderMatch) return orderMatch;
+  const orderFallback = candidates.find(dbc => dbc.order === chap.chapterNo);
+  if (orderFallback) return orderFallback;
 
   return null;
 }
