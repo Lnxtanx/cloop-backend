@@ -47,7 +47,7 @@ const SUBJECT_NAME_ALIASES = {
   'civics': ['Social Studies', 'Civics', 'Social Science'],
   'history': ['Social Studies', 'History', 'Social Science'],
   'economics': ['Social Studies', 'Economics', 'Social Science'],
-  'evs': ['Environmental Studies (EVS)', 'EVS'],
+  'evs': ['Environmental Studies', 'Environmental Studies (EVS)', 'Science', 'EVS'],
   'arts': ['Art & Craft', 'Arts'],
   'hindi': ['Hindi'],
   'physical-education': ['Physical Education', 'Health and Physical Education'],
