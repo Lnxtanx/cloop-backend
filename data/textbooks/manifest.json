@@ -1,676 +1,2993 @@
 [
   {
-    "class": "class-10",
-    "subject": "english",
+    "class": "class-5",
+    "subject": "arts",
     "chapter_no": 1,
-    "pdf_name": "jeff101.pdf",
-    "out_file": "textbooks\\class-10\\english\\chapter-01.txt",
-    "characters": 21678,
-    "paragraphs": 214
+    "out_file": "data\\textbooks\\class-5\\arts\\chapter-01.txt",
+    "characters": 9623,
+    "paragraphs": 161
   },
   {
-    "class": "class-10",
-    "subject": "english",
+    "class": "class-5",
+    "subject": "arts",
     "chapter_no": 2,
-    "pdf_name": "jeff102.pdf",
-    "out_file": "textbooks\\class-10\\english\\chapter-02.txt",
-    "characters": 25494,
-    "paragraphs": 255
+    "out_file": "data\\textbooks\\class-5\\arts\\chapter-02.txt",
+    "characters": 7617,
+    "paragraphs": 108
   },
   {
-    "class": "class-10",
-    "subject": "english",
+    "class": "class-5",
+    "subject": "arts",
     "chapter_no": 3,
-    "pdf_name": "jeff103.pdf",
-    "out_file": "textbooks\\class-10\\english\\chapter-03.txt",
-    "characters": 20643,
-    "paragraphs": 188
-  },
-  {
-    "class": "class-10",
-    "subject": "english",
-    "chapter_no": 4,
-    "pdf_name": "jeff104.pdf",
-    "out_file": "textbooks\\class-10\\english\\chapter-04.txt",
-    "characters": 26862,
-    "paragraphs": 247
-  },
-  {
-    "class": "class-10",
-    "subject": "english",
-    "chapter_no": 5,
-    "pdf_name": "jeff105.pdf",
-    "out_file": "textbooks\\class-10\\english\\chapter-05.txt",
-    "characters": 28042,
-    "paragraphs": 279
-  },
-  {
-    "class": "class-10",
-    "subject": "english",
-    "chapter_no": 6,
-    "pdf_name": "jeff106.pdf",
-    "out_file": "textbooks\\class-10\\english\\chapter-06.txt",
-    "characters": 24590,
-    "paragraphs": 213
-  },
-  {
-    "class": "class-10",
-    "subject": "english",
-    "chapter_no": 7,
-    "pdf_name": "jeff107.pdf",
-    "out_file": "textbooks\\class-10\\english\\chapter-07.txt",
-    "characters": 25393,
-    "paragraphs": 218
-  },
-  {
-    "class": "class-10",
-    "subject": "english",
-    "chapter_no": 8,
-    "pdf_name": "jeff108.pdf",
-    "out_file": "textbooks\\class-10\\english\\chapter-08.txt",
-    "characters": 15693,
-    "paragraphs": 128
-  },
-  {
-    "class": "class-10",
-    "subject": "english",
-    "chapter_no": 9,
-    "pdf_name": "jeff109.pdf",
-    "out_file": "textbooks\\class-10\\english\\chapter-09.txt",
-    "characters": 39435,
-    "paragraphs": 261
-  },
-  {
-    "class": "class-10",
-    "subject": "english-supplementary",
-    "chapter_no": 1,
-    "pdf_name": "jefp101.pdf",
-    "out_file": "textbooks\\class-10\\english-supplementary\\chapter-01.txt",
-    "characters": 10695,
-    "paragraphs": 67
-  },
-  {
-    "class": "class-10",
-    "subject": "english-supplementary",
-    "chapter_no": 2,
-    "pdf_name": "jefp102.pdf",
-    "out_file": "textbooks\\class-10\\english-supplementary\\chapter-02.txt",
-    "characters": 9553,
-    "paragraphs": 58
-  },
-  {
-    "class": "class-10",
-    "subject": "english-supplementary",
-    "chapter_no": 3,
-    "pdf_name": "jefp103.pdf",
-    "out_file": "textbooks\\class-10\\english-supplementary\\chapter-03.txt",
-    "characters": 8552,
-    "paragraphs": 54
-  },
-  {
-    "class": "class-10",
-    "subject": "english-supplementary",
-    "chapter_no": 4,
-    "pdf_name": "jefp104.pdf",
-    "out_file": "textbooks\\class-10\\english-supplementary\\chapter-04.txt",
-    "characters": 9078,
-    "paragraphs": 66
-  },
-  {
-    "class": "class-10",
-    "subject": "english-supplementary",
-    "chapter_no": 5,
-    "pdf_name": "jefp105.pdf",
-    "out_file": "textbooks\\class-10\\english-supplementary\\chapter-05.txt",
-    "characters": 9702,
-    "paragraphs": 59
-  },
-  {
-    "class": "class-10",
-    "subject": "english-supplementary",
-    "chapter_no": 6,
-    "pdf_name": "jefp106.pdf",
-    "out_file": "textbooks\\class-10\\english-supplementary\\chapter-06.txt",
-    "characters": 14079,
-    "paragraphs": 87
-  },
-  {
-    "class": "class-10",
-    "subject": "english-supplementary",
-    "chapter_no": 7,
-    "pdf_name": "jefp107.pdf",
-    "out_file": "textbooks\\class-10\\english-supplementary\\chapter-07.txt",
-    "characters": 14702,
-    "paragraphs": 101
-  },
-  {
-    "class": "class-10",
-    "subject": "english-supplementary",
-    "chapter_no": 8,
-    "pdf_name": "jefp108.pdf",
-    "out_file": "textbooks\\class-10\\english-supplementary\\chapter-08.txt",
-    "characters": 14917,
-    "paragraphs": 96
-  },
-  {
-    "class": "class-10",
-    "subject": "english-supplementary",
-    "chapter_no": 9,
-    "pdf_name": "jefp109.pdf",
-    "out_file": "textbooks\\class-10\\english-supplementary\\chapter-09.txt",
-    "characters": 20107,
-    "paragraphs": 139
-  },
-  {
-    "class": "class-10",
-    "subject": "english-workbook",
-    "chapter_no": 1,
-    "pdf_name": "jewe201.pdf",
-    "out_file": "textbooks\\class-10\\english-workbook\\chapter-01.txt",
-    "characters": 21097,
-    "paragraphs": 326
-  },
-  {
-    "class": "class-10",
-    "subject": "english-workbook",
-    "chapter_no": 2,
-    "pdf_name": "jewe202.pdf",
-    "out_file": "textbooks\\class-10\\english-workbook\\chapter-02.txt",
-    "characters": 17850,
-    "paragraphs": 265
-  },
-  {
-    "class": "class-10",
-    "subject": "english-workbook",
-    "chapter_no": 3,
-    "pdf_name": "jewe203.pdf",
-    "out_file": "textbooks\\class-10\\english-workbook\\chapter-03.txt",
-    "characters": 20305,
-    "paragraphs": 264
-  },
-  {
-    "class": "class-10",
-    "subject": "english-workbook",
-    "chapter_no": 4,
-    "pdf_name": "jewe204..pdf",
-    "out_file": "textbooks\\class-10\\english-workbook\\chapter-04.txt",
-    "characters": 16844,
-    "paragraphs": 217
-  },
-  {
-    "class": "class-10",
-    "subject": "english-workbook",
-    "chapter_no": 5,
-    "pdf_name": "jewe205.pdf",
-    "out_file": "textbooks\\class-10\\english-workbook\\chapter-05.txt",
-    "characters": 20912,
-    "paragraphs": 270
-  },
-  {
-    "class": "class-10",
-    "subject": "english-workbook",
-    "chapter_no": 6,
-    "pdf_name": "jewe206.pdf",
-    "out_file": "textbooks\\class-10\\english-workbook\\chapter-06.txt",
-    "characters": 24536,
-    "paragraphs": 352
-  },
-  {
-    "class": "class-10",
-    "subject": "english-workbook",
-    "chapter_no": 7,
-    "pdf_name": "jewe207.pdf",
-    "out_file": "textbooks\\class-10\\english-workbook\\chapter-07.txt",
-    "characters": 20595,
-    "paragraphs": 328
-  },
-  {
-    "class": "class-10",
-    "subject": "english-workbook",
-    "chapter_no": 8,
-    "pdf_name": "jewe208.pdf",
-    "out_file": "textbooks\\class-10\\english-workbook\\chapter-08.txt",
-    "characters": 18348,
-    "paragraphs": 259
-  },
-  {
-    "class": "class-10",
-    "subject": "english-workbook",
-    "chapter_no": 9,
-    "pdf_name": "jewe209..pdf",
-    "out_file": "textbooks\\class-10\\english-workbook\\chapter-09.txt",
-    "characters": 22624,
-    "paragraphs": 261
-  },
-  {
-    "class": "class-10",
-    "subject": "maths",
-    "chapter_no": 1,
-    "pdf_name": "jemh101.pdf",
-    "out_file": "textbooks\\class-10\\maths\\chapter-01.txt",
-    "characters": 15759,
-    "paragraphs": 170
-  },
-  {
-    "class": "class-10",
-    "subject": "maths",
-    "chapter_no": 2,
-    "pdf_name": "jemh102.pdf",
-    "out_file": "textbooks\\class-10\\maths\\chapter-02.txt",
-    "characters": 16630,
-    "paragraphs": 237
-  },
-  {
-    "class": "class-10",
-    "subject": "maths",
-    "chapter_no": 3,
-    "pdf_name": "jemh103.pdf",
-    "out_file": "textbooks\\class-10\\maths\\chapter-03.txt",
-    "characters": 21808,
-    "paragraphs": 306
-  },
-  {
-    "class": "class-10",
-    "subject": "maths",
-    "chapter_no": 4,
-    "pdf_name": "jemh104.pdf",
-    "out_file": "textbooks\\class-10\\maths\\chapter-04.txt",
-    "characters": 16776,
-    "paragraphs": 211
-  },
-  {
-    "class": "class-10",
-    "subject": "maths",
-    "chapter_no": 5,
-    "pdf_name": "jemh105.pdf",
-    "out_file": "textbooks\\class-10\\maths\\chapter-05.txt",
-    "characters": 34517,
-    "paragraphs": 509
-  },
-  {
-    "class": "class-10",
-    "subject": "maths",
-    "chapter_no": 6,
-    "pdf_name": "jemh106.pdf",
-    "out_file": "textbooks\\class-10\\maths\\chapter-06.txt",
-    "characters": 30579,
-    "paragraphs": 480
-  },
-  {
-    "class": "class-10",
-    "subject": "maths",
-    "chapter_no": 7,
-    "pdf_name": "jemh107.pdf",
-    "out_file": "textbooks\\class-10\\maths\\chapter-07.txt",
-    "characters": 19883,
-    "paragraphs": 292
-  },
-  {
-    "class": "class-10",
-    "subject": "maths",
-    "chapter_no": 8,
-    "pdf_name": "jemh108.pdf",
-    "out_file": "textbooks\\class-10\\maths\\chapter-08.txt",
-    "characters": 25345,
-    "paragraphs": 447
-  },
-  {
-    "class": "class-10",
-    "subject": "maths",
-    "chapter_no": 9,
-    "pdf_name": "jemh109.pdf",
-    "out_file": "textbooks\\class-10\\maths\\chapter-09.txt",
-    "characters": 14597,
-    "paragraphs": 173
-  },
-  {
-    "class": "class-10",
-    "subject": "maths",
-    "chapter_no": 10,
-    "pdf_name": "jemh110.pdf",
-    "out_file": "textbooks\\class-10\\maths\\chapter-10.txt",
-    "characters": 14171,
-    "paragraphs": 152
-  },
-  {
-    "class": "class-10",
-    "subject": "maths",
-    "chapter_no": 11,
-    "pdf_name": "jemh111.pdf",
-    "out_file": "textbooks\\class-10\\maths\\chapter-11.txt",
-    "characters": 8034,
-    "paragraphs": 138
-  },
-  {
-    "class": "class-10",
-    "subject": "maths",
-    "chapter_no": 12,
-    "pdf_name": "jemh112.pdf",
-    "out_file": "textbooks\\class-10\\maths\\chapter-12.txt",
-    "characters": 15931,
-    "paragraphs": 169
-  },
-  {
-    "class": "class-10",
-    "subject": "maths",
-    "chapter_no": 13,
-    "pdf_name": "jemh113.pdf",
-    "out_file": "textbooks\\class-10\\maths\\chapter-13.txt",
-    "characters": 37553,
-    "paragraphs": 695
-  },
-  {
-    "class": "class-10",
-    "subject": "maths",
-    "chapter_no": 14,
-    "pdf_name": "jemh114.pdf",
-    "out_file": "textbooks\\class-10\\maths\\chapter-14.txt",
-    "characters": 26620,
-    "paragraphs": 304
-  },
-  {
-    "class": "class-10",
-    "subject": "physical-education",
-    "chapter_no": 1,
-    "pdf_name": "jehp101.pdf",
-    "out_file": "textbooks\\class-10\\physical-education\\chapter-01.txt",
-    "characters": 23558,
-    "paragraphs": 113
-  },
-  {
-    "class": "class-10",
-    "subject": "physical-education",
-    "chapter_no": 2,
-    "pdf_name": "jehp102.pdf",
-    "out_file": "textbooks\\class-10\\physical-education\\chapter-02.txt",
-    "characters": 20231,
-    "paragraphs": 180
-  },
-  {
-    "class": "class-10",
-    "subject": "physical-education",
-    "chapter_no": 3,
-    "pdf_name": "jehp103.pdf",
-    "out_file": "textbooks\\class-10\\physical-education\\chapter-03.txt",
-    "characters": 23165,
-    "paragraphs": 210
-  },
-  {
-    "class": "class-10",
-    "subject": "physical-education",
-    "chapter_no": 4,
-    "pdf_name": "jehp104.pdf",
-    "out_file": "textbooks\\class-10\\physical-education\\chapter-04.txt",
-    "characters": 24788,
-    "paragraphs": 251
-  },
-  {
-    "class": "class-10",
-    "subject": "physical-education",
-    "chapter_no": 5,
-    "pdf_name": "jehp105.pdf",
-    "out_file": "textbooks\\class-10\\physical-education\\chapter-05.txt",
-    "characters": 43989,
-    "paragraphs": 333
-  },
-  {
-    "class": "class-10",
-    "subject": "physical-education",
-    "chapter_no": 6,
-    "pdf_name": "jehp106..pdf",
-    "out_file": "textbooks\\class-10\\physical-education\\chapter-06.txt",
-    "characters": 52527,
-    "paragraphs": 535
-  },
-  {
-    "class": "class-10",
-    "subject": "physical-education",
-    "chapter_no": 7,
-    "pdf_name": "jehp107.pdf",
-    "out_file": "textbooks\\class-10\\physical-education\\chapter-07.txt",
-    "characters": 39717,
-    "paragraphs": 372
-  },
-  {
-    "class": "class-10",
-    "subject": "physical-education",
-    "chapter_no": 8,
-    "pdf_name": "jehp108..pdf",
-    "out_file": "textbooks\\class-10\\physical-education\\chapter-08.txt",
-    "characters": 55249,
-    "paragraphs": 493
-  },
-  {
-    "class": "class-10",
-    "subject": "physical-education",
-    "chapter_no": 9,
-    "pdf_name": "jehp109.pdf",
-    "out_file": "textbooks\\class-10\\physical-education\\chapter-09.txt",
-    "characters": 36514,
-    "paragraphs": 183
-  },
-  {
-    "class": "class-10",
-    "subject": "physical-education",
-    "chapter_no": 10,
-    "pdf_name": "jehp110.pdf",
-    "out_file": "textbooks\\class-10\\physical-education\\chapter-10.txt",
-    "characters": 22869,
-    "paragraphs": 208
-  },
-  {
-    "class": "class-10",
-    "subject": "physical-education",
-    "chapter_no": 11,
-    "pdf_name": "jehp111.pdf",
-    "out_file": "textbooks\\class-10\\physical-education\\chapter-11.txt",
-    "characters": 21927,
-    "paragraphs": 136
-  },
-  {
-    "class": "class-10",
-    "subject": "physical-education",
-    "chapter_no": 12,
-    "pdf_name": "jehp112.pdf",
-    "out_file": "textbooks\\class-10\\physical-education\\chapter-12.txt",
-    "characters": 18690,
-    "paragraphs": 89
-  },
-  {
-    "class": "class-10",
-    "subject": "physical-education",
-    "chapter_no": 13,
-    "pdf_name": "jehp113..pdf",
-    "out_file": "textbooks\\class-10\\physical-education\\chapter-13.txt",
-    "characters": 20396,
-    "paragraphs": 87
-  },
-  {
-    "class": "class-10",
-    "subject": "science",
-    "chapter_no": 1,
-    "pdf_name": "jesc101.pdf",
-    "out_file": "textbooks\\class-10\\science\\chapter-01.txt",
-    "characters": 30495,
-    "paragraphs": 311
-  },
-  {
-    "class": "class-10",
-    "subject": "science",
-    "chapter_no": 2,
-    "pdf_name": "jesc102.pdf",
-    "out_file": "textbooks\\class-10\\science\\chapter-02.txt",
-    "characters": 37599,
-    "paragraphs": 371
-  },
-  {
-    "class": "class-10",
-    "subject": "science",
-    "chapter_no": 3,
-    "pdf_name": "jesc103.pdf",
-    "out_file": "textbooks\\class-10\\science\\chapter-03.txt",
-    "characters": 41521,
-    "paragraphs": 400
-  },
-  {
-    "class": "class-10",
-    "subject": "science",
-    "chapter_no": 4,
-    "pdf_name": "jesc104.pdf",
-    "out_file": "textbooks\\class-10\\science\\chapter-04.txt",
-    "characters": 44837,
-    "paragraphs": 299
-  },
-  {
-    "class": "class-10",
-    "subject": "science",
-    "chapter_no": 5,
-    "pdf_name": "jesc105.pdf",
-    "out_file": "textbooks\\class-10\\science\\chapter-05.txt",
-    "characters": 51630,
-    "paragraphs": 251
-  },
-  {
-    "class": "class-10",
-    "subject": "science",
-    "chapter_no": 6,
-    "pdf_name": "jesc106.pdf",
-    "out_file": "textbooks\\class-10\\science\\chapter-06.txt",
-    "characters": 30062,
-    "paragraphs": 140
-  },
-  {
-    "class": "class-10",
-    "subject": "science",
-    "chapter_no": 7,
-    "pdf_name": "jesc107.pdf",
-    "out_file": "textbooks\\class-10\\science\\chapter-07.txt",
-    "characters": 37041,
-    "paragraphs": 174
-  },
-  {
-    "class": "class-10",
-    "subject": "science",
-    "chapter_no": 8,
-    "pdf_name": "jesc108.pdf",
-    "out_file": "textbooks\\class-10\\science\\chapter-08.txt",
-    "characters": 15507,
-    "paragraphs": 93
-  },
-  {
-    "class": "class-10",
-    "subject": "science",
-    "chapter_no": 9,
-    "pdf_name": "jesc109.pdf",
-    "out_file": "textbooks\\class-10\\science\\chapter-09.txt",
-    "characters": 56352,
-    "paragraphs": 401
-  },
-  {
-    "class": "class-10",
-    "subject": "science",
-    "chapter_no": 10,
-    "pdf_name": "jesc110.pdf",
-    "out_file": "textbooks\\class-10\\science\\chapter-10.txt",
-    "characters": 24867,
-    "paragraphs": 110
-  },
-  {
-    "class": "class-10",
-    "subject": "science",
-    "chapter_no": 11,
-    "pdf_name": "jesc111.pdf",
-    "out_file": "textbooks\\class-10\\science\\chapter-11.txt",
-    "characters": 44193,
-    "paragraphs": 334
-  },
-  {
-    "class": "class-10",
-    "subject": "science",
-    "chapter_no": 12,
-    "pdf_name": "jesc112.pdf",
-    "out_file": "textbooks\\class-10\\science\\chapter-12.txt",
-    "characters": 29153,
-    "paragraphs": 180
-  },
-  {
-    "class": "class-10",
-    "subject": "science",
-    "chapter_no": 13,
-    "pdf_name": "jesc113.pdf",
-    "out_file": "textbooks\\class-10\\science\\chapter-13.txt",
-    "characters": 19681,
-    "paragraphs": 138
-  },
-  {
-    "class": "class-10",
-    "subject": "geography",
-    "chapter_no": 1,
-    "pdf_name": "jess101.pdf",
-    "out_file": "textbooks\\class-10\\geography\\chapter-01.txt",
-    "characters": 26632,
-    "paragraphs": 183
-  },
-  {
-    "class": "class-10",
-    "subject": "geography",
-    "chapter_no": 2,
-    "pdf_name": "jess102.pdf",
-    "out_file": "textbooks\\class-10\\geography\\chapter-02.txt",
-    "characters": 13204,
-    "paragraphs": 69
-  },
-  {
-    "class": "class-10",
-    "subject": "geography",
-    "chapter_no": 3,
-    "pdf_name": "jess103.pdf",
-    "out_file": "textbooks\\class-10\\geography\\chapter-03.txt",
-    "characters": 22772,
+    "out_file": "data\\textbooks\\class-5\\arts\\chapter-03.txt",
+    "characters": 6182,
     "paragraphs": 126
   },
   {
-    "class": "class-10",
-    "subject": "geography",
+    "class": "class-5",
+    "subject": "arts",
     "chapter_no": 4,
-    "pdf_name": "jess104.pdf",
-    "out_file": "textbooks\\class-10\\geography\\chapter-04.txt",
-    "characters": 24175,
-    "paragraphs": 148
+    "out_file": "data\\textbooks\\class-5\\arts\\chapter-04.txt",
+    "characters": 4185,
+    "paragraphs": 82
   },
   {
-    "class": "class-10",
-    "subject": "geography",
+    "class": "class-5",
+    "subject": "arts",
     "chapter_no": 5,
-    "pdf_name": "jess105.pdf",
-    "out_file": "textbooks\\class-10\\geography\\chapter-05.txt",
-    "characters": 31293,
-    "paragraphs": 221
+    "out_file": "data\\textbooks\\class-5\\arts\\chapter-05.txt",
+    "characters": 6764,
+    "paragraphs": 87
   },
   {
-    "class": "class-10",
-    "subject": "geography",
+    "class": "class-5",
+    "subject": "arts",
     "chapter_no": 6,
-    "pdf_name": "jess106.pdf",
-    "out_file": "textbooks\\class-10\\geography\\chapter-06.txt",
-    "characters": 24914,
+    "out_file": "data\\textbooks\\class-5\\arts\\chapter-06.txt",
+    "characters": 13510,
+    "paragraphs": 164
+  },
+  {
+    "class": "class-5",
+    "subject": "arts",
+    "chapter_no": 7,
+    "out_file": "data\\textbooks\\class-5\\arts\\chapter-07.txt",
+    "characters": 6004,
+    "paragraphs": 52
+  },
+  {
+    "class": "class-5",
+    "subject": "arts",
+    "chapter_no": 8,
+    "out_file": "data\\textbooks\\class-5\\arts\\chapter-08.txt",
+    "characters": 12987,
+    "paragraphs": 162
+  },
+  {
+    "class": "class-5",
+    "subject": "arts",
+    "chapter_no": 9,
+    "out_file": "data\\textbooks\\class-5\\arts\\chapter-09.txt",
+    "characters": 8513,
+    "paragraphs": 120
+  },
+  {
+    "class": "class-5",
+    "subject": "arts",
+    "chapter_no": 10,
+    "out_file": "data\\textbooks\\class-5\\arts\\chapter-10.txt",
+    "characters": 9343,
+    "paragraphs": 136
+  },
+  {
+    "class": "class-5",
+    "subject": "arts",
+    "chapter_no": 11,
+    "out_file": "data\\textbooks\\class-5\\arts\\chapter-11.txt",
+    "characters": 3999,
+    "paragraphs": 77
+  },
+  {
+    "class": "class-5",
+    "subject": "arts",
+    "chapter_no": 12,
+    "out_file": "data\\textbooks\\class-5\\arts\\chapter-12.txt",
+    "characters": 5799,
+    "paragraphs": 78
+  },
+  {
+    "class": "class-5",
+    "subject": "arts",
+    "chapter_no": 13,
+    "out_file": "data\\textbooks\\class-5\\arts\\chapter-13.txt",
+    "characters": 6690,
+    "paragraphs": 107
+  },
+  {
+    "class": "class-5",
+    "subject": "arts",
+    "chapter_no": 14,
+    "out_file": "data\\textbooks\\class-5\\arts\\chapter-14.txt",
+    "characters": 7693,
+    "paragraphs": 121
+  },
+  {
+    "class": "class-5",
+    "subject": "arts",
+    "chapter_no": 15,
+    "out_file": "data\\textbooks\\class-5\\arts\\chapter-15.txt",
+    "characters": 8165,
+    "paragraphs": 151
+  },
+  {
+    "class": "class-5",
+    "subject": "arts",
+    "chapter_no": 16,
+    "out_file": "data\\textbooks\\class-5\\arts\\chapter-16.txt",
+    "characters": 6015,
+    "paragraphs": 124
+  },
+  {
+    "class": "class-5",
+    "subject": "arts",
+    "chapter_no": 17,
+    "out_file": "data\\textbooks\\class-5\\arts\\chapter-17.txt",
+    "characters": 3730,
+    "paragraphs": 53
+  },
+  {
+    "class": "class-5",
+    "subject": "arts",
+    "chapter_no": 18,
+    "out_file": "data\\textbooks\\class-5\\arts\\chapter-18.txt",
+    "characters": 5151,
+    "paragraphs": 80
+  },
+  {
+    "class": "class-5",
+    "subject": "arts",
+    "chapter_no": 19,
+    "out_file": "data\\textbooks\\class-5\\arts\\chapter-19.txt",
+    "characters": 2579,
+    "paragraphs": 53
+  },
+  {
+    "class": "class-5",
+    "subject": "english",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-5\\english\\chapter-01.txt",
+    "characters": 6315,
+    "paragraphs": 177
+  },
+  {
+    "class": "class-5",
+    "subject": "english",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-5\\english\\chapter-02.txt",
+    "characters": 11489,
+    "paragraphs": 187
+  },
+  {
+    "class": "class-5",
+    "subject": "english",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-5\\english\\chapter-03.txt",
+    "characters": 9038,
+    "paragraphs": 252
+  },
+  {
+    "class": "class-5",
+    "subject": "english",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-5\\english\\chapter-04.txt",
+    "characters": 9666,
+    "paragraphs": 147
+  },
+  {
+    "class": "class-5",
+    "subject": "english",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-5\\english\\chapter-05.txt",
+    "characters": 5884,
+    "paragraphs": 113
+  },
+  {
+    "class": "class-5",
+    "subject": "english",
+    "chapter_no": 6,
+    "out_file": "data\\textbooks\\class-5\\english\\chapter-06.txt",
+    "characters": 10301,
+    "paragraphs": 118
+  },
+  {
+    "class": "class-5",
+    "subject": "english",
+    "chapter_no": 7,
+    "out_file": "data\\textbooks\\class-5\\english\\chapter-07.txt",
+    "characters": 9358,
     "paragraphs": 180
   },
   {
-    "class": "class-10",
-    "subject": "geography",
+    "class": "class-5",
+    "subject": "english",
+    "chapter_no": 8,
+    "out_file": "data\\textbooks\\class-5\\english\\chapter-08.txt",
+    "characters": 9573,
+    "paragraphs": 122
+  },
+  {
+    "class": "class-5",
+    "subject": "english",
+    "chapter_no": 9,
+    "out_file": "data\\textbooks\\class-5\\english\\chapter-09.txt",
+    "characters": 7905,
+    "paragraphs": 149
+  },
+  {
+    "class": "class-5",
+    "subject": "english",
+    "chapter_no": 10,
+    "out_file": "data\\textbooks\\class-5\\english\\chapter-10.txt",
+    "characters": 16017,
+    "paragraphs": 251
+  },
+  {
+    "class": "class-5",
+    "subject": "evs",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-5\\evs\\chapter-01.txt",
+    "characters": 15107,
+    "paragraphs": 217
+  },
+  {
+    "class": "class-5",
+    "subject": "evs",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-5\\evs\\chapter-02.txt",
+    "characters": 13247,
+    "paragraphs": 190
+  },
+  {
+    "class": "class-5",
+    "subject": "evs",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-5\\evs\\chapter-03.txt",
+    "characters": 14579,
+    "paragraphs": 187
+  },
+  {
+    "class": "class-5",
+    "subject": "evs",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-5\\evs\\chapter-04.txt",
+    "characters": 15919,
+    "paragraphs": 195
+  },
+  {
+    "class": "class-5",
+    "subject": "evs",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-5\\evs\\chapter-05.txt",
+    "characters": 16424,
+    "paragraphs": 188
+  },
+  {
+    "class": "class-5",
+    "subject": "evs",
+    "chapter_no": 6,
+    "out_file": "data\\textbooks\\class-5\\evs\\chapter-06.txt",
+    "characters": 15104,
+    "paragraphs": 174
+  },
+  {
+    "class": "class-5",
+    "subject": "evs",
     "chapter_no": 7,
-    "pdf_name": "jess107.pdf",
-    "out_file": "textbooks\\class-10\\geography\\chapter-07.txt",
-    "characters": 26114,
+    "out_file": "data\\textbooks\\class-5\\evs\\chapter-07.txt",
+    "characters": 16738,
+    "paragraphs": 204
+  },
+  {
+    "class": "class-5",
+    "subject": "evs",
+    "chapter_no": 8,
+    "out_file": "data\\textbooks\\class-5\\evs\\chapter-08.txt",
+    "characters": 11735,
+    "paragraphs": 156
+  },
+  {
+    "class": "class-5",
+    "subject": "evs",
+    "chapter_no": 9,
+    "out_file": "data\\textbooks\\class-5\\evs\\chapter-09.txt",
+    "characters": 13542,
+    "paragraphs": 188
+  },
+  {
+    "class": "class-5",
+    "subject": "evs",
+    "chapter_no": 10,
+    "out_file": "data\\textbooks\\class-5\\evs\\chapter-10.txt",
+    "characters": 15444,
+    "paragraphs": 211
+  },
+  {
+    "class": "class-5",
+    "subject": "hindi",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-5\\hindi\\chapter-01.txt",
+    "characters": 5373,
+    "paragraphs": 48
+  },
+  {
+    "class": "class-5",
+    "subject": "hindi",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-5\\hindi\\chapter-02.txt",
+    "characters": 12820,
+    "paragraphs": 98
+  },
+  {
+    "class": "class-5",
+    "subject": "hindi",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-5\\hindi\\chapter-03.txt",
+    "characters": 9615,
+    "paragraphs": 99
+  },
+  {
+    "class": "class-5",
+    "subject": "hindi",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-5\\hindi\\chapter-04.txt",
+    "characters": 10993,
+    "paragraphs": 103
+  },
+  {
+    "class": "class-5",
+    "subject": "hindi",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-5\\hindi\\chapter-05.txt",
+    "characters": 13788,
+    "paragraphs": 138
+  },
+  {
+    "class": "class-5",
+    "subject": "hindi",
+    "chapter_no": 6,
+    "out_file": "data\\textbooks\\class-5\\hindi\\chapter-06.txt",
+    "characters": 12498,
+    "paragraphs": 123
+  },
+  {
+    "class": "class-5",
+    "subject": "hindi",
+    "chapter_no": 7,
+    "out_file": "data\\textbooks\\class-5\\hindi\\chapter-07.txt",
+    "characters": 9286,
+    "paragraphs": 67
+  },
+  {
+    "class": "class-5",
+    "subject": "hindi",
+    "chapter_no": 8,
+    "out_file": "data\\textbooks\\class-5\\hindi\\chapter-08.txt",
+    "characters": 11056,
+    "paragraphs": 91
+  },
+  {
+    "class": "class-5",
+    "subject": "hindi",
+    "chapter_no": 9,
+    "out_file": "data\\textbooks\\class-5\\hindi\\chapter-09.txt",
+    "characters": 17404,
+    "paragraphs": 127
+  },
+  {
+    "class": "class-5",
+    "subject": "hindi",
+    "chapter_no": 10,
+    "out_file": "data\\textbooks\\class-5\\hindi\\chapter-10.txt",
+    "characters": 9752,
+    "paragraphs": 95
+  },
+  {
+    "class": "class-5",
+    "subject": "hindi",
+    "chapter_no": 11,
+    "out_file": "data\\textbooks\\class-5\\hindi\\chapter-11.txt",
+    "characters": 11030,
+    "paragraphs": 138
+  },
+  {
+    "class": "class-5",
+    "subject": "hindi",
+    "chapter_no": 12,
+    "out_file": "data\\textbooks\\class-5\\hindi\\chapter-12.txt",
+    "characters": 15253,
+    "paragraphs": 178
+  },
+  {
+    "class": "class-5",
+    "subject": "maths",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-5\\maths\\chapter-01.txt",
+    "characters": 16094,
+    "paragraphs": 344
+  },
+  {
+    "class": "class-5",
+    "subject": "maths",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-5\\maths\\chapter-02.txt",
+    "characters": 10195,
+    "paragraphs": 339
+  },
+  {
+    "class": "class-5",
+    "subject": "maths",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-5\\maths\\chapter-03.txt",
+    "characters": 8763,
+    "paragraphs": 197
+  },
+  {
+    "class": "class-5",
+    "subject": "maths",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-5\\maths\\chapter-04.txt",
+    "characters": 17528,
+    "paragraphs": 404
+  },
+  {
+    "class": "class-5",
+    "subject": "maths",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-5\\maths\\chapter-05.txt",
+    "characters": 12411,
+    "paragraphs": 284
+  },
+  {
+    "class": "class-5",
+    "subject": "maths",
+    "chapter_no": 6,
+    "out_file": "data\\textbooks\\class-5\\maths\\chapter-06.txt",
+    "characters": 22773,
+    "paragraphs": 607
+  },
+  {
+    "class": "class-5",
+    "subject": "maths",
+    "chapter_no": 7,
+    "out_file": "data\\textbooks\\class-5\\maths\\chapter-07.txt",
+    "characters": 12269,
+    "paragraphs": 273
+  },
+  {
+    "class": "class-5",
+    "subject": "maths",
+    "chapter_no": 8,
+    "out_file": "data\\textbooks\\class-5\\maths\\chapter-08.txt",
+    "characters": 15421,
+    "paragraphs": 419
+  },
+  {
+    "class": "class-5",
+    "subject": "maths",
+    "chapter_no": 9,
+    "out_file": "data\\textbooks\\class-5\\maths\\chapter-09.txt",
+    "characters": 21031,
+    "paragraphs": 437
+  },
+  {
+    "class": "class-5",
+    "subject": "maths",
+    "chapter_no": 10,
+    "out_file": "data\\textbooks\\class-5\\maths\\chapter-10.txt",
+    "characters": 6047,
+    "paragraphs": 101
+  },
+  {
+    "class": "class-5",
+    "subject": "maths",
+    "chapter_no": 11,
+    "out_file": "data\\textbooks\\class-5\\maths\\chapter-11.txt",
+    "characters": 7925,
+    "paragraphs": 164
+  },
+  {
+    "class": "class-5",
+    "subject": "maths",
+    "chapter_no": 12,
+    "out_file": "data\\textbooks\\class-5\\maths\\chapter-12.txt",
+    "characters": 6536,
+    "paragraphs": 145
+  },
+  {
+    "class": "class-5",
+    "subject": "maths",
+    "chapter_no": 13,
+    "out_file": "data\\textbooks\\class-5\\maths\\chapter-13.txt",
+    "characters": 6772,
+    "paragraphs": 149
+  },
+  {
+    "class": "class-5",
+    "subject": "maths",
+    "chapter_no": 14,
+    "out_file": "data\\textbooks\\class-5\\maths\\chapter-14.txt",
+    "characters": 7844,
+    "paragraphs": 163
+  },
+  {
+    "class": "class-5",
+    "subject": "maths",
+    "chapter_no": 15,
+    "out_file": "data\\textbooks\\class-5\\maths\\chapter-15.txt",
+    "characters": 8506,
+    "paragraphs": 303
+  },
+  {
+    "class": "class-5",
+    "subject": "physical-education",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-5\\physical-education\\chapter-01.txt",
+    "characters": 39447,
+    "paragraphs": 689
+  },
+  {
+    "class": "class-5",
+    "subject": "physical-education",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-5\\physical-education\\chapter-02.txt",
+    "characters": 19567,
+    "paragraphs": 315
+  },
+  {
+    "class": "class-5",
+    "subject": "physical-education",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-5\\physical-education\\chapter-03.txt",
+    "characters": 73674,
+    "paragraphs": 1187
+  },
+  {
+    "class": "class-6",
+    "subject": "arts",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-6\\arts\\chapter-01.txt",
+    "characters": 9502,
+    "paragraphs": 322
+  },
+  {
+    "class": "class-6",
+    "subject": "arts",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-6\\arts\\chapter-02.txt",
+    "characters": 9041,
+    "paragraphs": 314
+  },
+  {
+    "class": "class-6",
+    "subject": "arts",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-6\\arts\\chapter-03.txt",
+    "characters": 4921,
+    "paragraphs": 169
+  },
+  {
+    "class": "class-6",
+    "subject": "arts",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-6\\arts\\chapter-04.txt",
+    "characters": 3104,
+    "paragraphs": 92
+  },
+  {
+    "class": "class-6",
+    "subject": "arts",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-6\\arts\\chapter-05.txt",
+    "characters": 5510,
+    "paragraphs": 173
+  },
+  {
+    "class": "class-6",
+    "subject": "arts",
+    "chapter_no": 6,
+    "out_file": "data\\textbooks\\class-6\\arts\\chapter-06.txt",
+    "characters": 16486,
+    "paragraphs": 581
+  },
+  {
+    "class": "class-6",
+    "subject": "arts",
+    "chapter_no": 7,
+    "out_file": "data\\textbooks\\class-6\\arts\\chapter-07.txt",
+    "characters": 6536,
+    "paragraphs": 338
+  },
+  {
+    "class": "class-6",
+    "subject": "arts",
+    "chapter_no": 8,
+    "out_file": "data\\textbooks\\class-6\\arts\\chapter-08.txt",
+    "characters": 11977,
+    "paragraphs": 948
+  },
+  {
+    "class": "class-6",
+    "subject": "arts",
+    "chapter_no": 9,
+    "out_file": "data\\textbooks\\class-6\\arts\\chapter-09.txt",
+    "characters": 10551,
+    "paragraphs": 365
+  },
+  {
+    "class": "class-6",
+    "subject": "arts",
+    "chapter_no": 10,
+    "out_file": "data\\textbooks\\class-6\\arts\\chapter-10.txt",
+    "characters": 5261,
+    "paragraphs": 195
+  },
+  {
+    "class": "class-6",
+    "subject": "arts",
+    "chapter_no": 11,
+    "out_file": "data\\textbooks\\class-6\\arts\\chapter-11.txt",
+    "characters": 3435,
+    "paragraphs": 130
+  },
+  {
+    "class": "class-6",
+    "subject": "arts",
+    "chapter_no": 12,
+    "out_file": "data\\textbooks\\class-6\\arts\\chapter-12.txt",
+    "characters": 10070,
+    "paragraphs": 397
+  },
+  {
+    "class": "class-6",
+    "subject": "arts",
+    "chapter_no": 13,
+    "out_file": "data\\textbooks\\class-6\\arts\\chapter-13.txt",
+    "characters": 4656,
+    "paragraphs": 152
+  },
+  {
+    "class": "class-6",
+    "subject": "arts",
+    "chapter_no": 14,
+    "out_file": "data\\textbooks\\class-6\\arts\\chapter-14.txt",
+    "characters": 6034,
+    "paragraphs": 211
+  },
+  {
+    "class": "class-6",
+    "subject": "arts",
+    "chapter_no": 15,
+    "out_file": "data\\textbooks\\class-6\\arts\\chapter-15.txt",
+    "characters": 6424,
+    "paragraphs": 246
+  },
+  {
+    "class": "class-6",
+    "subject": "arts",
+    "chapter_no": 16,
+    "out_file": "data\\textbooks\\class-6\\arts\\chapter-16.txt",
+    "characters": 19256,
+    "paragraphs": 625
+  },
+  {
+    "class": "class-6",
+    "subject": "arts",
+    "chapter_no": 17,
+    "out_file": "data\\textbooks\\class-6\\arts\\chapter-17.txt",
+    "characters": 18073,
+    "paragraphs": 618
+  },
+  {
+    "class": "class-6",
+    "subject": "arts",
+    "chapter_no": 18,
+    "out_file": "data\\textbooks\\class-6\\arts\\chapter-18.txt",
+    "characters": 4907,
+    "paragraphs": 152
+  },
+  {
+    "class": "class-6",
+    "subject": "arts",
+    "chapter_no": 19,
+    "out_file": "data\\textbooks\\class-6\\arts\\chapter-19.txt",
+    "characters": 9733,
+    "paragraphs": 357
+  },
+  {
+    "class": "class-6",
+    "subject": "arts",
+    "chapter_no": 20,
+    "out_file": "data\\textbooks\\class-6\\arts\\chapter-20.txt",
+    "characters": 2864,
+    "paragraphs": 69
+  },
+  {
+    "class": "class-6",
+    "subject": "arts",
+    "chapter_no": 21,
+    "out_file": "data\\textbooks\\class-6\\arts\\chapter-21.txt",
+    "characters": 6174,
+    "paragraphs": 60
+  },
+  {
+    "class": "class-6",
+    "subject": "arts",
+    "chapter_no": 22,
+    "out_file": "data\\textbooks\\class-6\\arts\\chapter-22.txt",
+    "characters": 14057,
+    "paragraphs": 312
+  },
+  {
+    "class": "class-6",
+    "subject": "english",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-6\\english\\chapter-01.txt",
+    "characters": 30866,
+    "paragraphs": 564
+  },
+  {
+    "class": "class-6",
+    "subject": "english",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-6\\english\\chapter-02.txt",
+    "characters": 33472,
+    "paragraphs": 578
+  },
+  {
+    "class": "class-6",
+    "subject": "english",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-6\\english\\chapter-03.txt",
+    "characters": 28029,
+    "paragraphs": 512
+  },
+  {
+    "class": "class-6",
+    "subject": "english",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-6\\english\\chapter-04.txt",
+    "characters": 29014,
+    "paragraphs": 463
+  },
+  {
+    "class": "class-6",
+    "subject": "english",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-6\\english\\chapter-05.txt",
+    "characters": 32387,
+    "paragraphs": 533
+  },
+  {
+    "class": "class-6",
+    "subject": "hindi",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-6\\hindi\\chapter-01.txt",
+    "characters": 8619,
+    "paragraphs": 157
+  },
+  {
+    "class": "class-6",
+    "subject": "hindi",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-6\\hindi\\chapter-02.txt",
+    "characters": 13319,
+    "paragraphs": 118
+  },
+  {
+    "class": "class-6",
+    "subject": "hindi",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-6\\hindi\\chapter-03.txt",
+    "characters": 5550,
+    "paragraphs": 91
+  },
+  {
+    "class": "class-6",
+    "subject": "hindi",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-6\\hindi\\chapter-04.txt",
+    "characters": 11408,
+    "paragraphs": 116
+  },
+  {
+    "class": "class-6",
+    "subject": "hindi",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-6\\hindi\\chapter-05.txt",
+    "characters": 5852,
+    "paragraphs": 75
+  },
+  {
+    "class": "class-6",
+    "subject": "hindi",
+    "chapter_no": 6,
+    "out_file": "data\\textbooks\\class-6\\hindi\\chapter-06.txt",
+    "characters": 11179,
+    "paragraphs": 90
+  },
+  {
+    "class": "class-6",
+    "subject": "hindi",
+    "chapter_no": 7,
+    "out_file": "data\\textbooks\\class-6\\hindi\\chapter-07.txt",
+    "characters": 11487,
+    "paragraphs": 153
+  },
+  {
+    "class": "class-6",
+    "subject": "hindi",
+    "chapter_no": 8,
+    "out_file": "data\\textbooks\\class-6\\hindi\\chapter-08.txt",
+    "characters": 19921,
+    "paragraphs": 161
+  },
+  {
+    "class": "class-6",
+    "subject": "hindi",
+    "chapter_no": 9,
+    "out_file": "data\\textbooks\\class-6\\hindi\\chapter-09.txt",
+    "characters": 8971,
+    "paragraphs": 145
+  },
+  {
+    "class": "class-6",
+    "subject": "hindi",
+    "chapter_no": 10,
+    "out_file": "data\\textbooks\\class-6\\hindi\\chapter-10.txt",
+    "characters": 16723,
+    "paragraphs": 166
+  },
+  {
+    "class": "class-6",
+    "subject": "hindi",
+    "chapter_no": 11,
+    "out_file": "data\\textbooks\\class-6\\hindi\\chapter-11.txt",
+    "characters": 5079,
+    "paragraphs": 71
+  },
+  {
+    "class": "class-6",
+    "subject": "hindi",
+    "chapter_no": 12,
+    "out_file": "data\\textbooks\\class-6\\hindi\\chapter-12.txt",
+    "characters": 19163,
+    "paragraphs": 171
+  },
+  {
+    "class": "class-6",
+    "subject": "hindi",
+    "chapter_no": 13,
+    "out_file": "data\\textbooks\\class-6\\hindi\\chapter-13.txt",
+    "characters": 22537,
+    "paragraphs": 249
+  },
+  {
+    "class": "class-6",
+    "subject": "maths",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-6\\maths\\chapter-01.txt",
+    "characters": 19302,
+    "paragraphs": 256
+  },
+  {
+    "class": "class-6",
+    "subject": "maths",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-6\\maths\\chapter-02.txt",
+    "characters": 48892,
+    "paragraphs": 1329
+  },
+  {
+    "class": "class-6",
+    "subject": "maths",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-6\\maths\\chapter-03.txt",
+    "characters": 39275,
+    "paragraphs": 634
+  },
+  {
+    "class": "class-6",
+    "subject": "maths",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-6\\maths\\chapter-04.txt",
+    "characters": 50022,
+    "paragraphs": 826
+  },
+  {
+    "class": "class-6",
+    "subject": "maths",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-6\\maths\\chapter-05.txt",
+    "characters": 45297,
+    "paragraphs": 655
+  },
+  {
+    "class": "class-6",
+    "subject": "maths",
+    "chapter_no": 6,
+    "out_file": "data\\textbooks\\class-6\\maths\\chapter-06.txt",
+    "characters": 31392,
+    "paragraphs": 539
+  },
+  {
+    "class": "class-6",
+    "subject": "maths",
+    "chapter_no": 7,
+    "out_file": "data\\textbooks\\class-6\\maths\\chapter-07.txt",
+    "characters": 48702,
+    "paragraphs": 1760
+  },
+  {
+    "class": "class-6",
+    "subject": "maths",
+    "chapter_no": 8,
+    "out_file": "data\\textbooks\\class-6\\maths\\chapter-08.txt",
+    "characters": 28774,
+    "paragraphs": 589
+  },
+  {
+    "class": "class-6",
+    "subject": "maths",
+    "chapter_no": 9,
+    "out_file": "data\\textbooks\\class-6\\maths\\chapter-09.txt",
+    "characters": 28385,
+    "paragraphs": 423
+  },
+  {
+    "class": "class-6",
+    "subject": "maths",
+    "chapter_no": 10,
+    "out_file": "data\\textbooks\\class-6\\maths\\chapter-10.txt",
+    "characters": 53762,
+    "paragraphs": 815
+  },
+  {
+    "class": "class-6",
+    "subject": "physical-education",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-6\\physical-education\\chapter-01.txt",
+    "characters": 8053,
+    "paragraphs": 145
+  },
+  {
+    "class": "class-6",
+    "subject": "physical-education",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-6\\physical-education\\chapter-02.txt",
+    "characters": 18039,
+    "paragraphs": 272
+  },
+  {
+    "class": "class-6",
+    "subject": "physical-education",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-6\\physical-education\\chapter-03.txt",
+    "characters": 20279,
+    "paragraphs": 339
+  },
+  {
+    "class": "class-6",
+    "subject": "physical-education",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-6\\physical-education\\chapter-04.txt",
+    "characters": 21683,
+    "paragraphs": 336
+  },
+  {
+    "class": "class-6",
+    "subject": "physical-education",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-6\\physical-education\\chapter-05.txt",
+    "characters": 91727,
+    "paragraphs": 1697
+  },
+  {
+    "class": "class-6",
+    "subject": "science",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-6\\science\\chapter-01.txt",
+    "characters": 8713,
+    "paragraphs": 68
+  },
+  {
+    "class": "class-6",
+    "subject": "science",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-6\\science\\chapter-02.txt",
+    "characters": 34754,
+    "paragraphs": 429
+  },
+  {
+    "class": "class-6",
+    "subject": "science",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-6\\science\\chapter-03.txt",
+    "characters": 32462,
+    "paragraphs": 487
+  },
+  {
+    "class": "class-6",
+    "subject": "science",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-6\\science\\chapter-04.txt",
+    "characters": 19789,
+    "paragraphs": 327
+  },
+  {
+    "class": "class-6",
+    "subject": "science",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-6\\science\\chapter-05.txt",
+    "characters": 23378,
+    "paragraphs": 333
+  },
+  {
+    "class": "class-6",
+    "subject": "science",
+    "chapter_no": 6,
+    "out_file": "data\\textbooks\\class-6\\science\\chapter-06.txt",
+    "characters": 26428,
+    "paragraphs": 333
+  },
+  {
+    "class": "class-6",
+    "subject": "science",
+    "chapter_no": 7,
+    "out_file": "data\\textbooks\\class-6\\science\\chapter-07.txt",
+    "characters": 22993,
+    "paragraphs": 348
+  },
+  {
+    "class": "class-6",
+    "subject": "science",
+    "chapter_no": 8,
+    "out_file": "data\\textbooks\\class-6\\science\\chapter-08.txt",
+    "characters": 27833,
+    "paragraphs": 361
+  },
+  {
+    "class": "class-6",
+    "subject": "science",
+    "chapter_no": 9,
+    "out_file": "data\\textbooks\\class-6\\science\\chapter-09.txt",
+    "characters": 25737,
+    "paragraphs": 424
+  },
+  {
+    "class": "class-6",
+    "subject": "science",
+    "chapter_no": 10,
+    "out_file": "data\\textbooks\\class-6\\science\\chapter-10.txt",
+    "characters": 33060,
+    "paragraphs": 406
+  },
+  {
+    "class": "class-6",
+    "subject": "science",
+    "chapter_no": 11,
+    "out_file": "data\\textbooks\\class-6\\science\\chapter-11.txt",
+    "characters": 30551,
+    "paragraphs": 365
+  },
+  {
+    "class": "class-6",
+    "subject": "science",
+    "chapter_no": 12,
+    "out_file": "data\\textbooks\\class-6\\science\\chapter-12.txt",
+    "characters": 30013,
+    "paragraphs": 372
+  },
+  {
+    "class": "class-6",
+    "subject": "social-science",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-6\\social-science\\chapter-01.txt",
+    "characters": 30911,
+    "paragraphs": 348
+  },
+  {
+    "class": "class-6",
+    "subject": "social-science",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-6\\social-science\\chapter-02.txt",
+    "characters": 15823,
+    "paragraphs": 190
+  },
+  {
+    "class": "class-6",
+    "subject": "social-science",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-6\\social-science\\chapter-03.txt",
+    "characters": 20894,
+    "paragraphs": 266
+  },
+  {
+    "class": "class-6",
+    "subject": "social-science",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-6\\social-science\\chapter-04.txt",
+    "characters": 18955,
+    "paragraphs": 287
+  },
+  {
+    "class": "class-6",
+    "subject": "social-science",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-6\\social-science\\chapter-05.txt",
+    "characters": 10537,
+    "paragraphs": 192
+  },
+  {
+    "class": "class-6",
+    "subject": "social-science",
+    "chapter_no": 6,
+    "out_file": "data\\textbooks\\class-6\\social-science\\chapter-06.txt",
+    "characters": 21820,
+    "paragraphs": 233
+  },
+  {
+    "class": "class-6",
+    "subject": "social-science",
+    "chapter_no": 7,
+    "out_file": "data\\textbooks\\class-6\\social-science\\chapter-07.txt",
+    "characters": 27256,
+    "paragraphs": 236
+  },
+  {
+    "class": "class-6",
+    "subject": "social-science",
+    "chapter_no": 8,
+    "out_file": "data\\textbooks\\class-6\\social-science\\chapter-08.txt",
+    "characters": 14371,
+    "paragraphs": 164
+  },
+  {
+    "class": "class-6",
+    "subject": "social-science",
+    "chapter_no": 9,
+    "out_file": "data\\textbooks\\class-6\\social-science\\chapter-09.txt",
+    "characters": 14162,
+    "paragraphs": 121
+  },
+  {
+    "class": "class-6",
+    "subject": "social-science",
+    "chapter_no": 10,
+    "out_file": "data\\textbooks\\class-6\\social-science\\chapter-10.txt",
+    "characters": 15530,
+    "paragraphs": 175
+  },
+  {
+    "class": "class-6",
+    "subject": "social-science",
+    "chapter_no": 11,
+    "out_file": "data\\textbooks\\class-6\\social-science\\chapter-11.txt",
+    "characters": 12612,
+    "paragraphs": 102
+  },
+  {
+    "class": "class-6",
+    "subject": "social-science",
+    "chapter_no": 12,
+    "out_file": "data\\textbooks\\class-6\\social-science\\chapter-12.txt",
+    "characters": 10575,
+    "paragraphs": 115
+  },
+  {
+    "class": "class-6",
+    "subject": "social-science",
+    "chapter_no": 13,
+    "out_file": "data\\textbooks\\class-6\\social-science\\chapter-13.txt",
+    "characters": 11314,
+    "paragraphs": 145
+  },
+  {
+    "class": "class-6",
+    "subject": "social-science",
+    "chapter_no": 14,
+    "out_file": "data\\textbooks\\class-6\\social-science\\chapter-14.txt",
+    "characters": 15227,
+    "paragraphs": 188
+  },
+  {
+    "class": "class-7",
+    "subject": "arts",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-7\\arts\\chapter-01.txt",
+    "characters": 23705,
+    "paragraphs": 246
+  },
+  {
+    "class": "class-7",
+    "subject": "arts",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-7\\arts\\chapter-02.txt",
+    "characters": 10300,
+    "paragraphs": 109
+  },
+  {
+    "class": "class-7",
+    "subject": "arts",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-7\\arts\\chapter-03.txt",
+    "characters": 20861,
+    "paragraphs": 233
+  },
+  {
+    "class": "class-7",
+    "subject": "arts",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-7\\arts\\chapter-04.txt",
+    "characters": 9007,
+    "paragraphs": 94
+  },
+  {
+    "class": "class-7",
+    "subject": "arts",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-7\\arts\\chapter-05.txt",
+    "characters": 12743,
+    "paragraphs": 160
+  },
+  {
+    "class": "class-7",
+    "subject": "arts",
+    "chapter_no": 6,
+    "out_file": "data\\textbooks\\class-7\\arts\\chapter-06.txt",
+    "characters": 7903,
+    "paragraphs": 92
+  },
+  {
+    "class": "class-7",
+    "subject": "arts",
+    "chapter_no": 7,
+    "out_file": "data\\textbooks\\class-7\\arts\\chapter-07.txt",
+    "characters": 10911,
+    "paragraphs": 255
+  },
+  {
+    "class": "class-7",
+    "subject": "arts",
+    "chapter_no": 8,
+    "out_file": "data\\textbooks\\class-7\\arts\\chapter-08.txt",
+    "characters": 13306,
+    "paragraphs": 183
+  },
+  {
+    "class": "class-7",
+    "subject": "arts",
+    "chapter_no": 9,
+    "out_file": "data\\textbooks\\class-7\\arts\\chapter-09.txt",
+    "characters": 7134,
+    "paragraphs": 118
+  },
+  {
+    "class": "class-7",
+    "subject": "arts",
+    "chapter_no": 10,
+    "out_file": "data\\textbooks\\class-7\\arts\\chapter-10.txt",
+    "characters": 11568,
+    "paragraphs": 208
+  },
+  {
+    "class": "class-7",
+    "subject": "arts",
+    "chapter_no": 11,
+    "out_file": "data\\textbooks\\class-7\\arts\\chapter-11.txt",
+    "characters": 11091,
+    "paragraphs": 235
+  },
+  {
+    "class": "class-7",
+    "subject": "arts",
+    "chapter_no": 12,
+    "out_file": "data\\textbooks\\class-7\\arts\\chapter-12.txt",
+    "characters": 8513,
+    "paragraphs": 72
+  },
+  {
+    "class": "class-7",
+    "subject": "arts",
+    "chapter_no": 13,
+    "out_file": "data\\textbooks\\class-7\\arts\\chapter-13.txt",
+    "characters": 2727,
+    "paragraphs": 22
+  },
+  {
+    "class": "class-7",
+    "subject": "arts",
+    "chapter_no": 14,
+    "out_file": "data\\textbooks\\class-7\\arts\\chapter-14.txt",
+    "characters": 8638,
+    "paragraphs": 111
+  },
+  {
+    "class": "class-7",
+    "subject": "arts",
+    "chapter_no": 15,
+    "out_file": "data\\textbooks\\class-7\\arts\\chapter-15.txt",
+    "characters": 14159,
+    "paragraphs": 218
+  },
+  {
+    "class": "class-7",
+    "subject": "arts",
+    "chapter_no": 16,
+    "out_file": "data\\textbooks\\class-7\\arts\\chapter-16.txt",
+    "characters": 9758,
+    "paragraphs": 159
+  },
+  {
+    "class": "class-7",
+    "subject": "arts",
+    "chapter_no": 17,
+    "out_file": "data\\textbooks\\class-7\\arts\\chapter-17.txt",
+    "characters": 8652,
+    "paragraphs": 131
+  },
+  {
+    "class": "class-7",
+    "subject": "arts",
+    "chapter_no": 18,
+    "out_file": "data\\textbooks\\class-7\\arts\\chapter-18.txt",
+    "characters": 6825,
+    "paragraphs": 90
+  },
+  {
+    "class": "class-7",
+    "subject": "arts",
+    "chapter_no": 19,
+    "out_file": "data\\textbooks\\class-7\\arts\\chapter-19.txt",
+    "characters": 8513,
+    "paragraphs": 107
+  },
+  {
+    "class": "class-7",
+    "subject": "arts",
+    "chapter_no": 20,
+    "out_file": "data\\textbooks\\class-7\\arts\\chapter-20.txt",
+    "characters": 4736,
+    "paragraphs": 64
+  },
+  {
+    "class": "class-7",
+    "subject": "english",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-7\\english\\chapter-01.txt",
+    "characters": 53847,
+    "paragraphs": 765
+  },
+  {
+    "class": "class-7",
+    "subject": "english",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-7\\english\\chapter-02.txt",
+    "characters": 61788,
+    "paragraphs": 964
+  },
+  {
+    "class": "class-7",
+    "subject": "english",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-7\\english\\chapter-03.txt",
+    "characters": 61618,
+    "paragraphs": 984
+  },
+  {
+    "class": "class-7",
+    "subject": "english",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-7\\english\\chapter-04.txt",
+    "characters": 57617,
+    "paragraphs": 789
+  },
+  {
+    "class": "class-7",
+    "subject": "english",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-7\\english\\chapter-05.txt",
+    "characters": 55233,
+    "paragraphs": 692
+  },
+  {
+    "class": "class-7",
+    "subject": "maths",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-7\\maths\\chapter-01.txt",
+    "characters": 46800,
+    "paragraphs": 743
+  },
+  {
+    "class": "class-7",
+    "subject": "maths",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-7\\maths\\chapter-02.txt",
+    "characters": 49917,
+    "paragraphs": 773
+  },
+  {
+    "class": "class-7",
+    "subject": "maths",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-7\\maths\\chapter-03.txt",
+    "characters": 46675,
+    "paragraphs": 1343
+  },
+  {
+    "class": "class-7",
+    "subject": "maths",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-7\\maths\\chapter-04.txt",
+    "characters": 50149,
+    "paragraphs": 857
+  },
+  {
+    "class": "class-7",
+    "subject": "maths",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-7\\maths\\chapter-05.txt",
+    "characters": 28247,
+    "paragraphs": 537
+  },
+  {
+    "class": "class-7",
+    "subject": "maths",
+    "chapter_no": 6,
+    "out_file": "data\\textbooks\\class-7\\maths\\chapter-06.txt",
+    "characters": 38072,
+    "paragraphs": 535
+  },
+  {
+    "class": "class-7",
+    "subject": "maths",
+    "chapter_no": 7,
+    "out_file": "data\\textbooks\\class-7\\maths\\chapter-07.txt",
+    "characters": 38473,
+    "paragraphs": 625
+  },
+  {
+    "class": "class-7",
+    "subject": "maths",
+    "chapter_no": 8,
+    "out_file": "data\\textbooks\\class-7\\maths\\chapter-08.txt",
+    "characters": 38379,
+    "paragraphs": 1141
+  },
+  {
+    "class": "class-7",
+    "subject": "maths-part-2",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-7\\maths-part-2\\chapter-01.txt",
+    "characters": 20878,
+    "paragraphs": 423
+  },
+  {
+    "class": "class-7",
+    "subject": "maths-part-2",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-7\\maths-part-2\\chapter-02.txt",
+    "characters": 30687,
+    "paragraphs": 477
+  },
+  {
+    "class": "class-7",
+    "subject": "maths-part-2",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-7\\maths-part-2\\chapter-03.txt",
+    "characters": 29433,
+    "paragraphs": 397
+  },
+  {
+    "class": "class-7",
+    "subject": "maths-part-2",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-7\\maths-part-2\\chapter-04.txt",
+    "characters": 33777,
+    "paragraphs": 719
+  },
+  {
+    "class": "class-7",
+    "subject": "maths-part-2",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-7\\maths-part-2\\chapter-05.txt",
+    "characters": 50983,
+    "paragraphs": 808
+  },
+  {
+    "class": "class-7",
+    "subject": "maths-part-2",
+    "chapter_no": 6,
+    "out_file": "data\\textbooks\\class-7\\maths-part-2\\chapter-06.txt",
+    "characters": 25589,
+    "paragraphs": 491
+  },
+  {
+    "class": "class-7",
+    "subject": "maths-part-2",
+    "chapter_no": 7,
+    "out_file": "data\\textbooks\\class-7\\maths-part-2\\chapter-07.txt",
+    "characters": 31705,
+    "paragraphs": 556
+  },
+  {
+    "class": "class-7",
+    "subject": "physical-education",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-7\\physical-education\\chapter-01.txt",
+    "characters": 14569,
+    "paragraphs": 244
+  },
+  {
+    "class": "class-7",
+    "subject": "physical-education",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-7\\physical-education\\chapter-02.txt",
+    "characters": 20923,
+    "paragraphs": 338
+  },
+  {
+    "class": "class-7",
+    "subject": "physical-education",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-7\\physical-education\\chapter-03.txt",
+    "characters": 22151,
+    "paragraphs": 392
+  },
+  {
+    "class": "class-7",
+    "subject": "physical-education",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-7\\physical-education\\chapter-04.txt",
+    "characters": 25376,
+    "paragraphs": 444
+  },
+  {
+    "class": "class-7",
+    "subject": "physical-education",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-7\\physical-education\\chapter-05.txt",
+    "characters": 24503,
+    "paragraphs": 400
+  },
+  {
+    "class": "class-7",
+    "subject": "physical-education",
+    "chapter_no": 6,
+    "out_file": "data\\textbooks\\class-7\\physical-education\\chapter-06.txt",
+    "characters": 90582,
+    "paragraphs": 1677
+  },
+  {
+    "class": "class-7",
+    "subject": "science",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-7\\science\\chapter-01.txt",
+    "characters": 8966,
+    "paragraphs": 36
+  },
+  {
+    "class": "class-7",
+    "subject": "science",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-7\\science\\chapter-02.txt",
+    "characters": 24046,
+    "paragraphs": 351
+  },
+  {
+    "class": "class-7",
+    "subject": "science",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-7\\science\\chapter-03.txt",
+    "characters": 26371,
+    "paragraphs": 422
+  },
+  {
+    "class": "class-7",
+    "subject": "science",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-7\\science\\chapter-04.txt",
+    "characters": 26467,
+    "paragraphs": 367
+  },
+  {
+    "class": "class-7",
+    "subject": "science",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-7\\science\\chapter-05.txt",
+    "characters": 23768,
+    "paragraphs": 325
+  },
+  {
+    "class": "class-7",
+    "subject": "science",
+    "chapter_no": 6,
+    "out_file": "data\\textbooks\\class-7\\science\\chapter-06.txt",
+    "characters": 25741,
+    "paragraphs": 273
+  },
+  {
+    "class": "class-7",
+    "subject": "science",
+    "chapter_no": 7,
+    "out_file": "data\\textbooks\\class-7\\science\\chapter-07.txt",
+    "characters": 27571,
+    "paragraphs": 392
+  },
+  {
+    "class": "class-7",
+    "subject": "science",
+    "chapter_no": 8,
+    "out_file": "data\\textbooks\\class-7\\science\\chapter-08.txt",
+    "characters": 26063,
+    "paragraphs": 306
+  },
+  {
+    "class": "class-7",
+    "subject": "science",
+    "chapter_no": 9,
+    "out_file": "data\\textbooks\\class-7\\science\\chapter-09.txt",
+    "characters": 30480,
+    "paragraphs": 322
+  },
+  {
+    "class": "class-7",
+    "subject": "science",
+    "chapter_no": 10,
+    "out_file": "data\\textbooks\\class-7\\science\\chapter-10.txt",
+    "characters": 27231,
+    "paragraphs": 410
+  },
+  {
+    "class": "class-7",
+    "subject": "science",
+    "chapter_no": 11,
+    "out_file": "data\\textbooks\\class-7\\science\\chapter-11.txt",
+    "characters": 25485,
+    "paragraphs": 367
+  },
+  {
+    "class": "class-7",
+    "subject": "science",
+    "chapter_no": 12,
+    "out_file": "data\\textbooks\\class-7\\science\\chapter-12.txt",
+    "characters": 32932,
+    "paragraphs": 377
+  },
+  {
+    "class": "class-7",
+    "subject": "social-science",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-7\\social-science\\chapter-01.txt",
+    "characters": 28440,
+    "paragraphs": 285
+  },
+  {
+    "class": "class-7",
+    "subject": "social-science",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-7\\social-science\\chapter-02.txt",
+    "characters": 21564,
+    "paragraphs": 295
+  },
+  {
+    "class": "class-7",
+    "subject": "social-science",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-7\\social-science\\chapter-03.txt",
+    "characters": 29566,
+    "paragraphs": 288
+  },
+  {
+    "class": "class-7",
+    "subject": "social-science",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-7\\social-science\\chapter-04.txt",
+    "characters": 19358,
+    "paragraphs": 159
+  },
+  {
+    "class": "class-7",
+    "subject": "social-science",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-7\\social-science\\chapter-05.txt",
+    "characters": 41638,
+    "paragraphs": 521
+  },
+  {
+    "class": "class-7",
+    "subject": "social-science",
+    "chapter_no": 6,
+    "out_file": "data\\textbooks\\class-7\\social-science\\chapter-06.txt",
+    "characters": 31834,
+    "paragraphs": 365
+  },
+  {
+    "class": "class-7",
+    "subject": "social-science",
+    "chapter_no": 7,
+    "out_file": "data\\textbooks\\class-7\\social-science\\chapter-07.txt",
+    "characters": 29808,
+    "paragraphs": 316
+  },
+  {
+    "class": "class-7",
+    "subject": "social-science",
+    "chapter_no": 8,
+    "out_file": "data\\textbooks\\class-7\\social-science\\chapter-08.txt",
+    "characters": 25314,
+    "paragraphs": 201
+  },
+  {
+    "class": "class-7",
+    "subject": "social-science",
+    "chapter_no": 9,
+    "out_file": "data\\textbooks\\class-7\\social-science\\chapter-09.txt",
+    "characters": 36021,
+    "paragraphs": 348
+  },
+  {
+    "class": "class-7",
+    "subject": "social-science",
+    "chapter_no": 10,
+    "out_file": "data\\textbooks\\class-7\\social-science\\chapter-10.txt",
+    "characters": 27311,
+    "paragraphs": 309
+  },
+  {
+    "class": "class-7",
+    "subject": "social-science",
+    "chapter_no": 11,
+    "out_file": "data\\textbooks\\class-7\\social-science\\chapter-11.txt",
+    "characters": 20910,
+    "paragraphs": 261
+  },
+  {
+    "class": "class-7",
+    "subject": "social-science",
+    "chapter_no": 12,
+    "out_file": "data\\textbooks\\class-7\\social-science\\chapter-12.txt",
+    "characters": 32212,
+    "paragraphs": 392
+  },
+  {
+    "class": "class-7",
+    "subject": "social-science-part-2",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-7\\social-science-part-2\\chapter-01.txt",
+    "characters": 40808,
+    "paragraphs": 441
+  },
+  {
+    "class": "class-7",
+    "subject": "social-science-part-2",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-7\\social-science-part-2\\chapter-02.txt",
+    "characters": 44350,
+    "paragraphs": 404
+  },
+  {
+    "class": "class-7",
+    "subject": "social-science-part-2",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-7\\social-science-part-2\\chapter-03.txt",
+    "characters": 59879,
+    "paragraphs": 562
+  },
+  {
+    "class": "class-7",
+    "subject": "social-science-part-2",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-7\\social-science-part-2\\chapter-04.txt",
+    "characters": 43768,
+    "paragraphs": 389
+  },
+  {
+    "class": "class-7",
+    "subject": "social-science-part-2",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-7\\social-science-part-2\\chapter-05.txt",
+    "characters": 25099,
+    "paragraphs": 192
+  },
+  {
+    "class": "class-7",
+    "subject": "social-science-part-2",
+    "chapter_no": 6,
+    "out_file": "data\\textbooks\\class-7\\social-science-part-2\\chapter-06.txt",
+    "characters": 37396,
+    "paragraphs": 357
+  },
+  {
+    "class": "class-7",
+    "subject": "social-science-part-2",
+    "chapter_no": 7,
+    "out_file": "data\\textbooks\\class-7\\social-science-part-2\\chapter-07.txt",
+    "characters": 28114,
+    "paragraphs": 414
+  },
+  {
+    "class": "class-7",
+    "subject": "social-science-part-2",
+    "chapter_no": 8,
+    "out_file": "data\\textbooks\\class-7\\social-science-part-2\\chapter-08.txt",
+    "characters": 27847,
+    "paragraphs": 336
+  },
+  {
+    "class": "class-8",
+    "subject": "arts",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-8\\arts\\chapter-01.txt",
+    "characters": 19394,
+    "paragraphs": 232
+  },
+  {
+    "class": "class-8",
+    "subject": "arts",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-8\\arts\\chapter-02.txt",
+    "characters": 13381,
+    "paragraphs": 145
+  },
+  {
+    "class": "class-8",
+    "subject": "arts",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-8\\arts\\chapter-03.txt",
+    "characters": 25630,
+    "paragraphs": 274
+  },
+  {
+    "class": "class-8",
+    "subject": "arts",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-8\\arts\\chapter-04.txt",
+    "characters": 9771,
+    "paragraphs": 102
+  },
+  {
+    "class": "class-8",
+    "subject": "arts",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-8\\arts\\chapter-05.txt",
+    "characters": 12299,
+    "paragraphs": 203
+  },
+  {
+    "class": "class-8",
+    "subject": "arts",
+    "chapter_no": 6,
+    "out_file": "data\\textbooks\\class-8\\arts\\chapter-06.txt",
+    "characters": 8826,
+    "paragraphs": 136
+  },
+  {
+    "class": "class-8",
+    "subject": "arts",
+    "chapter_no": 7,
+    "out_file": "data\\textbooks\\class-8\\arts\\chapter-07.txt",
+    "characters": 9284,
+    "paragraphs": 242
+  },
+  {
+    "class": "class-8",
+    "subject": "arts",
+    "chapter_no": 8,
+    "out_file": "data\\textbooks\\class-8\\arts\\chapter-08.txt",
+    "characters": 6904,
+    "paragraphs": 86
+  },
+  {
+    "class": "class-8",
+    "subject": "arts",
+    "chapter_no": 9,
+    "out_file": "data\\textbooks\\class-8\\arts\\chapter-09.txt",
+    "characters": 10836,
+    "paragraphs": 115
+  },
+  {
+    "class": "class-8",
+    "subject": "arts",
+    "chapter_no": 10,
+    "out_file": "data\\textbooks\\class-8\\arts\\chapter-10.txt",
+    "characters": 14407,
+    "paragraphs": 156
+  },
+  {
+    "class": "class-8",
+    "subject": "arts",
+    "chapter_no": 11,
+    "out_file": "data\\textbooks\\class-8\\arts\\chapter-11.txt",
+    "characters": 11764,
+    "paragraphs": 104
+  },
+  {
+    "class": "class-8",
+    "subject": "arts",
+    "chapter_no": 12,
+    "out_file": "data\\textbooks\\class-8\\arts\\chapter-12.txt",
+    "characters": 11920,
+    "paragraphs": 141
+  },
+  {
+    "class": "class-8",
+    "subject": "arts",
+    "chapter_no": 13,
+    "out_file": "data\\textbooks\\class-8\\arts\\chapter-13.txt",
+    "characters": 10037,
+    "paragraphs": 68
+  },
+  {
+    "class": "class-8",
+    "subject": "arts",
+    "chapter_no": 14,
+    "out_file": "data\\textbooks\\class-8\\arts\\chapter-14.txt",
+    "characters": 8346,
+    "paragraphs": 118
+  },
+  {
+    "class": "class-8",
+    "subject": "arts",
+    "chapter_no": 15,
+    "out_file": "data\\textbooks\\class-8\\arts\\chapter-15.txt",
+    "characters": 12400,
+    "paragraphs": 148
+  },
+  {
+    "class": "class-8",
+    "subject": "arts",
+    "chapter_no": 16,
+    "out_file": "data\\textbooks\\class-8\\arts\\chapter-16.txt",
+    "characters": 8162,
+    "paragraphs": 109
+  },
+  {
+    "class": "class-8",
+    "subject": "arts",
+    "chapter_no": 17,
+    "out_file": "data\\textbooks\\class-8\\arts\\chapter-17.txt",
+    "characters": 9509,
+    "paragraphs": 143
+  },
+  {
+    "class": "class-8",
+    "subject": "arts",
+    "chapter_no": 18,
+    "out_file": "data\\textbooks\\class-8\\arts\\chapter-18.txt",
+    "characters": 8255,
+    "paragraphs": 81
+  },
+  {
+    "class": "class-8",
+    "subject": "arts",
+    "chapter_no": 19,
+    "out_file": "data\\textbooks\\class-8\\arts\\chapter-19.txt",
+    "characters": 7292,
+    "paragraphs": 103
+  },
+  {
+    "class": "class-8",
+    "subject": "english",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-8\\english\\chapter-01.txt",
+    "characters": 66225,
+    "paragraphs": 1017
+  },
+  {
+    "class": "class-8",
+    "subject": "english",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-8\\english\\chapter-02.txt",
+    "characters": 73324,
+    "paragraphs": 951
+  },
+  {
+    "class": "class-8",
+    "subject": "english",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-8\\english\\chapter-03.txt",
+    "characters": 73964,
+    "paragraphs": 1107
+  },
+  {
+    "class": "class-8",
+    "subject": "english",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-8\\english\\chapter-04.txt",
+    "characters": 67774,
+    "paragraphs": 1024
+  },
+  {
+    "class": "class-8",
+    "subject": "english",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-8\\english\\chapter-05.txt",
+    "characters": 66673,
+    "paragraphs": 813
+  },
+  {
+    "class": "class-8",
+    "subject": "maths",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-8\\maths\\chapter-01.txt",
+    "characters": 29151,
+    "paragraphs": 431
+  },
+  {
+    "class": "class-8",
+    "subject": "maths",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-8\\maths\\chapter-02.txt",
+    "characters": 52503,
+    "paragraphs": 839
+  },
+  {
+    "class": "class-8",
+    "subject": "maths",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-8\\maths\\chapter-03.txt",
+    "characters": 53575,
+    "paragraphs": 616
+  },
+  {
+    "class": "class-8",
+    "subject": "maths",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-8\\maths\\chapter-04.txt",
+    "characters": 43981,
+    "paragraphs": 981
+  },
+  {
+    "class": "class-8",
+    "subject": "maths",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-8\\maths\\chapter-05.txt",
+    "characters": 52658,
+    "paragraphs": 940
+  },
+  {
+    "class": "class-8",
+    "subject": "maths",
+    "chapter_no": 6,
+    "out_file": "data\\textbooks\\class-8\\maths\\chapter-06.txt",
+    "characters": 40069,
+    "paragraphs": 796
+  },
+  {
+    "class": "class-8",
+    "subject": "maths",
+    "chapter_no": 7,
+    "out_file": "data\\textbooks\\class-8\\maths\\chapter-07.txt",
+    "characters": 41058,
+    "paragraphs": 562
+  },
+  {
+    "class": "class-8",
+    "subject": "maths-part-2",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-8\\maths-part-2\\chapter-01.txt",
+    "characters": 49130,
+    "paragraphs": 859
+  },
+  {
+    "class": "class-8",
+    "subject": "maths-part-2",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-8\\maths-part-2\\chapter-02.txt",
+    "characters": 25227,
+    "paragraphs": 434
+  },
+  {
+    "class": "class-8",
+    "subject": "maths-part-2",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-8\\maths-part-2\\chapter-03.txt",
+    "characters": 21868,
+    "paragraphs": 326
+  },
+  {
+    "class": "class-8",
+    "subject": "maths-part-2",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-8\\maths-part-2\\chapter-04.txt",
+    "characters": 32340,
+    "paragraphs": 436
+  },
+  {
+    "class": "class-8",
+    "subject": "maths-part-2",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-8\\maths-part-2\\chapter-05.txt",
+    "characters": 38530,
+    "paragraphs": 545
+  },
+  {
+    "class": "class-8",
+    "subject": "maths-part-2",
+    "chapter_no": 6,
+    "out_file": "data\\textbooks\\class-8\\maths-part-2\\chapter-06.txt",
+    "characters": 15645,
+    "paragraphs": 351
+  },
+  {
+    "class": "class-8",
+    "subject": "maths-part-2",
+    "chapter_no": 7,
+    "out_file": "data\\textbooks\\class-8\\maths-part-2\\chapter-07.txt",
+    "characters": 24980,
+    "paragraphs": 702
+  },
+  {
+    "class": "class-8",
+    "subject": "physical-education",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-8\\physical-education\\chapter-01.txt",
+    "characters": 25081,
+    "paragraphs": 455
+  },
+  {
+    "class": "class-8",
+    "subject": "physical-education",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-8\\physical-education\\chapter-02.txt",
+    "characters": 18551,
+    "paragraphs": 305
+  },
+  {
+    "class": "class-8",
+    "subject": "physical-education",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-8\\physical-education\\chapter-03.txt",
+    "characters": 27668,
+    "paragraphs": 530
+  },
+  {
+    "class": "class-8",
+    "subject": "physical-education",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-8\\physical-education\\chapter-04.txt",
+    "characters": 38841,
+    "paragraphs": 613
+  },
+  {
+    "class": "class-8",
+    "subject": "physical-education",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-8\\physical-education\\chapter-05.txt",
+    "characters": 25743,
+    "paragraphs": 411
+  },
+  {
+    "class": "class-8",
+    "subject": "physical-education",
+    "chapter_no": 6,
+    "out_file": "data\\textbooks\\class-8\\physical-education\\chapter-06.txt",
+    "characters": 88504,
+    "paragraphs": 1255
+  },
+  {
+    "class": "class-8",
+    "subject": "science",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-8\\science\\chapter-01.txt",
+    "characters": 11900,
+    "paragraphs": 60
+  },
+  {
+    "class": "class-8",
+    "subject": "science",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-8\\science\\chapter-02.txt",
+    "characters": 37601,
+    "paragraphs": 350
+  },
+  {
+    "class": "class-8",
+    "subject": "science",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-8\\science\\chapter-03.txt",
+    "characters": 31233,
+    "paragraphs": 442
+  },
+  {
+    "class": "class-8",
+    "subject": "science",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-8\\science\\chapter-04.txt",
+    "characters": 27768,
+    "paragraphs": 281
+  },
+  {
+    "class": "class-8",
+    "subject": "science",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-8\\science\\chapter-05.txt",
+    "characters": 30531,
+    "paragraphs": 318
+  },
+  {
+    "class": "class-8",
+    "subject": "science",
+    "chapter_no": 6,
+    "out_file": "data\\textbooks\\class-8\\science\\chapter-06.txt",
+    "characters": 33026,
+    "paragraphs": 295
+  },
+  {
+    "class": "class-8",
+    "subject": "science",
+    "chapter_no": 7,
+    "out_file": "data\\textbooks\\class-8\\science\\chapter-07.txt",
+    "characters": 27707,
+    "paragraphs": 356
+  },
+  {
+    "class": "class-8",
+    "subject": "science",
+    "chapter_no": 8,
+    "out_file": "data\\textbooks\\class-8\\science\\chapter-08.txt",
+    "characters": 31422,
+    "paragraphs": 396
+  },
+  {
+    "class": "class-8",
+    "subject": "science",
+    "chapter_no": 9,
+    "out_file": "data\\textbooks\\class-8\\science\\chapter-09.txt",
+    "characters": 32559,
+    "paragraphs": 364
+  },
+  {
+    "class": "class-8",
+    "subject": "science",
+    "chapter_no": 10,
+    "out_file": "data\\textbooks\\class-8\\science\\chapter-10.txt",
+    "characters": 30284,
+    "paragraphs": 393
+  },
+  {
+    "class": "class-8",
+    "subject": "science",
+    "chapter_no": 11,
+    "out_file": "data\\textbooks\\class-8\\science\\chapter-11.txt",
+    "characters": 39219,
+    "paragraphs": 393
+  },
+  {
+    "class": "class-8",
+    "subject": "science",
+    "chapter_no": 12,
+    "out_file": "data\\textbooks\\class-8\\science\\chapter-12.txt",
+    "characters": 35983,
+    "paragraphs": 357
+  },
+  {
+    "class": "class-8",
+    "subject": "science",
+    "chapter_no": 13,
+    "out_file": "data\\textbooks\\class-8\\science\\chapter-13.txt",
+    "characters": 38000,
+    "paragraphs": 242
+  },
+  {
+    "class": "class-8",
+    "subject": "social-science",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-8\\social-science\\chapter-01.txt",
+    "characters": 30777,
+    "paragraphs": 307
+  },
+  {
+    "class": "class-8",
+    "subject": "social-science",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-8\\social-science\\chapter-02.txt",
+    "characters": 53923,
+    "paragraphs": 476
+  },
+  {
+    "class": "class-8",
+    "subject": "social-science",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-8\\social-science\\chapter-03.txt",
+    "characters": 32508,
+    "paragraphs": 330
+  },
+  {
+    "class": "class-8",
+    "subject": "social-science",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-8\\social-science\\chapter-04.txt",
+    "characters": 52777,
+    "paragraphs": 383
+  },
+  {
+    "class": "class-8",
+    "subject": "social-science",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-8\\social-science\\chapter-05.txt",
+    "characters": 29067,
+    "paragraphs": 348
+  },
+  {
+    "class": "class-8",
+    "subject": "social-science",
+    "chapter_no": 6,
+    "out_file": "data\\textbooks\\class-8\\social-science\\chapter-06.txt",
+    "characters": 36362,
+    "paragraphs": 389
+  },
+  {
+    "class": "class-8",
+    "subject": "social-science",
+    "chapter_no": 7,
+    "out_file": "data\\textbooks\\class-8\\social-science\\chapter-07.txt",
+    "characters": 47102,
+    "paragraphs": 411
+  },
+  {
+    "class": "class-8",
+    "subject": "social-science-part-2",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-8\\social-science-part-2\\chapter-01.txt",
+    "characters": 41899,
+    "paragraphs": 590
+  },
+  {
+    "class": "class-8",
+    "subject": "social-science-part-2",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-8\\social-science-part-2\\chapter-02.txt",
+    "characters": 84808,
+    "paragraphs": 576
+  },
+  {
+    "class": "class-8",
+    "subject": "social-science-part-2",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-8\\social-science-part-2\\chapter-03.txt",
+    "characters": 42796,
+    "paragraphs": 423
+  },
+  {
+    "class": "class-8",
+    "subject": "social-science-part-2",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-8\\social-science-part-2\\chapter-04.txt",
+    "characters": 25161,
+    "paragraphs": 250
+  },
+  {
+    "class": "class-8",
+    "subject": "social-science-part-2",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-8\\social-science-part-2\\chapter-05.txt",
+    "characters": 34263,
+    "paragraphs": 299
+  },
+  {
+    "class": "class-8",
+    "subject": "social-science-part-2",
+    "chapter_no": 6,
+    "out_file": "data\\textbooks\\class-8\\social-science-part-2\\chapter-06.txt",
+    "characters": 31173,
+    "paragraphs": 593
+  },
+  {
+    "class": "class-8",
+    "subject": "social-science-part-2",
+    "chapter_no": 7,
+    "out_file": "data\\textbooks\\class-8\\social-science-part-2\\chapter-07.txt",
+    "characters": 31394,
+    "paragraphs": 315
+  },
+  {
+    "class": "class-8",
+    "subject": "social-science-part-2",
+    "chapter_no": 9,
+    "out_file": "data\\textbooks\\class-8\\social-science-part-2\\chapter-09.txt",
+    "characters": 48567,
+    "paragraphs": 400
+  },
+  {
+    "class": "class-9",
+    "subject": "arts",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-9\\arts\\chapter-01.txt",
+    "characters": 50013,
+    "paragraphs": 538
+  },
+  {
+    "class": "class-9",
+    "subject": "arts",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-9\\arts\\chapter-02.txt",
+    "characters": 19267,
+    "paragraphs": 213
+  },
+  {
+    "class": "class-9",
+    "subject": "arts",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-9\\arts\\chapter-03.txt",
+    "characters": 17290,
+    "paragraphs": 219
+  },
+  {
+    "class": "class-9",
+    "subject": "arts",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-9\\arts\\chapter-04.txt",
+    "characters": 15246,
+    "paragraphs": 170
+  },
+  {
+    "class": "class-9",
+    "subject": "arts",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-9\\arts\\chapter-05.txt",
+    "characters": 22534,
+    "paragraphs": 312
+  },
+  {
+    "class": "class-9",
+    "subject": "arts",
+    "chapter_no": 6,
+    "out_file": "data\\textbooks\\class-9\\arts\\chapter-06.txt",
+    "characters": 20284,
+    "paragraphs": 262
+  },
+  {
+    "class": "class-9",
+    "subject": "arts",
+    "chapter_no": 7,
+    "out_file": "data\\textbooks\\class-9\\arts\\chapter-07.txt",
+    "characters": 11219,
     "paragraphs": 167
+  },
+  {
+    "class": "class-9",
+    "subject": "arts",
+    "chapter_no": 8,
+    "out_file": "data\\textbooks\\class-9\\arts\\chapter-08.txt",
+    "characters": 16833,
+    "paragraphs": 471
+  },
+  {
+    "class": "class-9",
+    "subject": "arts",
+    "chapter_no": 9,
+    "out_file": "data\\textbooks\\class-9\\arts\\chapter-09.txt",
+    "characters": 8895,
+    "paragraphs": 122
+  },
+  {
+    "class": "class-9",
+    "subject": "arts",
+    "chapter_no": 10,
+    "out_file": "data\\textbooks\\class-9\\arts\\chapter-10.txt",
+    "characters": 22455,
+    "paragraphs": 296
+  },
+  {
+    "class": "class-9",
+    "subject": "arts",
+    "chapter_no": 11,
+    "out_file": "data\\textbooks\\class-9\\arts\\chapter-11.txt",
+    "characters": 6140,
+    "paragraphs": 68
+  },
+  {
+    "class": "class-9",
+    "subject": "arts",
+    "chapter_no": 12,
+    "out_file": "data\\textbooks\\class-9\\arts\\chapter-12.txt",
+    "characters": 11106,
+    "paragraphs": 129
+  },
+  {
+    "class": "class-9",
+    "subject": "arts",
+    "chapter_no": 13,
+    "out_file": "data\\textbooks\\class-9\\arts\\chapter-13.txt",
+    "characters": 10708,
+    "paragraphs": 163
+  },
+  {
+    "class": "class-9",
+    "subject": "arts",
+    "chapter_no": 14,
+    "out_file": "data\\textbooks\\class-9\\arts\\chapter-14.txt",
+    "characters": 18991,
+    "paragraphs": 255
+  },
+  {
+    "class": "class-9",
+    "subject": "arts",
+    "chapter_no": 15,
+    "out_file": "data\\textbooks\\class-9\\arts\\chapter-15.txt",
+    "characters": 15592,
+    "paragraphs": 232
+  },
+  {
+    "class": "class-9",
+    "subject": "arts",
+    "chapter_no": 16,
+    "out_file": "data\\textbooks\\class-9\\arts\\chapter-16.txt",
+    "characters": 10703,
+    "paragraphs": 176
+  },
+  {
+    "class": "class-9",
+    "subject": "arts",
+    "chapter_no": 17,
+    "out_file": "data\\textbooks\\class-9\\arts\\chapter-17.txt",
+    "characters": 8244,
+    "paragraphs": 130
+  },
+  {
+    "class": "class-9",
+    "subject": "english",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-9\\english\\chapter-01.txt",
+    "characters": 37662,
+    "paragraphs": 600
+  },
+  {
+    "class": "class-9",
+    "subject": "english",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-9\\english\\chapter-02.txt",
+    "characters": 42230,
+    "paragraphs": 594
+  },
+  {
+    "class": "class-9",
+    "subject": "english",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-9\\english\\chapter-03.txt",
+    "characters": 34045,
+    "paragraphs": 540
+  },
+  {
+    "class": "class-9",
+    "subject": "english",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-9\\english\\chapter-04.txt",
+    "characters": 47287,
+    "paragraphs": 681
+  },
+  {
+    "class": "class-9",
+    "subject": "english",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-9\\english\\chapter-05.txt",
+    "characters": 33548,
+    "paragraphs": 609
+  },
+  {
+    "class": "class-9",
+    "subject": "english",
+    "chapter_no": 6,
+    "out_file": "data\\textbooks\\class-9\\english\\chapter-06.txt",
+    "characters": 37943,
+    "paragraphs": 675
+  },
+  {
+    "class": "class-9",
+    "subject": "english",
+    "chapter_no": 7,
+    "out_file": "data\\textbooks\\class-9\\english\\chapter-07.txt",
+    "characters": 32455,
+    "paragraphs": 569
+  },
+  {
+    "class": "class-9",
+    "subject": "english",
+    "chapter_no": 8,
+    "out_file": "data\\textbooks\\class-9\\english\\chapter-08.txt",
+    "characters": 35861,
+    "paragraphs": 563
+  },
+  {
+    "class": "class-9",
+    "subject": "maths",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-9\\maths\\chapter-01.txt",
+    "characters": 21004,
+    "paragraphs": 285
+  },
+  {
+    "class": "class-9",
+    "subject": "maths",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-9\\maths\\chapter-02.txt",
+    "characters": 33012,
+    "paragraphs": 580
+  },
+  {
+    "class": "class-9",
+    "subject": "maths",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-9\\maths\\chapter-03.txt",
+    "characters": 40134,
+    "paragraphs": 604
+  },
+  {
+    "class": "class-9",
+    "subject": "maths",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-9\\maths\\chapter-04.txt",
+    "characters": 30422,
+    "paragraphs": 631
+  },
+  {
+    "class": "class-9",
+    "subject": "maths",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-9\\maths\\chapter-05.txt",
+    "characters": 38454,
+    "paragraphs": 523
+  },
+  {
+    "class": "class-9",
+    "subject": "maths",
+    "chapter_no": 6,
+    "out_file": "data\\textbooks\\class-9\\maths\\chapter-06.txt",
+    "characters": 52929,
+    "paragraphs": 884
+  },
+  {
+    "class": "class-9",
+    "subject": "maths",
+    "chapter_no": 7,
+    "out_file": "data\\textbooks\\class-9\\maths\\chapter-07.txt",
+    "characters": 31604,
+    "paragraphs": 317
+  },
+  {
+    "class": "class-9",
+    "subject": "maths",
+    "chapter_no": 8,
+    "out_file": "data\\textbooks\\class-9\\maths\\chapter-08.txt",
+    "characters": 37540,
+    "paragraphs": 482
+  },
+  {
+    "class": "class-9",
+    "subject": "maths-part-2",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-9\\maths-part-2\\chapter-01.txt",
+    "characters": 10783,
+    "paragraphs": 123
+  },
+  {
+    "class": "class-9",
+    "subject": "maths-part-2",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-9\\maths-part-2\\chapter-02.txt",
+    "characters": 45253,
+    "paragraphs": 740
+  },
+  {
+    "class": "class-9",
+    "subject": "maths-part-2",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-9\\maths-part-2\\chapter-03.txt",
+    "characters": 26308,
+    "paragraphs": 245
+  },
+  {
+    "class": "class-9",
+    "subject": "maths-part-2",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-9\\maths-part-2\\chapter-04.txt",
+    "characters": 47848,
+    "paragraphs": 562
+  },
+  {
+    "class": "class-9",
+    "subject": "maths-part-2",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-9\\maths-part-2\\chapter-05.txt",
+    "characters": 50188,
+    "paragraphs": 912
+  },
+  {
+    "class": "class-9",
+    "subject": "maths-part-2",
+    "chapter_no": 6,
+    "out_file": "data\\textbooks\\class-9\\maths-part-2\\chapter-06.txt",
+    "characters": 35812,
+    "paragraphs": 436
+  },
+  {
+    "class": "class-9",
+    "subject": "physical-education",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-9\\physical-education\\chapter-01.txt",
+    "characters": 44400,
+    "paragraphs": 417
+  },
+  {
+    "class": "class-9",
+    "subject": "physical-education",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-9\\physical-education\\chapter-02.txt",
+    "characters": 58460,
+    "paragraphs": 773
+  },
+  {
+    "class": "class-9",
+    "subject": "physical-education",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-9\\physical-education\\chapter-03.txt",
+    "characters": 33545,
+    "paragraphs": 247
+  },
+  {
+    "class": "class-9",
+    "subject": "physical-education",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-9\\physical-education\\chapter-04.txt",
+    "characters": 57354,
+    "paragraphs": 645
+  },
+  {
+    "class": "class-9",
+    "subject": "physical-education",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-9\\physical-education\\chapter-05.txt",
+    "characters": 25311,
+    "paragraphs": 167
+  },
+  {
+    "class": "class-9",
+    "subject": "physical-education",
+    "chapter_no": 6,
+    "out_file": "data\\textbooks\\class-9\\physical-education\\chapter-06.txt",
+    "characters": 93283,
+    "paragraphs": 976
+  },
+  {
+    "class": "class-9",
+    "subject": "science",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-9\\science\\chapter-01.txt",
+    "characters": 18367,
+    "paragraphs": 62
+  },
+  {
+    "class": "class-9",
+    "subject": "science",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-9\\science\\chapter-02.txt",
+    "characters": 49243,
+    "paragraphs": 413
+  },
+  {
+    "class": "class-9",
+    "subject": "science",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-9\\science\\chapter-03.txt",
+    "characters": 46104,
+    "paragraphs": 437
+  },
+  {
+    "class": "class-9",
+    "subject": "science",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-9\\science\\chapter-04.txt",
+    "characters": 57692,
+    "paragraphs": 741
+  },
+  {
+    "class": "class-9",
+    "subject": "science",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-9\\science\\chapter-05.txt",
+    "characters": 49497,
+    "paragraphs": 468
+  },
+  {
+    "class": "class-9",
+    "subject": "science",
+    "chapter_no": 6,
+    "out_file": "data\\textbooks\\class-9\\science\\chapter-06.txt",
+    "characters": 56367,
+    "paragraphs": 455
+  },
+  {
+    "class": "class-9",
+    "subject": "science",
+    "chapter_no": 7,
+    "out_file": "data\\textbooks\\class-9\\science\\chapter-07.txt",
+    "characters": 60080,
+    "paragraphs": 605
+  },
+  {
+    "class": "class-9",
+    "subject": "science",
+    "chapter_no": 8,
+    "out_file": "data\\textbooks\\class-9\\science\\chapter-08.txt",
+    "characters": 47889,
+    "paragraphs": 431
+  },
+  {
+    "class": "class-9",
+    "subject": "science",
+    "chapter_no": 9,
+    "out_file": "data\\textbooks\\class-9\\science\\chapter-09.txt",
+    "characters": 47097,
+    "paragraphs": 533
+  },
+  {
+    "class": "class-9",
+    "subject": "science",
+    "chapter_no": 10,
+    "out_file": "data\\textbooks\\class-9\\science\\chapter-10.txt",
+    "characters": 53742,
+    "paragraphs": 440
+  },
+  {
+    "class": "class-9",
+    "subject": "science",
+    "chapter_no": 11,
+    "out_file": "data\\textbooks\\class-9\\science\\chapter-11.txt",
+    "characters": 52805,
+    "paragraphs": 359
+  },
+  {
+    "class": "class-9",
+    "subject": "science",
+    "chapter_no": 12,
+    "out_file": "data\\textbooks\\class-9\\science\\chapter-12.txt",
+    "characters": 58163,
+    "paragraphs": 461
+  },
+  {
+    "class": "class-9",
+    "subject": "science",
+    "chapter_no": 13,
+    "out_file": "data\\textbooks\\class-9\\science\\chapter-13.txt",
+    "characters": 53053,
+    "paragraphs": 492
+  },
+  {
+    "class": "class-9",
+    "subject": "social-science",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-9\\social-science\\chapter-01.txt",
+    "characters": 24828,
+    "paragraphs": 143
+  },
+  {
+    "class": "class-9",
+    "subject": "social-science",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-9\\social-science\\chapter-02.txt",
+    "characters": 32034,
+    "paragraphs": 356
+  },
+  {
+    "class": "class-9",
+    "subject": "social-science",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-9\\social-science\\chapter-03.txt",
+    "characters": 32631,
+    "paragraphs": 478
+  },
+  {
+    "class": "class-9",
+    "subject": "social-science",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-9\\social-science\\chapter-04.txt",
+    "characters": 52197,
+    "paragraphs": 740
+  },
+  {
+    "class": "class-9",
+    "subject": "social-science",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-9\\social-science\\chapter-05.txt",
+    "characters": 73435,
+    "paragraphs": 932
+  },
+  {
+    "class": "class-9",
+    "subject": "social-science",
+    "chapter_no": 6,
+    "out_file": "data\\textbooks\\class-9\\social-science\\chapter-06.txt",
+    "characters": 41926,
+    "paragraphs": 457
+  },
+  {
+    "class": "class-9",
+    "subject": "social-science",
+    "chapter_no": 7,
+    "out_file": "data\\textbooks\\class-9\\social-science\\chapter-07.txt",
+    "characters": 34203,
+    "paragraphs": 400
+  },
+  {
+    "class": "class-9",
+    "subject": "social-science",
+    "chapter_no": 8,
+    "out_file": "data\\textbooks\\class-9\\social-science\\chapter-08.txt",
+    "characters": 22384,
+    "paragraphs": 223
+  },
+  {
+    "class": "class-9",
+    "subject": "social-science",
+    "chapter_no": 9,
+    "out_file": "data\\textbooks\\class-9\\social-science\\chapter-09.txt",
+    "characters": 39832,
+    "paragraphs": 471
+  },
+  {
+    "class": "class-9",
+    "subject": "social-science-part-2",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-9\\social-science-part-2\\chapter-01.txt",
+    "characters": 31442,
+    "paragraphs": 406
+  },
+  {
+    "class": "class-9",
+    "subject": "social-science-part-2",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-9\\social-science-part-2\\chapter-02.txt",
+    "characters": 33806,
+    "paragraphs": 334
+  },
+  {
+    "class": "class-9",
+    "subject": "social-science-part-2",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-9\\social-science-part-2\\chapter-03.txt",
+    "characters": 58008,
+    "paragraphs": 514
+  },
+  {
+    "class": "class-9",
+    "subject": "social-science-part-2",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-9\\social-science-part-2\\chapter-04.txt",
+    "characters": 43414,
+    "paragraphs": 429
+  },
+  {
+    "class": "class-9",
+    "subject": "social-science-part-2",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-9\\social-science-part-2\\chapter-05.txt",
+    "characters": 30405,
+    "paragraphs": 414
+  },
+  {
+    "class": "class-9",
+    "subject": "social-science-part-2",
+    "chapter_no": 6,
+    "out_file": "data\\textbooks\\class-9\\social-science-part-2\\chapter-06.txt",
+    "characters": 35923,
+    "paragraphs": 484
   },
   {
     "class": "class-10",
     "subject": "civics",
     "chapter_no": 1,
-    "pdf_name": "jess401.pdf",
-    "out_file": "textbooks\\class-10\\civics\\chapter-01.txt",
+    "out_file": "data\\textbooks\\class-10\\civics\\chapter-01.txt",
     "characters": 25998,
     "paragraphs": 148
   },
@@ -678,8 +2995,7 @@
     "class": "class-10",
     "subject": "civics",
     "chapter_no": 2,
-    "pdf_name": "jess402.pdf",
-    "out_file": "textbooks\\class-10\\civics\\chapter-02.txt",
+    "out_file": "data\\textbooks\\class-10\\civics\\chapter-02.txt",
     "characters": 32803,
     "paragraphs": 208
   },
@@ -687,8 +3003,7 @@
     "class": "class-10",
     "subject": "civics",
     "chapter_no": 3,
-    "pdf_name": "jess403.pdf",
-    "out_file": "textbooks\\class-10\\civics\\chapter-03.txt",
+    "out_file": "data\\textbooks\\class-10\\civics\\chapter-03.txt",
     "characters": 34019,
     "paragraphs": 222
   },
@@ -696,8 +3011,7 @@
     "class": "class-10",
     "subject": "civics",
     "chapter_no": 4,
-    "pdf_name": "jess404.pdf",
-    "out_file": "textbooks\\class-10\\civics\\chapter-04.txt",
+    "out_file": "data\\textbooks\\class-10\\civics\\chapter-04.txt",
     "characters": 35421,
     "paragraphs": 184
   },
@@ -705,62 +3019,15 @@
     "class": "class-10",
     "subject": "civics",
     "chapter_no": 5,
-    "pdf_name": "jess405.pdf",
-    "out_file": "textbooks\\class-10\\civics\\chapter-05.txt",
+    "out_file": "data\\textbooks\\class-10\\civics\\chapter-05.txt",
     "characters": 24445,
     "paragraphs": 154
   },
   {
     "class": "class-10",
-    "subject": "history",
-    "chapter_no": 1,
-    "pdf_name": "jess301.pdf",
-    "out_file": "textbooks\\class-10\\history\\chapter-01.txt",
-    "characters": 57497,
-    "paragraphs": 359
-  },
-  {
-    "class": "class-10",
-    "subject": "history",
-    "chapter_no": 2,
-    "pdf_name": "jess302.pdf",
-    "out_file": "textbooks\\class-10\\history\\chapter-02.txt",
-    "characters": 52988,
-    "paragraphs": 233
-  },
-  {
-    "class": "class-10",
-    "subject": "history",
-    "chapter_no": 3,
-    "pdf_name": "jess303.pdf",
-    "out_file": "textbooks\\class-10\\history\\chapter-03.txt",
-    "characters": 58419,
-    "paragraphs": 341
-  },
-  {
-    "class": "class-10",
-    "subject": "history",
-    "chapter_no": 4,
-    "pdf_name": "jess304.pdf",
-    "out_file": "textbooks\\class-10\\history\\chapter-04.txt",
-    "characters": 51489,
-    "paragraphs": 272
-  },
-  {
-    "class": "class-10",
-    "subject": "history",
-    "chapter_no": 5,
-    "pdf_name": "jess305.pdf",
-    "out_file": "textbooks\\class-10\\history\\chapter-05.txt",
-    "characters": 57629,
-    "paragraphs": 328
-  },
-  {
-    "class": "class-10",
     "subject": "economics",
     "chapter_no": 1,
-    "pdf_name": "jess201.pdf",
-    "out_file": "textbooks\\class-10\\economics\\chapter-01.txt",
+    "out_file": "data\\textbooks\\class-10\\economics\\chapter-01.txt",
     "characters": 38205,
     "paragraphs": 260
   },
@@ -768,8 +3035,7 @@
     "class": "class-10",
     "subject": "economics",
     "chapter_no": 2,
-    "pdf_name": "jess202.pdf",
-    "out_file": "textbooks\\class-10\\economics\\chapter-02.txt",
+    "out_file": "data\\textbooks\\class-10\\economics\\chapter-02.txt",
     "characters": 52396,
     "paragraphs": 304
   },
@@ -777,8 +3043,7 @@
     "class": "class-10",
     "subject": "economics",
     "chapter_no": 3,
-    "pdf_name": "jess203.pdf",
-    "out_file": "textbooks\\class-10\\economics\\chapter-03.txt",
+    "out_file": "data\\textbooks\\class-10\\economics\\chapter-03.txt",
     "characters": 38384,
     "paragraphs": 237
   },
@@ -786,8 +3051,7 @@
     "class": "class-10",
     "subject": "economics",
     "chapter_no": 4,
-    "pdf_name": "jess204.pdf",
-    "out_file": "textbooks\\class-10\\economics\\chapter-04.txt",
+    "out_file": "data\\textbooks\\class-10\\economics\\chapter-04.txt",
     "characters": 46876,
     "paragraphs": 259
   },
@@ -795,9 +3059,640 @@
     "class": "class-10",
     "subject": "economics",
     "chapter_no": 5,
-    "pdf_name": "jess205.pdf",
-    "out_file": "textbooks\\class-10\\economics\\chapter-05.txt",
+    "out_file": "data\\textbooks\\class-10\\economics\\chapter-05.txt",
     "characters": 41995,
     "paragraphs": 264
+  },
+  {
+    "class": "class-10",
+    "subject": "english",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-10\\english\\chapter-01.txt",
+    "characters": 21678,
+    "paragraphs": 214
+  },
+  {
+    "class": "class-10",
+    "subject": "english",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-10\\english\\chapter-02.txt",
+    "characters": 25494,
+    "paragraphs": 255
+  },
+  {
+    "class": "class-10",
+    "subject": "english",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-10\\english\\chapter-03.txt",
+    "characters": 20643,
+    "paragraphs": 188
+  },
+  {
+    "class": "class-10",
+    "subject": "english",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-10\\english\\chapter-04.txt",
+    "characters": 26862,
+    "paragraphs": 247
+  },
+  {
+    "class": "class-10",
+    "subject": "english",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-10\\english\\chapter-05.txt",
+    "characters": 28042,
+    "paragraphs": 279
+  },
+  {
+    "class": "class-10",
+    "subject": "english",
+    "chapter_no": 6,
+    "out_file": "data\\textbooks\\class-10\\english\\chapter-06.txt",
+    "characters": 24590,
+    "paragraphs": 213
+  },
+  {
+    "class": "class-10",
+    "subject": "english",
+    "chapter_no": 7,
+    "out_file": "data\\textbooks\\class-10\\english\\chapter-07.txt",
+    "characters": 25393,
+    "paragraphs": 218
+  },
+  {
+    "class": "class-10",
+    "subject": "english",
+    "chapter_no": 8,
+    "out_file": "data\\textbooks\\class-10\\english\\chapter-08.txt",
+    "characters": 15693,
+    "paragraphs": 128
+  },
+  {
+    "class": "class-10",
+    "subject": "english",
+    "chapter_no": 9,
+    "out_file": "data\\textbooks\\class-10\\english\\chapter-09.txt",
+    "characters": 39435,
+    "paragraphs": 261
+  },
+  {
+    "class": "class-10",
+    "subject": "english-supplementary",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-10\\english-supplementary\\chapter-01.txt",
+    "characters": 10695,
+    "paragraphs": 67
+  },
+  {
+    "class": "class-10",
+    "subject": "english-supplementary",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-10\\english-supplementary\\chapter-02.txt",
+    "characters": 9553,
+    "paragraphs": 58
+  },
+  {
+    "class": "class-10",
+    "subject": "english-supplementary",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-10\\english-supplementary\\chapter-03.txt",
+    "characters": 8552,
+    "paragraphs": 54
+  },
+  {
+    "class": "class-10",
+    "subject": "english-supplementary",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-10\\english-supplementary\\chapter-04.txt",
+    "characters": 9078,
+    "paragraphs": 66
+  },
+  {
+    "class": "class-10",
+    "subject": "english-supplementary",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-10\\english-supplementary\\chapter-05.txt",
+    "characters": 9702,
+    "paragraphs": 59
+  },
+  {
+    "class": "class-10",
+    "subject": "english-supplementary",
+    "chapter_no": 6,
+    "out_file": "data\\textbooks\\class-10\\english-supplementary\\chapter-06.txt",
+    "characters": 14079,
+    "paragraphs": 87
+  },
+  {
+    "class": "class-10",
+    "subject": "english-supplementary",
+    "chapter_no": 7,
+    "out_file": "data\\textbooks\\class-10\\english-supplementary\\chapter-07.txt",
+    "characters": 14702,
+    "paragraphs": 101
+  },
+  {
+    "class": "class-10",
+    "subject": "english-supplementary",
+    "chapter_no": 8,
+    "out_file": "data\\textbooks\\class-10\\english-supplementary\\chapter-08.txt",
+    "characters": 14917,
+    "paragraphs": 96
+  },
+  {
+    "class": "class-10",
+    "subject": "english-supplementary",
+    "chapter_no": 9,
+    "out_file": "data\\textbooks\\class-10\\english-supplementary\\chapter-09.txt",
+    "characters": 20107,
+    "paragraphs": 139
+  },
+  {
+    "class": "class-10",
+    "subject": "english-workbook",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-10\\english-workbook\\chapter-01.txt",
+    "characters": 21097,
+    "paragraphs": 326
+  },
+  {
+    "class": "class-10",
+    "subject": "english-workbook",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-10\\english-workbook\\chapter-02.txt",
+    "characters": 17850,
+    "paragraphs": 265
+  },
+  {
+    "class": "class-10",
+    "subject": "english-workbook",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-10\\english-workbook\\chapter-03.txt",
+    "characters": 20305,
+    "paragraphs": 264
+  },
+  {
+    "class": "class-10",
+    "subject": "english-workbook",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-10\\english-workbook\\chapter-04.txt",
+    "characters": 16844,
+    "paragraphs": 217
+  },
+  {
+    "class": "class-10",
+    "subject": "english-workbook",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-10\\english-workbook\\chapter-05.txt",
+    "characters": 20912,
+    "paragraphs": 270
+  },
+  {
+    "class": "class-10",
+    "subject": "english-workbook",
+    "chapter_no": 6,
+    "out_file": "data\\textbooks\\class-10\\english-workbook\\chapter-06.txt",
+    "characters": 24536,
+    "paragraphs": 352
+  },
+  {
+    "class": "class-10",
+    "subject": "english-workbook",
+    "chapter_no": 7,
+    "out_file": "data\\textbooks\\class-10\\english-workbook\\chapter-07.txt",
+    "characters": 20595,
+    "paragraphs": 328
+  },
+  {
+    "class": "class-10",
+    "subject": "english-workbook",
+    "chapter_no": 8,
+    "out_file": "data\\textbooks\\class-10\\english-workbook\\chapter-08.txt",
+    "characters": 18348,
+    "paragraphs": 259
+  },
+  {
+    "class": "class-10",
+    "subject": "english-workbook",
+    "chapter_no": 9,
+    "out_file": "data\\textbooks\\class-10\\english-workbook\\chapter-09.txt",
+    "characters": 22624,
+    "paragraphs": 261
+  },
+  {
+    "class": "class-10",
+    "subject": "geography",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-10\\geography\\chapter-01.txt",
+    "characters": 26632,
+    "paragraphs": 183
+  },
+  {
+    "class": "class-10",
+    "subject": "geography",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-10\\geography\\chapter-02.txt",
+    "characters": 13204,
+    "paragraphs": 69
+  },
+  {
+    "class": "class-10",
+    "subject": "geography",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-10\\geography\\chapter-03.txt",
+    "characters": 22772,
+    "paragraphs": 126
+  },
+  {
+    "class": "class-10",
+    "subject": "geography",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-10\\geography\\chapter-04.txt",
+    "characters": 24175,
+    "paragraphs": 148
+  },
+  {
+    "class": "class-10",
+    "subject": "geography",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-10\\geography\\chapter-05.txt",
+    "characters": 31293,
+    "paragraphs": 221
+  },
+  {
+    "class": "class-10",
+    "subject": "geography",
+    "chapter_no": 6,
+    "out_file": "data\\textbooks\\class-10\\geography\\chapter-06.txt",
+    "characters": 24914,
+    "paragraphs": 180
+  },
+  {
+    "class": "class-10",
+    "subject": "geography",
+    "chapter_no": 7,
+    "out_file": "data\\textbooks\\class-10\\geography\\chapter-07.txt",
+    "characters": 26114,
+    "paragraphs": 167
+  },
+  {
+    "class": "class-10",
+    "subject": "history",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-10\\history\\chapter-01.txt",
+    "characters": 57497,
+    "paragraphs": 359
+  },
+  {
+    "class": "class-10",
+    "subject": "history",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-10\\history\\chapter-02.txt",
+    "characters": 52988,
+    "paragraphs": 233
+  },
+  {
+    "class": "class-10",
+    "subject": "history",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-10\\history\\chapter-03.txt",
+    "characters": 58419,
+    "paragraphs": 341
+  },
+  {
+    "class": "class-10",
+    "subject": "history",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-10\\history\\chapter-04.txt",
+    "characters": 51489,
+    "paragraphs": 272
+  },
+  {
+    "class": "class-10",
+    "subject": "history",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-10\\history\\chapter-05.txt",
+    "characters": 57629,
+    "paragraphs": 328
+  },
+  {
+    "class": "class-10",
+    "subject": "maths",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-10\\maths\\chapter-01.txt",
+    "characters": 15759,
+    "paragraphs": 170
+  },
+  {
+    "class": "class-10",
+    "subject": "maths",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-10\\maths\\chapter-02.txt",
+    "characters": 16630,
+    "paragraphs": 237
+  },
+  {
+    "class": "class-10",
+    "subject": "maths",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-10\\maths\\chapter-03.txt",
+    "characters": 21808,
+    "paragraphs": 306
+  },
+  {
+    "class": "class-10",
+    "subject": "maths",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-10\\maths\\chapter-04.txt",
+    "characters": 16776,
+    "paragraphs": 211
+  },
+  {
+    "class": "class-10",
+    "subject": "maths",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-10\\maths\\chapter-05.txt",
+    "characters": 34517,
+    "paragraphs": 509
+  },
+  {
+    "class": "class-10",
+    "subject": "maths",
+    "chapter_no": 6,
+    "out_file": "data\\textbooks\\class-10\\maths\\chapter-06.txt",
+    "characters": 30579,
+    "paragraphs": 480
+  },
+  {
+    "class": "class-10",
+    "subject": "maths",
+    "chapter_no": 7,
+    "out_file": "data\\textbooks\\class-10\\maths\\chapter-07.txt",
+    "characters": 19883,
+    "paragraphs": 292
+  },
+  {
+    "class": "class-10",
+    "subject": "maths",
+    "chapter_no": 8,
+    "out_file": "data\\textbooks\\class-10\\maths\\chapter-08.txt",
+    "characters": 25345,
+    "paragraphs": 447
+  },
+  {
+    "class": "class-10",
+    "subject": "maths",
+    "chapter_no": 9,
+    "out_file": "data\\textbooks\\class-10\\maths\\chapter-09.txt",
+    "characters": 14597,
+    "paragraphs": 173
+  },
+  {
+    "class": "class-10",
+    "subject": "maths",
+    "chapter_no": 10,
+    "out_file": "data\\textbooks\\class-10\\maths\\chapter-10.txt",
+    "characters": 14171,
+    "paragraphs": 152
+  },
+  {
+    "class": "class-10",
+    "subject": "maths",
+    "chapter_no": 11,
+    "out_file": "data\\textbooks\\class-10\\maths\\chapter-11.txt",
+    "characters": 8034,
+    "paragraphs": 138
+  },
+  {
+    "class": "class-10",
+    "subject": "maths",
+    "chapter_no": 12,
+    "out_file": "data\\textbooks\\class-10\\maths\\chapter-12.txt",
+    "characters": 15931,
+    "paragraphs": 169
+  },
+  {
+    "class": "class-10",
+    "subject": "maths",
+    "chapter_no": 13,
+    "out_file": "data\\textbooks\\class-10\\maths\\chapter-13.txt",
+    "characters": 37553,
+    "paragraphs": 695
+  },
+  {
+    "class": "class-10",
+    "subject": "maths",
+    "chapter_no": 14,
+    "out_file": "data\\textbooks\\class-10\\maths\\chapter-14.txt",
+    "characters": 26620,
+    "paragraphs": 304
+  },
+  {
+    "class": "class-10",
+    "subject": "physical-education",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-10\\physical-education\\chapter-01.txt",
+    "characters": 23558,
+    "paragraphs": 113
+  },
+  {
+    "class": "class-10",
+    "subject": "physical-education",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-10\\physical-education\\chapter-02.txt",
+    "characters": 20231,
+    "paragraphs": 180
+  },
+  {
+    "class": "class-10",
+    "subject": "physical-education",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-10\\physical-education\\chapter-03.txt",
+    "characters": 23165,
+    "paragraphs": 210
+  },
+  {
+    "class": "class-10",
+    "subject": "physical-education",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-10\\physical-education\\chapter-04.txt",
+    "characters": 24788,
+    "paragraphs": 251
+  },
+  {
+    "class": "class-10",
+    "subject": "physical-education",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-10\\physical-education\\chapter-05.txt",
+    "characters": 43989,
+    "paragraphs": 333
+  },
+  {
+    "class": "class-10",
+    "subject": "physical-education",
+    "chapter_no": 6,
+    "out_file": "data\\textbooks\\class-10\\physical-education\\chapter-06.txt",
+    "characters": 52527,
+    "paragraphs": 535
+  },
+  {
+    "class": "class-10",
+    "subject": "physical-education",
+    "chapter_no": 7,
+    "out_file": "data\\textbooks\\class-10\\physical-education\\chapter-07.txt",
+    "characters": 39717,
+    "paragraphs": 372
+  },
+  {
+    "class": "class-10",
+    "subject": "physical-education",
+    "chapter_no": 8,
+    "out_file": "data\\textbooks\\class-10\\physical-education\\chapter-08.txt",
+    "characters": 55249,
+    "paragraphs": 493
+  },
+  {
+    "class": "class-10",
+    "subject": "physical-education",
+    "chapter_no": 9,
+    "out_file": "data\\textbooks\\class-10\\physical-education\\chapter-09.txt",
+    "characters": 36514,
+    "paragraphs": 183
+  },
+  {
+    "class": "class-10",
+    "subject": "physical-education",
+    "chapter_no": 10,
+    "out_file": "data\\textbooks\\class-10\\physical-education\\chapter-10.txt",
+    "characters": 22869,
+    "paragraphs": 208
+  },
+  {
+    "class": "class-10",
+    "subject": "physical-education",
+    "chapter_no": 11,
+    "out_file": "data\\textbooks\\class-10\\physical-education\\chapter-11.txt",
+    "characters": 21927,
+    "paragraphs": 136
+  },
+  {
+    "class": "class-10",
+    "subject": "physical-education",
+    "chapter_no": 12,
+    "out_file": "data\\textbooks\\class-10\\physical-education\\chapter-12.txt",
+    "characters": 18690,
+    "paragraphs": 89
+  },
+  {
+    "class": "class-10",
+    "subject": "physical-education",
+    "chapter_no": 13,
+    "out_file": "data\\textbooks\\class-10\\physical-education\\chapter-13.txt",
+    "characters": 20396,
+    "paragraphs": 87
+  },
+  {
+    "class": "class-10",
+    "subject": "science",
+    "chapter_no": 1,
+    "out_file": "data\\textbooks\\class-10\\science\\chapter-01.txt",
+    "characters": 30495,
+    "paragraphs": 311
+  },
+  {
+    "class": "class-10",
+    "subject": "science",
+    "chapter_no": 2,
+    "out_file": "data\\textbooks\\class-10\\science\\chapter-02.txt",
+    "characters": 37599,
+    "paragraphs": 371
+  },
+  {
+    "class": "class-10",
+    "subject": "science",
+    "chapter_no": 3,
+    "out_file": "data\\textbooks\\class-10\\science\\chapter-03.txt",
+    "characters": 41521,
+    "paragraphs": 400
+  },
+  {
+    "class": "class-10",
+    "subject": "science",
+    "chapter_no": 4,
+    "out_file": "data\\textbooks\\class-10\\science\\chapter-04.txt",
+    "characters": 44837,
+    "paragraphs": 299
+  },
+  {
+    "class": "class-10",
+    "subject": "science",
+    "chapter_no": 5,
+    "out_file": "data\\textbooks\\class-10\\science\\chapter-05.txt",
+    "characters": 51630,
+    "paragraphs": 251
+  },
+  {
+    "class": "class-10",
+    "subject": "science",
+    "chapter_no": 6,
+    "out_file": "data\\textbooks\\class-10\\science\\chapter-06.txt",
+    "characters": 30062,
+    "paragraphs": 140
+  },
+  {
+    "class": "class-10",
+    "subject": "science",
+    "chapter_no": 7,
+    "out_file": "data\\textbooks\\class-10\\science\\chapter-07.txt",
+    "characters": 37041,
+    "paragraphs": 174
+  },
+  {
+    "class": "class-10",
+    "subject": "science",
+    "chapter_no": 8,
+    "out_file": "data\\textbooks\\class-10\\science\\chapter-08.txt",
+    "characters": 15507,
+    "paragraphs": 93
+  },
+  {
+    "class": "class-10",
+    "subject": "science",
+    "chapter_no": 9,
+    "out_file": "data\\textbooks\\class-10\\science\\chapter-09.txt",
+    "characters": 56352,
+    "paragraphs": 401
+  },
+  {
+    "class": "class-10",
+    "subject": "science",
+    "chapter_no": 10,
+    "out_file": "data\\textbooks\\class-10\\science\\chapter-10.txt",
+    "characters": 24867,
+    "paragraphs": 110
+  },
+  {
+    "class": "class-10",
+    "subject": "science",
+    "chapter_no": 11,
+    "out_file": "data\\textbooks\\class-10\\science\\chapter-11.txt",
+    "characters": 44193,
+    "paragraphs": 334
+  },
+  {
+    "class": "class-10",
+    "subject": "science",
+    "chapter_no": 12,
+    "out_file": "data\\textbooks\\class-10\\science\\chapter-12.txt",
+    "characters": 29153,
+    "paragraphs": 180
+  },
+  {
+    "class": "class-10",
+    "subject": "science",
+    "chapter_no": 13,
+    "out_file": "data\\textbooks\\class-10\\science\\chapter-13.txt",
+    "characters": 19681,
+    "paragraphs": 138
   }
 ]

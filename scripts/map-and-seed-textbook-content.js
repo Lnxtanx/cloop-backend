@@ -127,7 +127,7 @@ Return JSON ONLY. No prose outside the JSON.`;
   const response = await invokeModel(
     'You are a precise curriculum mapping engine. You output valid JSON only.',
     [{ role: 'user', content: prompt }],
-    { jsonFormat: true, temperature: 0.1 }
+    { jsonFormat: true, temperature: 0.1, model: 'deepseek-flash', thinking: 'disabled' }
   );
 
   const parsed = extractJson(response);
@@ -342,14 +342,85 @@ async function main() {
     return;
   }
 
+function normalizeTitle(str) {
+  return (str || '')
+    .toLowerCase()
+    .replace(/^chapter\s*\d+\s*[:\-–—]\s*/i, '')
+    .replace(/[^a-z0-9]/g, '');
+}
+
+function resolveMatchingChapter(chap, dbChapters, rawText) {
+  const allowedAliases = SUBJECT_NAME_ALIASES[chap.subjectSlug] || [chap.subjectSlug];
+
+  // Candidates for this grade and subject
+  const candidates = dbChapters.filter(dbc => {
+    const gradeMatch = dbc.subject?.grade?.toLowerCase() === chap.grade.toLowerCase();
+    const subjectMatch = allowedAliases.some(a => a.toLowerCase() === dbc.subject?.name?.toLowerCase());
+    return gradeMatch && subjectMatch;
+  });
+
+  if (!candidates.length) return null;
+
+  // 1. Direct offset mapping for multi-part subjects
+  // Class 10 Social Studies (History: 1-5, Geography: 6-12, Civics: 13-17, Economics: 18-21)
+  if (chap.grade === 'Class 10' && allowedAliases.includes('Social Studies')) {
+    let targetOrder = chap.chapterNo;
+    if (chap.subjectSlug === 'history') targetOrder = chap.chapterNo;
+    else if (chap.subjectSlug === 'geography') targetOrder = chap.chapterNo + 5;
+    else if (chap.subjectSlug === 'civics') targetOrder = chap.chapterNo + 12;
+    else if (chap.subjectSlug === 'economics') targetOrder = chap.chapterNo + 17;
+    const match = candidates.find(dbc => dbc.order === targetOrder);
+    if (match) return match;
+  }
+
+  // Class 9 Social Studies (History: 1-5, Geography: 6-11, Civics: 12-16, Economics: 17-20)
+  if (chap.grade === 'Class 9' && allowedAliases.includes('Social Studies')) {
+    let targetOrder = chap.chapterNo;
+    if (chap.subjectSlug === 'history') targetOrder = chap.chapterNo;
+    else if (chap.subjectSlug === 'geography') targetOrder = chap.chapterNo + 5;
+    else if (chap.subjectSlug === 'civics') targetOrder = chap.chapterNo + 11;
+    else if (chap.subjectSlug === 'economics') targetOrder = chap.chapterNo + 16;
+    const match = candidates.find(dbc => dbc.order === targetOrder);
+    if (match) return match;
+  }
+
+  // Class 10 English Supplementary (Footprints Without Feet -> order 21-29)
+  if (chap.grade === 'Class 10' && chap.subjectSlug === 'english-supplementary') {
+    const match = candidates.find(dbc => dbc.order === chap.chapterNo + 20);
+    if (match) return match;
+  }
+
+  // 2. Normalized Title Matching from File Header Lines
+  const headerLines = rawText.split('\n')
+    .map(l => l.trim())
+    .filter(l => l && !l.startsWith('#') && !l.startsWith('NOTES FOR') && !l.startsWith('SECTION'))
+    .slice(0, 15);
+
+  const headerNorms = headerLines.map(normalizeTitle).filter(s => s.length >= 4);
+
+  for (const dbc of candidates) {
+    const dbNorm = normalizeTitle(dbc.title);
+    if (!dbNorm || dbNorm.length < 4) continue;
+    if (headerNorms.some(hn => hn.includes(dbNorm) || dbNorm.includes(hn))) {
+      return dbc;
+    }
+  }
+
+  // 3. Direct order match for single-part subjects
+  const orderMatch = candidates.find(dbc => dbc.order === chap.chapterNo);
+  if (orderMatch) return orderMatch;
+
+  return null;
+}
+
   // Fetch topics for these chapters from database
   let dbChapters = [];
   if (prisma) {
-    console.log('[DB] Fetching live chapters and topics from database...');
+    console.log('[DB] Fetching live CBSE chapters and topics from database...');
     dbChapters = await prisma.global_chapters.findMany({
       where: {
         subject: {
-          board: { contains: 'CBSE' },
+          board: { contains: 'Central Board', mode: 'insensitive' },
           ...(filterGrade ? { grade: filterGrade } : {}),
         }
       },
@@ -359,7 +430,7 @@ async function main() {
       },
       orderBy: [{ subject_id: 'asc' }, { order: 'asc' }]
     });
-    console.log(`[DB] Loaded ${dbChapters.length} chapters from database.\n`);
+    console.log(`[DB] Loaded ${dbChapters.length} CBSE chapters from database.\n`);
   }
 
   // Match files to database chapters
@@ -368,19 +439,19 @@ async function main() {
   for (const chap of eligibleChapters) {
     tasks.push(async () => {
       let topics = [];
+      let matchedDbChapter = null;
+
+      if (!fs.existsSync(chap.chapterFile)) {
+        console.warn(`[Skip] File not found: ${chap.chapterFile}`);
+        return { skipped: true, reason: 'file_not_found' };
+      }
+
+      const rawText = fs.readFileSync(chap.chapterFile, 'utf8');
 
       if (prisma && dbChapters.length) {
-        // Find matching chapter in DB
-        const match = dbChapters.find(dbc => {
-          const gradeMatch = dbc.subject?.grade?.toLowerCase() === chap.grade.toLowerCase();
-          const orderMatch = dbc.order === chap.chapterNo;
-          const allowedAliases = SUBJECT_NAME_ALIASES[chap.subjectSlug] || [chap.subjectSlug];
-          const subjectMatch = allowedAliases.some(a => a.toLowerCase() === dbc.subject?.name?.toLowerCase());
-          return gradeMatch && orderMatch && subjectMatch;
-        });
-
-        if (match && match.topics.length) {
-          topics = match.topics;
+        matchedDbChapter = resolveMatchingChapter(chap, dbChapters, rawText);
+        if (matchedDbChapter && matchedDbChapter.topics.length) {
+          topics = matchedDbChapter.topics;
         }
       }
 
@@ -400,6 +471,10 @@ async function main() {
       if (!topics.length) {
         console.warn(`[Skip] No database topics found for ${chap.grade} ${chap.subjectSlug} Chapter ${chap.chapterNo}`);
         return { skipped: true, reason: 'no_topics' };
+      }
+
+      if (matchedDbChapter) {
+        console.log(`[${chap.grade} | ${chap.subjectSlug} | Ch ${chap.chapterNo}] -> Matched DB Chapter [${matchedDbChapter.order}: ${matchedDbChapter.title}] (${topics.length} topics)`);
       }
 
       return await processChapter({
