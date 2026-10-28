@@ -4,7 +4,7 @@ try {
   const state = require('./state');
   if (state.CHOICE_QUESTION) CHOICE_QUESTION = state.CHOICE_QUESTION;
 } catch (_) {}
-const MAX_WORDS_PER_BUBBLE = 19; // Strictly fewer than 20.
+const MAX_WORDS_PER_BUBBLE = 30; // Strictly under 31 words.
 const MAX_BUBBLES = 2;
 const PILL_NARRATION = [
   /\bopen the\s+['"\u2018\u2019\u201c\u201d]?[\w\s'-]{0,30}['"\u2018\u2019\u201c\u201d]?\s*(card|pill|link|note)\b[,:]?\s*/gi,
@@ -108,7 +108,7 @@ function splitIntoMicroBubbles(text, maxWords = MAX_WORDS_PER_BUBBLE) {
   return chunks;
 }
 
-function cleanCompleteSentence(text, maxWords = 15) {
+function cleanCompleteSentence(text, maxWords = 30) {
   const clean = unescapeHtml(text).trim().replace(/\s+/g, ' ');
   if (!clean) return '';
   const firstSentenceMatch = clean.match(/^([^.!?]+[.!?])/);
@@ -197,7 +197,10 @@ function normalizeOptions(options, correctOption) {
     seen.add(key);
     result.push({ text, value: text });
   }
-  return result.filter(o => o.text === correctOption).length === 1 ? result : null;
+  const norm = s => String(s || '').trim().replace(/[.?!,;:]+$/, '').toLowerCase().replace(/\s+/g, ' ');
+  const targetNorm = norm(correctOption);
+  const matching = result.filter(o => norm(o.text) === targetNorm || o.text === correctOption);
+  return matching.length === 1 ? result : null;
 }
 
 const PHYSICAL_ENTITIES = [
@@ -214,6 +217,13 @@ const CONFLICTING_ENTITY_GROUPS = [
   ['box', 'block', 'stone', 'brick']
 ];
 
+const FEEDBACK_PREFIX_REGEX = /^(?:(?:right|exactly|spot\s*on|correct|yes|good|well\s*done|great|nice|true|that(?:'s| is) (?:right|correct)|you(?:'re| are) (?:right|correct)|your (?:[a-z]+\s+)?(?:answer|response|point|brake)|you mentioned|you said|as you said|not quite|careful|nice try|almost|today\s+we['’]?ll\s+learn|let['’]?s\s+explore|in\s+the\s+last|as\s+we\s+saw)\b)/i;
+
+function isFeedbackBubble(text) {
+  const clean = cleanProse(text).trim();
+  return FEEDBACK_PREFIX_REGEX.test(clean);
+}
+
 function extractEntities(text) {
   const lower = String(text || '').toLowerCase();
   return PHYSICAL_ENTITIES.filter(entity => {
@@ -226,7 +236,9 @@ function validateScenarioConsistency(explanationText, questionText, rubric = nul
   if (!questionText) return true;
   const qEntities = extractEntities(questionText);
 
-  if (explanationText) {
+  // Conversational feedback acknowledging the student's prior answer reflects the prior scenario,
+  // not setting up this question's scenario. Do not cross-check feedback against the new question.
+  if (explanationText && !isFeedbackBubble(explanationText)) {
     const explEntities = extractEntities(explanationText);
     if (explEntities.length > 0 && qEntities.length > 0) {
       for (const group of CONFLICTING_ENTITY_GROUPS) {
@@ -602,7 +614,7 @@ function enforce(rawOutput, context = {}) {
   const isHelpOrIdk = Boolean(context.isHelpOrIdk || (studentMessage && /\b(idnt|i\s*dnt|idk|explain|don['’]?t\s+know|dont\s+know|don['’]?t\s+understand|didn['’]?t\s+understand|samjh|samajh)\b/i.test(studentMessage)));
   const isTeachingOrExplanation = explanationOnly || phase === 'THEORY' || response_mode === 'teach' || response_mode === 'explain' || isHelpOrIdk;
   const effectiveMaxBubbles = isTeachingOrExplanation ? 3 : MAX_BUBBLES;
-  const maxWordsPerBubble = isTeachingOrExplanation ? 25 : MAX_WORDS_PER_BUBBLE;
+  const maxWordsPerBubble = isTeachingOrExplanation ? 30 : MAX_WORDS_PER_BUBBLE;
   const rawMessages = Array.isArray(rawOutput?.messages) ? rawOutput.messages : [];
   if (!ending && isTeachingOrExplanation && rawMessages.some(b => cleanProse(b?.message) && !splitIntoMicroBubbles(cleanProse(b.message), maxWordsPerBubble).length)) {
     const recovery = buildFocusedFallback({ ...context, response_mode: 'task_repair' });
@@ -793,6 +805,11 @@ function enforce(rawOutput, context = {}) {
     questionReplaced = true;
   } else if (validOptions) {
     final.options = validOptions;
+    if (rubric?.correct_option_text) {
+      const norm = s => String(s || '').trim().replace(/[.?!,;:]+$/, '').toLowerCase().replace(/\s+/g, ' ');
+      const match = validOptions.find(o => norm(o.text) === norm(rubric.correct_option_text));
+      if (match) rubric.correct_option_text = match.text;
+    }
   }
 
   // Validate explanation and question scenario consistency before delivery
@@ -838,5 +855,5 @@ function enforce(rawOutput, context = {}) {
 
 module.exports = { PILL_NARRATION, enforce, cleanProse, wordCount, splitIntoMicroBubbles, endsWithQuestion,
   sanitizeDiffHtml, reconcileTone, normalizeRubric, normalizeOptions, buildFocusedFallback, factualSourceParts, sourceFactsFor, topicFactsFor, paginateSupportBubbles, isGoalHeadingQuestion,
-  validateScenarioConsistency, extractScenario, createQuestionRecord, unescapeHtml, escapeHtml,
+  validateScenarioConsistency, isFeedbackBubble, extractScenario, createQuestionRecord, unescapeHtml, escapeHtml,
   cleanConceptHeading, cleanObjectiveText, CONFLICTING_ENTITY_GROUPS, PHYSICAL_ENTITIES, MAX_WORDS_PER_BUBBLE, CHOICE_QUESTION };

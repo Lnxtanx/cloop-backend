@@ -16,7 +16,7 @@ test('purges blank and whitespace-only bubbles', () => {
 });
 
 test('replaces an overlong sentence with a whole focused question rather than a chopped fragment', () => {
-  const longText = 'Carbon is an extraordinary chemical element with atomic number six because it can form four strong covalent bonds with other atoms.';
+  const longText = 'Carbon is an extraordinary chemical element with atomic number six and atomic weight twelve because it can form four strong covalent bonds with other carbon atoms or different elements across millions of known organic chemical compounds.';
   const raw = {
     messages: [
       { message: longText, message_type: 'text' }
@@ -141,13 +141,13 @@ const rubric = {
   model_answer: 'A force can change shape'
 };
 
-test('strict bubble limit is 19 words and preserves whole short questions', () => {
-  const question = 'Which effect of force makes a rolling ball stop when a goalkeeper catches it carefully with both hands today during practice?';
-  assert.strictEqual(V.wordCount(question), 21);
+test('strict bubble limit is 30 words and preserves whole short questions', () => {
+  const question = 'Which effect of force explains why a rolling soccer ball slows down and stops when a goalkeeper catches it firmly with both hands today during an intense school football tournament match?';
+  assert.strictEqual(V.wordCount(question), 31);
   const out = V.enforce({ messages: [{ message: question }], lastQuestionRubric: rubric }, goalContext);
   assert.ok(out.questionReplaced);
   assert.strictEqual(out.messages.at(-1).message, 'What changes can a force cause?');
-  assert.ok(out.messages.every(m => V.wordCount(m.message) < 20));
+  assert.ok(out.messages.every(m => V.wordCount(m.message) <= 30));
   assert.strictEqual(out.lastQuestionRubric.criteria.length, 4);
 });
 
@@ -257,13 +257,13 @@ test('roundup retry may teach but preserves the original full question and rubri
 });
 
 test('a whole terminal question survives splitting preceding prose', () => {
-  const out = V.enforce({ messages: [{ message: 'A moving object may change speed, direction, or both when an external unbalanced force acts on it. What can force change?' }], lastQuestionRubric: rubric }, { phase: 'DIALOGUE', currentGoalTitle: 'Effects of force', currentGoalDescription: 'A force can change motion or shape' });
+  const out = V.enforce({ messages: [{ message: 'A moving object in our physical environment may change its speed, its direction of motion, or its physical shape when an external unbalanced contact force acts upon it. What can force change?' }], lastQuestionRubric: rubric }, { phase: 'DIALOGUE', currentGoalTitle: 'Effects of force', currentGoalDescription: 'A force can change motion or shape' });
   assert.strictEqual(out.messages.at(-1).message, 'What can force change?');
   assert.strictEqual(out.questionReplaced, false);
 });
 
 test('a decimal inside an overlong question cannot make its tail appear to be a whole question', () => {
-  const out = V.enforce({ messages: [{ message: 'Which effect of force explains why a slowly moving toy car on the table accelerates when we push it with 0.5 newtons?' }], lastQuestionRubric: rubric }, { phase: 'DIALOGUE', currentGoalTitle: 'Effects of force', currentGoalDescription: 'A force can change speed' });
+  const out = V.enforce({ messages: [{ message: 'Which specific effect of force explains why a very slowly moving wooden toy car resting on the smooth horizontal laboratory table accelerates forward rapidly when we push it with 0.5 newtons?' }], lastQuestionRubric: rubric }, { phase: 'DIALOGUE', currentGoalTitle: 'Effects of force', currentGoalDescription: 'A force can change speed' });
   assert.strictEqual(out.questionReplaced, true);
   assert.ok(!out.messages.at(-1).message.startsWith('5 newtons'));
   assert.strictEqual(out.lastQuestionRubric.model_answer, 'A force can change speed');

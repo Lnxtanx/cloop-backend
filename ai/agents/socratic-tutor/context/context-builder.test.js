@@ -53,10 +53,10 @@ test('CB4: Scenario continuity locks physical objects across turns', () => {
 
 test('CB5: Pedagogical phase guidance customizes instructions and word counts per phase', () => {
   const probeGuidance = getPhaseGuidance('PROBE');
-  assert.ok(probeGuidance.bubble_structure.includes('under 20 words'));
+  assert.ok(probeGuidance.bubble_structure.includes('under 30 words'));
 
   const theoryGuidance = getPhaseGuidance('THEORY');
-  assert.ok(theoryGuidance.bubble_structure.includes('under 25 words'), 'Theory phase bubbles must be under 25 words each');
+  assert.ok(theoryGuidance.bubble_structure.includes('under 30 words'), 'Theory phase bubbles must be under 30 words each');
   assert.match(theoryGuidance.bubble_structure, /(?:up to|at most) 3 micro-bubbles/i);
 
   const checkGuidance = getPhaseGuidance('CHECK');

@@ -76,7 +76,7 @@ test('an invalid generator is bounded: two repairs, then an unverified item and 
   const second = await turn(first.nextState, 'Ok');
   assert.equal(second.nextState.pendingAdvanceAfterExplanation, true);
   assert.equal(second.nextState.awaitingAcademicQuestion, false);
-  assert.match(second.messages[0].message, /ungraded/);
+  assert.match(second.messages[0].message, /explore the next part|continue/i);
   const end = await turn(second.nextState, 'Ok');
   assert.equal(end.nextState.phase, 'WRAP');
   assert.equal(end.masteryReport.total_questions, 0);

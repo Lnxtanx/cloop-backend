@@ -15,16 +15,16 @@ Pending Question: "${lastQuestionText || ''}"
 
 CURIOSITY & REPAIR RULES:
 1. Deliver in 2 distinct bubbles:
-   - BUBBLE 1: Directly and clearly answer the student's question with enthusiasm and academic accuracy (under 25 words).
-   - BUBBLE 2: Gently connect that insight back to our main goal and re-ask the pending task or a simpler version (under 20 words).
+   - BUBBLE 1: Directly and clearly answer the student's question with enthusiasm and academic accuracy (under 30 words).
+   - BUBBLE 2: Gently connect that insight back to our main goal and re-ask the pending task or a simpler version (under 30 words).
 2. Never penalize the student for asking questions or requesting clarification.
 3. Tone: Curious, warm, and intellectually welcoming.
 
 Return STRICT JSON:
 {
   "messages": [
-    { "message": "Direct, fascinating answer under 25 words.", "message_type": "text" },
-    { "message": "Smooth bridge question back to our goal under 20 words?", "message_type": "text" }
+    { "message": "Direct, fascinating answer under 30 words.", "message_type": "text" },
+    { "message": "Smooth bridge question back to our goal under 30 words?", "message_type": "text" }
   ],
   "lastQuestionRubric": {
     "criteria": [{ "id": "goal_check", "description": "Checks the core goal understanding", "required": true }],

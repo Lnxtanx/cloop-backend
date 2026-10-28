@@ -20,7 +20,7 @@ FACTS: ${currentGoalDescription}
 
 RULES FOR MCQ:
 1. Deliver in 1 or 2 bubbles.
-2. Bubble 1: Brief transition (under 15 words).
+2. Bubble 1: Brief transition (under 30 words).
 3. Bubble 2: Clear question accompanied by 2 to 4 distinct, plausible answer options.
 4. Exactly ONE option must be conceptually correct.
 5. Provide text and value identically for each option.
@@ -31,7 +31,7 @@ Return STRICT JSON:
   "messages": [
     { "message": "Let's check your understanding of this concept.", "message_type": "text" },
     {
-      "message": "Clear focused question text under 20 words?",
+      "message": "Clear focused question text under 30 words?",
       "message_type": "text",
       "options": [
         { "text": "Correct answer text", "value": "Correct answer text" },

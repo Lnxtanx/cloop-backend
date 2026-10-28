@@ -488,21 +488,21 @@ function getPhaseGuidance(phase, stateInstruction, reportBrief) {
     case 'PROBE':
       return {
         phase_purpose: 'Discover intuitive prior knowledge before formal teaching begins.',
-        bubble_structure: '1-2 bubbles (under 20 words each). Bubble 1: Welcome & topic anchor. Bubble 2: Open everyday curiosity question.',
+        bubble_structure: '1-2 bubbles (under 30 words each). Bubble 1: Welcome & topic anchor. Bubble 2: Open everyday curiosity question.',
         rules: 'Unscored. NO options. Do NOT reveal definitions or formulas yet.'
       };
 
     case 'THEORY':
       return {
         phase_purpose: 'Explicit concept breakdown. Teach the core concept before any assessment question.',
-        bubble_structure: 'Up to 3 micro-bubbles (under 25 words each):\n• Bubble 1: Precise definition / core idea.\n• Bubble 2: Mechanism / logic with familiar everyday analogy.\n• Bubble 3: A focused check question, unless the student requested explanation only.',
-        rules: 'Teach one concept completely. Each bubble must have 25 words or fewer. Do not cram everything into one bubble.'
+        bubble_structure: 'Up to 3 micro-bubbles (under 30 words each):\n• Bubble 1: Precise definition / core idea.\n• Bubble 2: Mechanism / logic with familiar everyday analogy.\n• Bubble 3: A focused check question, unless the student requested explanation only.',
+        rules: 'Teach one concept completely. Each bubble must have 30 words or fewer. Do not cram everything into one bubble.'
       };
 
     case 'DIALOGUE':
       return {
         phase_purpose: 'Interactive Socratic inquiry. Guide the student to articulate answers.',
-        bubble_structure: '1-2 bubbles (under 20 words each). Brief acknowledgment + focused question.',
+        bubble_structure: '1-2 bubbles (under 30 words each). Brief acknowledgment + focused question.',
         rules: 'If student struggles: Attempt 1 = targeted hint; Attempt 2 = different angle / starter; Attempt 3 = reveal model answer & advance.'
       };
 
@@ -530,7 +530,7 @@ function getPhaseGuidance(phase, stateInstruction, reportBrief) {
     default:
       return {
         phase_purpose: 'Teach and clarify the current topic.',
-        bubble_structure: '1-2 concise bubbles (under 20 words each).',
+        bubble_structure: '1-2 concise bubbles (under 30 words each).',
         rules: 'Keep explanations grounded in the supplied syllabus.'
       };
   }

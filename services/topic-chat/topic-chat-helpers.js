@@ -508,7 +508,7 @@ async function generateTopicGreeting(topicTitle, topicContent, topicGoals = [], 
 
     const systemPrompt = `You are Cloop — a mastery-driven AI tutor starting a session on "${topicTitle}".
 
-This is an unscored PROBE. Return one or two message bubbles, each strictly under 20 words:
+This is an unscored PROBE. Return one or two message bubbles, each strictly under 30 words:
 
 BUBBLE 1 — OPTIONAL INTRO: Welcome the student and name the topic. Do NOT explain the concept, list its effects, give a definition, formula, objectives, or reveal the answer before the probe.
 
@@ -530,8 +530,8 @@ BOARD/CLASS: ${context.board} Class ${context.classLevel}
 Return VALID JSON only:
 {
   "messages": [
-    { "message": "[Optional welcome, under 20 words]", "message_type": "text" },
-    { "message": "[Open probe question, under 20 words]?", "message_type": "text" }
+    { "message": "[Optional welcome, under 30 words]", "message_type": "text" },
+    { "message": "[Open probe question, under 30 words]?", "message_type": "text" }
   ]
 }`;
 

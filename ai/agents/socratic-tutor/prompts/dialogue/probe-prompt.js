@@ -21,13 +21,13 @@ PROBE OBJECTIVE:
 Ask ONE friendly, curiosity-sparking question about an everyday situation or intuitive observation connected to ${topicTitle}.
 Do NOT provide options.
 Do NOT test formulas or definitions yet.
-Keep it warm, open-ended, and under 20 words.
+Keep it warm, open-ended, and under 30 words.
 
 Return STRICT JSON:
 {
   "messages": [
-    { "message": "Warm opening greeting and context under 15 words.", "message_type": "text" },
-    { "message": "Everyday curiosity question under 20 words?", "message_type": "text" }
+    { "message": "Warm opening greeting and context under 30 words.", "message_type": "text" },
+    { "message": "Everyday curiosity question under 30 words?", "message_type": "text" }
   ],
   "lastQuestionRubric": {
     "criteria": [{ "id": "prior_intuition", "description": "Expresses intuitive understanding", "required": true }],

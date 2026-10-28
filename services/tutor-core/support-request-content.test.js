@@ -125,7 +125,7 @@ for (const path of ['./validate', '../../ai/agents/socratic-tutor/formatters/bub
     assert.ok(bubbles.every(b => V.wordCount(b) <= 19));
   });
   test(`${path}: unsplittable overlong clauses request repair instead of semantic rewriting`, () => {
-    const overlong = 'A force is a push or pull and not a property that an object owns because another object acts upon it to cause a change in its motion.';
+    const overlong = 'A force is a push or pull and not a property that an object owns because another object acts upon it to cause a change in its physical state of rest or uniform motion across space.';
     assert.deepEqual(V.splitIntoMicroBubbles(overlong, 25), []);
     const out = V.enforce({ messages: [{ message: overlong }, { message: 'What is force?' }] }, {
       ...base, supportRequestKind: null, response_mode: 'explain', currentGoalDescription: 'Force is a push or pull.',

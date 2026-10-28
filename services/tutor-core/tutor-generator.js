@@ -14,7 +14,7 @@ const DIRECTIVE_GUIDANCE = {
   continue_dialogue: 'Ask a focused written concept question about the current goal.',
   assess_with_mcq: 'Assess the goal using one MCQ with 2–4 distinct plausible answer texts and exactly one correct answer.',
   assess_with_mcq_simpler: 'Assess the goal using one shorter MCQ with two distinct plausible answer texts and exactly one correct answer.',
-  roundup_recall: 'Ask focused written recall of this goal: its required definition, distinct key facts, and any formula with units.',
+  roundup_recall: 'Ask the student to summarize or explain the core concept of this goal in their own words, covering its key points.',
   correct_and_reask: 'Correct the specific misconception briefly within the current scenario, then ask a focused check question with matching rubric.',
   reteach_new_angle: 'Explain the concept clearly within the current scenario, then ask a focused check question with matching rubric.',
   reask_shorter: 'Explain briefly within the current scenario, then ask a shorter check question with matching rubric.',
@@ -48,7 +48,7 @@ const PHASE_PURPOSES = {
   OBJECTIVES: 'State what the student will learn in this session.',
   DIALOGUE: 'Teach the concept and guide the student to write answers.',
   CHECK: 'Check understanding with an MCQ assessment.',
-  ROUNDUP: 'End-of-lesson written recall of goals just taught, without hints.',
+  ROUNDUP: 'End-of-lesson recap where the student expresses the key ideas they just learned in their own words.',
   WRAP: 'Summarize the session and review mastery without asking questions.',
   DONE: 'Session finished.',
 };
@@ -265,7 +265,7 @@ Never expose internal goal numbers as questions or interpret unclear
 tutor wording as a student misconception.
 
 5. FOLLOW THE SERVER'S SUPPORT MODE.
-${explanationOnly ? 'This is explanation or clarification only: answer the student directly in 1–3 complete micro-bubbles, at most 25 words each. Do not ask a check question, offer choices, or create a rubric.' : isOfferChoice ? 'Offer only the server-selected explain/try choice. Do not add an academic question or rubric.' : 'When struggling, teach the missing point simply before one focused check. Use at most 3 micro-bubbles: explanations at most 25 words, question at most 19 words. Do not force exactly 3 bubbles.'}
+${explanationOnly ? 'This is explanation or clarification only: answer the student directly in 1–3 complete micro-bubbles, at most 30 words each. Do not ask a check question, offer choices, or create a rubric.' : isOfferChoice ? 'Offer only the server-selected explain/try choice. Do not add an academic question or rubric.' : 'When struggling, teach the missing point simply before one focused check. Use at most 3 micro-bubbles: explanations at most 30 words, question at most 30 words. Do not force exactly 3 bubbles.'}
 NEVER REPEAT A QUESTION during teaching. Never repeat a question you have already asked as a way of responding to confusion.
 A clarification request is not a failed answer. Follow the server's support, pause or progression directive.
 Do not advance the goal yourself.
@@ -297,7 +297,7 @@ ${phase === 'ROUNDUP' && !explanationOnly && !isOfferChoice ? 'For ROUNDUP: requ
 
 8. FOLLOW THE OUTPUT CONTRACT.
 Return only JSON matching the supplied schema.
-${explanationOnly ? 'Explanation/clarification: 1–3 bubbles, at most 25 words each; no question and no rubric.' : 'Teaching or struggle support: at most 3 bubbles, explanations at most 25 words and question at most 19 words. Standard dialogue: 1–2 bubbles, each at most 19 words.'}
+${explanationOnly ? 'Explanation/clarification: 1–3 bubbles, at most 30 words each; no question and no rubric.' : 'Teaching or struggle support: at most 3 bubbles, each at most 30 words. Standard dialogue: 1–2 bubbles, each strictly under 30 words.'}
 Preserve complete sentences and scientific meaning.
 Academic options appear only when the server selects CHECK MCQ; the support-choice schema is a separate exception:
 2–4 distinct answer texts, text=value, exactly one correct answer.

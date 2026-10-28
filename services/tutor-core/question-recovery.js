@@ -36,7 +36,7 @@ function recordQuestionRecovery(state, next, validated, { ending = false } = {})
   next.lastQuestionOptions = null;
   next.lastQuestionRecord = null;
   next.lastQuestionType = 'none';
-  validated.messages = [{ message: "We'll leave this question ungraded and continue to the next part.", message_type: 'text' }];
+  validated.messages = [{ message: "Great effort! Let's continue forward to explore the next part together.", message_type: 'text' }];
   return { action: 'skip_unverified', attempts, reason };
 }
 
