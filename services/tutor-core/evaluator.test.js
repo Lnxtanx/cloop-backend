@@ -83,6 +83,26 @@ test('a valid misspelled answer passes every semantic criterion', async () => {
   assert.equal(result.diff_html, '<del>chnage</del><ins>change</ins>');
 });
 
+test('multiple misspelled words are all preserved in diff_html with clean formatting', async () => {
+  setOutput(outputFor(forceRubric, [true, true, true, true], {
+    error_type: 'Spelling', is_correct: true, score_percent: 100,
+    diff_html: '<del>valuse</del> <ins>values</ins>, <del>precsion</del> <ins>precision</ins>', feedback: 'Good reasoning.',
+  }));
+  const result = await evaluateStudentTurn({ ...params, studentMessage: 'we estimate those valuse with precsion' });
+  assert.equal(result.is_correct, true);
+  assert.equal(result.diff_html, '<del>valuse</del> <ins>values</ins>, <del>precsion</del> <ins>precision</ins>');
+});
+
+test('spelling typos on incomplete/incorrect answers are retained rather than discarded', async () => {
+  setOutput(outputFor(forceRubric, [false, false, false, false], {
+    error_type: 'Incomplete', is_correct: false, score_percent: 0,
+    diff_html: '<del>scentific</del> <ins>scientific</ins>', feedback: 'Scientific questions need measurable evidence.',
+  }));
+  const result = await evaluateStudentTurn({ ...params, studentMessage: 'its ask about scentific proof' });
+  assert.equal(result.is_correct, false);
+  assert.equal(result.diff_html, '<del>scentific</del> <ins>scientific</ins>');
+});
+
 test('transcript answers must satisfy the specific question, including reasons and recall scope', async () => {
   const fixtures = [
     {

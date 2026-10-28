@@ -319,24 +319,49 @@ function validateCriterionRequirements(criteria, lastQuestionText) {
 /** Only the two correction tags survive, with embedded text escaped and sentences kept complete. */
 function safeDiff(diff, studentText = null) {
   if (typeof diff !== 'string') return null;
-  const delMatch = diff.match(/<del\b[^>]*>([\s\S]*?)<\/del\s*>/i);
-  const insMatch = diff.match(/<ins\b[^>]*>([\s\S]*?)<\/ins\s*>/i);
-  if (!delMatch || !insMatch || !insMatch[1].trim()) return null;
-  const deletion = unescapeHtml(delMatch[1]).replace(/\s+/g, ' ').trim();
-  if (!deletion) return null;
-  // Decode entities before sentence/clause boundaries are examined
-  const rawIns = unescapeHtml(insMatch[1]).trim();
-  const insertion = cleanCompleteSentence(rawIns, 25) || (rawIns.split(/\s+/).length <= 25 ? rawIns : rawIns.split(/\s+/).slice(0, 25).join(' ') + '.');
-  if (!insertion) return null;
-  if (normalizedText(deletion) === normalizedText(insertion)) return null;
-  if (studentText != null && String(studentText).trim()) {
-    const studentNorm = normalizedText(studentText);
-    const delNorm = normalizedText(deletion);
-    const delWords = delNorm.split(/\s+/).filter(w => w.length > 2);
-    const matchesWord = delWords.length > 0 && delWords.some(w => studentNorm.includes(w));
-    if (!studentNorm.includes(delNorm) && !matchesWord) return null;
+  const pairRegex = /<del\b[^>]*>([\s\S]*?)<\/del\s*>([\s]*?)<ins\b[^>]*>([\s\S]*?)<\/ins\s*>/gi;
+  const pairs = [];
+  let match;
+  while ((match = pairRegex.exec(diff)) !== null) {
+    const rawDel = match[1];
+    const rawSep = match[2];
+    const rawIns = match[3];
+    const deletion = unescapeHtml(rawDel).replace(/\s+/g, ' ').trim();
+    const rawCleanIns = unescapeHtml(rawIns).trim();
+    if (!deletion || !rawCleanIns) continue;
+    const insertion = cleanCompleteSentence(rawCleanIns, 25) || (rawCleanIns.split(/\s+/).length <= 25 ? rawCleanIns : rawCleanIns.split(/\s+/).slice(0, 25).join(' ') + '.');
+    if (!insertion) continue;
+    if (normalizedText(deletion) === normalizedText(insertion)) continue;
+    if (studentText != null && String(studentText).trim()) {
+      const studentNorm = normalizedText(studentText);
+      const delNorm = normalizedText(deletion);
+      const delWords = delNorm.split(/\s+/).filter(w => w.length > 2);
+      const matchesWord = delWords.length > 0 && delWords.some(w => studentNorm.includes(w));
+      if (!studentNorm.includes(delNorm) && !matchesWord) continue;
+    }
+    pairs.push({
+      deletion: escapeHtml(deletion),
+      insertion: escapeHtml(insertion),
+      hasSep: Boolean(rawSep && rawSep.length > 0)
+    });
   }
-  return `<del>${escapeHtml(deletion)}</del><ins>${escapeHtml(insertion)}</ins>`;
+
+  if (!pairs.length) return null;
+  if (pairs.length === 1) {
+    const p = pairs[0];
+    const sep = p.hasSep ? ' ' : '';
+    return `<del>${p.deletion}</del>${sep}<ins>${p.insertion}</ins>`;
+  }
+  return pairs.map(p => `<del>${p.deletion}</del> <ins>${p.insertion}</ins>`).join(', ');
+}
+
+function isSpellingDiff(html) {
+  if (!html || typeof html !== 'string') return false;
+  const dels = [...html.matchAll(/<del\b[^>]*>([\s\S]*?)<\/del\s*>/gi)];
+  const inss = [...html.matchAll(/<ins\b[^>]*>([\s\S]*?)<\/ins\s*>/gi)];
+  return dels.length > 0 && dels.length === inss.length &&
+    dels.every(d => d[1].trim().split(/\s+/).length <= 4) &&
+    inss.every(i => i[1].trim().split(/\s+/).length <= 4);
 }
 
 function assessedResult(parsed, criteria, rubric, resolved, gradedBy, lastQuestionText = '') {
@@ -376,15 +401,13 @@ function assessedResult(parsed, criteria, rubric, resolved, gradedBy, lastQuesti
   if (correct) {
     // For correct answers, retain diff_html if it is a spelling/typo correction.
     if (result.diff_html && !LANGUAGE_ONLY_ERRORS.has(String(parsed.error_type || '').toLowerCase())) {
-      const delMatch = (parsed.diff_html || '').match(/<del\b[^>]*>([\s\S]*?)<\/del\s*>/i);
-      const insMatch = (parsed.diff_html || '').match(/<ins\b[^>]*>([\s\S]*?)<\/ins\s*>/i);
-      const isShortSpelling = delMatch && insMatch &&
-        delMatch[1].trim().split(/\s+/).length <= 3 &&
-        insMatch[1].trim().split(/\s+/).length <= 3;
-      if (!isShortSpelling) result.diff_html = null;
+      if (!isSpellingDiff(result.diff_html)) result.diff_html = null;
     }
   } else if (contentType === 'Incomplete' && contradictions.length === 0) {
-    result.diff_html = null;
+    // Retain spelling/typo corrections on incomplete answers, but suppress conceptual additions
+    if (!isSpellingDiff(result.diff_html)) {
+      result.diff_html = null;
+    }
   }
   return applyGradingGuards(result);
 }
@@ -447,11 +470,13 @@ SOURCE-GROUNDED ACCURACY (every topic):
 
 Correct an IDEA, not English. For incorrect answers give an accurate complete_answer and
 a plain-language feedback explanation describing the specific missing/wrong requirement.
-- When an answer has typos or misspelled terms (e.g. "pallied" for "applied", "filder" for "fielder"), include diff_html as:
-  <del>typo</del><ins>correct word</ins>
-  and set error_type: "spelling".
-- For incorrect answers, identify the inaccurate phrase or concept in diff_html as:
-  <del>wrong phrase</del><ins>correct phrase</ins>, insertion under 25 words.
+- SPELLING / TYPOS (applies to BOTH correct and incorrect answers):
+  Identify misspelled words or typos in the student's answer.
+  Always format with a space between del and ins: <del>typo</del> <ins>correct word</ins>.
+  If there are multiple typos, list ALL of them separated by commas:
+  e.g. <del>valuse</del> <ins>values</ins>, <del>precsion</del> <ins>precision</ins>, <del>mechansianom</del> <ins>mechanism</ins>
+  When an answer is conceptually correct but has typos, keep is_correct: true and include diff_html.
+  When an answer is incorrect or incomplete, grade the concept accurately, and still include diff_html for any typos or the mistaken term.
 - For fully correct answers with no spelling typos, diff_html is null and error_type is null.
 For nonanswers, criterion_results:[], contradictions:[], error_type:null, diff_html:null,
 complete_answer:null, feedback:null. No grade for nonanswers.

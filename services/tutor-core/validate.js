@@ -150,21 +150,43 @@ function cleanCompleteSentence(text, maxWords = 30) {
 
 function sanitizeDiffHtml(diffHtml, rawStudentText = '') {
   if (typeof diffHtml !== 'string') return null;
-  const deletions = [...diffHtml.matchAll(/<del\b[^>]*>([\s\S]*?)<\/del\s*>/gi)];
-  const insertions = [...diffHtml.matchAll(/<ins\b[^>]*>([\s\S]*?)<\/ins\s*>/gi)];
-  if (!deletions.length || !insertions.length) return null;
-  // Rebuild from escaped text, discarding every attribute and every other HTML tag.
-  const removed = unescapeHtml(deletions.map(m => m[1]).join(' ')).replace(/\s+/g, ' ').trim();
-  const inserted = unescapeHtml(insertions.map(m => m[1]).join(' ')).replace(/\s+/g, ' ').trim();
-  if (!inserted || !removed) return null;
+  const pairRegex = /<del\b[^>]*>([\s\S]*?)<\/del\s*>([\s]*?)<ins\b[^>]*>([\s\S]*?)<\/ins\s*>/gi;
+  const pairs = [];
+  let match;
   const normalized = value => unescapeHtml(value).replace(/\s+/g, ' ').trim().toLowerCase();
-  // A deletion must be the student's actual span, not an invented or truncated rewrite.
-  if (String(rawStudentText).trim() && !normalized(rawStudentText).includes(normalized(removed))) return null;
-  const firstSentence = inserted.match(/^([^.!?]+[.!?])/);
-  if (wordCount(inserted) > 15 && (!firstSentence || wordCount(firstSentence[1]) > 15)) return null;
-  const cleanInserted = cleanCompleteSentence(inserted, 15);
-  if (!cleanInserted || normalized(removed) === normalized(cleanInserted)) return null;
-  return `<del>${escapeHtml(removed)}</del><ins>${escapeHtml(cleanInserted)}</ins>`;
+  const normStudent = normalized(rawStudentText || '');
+
+  while ((match = pairRegex.exec(diffHtml)) !== null) {
+    const rawDel = match[1];
+    const rawSep = match[2];
+    const rawIns = match[3];
+    const removed = unescapeHtml(rawDel).replace(/\s+/g, ' ').trim();
+    const inserted = unescapeHtml(rawIns).replace(/\s+/g, ' ').trim();
+    if (!inserted || !removed) continue;
+    const normRemoved = normalized(removed);
+    if (normStudent) {
+      const words = normRemoved.split(/\s+/).filter(w => w.length > 2);
+      const matchesWord = words.length > 0 && words.some(w => normStudent.includes(w));
+      if (!normStudent.includes(normRemoved) && !matchesWord) continue;
+    }
+    const firstSentence = inserted.match(/^([^.!?]+[.!?])/);
+    if (wordCount(inserted) > 15 && (!firstSentence || wordCount(firstSentence[1]) > 15)) continue;
+    const cleanInserted = cleanCompleteSentence(inserted, 15);
+    if (!cleanInserted || normRemoved === normalized(cleanInserted)) continue;
+    pairs.push({
+      removed: escapeHtml(removed),
+      cleanInserted: escapeHtml(cleanInserted),
+      hasSep: Boolean(rawSep && rawSep.length > 0)
+    });
+  }
+
+  if (!pairs.length) return null;
+  if (pairs.length === 1) {
+    const p = pairs[0];
+    const sep = p.hasSep ? ' ' : '';
+    return `<del>${p.removed}</del>${sep}<ins>${p.cleanInserted}</ins>`;
+  }
+  return pairs.map(p => `<del>${p.removed}</del> <ins>${p.cleanInserted}</ins>`).join(', ');
 }
 
 function reconcileTone(messageText, isCorrect) {
