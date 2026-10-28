@@ -786,8 +786,13 @@ function enforce(rawOutput, context = {}) {
   }
 
   const final = messages[messages.length - 1];
-  // A question shortened by dropping its beginning no longer matches its saved rubric.
-  const originalFinal = cleanProse(rawMessages[rawMessages.length - 1]?.message);
+  if (!explanationOnly && final?.message && !endsWithQuestion(final.message)) {
+    final.message = final.message.replace(/[.!?]*$/, '') + '?';
+  }
+  let originalFinal = cleanProse(rawMessages[rawMessages.length - 1]?.message);
+  if (!explanationOnly && originalFinal && !endsWithQuestion(originalFinal)) {
+    originalFinal = originalFinal.replace(/[.!?]*$/, '') + '?';
+  }
   const originalTerminalQuestion = sentencesIn(originalFinal).at(-1);
   const retainedTerminalQuestion = sentencesIn(final?.message).at(-1);
   const wholeQuestion = endsWithQuestion(final?.message) && endsWithQuestion(originalFinal) &&
@@ -799,17 +804,29 @@ function enforce(rawOutput, context = {}) {
   const missingContract = !rubric && Boolean(context.currentGoalDescription || context.currentGoalTitle);
   if (!wholeQuestion || isGoalHeadingQuestion(final?.message) || missingContract || (actualQuestionType === 'mcq' && !validOptions)) {
     let fallback = buildFocusedFallback(context);
-    if (fallback.fallbackQuestionType === 'none' && !context.fallbackQuestion) return enforce(fallback, { ...context, questionType: 'none' });
-    // Legacy callers can provide a focused fallback until all question contracts are migrated.
-    if (!fallback.lastQuestionRubric && context.fallbackQuestion && wordCount(cleanProse(context.fallbackQuestion)) <= MAX_WORDS_PER_BUBBLE && endsWithQuestion(cleanProse(context.fallbackQuestion))) {
-      fallback.messages[0].message = cleanProse(context.fallbackQuestion);
-      fallback.fallbackQuestionType = 'open';
+    if (fallback.fallbackQuestionType === 'none' && !context.fallbackQuestion) {
+      if (final?.message && !isGoalHeadingQuestion(final.message) && !explanationOnly) {
+        if (!endsWithQuestion(final.message)) final.message = final.message.replace(/[.!?]*$/, '') + '?';
+        rubric = {
+          criteria: [{ id: 'fact_1', description: cleanObjectiveText(context.currentGoalDescription || context.currentGoalTitle || final.message), required: true }],
+          model_answer: cleanProse(final.message)
+        };
+        actualQuestionType = 'open';
+      } else {
+        return enforce(fallback, { ...context, questionType: 'none' });
+      }
+    } else {
+      // Legacy callers can provide a focused fallback until all question contracts are migrated.
+      if (!fallback.lastQuestionRubric && context.fallbackQuestion && wordCount(cleanProse(context.fallbackQuestion)) <= MAX_WORDS_PER_BUBBLE && endsWithQuestion(cleanProse(context.fallbackQuestion))) {
+        fallback.messages[0].message = cleanProse(context.fallbackQuestion);
+        fallback.fallbackQuestionType = 'open';
+      }
+      messages = messages.length && !endsWithQuestion(messages[0].message) && wordCount(messages[0].message) <= MAX_WORDS_PER_BUBBLE
+        ? [messages[0], fallback.messages[0]] : fallback.messages;
+      rubric = fallback.lastQuestionRubric;
+      actualQuestionType = fallback.fallbackQuestionType;
+      questionReplaced = true;
     }
-    messages = messages.length && !endsWithQuestion(messages[0].message) && wordCount(messages[0].message) <= MAX_WORDS_PER_BUBBLE
-      ? [messages[0], fallback.messages[0]] : fallback.messages;
-    rubric = fallback.lastQuestionRubric;
-    actualQuestionType = fallback.fallbackQuestionType;
-    questionReplaced = true;
   } else if (validOptions) {
     final.options = validOptions;
     if (rubric?.correct_option_text) {
@@ -825,11 +842,19 @@ function enforce(rawOutput, context = {}) {
   if (explanationBubble && questionBubble && endsWithQuestion(questionBubble.message)) {
     if (!validateScenarioConsistency(explanationBubble.message, questionBubble.message, rubric)) {
       let fallback = buildFocusedFallback(context);
-      if (fallback.fallbackQuestionType === 'none') return enforce(fallback, { ...context, questionType: 'none' });
-      messages = [explanationBubble, fallback.messages[0]];
-      rubric = fallback.lastQuestionRubric;
-      actualQuestionType = fallback.fallbackQuestionType;
-      questionReplaced = true;
+      if (fallback.fallbackQuestionType === 'none') {
+        if (!rubric) {
+          rubric = {
+            criteria: [{ id: 'fact_1', description: cleanObjectiveText(context.currentGoalDescription || context.currentGoalTitle || questionBubble.message), required: true }],
+            model_answer: cleanProse(questionBubble.message)
+          };
+        }
+      } else {
+        messages = [explanationBubble, fallback.messages[0]];
+        rubric = fallback.lastQuestionRubric;
+        actualQuestionType = fallback.fallbackQuestionType;
+        questionReplaced = true;
+      }
     }
   }
 

@@ -373,11 +373,17 @@ function assessedResult(parsed, criteria, rubric, resolved, gradedBy, lastQuesti
     resolved_answer: resolved.isOption ? resolved.resolvedText : null,
   };
 
-  // Missing content belongs in feedback and the full answer. Striking through
-  // a correct answer to insert extra facts teaches the student their valid
-  // words were wrong. A correct answer only gets an optional spelling diff.
-  if ((!correct && contentType === 'Incomplete' && contradictions.length === 0) ||
-      (correct && !LANGUAGE_ONLY_ERRORS.has(String(parsed.error_type || '').toLowerCase()))) {
+  if (correct) {
+    // For correct answers, retain diff_html if it is a spelling/typo correction.
+    if (result.diff_html && !LANGUAGE_ONLY_ERRORS.has(String(parsed.error_type || '').toLowerCase())) {
+      const delMatch = (parsed.diff_html || '').match(/<del\b[^>]*>([\s\S]*?)<\/del\s*>/i);
+      const insMatch = (parsed.diff_html || '').match(/<ins\b[^>]*>([\s\S]*?)<\/ins\s*>/i);
+      const isShortSpelling = delMatch && insMatch &&
+        delMatch[1].trim().split(/\s+/).length <= 3 &&
+        insMatch[1].trim().split(/\s+/).length <= 3;
+      if (!isShortSpelling) result.diff_html = null;
+    }
+  } else if (contentType === 'Incomplete' && contradictions.length === 0) {
     result.diff_html = null;
   }
   return applyGradingGuards(result);
@@ -441,9 +447,12 @@ SOURCE-GROUNDED ACCURACY (every topic):
 
 Correct an IDEA, not English. For incorrect answers give an accurate complete_answer and
 a plain-language feedback explanation describing the specific missing/wrong requirement.
-For incorrect or incomplete answers, identify the inaccurate phrase or missing concept in diff_html
-as <del>wrong phrase</del><ins>correct phrase</ins>, insertion under 25 words, using resolved option text rather than a letter. No other HTML.
-For fully correct answers or nonanswers, diff_html is null.
+- When an answer has typos or misspelled terms (e.g. "pallied" for "applied", "filder" for "fielder"), include diff_html as:
+  <del>typo</del><ins>correct word</ins>
+  and set error_type: "spelling".
+- For incorrect answers, identify the inaccurate phrase or concept in diff_html as:
+  <del>wrong phrase</del><ins>correct phrase</ins>, insertion under 25 words.
+- For fully correct answers with no spelling typos, diff_html is null and error_type is null.
 For nonanswers, criterion_results:[], contradictions:[], error_type:null, diff_html:null,
 complete_answer:null, feedback:null. No grade for nonanswers.
 
