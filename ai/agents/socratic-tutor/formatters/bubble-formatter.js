@@ -616,12 +616,17 @@ function enforce(rawOutput, context = {}) {
   const effectiveMaxBubbles = isTeachingOrExplanation ? 3 : MAX_BUBBLES;
   const maxWordsPerBubble = isTeachingOrExplanation ? 30 : MAX_WORDS_PER_BUBBLE;
   const rawMessages = Array.isArray(rawOutput?.messages) ? rawOutput.messages : [];
-  if (!ending && isTeachingOrExplanation && rawMessages.some(b => cleanProse(b?.message) && !splitIntoMicroBubbles(cleanProse(b.message), maxWordsPerBubble).length)) {
+  if (!ending && response_mode === 'explain' && rawMessages.some(b => cleanProse(b?.message) && !splitIntoMicroBubbles(cleanProse(b.message), maxWordsPerBubble).length)) {
     const recovery = buildFocusedFallback({ ...context, response_mode: 'task_repair' });
     return enforce(recovery, { ...context, response_mode: 'task_repair', questionType: 'none' });
   }
-  const expanded = rawMessages.flatMap(b => splitIntoMicroBubbles(reconcileTone(cleanProse(b?.message), isCorrect), maxWordsPerBubble)
-    .map((message, i, parts) => ({ message, message_type: 'text', ...(i === parts.length - 1 && b.options ? { options: b.options } : {}) })));
+  const expanded = rawMessages
+    .filter(b => cleanProse(b?.message))
+    .flatMap(b => {
+      const bubbles = splitIntoMicroBubbles(reconcileTone(cleanProse(b?.message), isCorrect), maxWordsPerBubble);
+      const toUse = bubbles.length ? bubbles : [cleanProse(b?.message)];
+      return toUse.map((message, i, parts) => ({ message, message_type: 'text', ...(i === parts.length - 1 && b.options ? { options: b.options } : {}) }));
+    });
   let messages = expanded.length > effectiveMaxBubbles
     ? (isTeachingOrExplanation
         ? (expanded.length >= 3 && endsWithQuestion(expanded[expanded.length - 1]?.message)
@@ -763,7 +768,9 @@ function enforce(rawOutput, context = {}) {
     const hasAdaptiveQuestion = endsWithQuestion(candidateQuestion) && wordCount(candidateQuestion) <= MAX_WORDS_PER_BUBBLE;
     const hasAdaptiveRubric = Boolean(rubric);
 
-    if (hasAdaptiveQuestion && hasAdaptiveRubric) {
+    if (hasAdaptiveQuestion) {
+      if (!rubric) rubric = priorRubric;
+      actualQuestionType = 'open';
       questionAssisted = true;
     } else {
       const pending = buildFocusedFallback(context);
@@ -798,7 +805,7 @@ function enforce(rawOutput, context = {}) {
       fallback.messages[0].message = cleanProse(context.fallbackQuestion);
       fallback.fallbackQuestionType = 'open';
     }
-    messages = messages.length && !endsWithQuestion(messages[0].message)
+    messages = messages.length && !endsWithQuestion(messages[0].message) && wordCount(messages[0].message) <= MAX_WORDS_PER_BUBBLE
       ? [messages[0], fallback.messages[0]] : fallback.messages;
     rubric = fallback.lastQuestionRubric;
     actualQuestionType = fallback.fallbackQuestionType;

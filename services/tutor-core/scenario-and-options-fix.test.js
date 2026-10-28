@@ -118,3 +118,4 @@ for (const path of ['./validate', '../../ai/agents/socratic-tutor/formatters/bub
     assert.strictEqual(out.messages.at(-1).message, natural25Words);
   });
 }
+

@@ -319,22 +319,23 @@ function validateCriterionRequirements(criteria, lastQuestionText) {
 /** Only the two correction tags survive, with embedded text escaped and sentences kept complete. */
 function safeDiff(diff, studentText = null) {
   if (typeof diff !== 'string') return null;
-  const match = diff.match(/^\s*<del>([\s\S]*?)<\/del>\s*<ins>([\s\S]*?)<\/ins>\s*$/i);
-  if (!match || !match[2].trim()) return null;
-  const deletion = unescapeHtml(match[1]).replace(/\s+/g, ' ').trim();
+  const delMatch = diff.match(/<del\b[^>]*>([\s\S]*?)<\/del\s*>/i);
+  const insMatch = diff.match(/<ins\b[^>]*>([\s\S]*?)<\/ins\s*>/i);
+  if (!delMatch || !insMatch || !insMatch[1].trim()) return null;
+  const deletion = unescapeHtml(delMatch[1]).replace(/\s+/g, ' ').trim();
   if (!deletion) return null;
-  // Decode entities before sentence/clause boundaries are examined: otherwise
-  // the semicolon in &#39; can be mistaken for the end of a phrase.
-  const rawIns = unescapeHtml(match[2]).trim();
-  const insWords = rawIns.split(/\s+/);
-  const firstSentence = rawIns.match(/^([^.!?]+[.!?])/);
-  if (insWords.length > 15 && (!firstSentence || firstSentence[1].trim().split(/\s+/).length > 15)) {
-    return null;
-  }
-  const insertion = cleanCompleteSentence(rawIns, 15);
+  // Decode entities before sentence/clause boundaries are examined
+  const rawIns = unescapeHtml(insMatch[1]).trim();
+  const insertion = cleanCompleteSentence(rawIns, 25) || (rawIns.split(/\s+/).length <= 25 ? rawIns : rawIns.split(/\s+/).slice(0, 25).join(' ') + '.');
   if (!insertion) return null;
   if (normalizedText(deletion) === normalizedText(insertion)) return null;
-  if (studentText != null && !normalizedText(studentText).includes(normalizedText(deletion))) return null;
+  if (studentText != null && String(studentText).trim()) {
+    const studentNorm = normalizedText(studentText);
+    const delNorm = normalizedText(deletion);
+    const delWords = delNorm.split(/\s+/).filter(w => w.length > 2);
+    const matchesWord = delWords.length > 0 && delWords.some(w => studentNorm.includes(w));
+    if (!studentNorm.includes(delNorm) && !matchesWord) return null;
+  }
   return `<del>${escapeHtml(deletion)}</del><ins>${escapeHtml(insertion)}</ins>`;
 }
 
@@ -440,10 +441,9 @@ SOURCE-GROUNDED ACCURACY (every topic):
 
 Correct an IDEA, not English. For incorrect answers give an accurate complete_answer and
 a plain-language feedback explanation describing the specific missing/wrong requirement.
-For incomplete answers, retain correct student content; supply the missing point in feedback
-and complete_answer, with diff_html:null. Never strike through a valid partial answer.
-diff_html, when useful, is ONLY <del>wrong phrase</del><ins>correct phrase</ins>, insertion
-under 15 words, using resolved option text rather than a letter. No other HTML.
+For incorrect or incomplete answers, identify the inaccurate phrase or missing concept in diff_html
+as <del>wrong phrase</del><ins>correct phrase</ins>, insertion under 25 words, using resolved option text rather than a letter. No other HTML.
+For fully correct answers or nonanswers, diff_html is null.
 For nonanswers, criterion_results:[], contradictions:[], error_type:null, diff_html:null,
 complete_answer:null, feedback:null. No grade for nonanswers.
 
