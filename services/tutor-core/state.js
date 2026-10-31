@@ -148,11 +148,11 @@ function initialState(goalTotal) {
 }
 
 /** The question type this phase asks for. Decided here, never by the model. */
-function questionTypeFor(phase) {
+function questionTypeFor(phase, state = null) {
   if (phase === "WRAP" || phase === "DONE") return null;
-  // ROUNDUP is written recall: the student must produce the definition/formula,
-  // not pick it from options. Only CHECK is multiple choice.
-  return phase === "CHECK" ? "mcq" : "open";
+  if (phase === "CHECK") return "mcq";
+  if (phase === "ROUNDUP" && state && state.recallThisGoal === 1) return "mcq";
+  return "open";
 }
 
 /** Whether an answer in this phase counts toward mastery. */
@@ -626,7 +626,8 @@ function nextPhase(prev, s) {
 
     case "ROUNDUP": {
       s.recallThisGoal = prev.recallThisGoal + 1;
-      if (s.recallThisGoal < RECALL_PER_GOAL) return "ROUNDUP";
+      const recallLimit = (prev.includeReasoningMcq || s.includeReasoningMcq) ? 2 : RECALL_PER_GOAL;
+      if (s.recallThisGoal < recallLimit) return "ROUNDUP";
       const nextRecall = (prev.roundupIndex || 0) + 1;
       if (nextRecall >= prev.goalTotal) return "WRAP";
       s.roundupIndex = nextRecall;
@@ -700,7 +701,7 @@ function baseInstruction(state, intent) {
     case "CHECK":
       return "assess_with_mcq";
     case "ROUNDUP":
-      return "roundup_recall";
+      return state.recallThisGoal === 1 ? "roundup_reasoning_mcq" : "roundup_recall";
     case "DIALOGUE":
       return state.openThisGoal === 0 ? "open_goal_dialogue" : "continue_dialogue";
     default:

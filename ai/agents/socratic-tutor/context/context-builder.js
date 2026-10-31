@@ -542,6 +542,61 @@ function getPhaseGuidance(phase, stateInstruction, reportBrief) {
  * @param {Object} params
  * @returns {Object} Complete structured teaching context
  */
+/**
+ * Extract textbook in-text elements: question bank, summary, step-further, activities, section numbers
+ */
+function extractTextbookElements(text) {
+  if (!text || typeof text !== 'string') {
+    return {
+      passages: [],
+      question_bank: [],
+      chapter_summary: null,
+      step_further: null,
+      activities: [],
+      section_numbers: [],
+    };
+  }
+
+  const sectionMatches = text.match(/(?:(?:Section\s+)?(\d+\.\d+)|(?:Activity\s+(\d+\.\d+)))/gi) || [];
+  const sectionNumbers = Array.from(new Set(sectionMatches.map(s => s.trim()))).slice(0, 10);
+
+  const activityBlocks = [];
+  const actRegex = /(?:Activity\s+(\d+\.\d+)[\s\S]*?(?=(?:Activity\s+\d+\.\d+|Questions|What you have learnt|A step further|$)))/gi;
+  let m;
+  while ((m = actRegex.exec(text)) !== null && activityBlocks.length < 5) {
+    activityBlocks.push(m[0].trim().slice(0, 400));
+  }
+
+  const questionBank = [];
+  const qRegex = /(?:(?:Questions|Exercises|Think and Discuss|Probe and ponder)[\s\S]*?(?=(?:Activity|What you have learnt|A step further|$)))/gi;
+  while ((m = qRegex.exec(text)) !== null && questionBank.length < 6) {
+    questionBank.push(m[0].trim().slice(0, 500));
+  }
+
+  let summary = null;
+  const sumRegex = /(?:(?:What you have learnt|Summary|Points to remember)[\s\S]*?(?=(?:Exercises|A step further|$)))/i;
+  const sumMatch = text.match(sumRegex);
+  if (sumMatch) {
+    summary = sumMatch[0].trim().slice(0, 600);
+  }
+
+  let stepFurther = null;
+  const stepRegex = /(?:(?:A step further|More to know|Did you know\?|Discover, design and debate)[\s\S]*?(?=(?:Questions|Exercises|Activity|$)))/i;
+  const stepMatch = text.match(stepRegex);
+  if (stepMatch) {
+    stepFurther = stepMatch[0].trim().slice(0, 600);
+  }
+
+  return {
+    passages: text.split(/\n\s*\n/).filter(p => p.trim().length > 30).slice(0, 8),
+    question_bank: questionBank,
+    chapter_summary: summary,
+    step_further: stepFurther,
+    activities: activityBlocks,
+    section_numbers: sectionNumbers,
+  };
+}
+
 function buildTeachingContext(params) {
   const {
     topic,
@@ -564,8 +619,10 @@ function buildTeachingContext(params) {
 
   const { subjectName, boardName, gradeLevel } = resolveSubjectAndBoard(topic, userProfile);
 
-  const gradeStr = userProfile.grade_level ? `Class ${userProfile.grade_level}` : 'Class 8';
-  const classLevel = `${gradeStr} ${boardName}`;
+  const rawGrade = userProfile.grade_level ? String(userProfile.grade_level).trim() : 'Class 8';
+  const cleanGrade = /^class\b/i.test(rawGrade) ? rawGrade : `Class ${rawGrade}`;
+  const strippedGrade = cleanGrade.replace(new RegExp(`\\s*${boardName}\\b`, 'gi'), '').trim();
+  const classLevel = boardName ? `${strippedGrade} ${boardName}` : strippedGrade;
 
   const gradePedagogy = resolveGradePedagogy(gradeLevel, subjectName);
 
@@ -605,6 +662,12 @@ function buildTeachingContext(params) {
       grade_level: gradeLevel,
       class_level: classLevel,
       textbook_material: topic?.textbook_content || topicContent || akgContext?.textbook_content || '',
+      textbook_elements: extractTextbookElements(topic?.textbook_content || topicContent || akgContext?.textbook_content || ''),
+      question_bank: extractTextbookElements(topic?.textbook_content || topicContent || akgContext?.textbook_content || '').question_bank,
+      chapter_summary: extractTextbookElements(topic?.textbook_content || topicContent || akgContext?.textbook_content || '').chapter_summary,
+      step_further: extractTextbookElements(topic?.textbook_content || topicContent || akgContext?.textbook_content || '').step_further,
+      activities: extractTextbookElements(topic?.textbook_content || topicContent || akgContext?.textbook_content || '').activities,
+      section_numbers: extractTextbookElements(topic?.textbook_content || topicContent || akgContext?.textbook_content || '').section_numbers,
       current_goal: {
         index: currentGoalIdx + 1,
         total: totalGoals,
@@ -662,6 +725,7 @@ function buildTeachingContext(params) {
 
 module.exports = {
   buildTeachingContext,
+  extractTextbookElements,
   ensureAcademicGrounding,
   resolveAnalogies,
   resolveMisconceptions,

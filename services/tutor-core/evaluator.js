@@ -440,7 +440,7 @@ invent content. A relevant partial answer fails missing required criteria.
 Do not return your own correctness verdict or score: the server combines the evidence.
 List scientific contradictions even if other parts of the answer are correct.
 
-English, spelling, grammar, tense and word order never make content incorrect. Recognize
+English, spelling, grammar, tense and word order never make content incorrect unless the task is explicitly about language. Judge the idea. Recognize
 misspelled scientific terms when meaning is clear. Offer a gentle spelling diff only if all
 content requirements are met. A language mistake cannot hide a conceptual mistake.
 Only require a formula, symbols, units, a causal explanation or a specific count when the
@@ -448,6 +448,10 @@ actual visible question asks for it; a hidden rubric requirement is not enough. 
 For a requested list, count DISTINCT items: a restated example (e.g. stretching under "change
 of shape") is not an extra item, and an answer about one property does not answer a question
 about another (an explanation about speed/direction does not answer one about shape).
+
+REASONING QUESTIONS AND ALTERNATIVE REASONING:
+- Questions may be in varied reasoning formats: NOT question, Statements (i and ii, etc.), Situation, Reason (... because ...), Consequence (What would happen if ...?), Experiment, Term in context, Diagram, Assertion-Reason, or Case-based.
+- In reasoning questions, accept alternative reasoning when supported by evidence: accept a different answer when the student's evidence and scientific reasoning logically support it.
 
 SOURCE-GROUNDED ACCURACY (every topic):
 - Grade strictly against the supplied source and the exact question. Never invent a fact,

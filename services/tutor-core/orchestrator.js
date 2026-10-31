@@ -206,6 +206,7 @@ async function processTutorTurn(params) {
       ? { ...paginateSupportBubbles(state.supportContinuation), recapSourceBacked: true, taskRepair: true, fallbackQuestionType: 'none' }
       : await generateTutorResponse(generationContext);
   const validated = enforce(rawTutorOutput, { ...generationContext,
+    shuffleOptions: true,
     isCorrect: evaluatorResult.is_correct, diffHtml: evaluatorResult.diff_html,
     studentMessage: evaluatorResult.resolved_answer || studentMessage });
   questionType = validated.questionType;

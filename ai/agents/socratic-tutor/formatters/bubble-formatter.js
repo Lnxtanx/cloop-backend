@@ -208,7 +208,16 @@ function normalizeRubric(rubric) {
     ...(rubric.correct_option_text ? { correct_option_text: String(rubric.correct_option_text).trim() } : {}) };
 }
 
-function normalizeOptions(options, correctOption) {
+function shuffleOptions(array) {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
+function normalizeOptions(options, correctOption, shuffle = false) {
   if (!Array.isArray(options) || options.length < 2 || options.length > 4 || !correctOption) return null;
   const seen = new Set();
   const result = [];
@@ -222,7 +231,8 @@ function normalizeOptions(options, correctOption) {
   const norm = s => String(s || '').trim().replace(/[.?!,;:]+$/, '').toLowerCase().replace(/\s+/g, ' ');
   const targetNorm = norm(correctOption);
   const matching = result.filter(o => norm(o.text) === targetNorm || o.text === correctOption);
-  return matching.length === 1 ? result : null;
+  if (matching.length !== 1) return null;
+  return shuffle ? shuffleOptions(result) : result;
 }
 
 const PHYSICAL_ENTITIES = [
@@ -851,7 +861,7 @@ function enforce(rawOutput, context = {}) {
       questionReplaced = true;
     }
   } else if (validOptions) {
-    final.options = validOptions;
+    final.options = context.shuffleOptions ? shuffleOptions(validOptions) : validOptions;
     if (rubric?.correct_option_text) {
       const norm = s => String(s || '').trim().replace(/[.?!,;:]+$/, '').toLowerCase().replace(/\s+/g, ' ');
       const match = validOptions.find(o => norm(o.text) === norm(rubric.correct_option_text));
@@ -883,7 +893,7 @@ function enforce(rawOutput, context = {}) {
 
   // Options belong only to the final CHECK question, never a written or closing bubble.
   messages.forEach((b, i) => {
-    if (phase !== 'CHECK' || actualQuestionType !== 'mcq' || i !== messages.length - 1) delete b.options;
+    if ((phase !== 'CHECK' && !(phase === 'ROUNDUP' && actualQuestionType === 'mcq')) || actualQuestionType !== 'mcq' || i !== messages.length - 1) delete b.options;
   });
   if (phase !== 'CHECK') actualQuestionType = 'open';
   if (rubric && actualQuestionType !== 'mcq') delete rubric.correct_option_text;

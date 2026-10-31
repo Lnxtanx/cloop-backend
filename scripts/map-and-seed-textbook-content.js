@@ -1,4 +1,14 @@
 #!/usr/bin/env node
+function detectParagraphTag(text) {
+  const t = String(text || '').trim();
+  if (/^(?:what you have learnt|summary|points to remember)\b/i.test(t)) return '[CHAPTER_SUMMARY]';
+  if (/^(?:a step further|more to know|did you know\?|discover,\s*design and debate)\b/i.test(t)) return '[A_STEP_FURTHER]';
+  const actMatch = t.match(/^Activity\s+(\d+\.\d+)/i);
+  if (actMatch) return `[ACTIVITY: ${actMatch[1]}]`;
+  if (/^(?:questions|exercises|think and discuss|probe and ponder)\b/i.test(t)) return '[QUESTION_BANK]';
+  return null;
+}
+
 /**
  * Universal AI Textbook-to-Topic Content Mapper & Seeder
  * 
@@ -84,10 +94,14 @@ function splitIntoParagraphs(text) {
     paragraphs.push(current.join(' '));
   }
 
-  return paragraphs.map((p, idx) => ({
-    id: idx + 1,
-    text: p,
-  }));
+  return paragraphs.map((p, idx) => {
+    const tag = detectParagraphTag(p);
+    return {
+      id: idx + 1,
+      tag: tag || null,
+      text: tag && !p.startsWith('[') ? `${tag} ${p}` : p,
+    };
+  });
 }
 
 function sqlEscape(str) {
@@ -548,7 +562,14 @@ function resolveMatchingChapter(chap, dbChapters, rawText) {
   }
 }
 
-main().catch(err => {
-  console.error('[!] Fatal error in main:', err);
-  process.exit(1);
-});
+if (require.main === module) {
+  main().catch(err => {
+    console.error('[!] Fatal error in main:', err);
+    process.exit(1);
+  });
+}
+
+module.exports = {
+  detectParagraphTag,
+  splitIntoParagraphs,
+};

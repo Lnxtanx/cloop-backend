@@ -338,6 +338,7 @@ async function processTurn({
     isCorrect: evaluatorResult.is_correct,
     diffHtml: evaluatorResult.diff_html,
     studentMessage: evaluatorResult.resolved_answer || studentMessage,
+    shuffleOptions: true,
   });
 
   questionType = validated.questionType;
