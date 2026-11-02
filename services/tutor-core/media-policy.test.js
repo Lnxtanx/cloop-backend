@@ -54,3 +54,12 @@ test('missing history suppresses automatic assets while explicit replay remains 
   assert.equal(shouldDeliverMedia({ kind: 'video', asset: { id: 'abc123' }, seen: null, explicitRequest: true }), true);
   assert.doesNotThrow(() => previouslyShown([{ message_type: 'youtube_video', diff_html: '{broken' }]));
 });
+test('getRevisionVideos produces structured educational video references without failing', async () => {
+  const { getRevisionVideos } = require('../media-search');
+  const videos = await getRevisionVideos('Newton Laws', '9', 2);
+  assert.ok(Array.isArray(videos));
+  assert.ok(videos.length > 0);
+  assert.ok(videos[0].title);
+  assert.match(videos[0].url, /^https:\/\/(www\.)?youtube\.com/);
+  assert.ok(videos[0].channel);
+});

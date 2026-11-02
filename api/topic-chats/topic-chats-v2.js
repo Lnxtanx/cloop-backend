@@ -440,8 +440,19 @@ async function handleTopicChatMessageV2(req, res) {
         practice_next_time: `Notice how ${topic.title} applies in everyday technology and science.`,
         key_points: topicGoals.map(g => `${g.title}: ${g.description || 'Key concept to revise.'}`),
         common_mistakes: (turnResult.masteryReport?.key_errors || []).map(e => `${e.type} (${e.count}x)`),
-        your_weak_spots: (turnResult.masteryReport?.areas_to_improve || []).map(a => a.goal)
+        your_weak_spots: (turnResult.masteryReport?.areas_to_improve || []).map(a => a.goal),
+        recommended_videos: []
       };
+
+      if (!revisionPayload.recommended_videos || !revisionPayload.recommended_videos.length) {
+        try {
+          const { getRevisionVideos } = require('../../services/media-search');
+          const videos = await getRevisionVideos(topic.title, studentClass || '10', 2);
+          if (Array.isArray(videos) && videos.length) {
+            revisionPayload.recommended_videos = videos;
+          }
+        } catch (_) {}
+      }
 
       const revisionRecord = await prisma.admin_chat.create({
         data: {

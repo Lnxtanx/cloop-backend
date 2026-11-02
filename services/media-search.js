@@ -356,7 +356,42 @@ function formatViewCount(count) {
   return `${count} views`;
 }
 
+/**
+ * Get curated, educational YouTube video lessons for a revision sheet
+ * @param {string} topicTitle - Name of the topic
+ * @param {string|number} classLevel - Class/Grade level (e.g. 10)
+ * @param {number} max - Maximum videos (default 2)
+ * @returns {Promise<Array>} Array of video objects with clean fields
+ */
+async function getRevisionVideos(topicTitle, classLevel = '10', max = 2) {
+  try {
+    const cleanTopic = String(topicTitle || '').trim();
+    if (!cleanTopic) return [];
+    const query = `${cleanTopic} Class ${classLevel} CBSE NCERT`;
+    const videos = await searchYouTube(query, max);
+    if (!Array.isArray(videos)) return [];
+    return videos.slice(0, max).map(v => {
+      let durationStr = '';
+      if (v.duration) {
+        durationStr = /^\d+:\d+(:\d+)?$/.test(v.duration) ? v.duration : (formatDuration(v.duration) || v.duration);
+      }
+      return {
+        id: v.id || `yt-${Date.now()}`,
+        title: v.title || `${cleanTopic} — Video Lesson`,
+        url: v.url || `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`,
+        thumbnail: v.thumbnail || '',
+        channel: v.channel || 'Educational Lesson',
+        duration: durationStr
+      };
+    });
+  } catch (err) {
+    console.warn('[media-search] Failed to get revision videos:', err.message);
+    return [];
+  }
+}
+
 module.exports = {
+  getRevisionVideos,
   searchYouTube,
   searchImages,
   formatDuration,

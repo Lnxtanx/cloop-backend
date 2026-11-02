@@ -267,6 +267,13 @@ async function processTurn({
           masteryReport,
         });
       }
+      try {
+        const { getRevisionVideos } = require('../../../services/media-search');
+        const videos = await getRevisionVideos(topic.title, classLevel, 2);
+        if (Array.isArray(videos) && videos.length) {
+          revisionSheet.recommended_videos = videos;
+        }
+      } catch (_) {}
     }
     nextState.wrapArtifacts = { masteryReport, revisionSheet };
   }

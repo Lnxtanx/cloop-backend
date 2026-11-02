@@ -177,6 +177,13 @@ async function processTutorTurn(params) {
         revisionSheet = buildFallbackRevisionSheet({ topicTitle: topic.title, goals,
           keyErrors: masteryReport.key_errors, masteryReport });
       }
+      try {
+        const { getRevisionVideos } = require('../media-search');
+        const videos = await getRevisionVideos(topic.title, classLevel, 2);
+        if (Array.isArray(videos) && videos.length) {
+          revisionSheet.recommended_videos = videos;
+        }
+      } catch (_) {}
     }
     nextState.wrapArtifacts = { masteryReport, revisionSheet };
   }

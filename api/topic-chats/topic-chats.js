@@ -2238,8 +2238,16 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 								your_weak_spots: (metricsData.weak_goals || []).map(g => g.goal_title),
 								overall_score_percent: metricsData.overall_score_percent,
 								star_rating: metricsData.star_rating,
-								performance_level: metricsData.performance_level
+								performance_level: metricsData.performance_level,
+								recommended_videos: []
 							};
+							try {
+								const { getRevisionVideos } = require('../../services/media-search');
+								const videos = await getRevisionVideos(topic.title, '10', 2);
+								if (Array.isArray(videos) && videos.length) {
+									revisionSheetData.recommended_videos = videos;
+								}
+							} catch (_) {}
 							const savedRev = await savePhaseBlock('revision_sheet', revisionSheetData, '');
 							if (savedRev) {
 								if (!aiResponse.revision_sheet) aiResponse.revision_sheet = revisionSheetData;
