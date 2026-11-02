@@ -13,7 +13,7 @@ const { teachingRequest, requestEvaluation } = require('../../../services/tutor-
  * 5. Grounded Final Revision Sheet Generation
  */
 
-const { evaluateStudentTurn } = require('./evaluators/answer-evaluator');
+const { evaluateStudentTurn, resolveOptionAnswer } = require('./evaluators/answer-evaluator');
 const {
   advance,
   instructionFor,
@@ -172,7 +172,11 @@ async function processTurn({
   let evaluatorResult = noEvaluation();
   const continuingRecap = Array.isArray(state.supportContinuation) && state.supportContinuation.length > 0 &&
     /^(?:continue|more|next|ok(?:ay)?|go on|yes)[.!?]*$/i.test(studentMessage.trim());
-  const learningRequest = continuingRecap ? 'recap_topic' : teachingRequest(studentMessage) ||
+  // A saved academic option may itself be a command word (for example, Stop).
+  const isAcademicOption = state.lastQuestionType === 'mcq' && state.response_mode !== 'offer_choice' &&
+    !state.awaitingAcademicQuestion && !state.pendingAdvanceAfterExplanation &&
+    typeof resolveOptionAnswer === 'function' && resolveOptionAnswer(studentMessage, lastQuestionOptions).isOption;
+  const learningRequest = continuingRecap ? 'recap_topic' : isAcademicOption ? null : teachingRequest(studentMessage) ||
     ((explicitMedia.video || explicitMedia.diagram) ? 'media_request' : null);
   if (learningRequest) evaluatorResult = requestEvaluation(learningRequest);
   else if (!starting && !terminal && !state.awaitingAcademicQuestion &&
@@ -186,6 +190,7 @@ async function processTurn({
       lastQuestionRecord: state.lastQuestionRecord || null,
       scenario: state.lastQuestionRecord?.scenario || null,
       phase: state.phase,
+      lastQuestionType: state.lastQuestionType || null,
       response_mode: state.response_mode || null,
       awaiting_learning_choice: isAwaitingChoice,
       topicTitle: topic.title,
@@ -214,6 +219,7 @@ async function processTurn({
     requestKind: evaluatorResult.request_kind || evaluatorResult.requestKind || null,
     request_kind: evaluatorResult.request_kind || evaluatorResult.requestKind || null,
     lastQuestionRecord: state.lastQuestionRecord || null,
+    isAcademicOption,
   });
 
   const stateInstruction = instructionFor(nextState, {
@@ -222,7 +228,7 @@ async function processTurn({
     suggestedAction: evaluatorResult.suggested_action,
   });
   nextState.lastInstruction = stateInstruction;
-  let questionType = questionTypeFor(nextState.phase);
+  let questionType = questionTypeFor(nextState.phase, nextState);
   const isHelpOrIdk = !nextState.assessmentAdvanced && (intent === 'HELP' || intent === 'IDK' ||
     Boolean(studentMessage && /\b(idk|idnt|i\s*dnt|don['’]?t\s+know|dont\s+know|don['’]?t\s+understand|didn['’]?t\s+understand|explain|explain\s+more|help|confused|samjh|samajh)\b/i.test(studentMessage)));
   const isAssistanceDirective = Boolean(stateInstruction && ['hint_then_easier', 'explain_differently', 'reteach_new_angle', 'give_starter', 'reveal_and_move_on'].includes(stateInstruction));
@@ -335,6 +341,7 @@ async function processTurn({
 
   const validated = enforce(rawTutorOutput, {
     ...generationContext,
+    shuffleOptions: true,
     isCorrect: evaluatorResult.is_correct,
     diffHtml: evaluatorResult.diff_html,
     studentMessage: evaluatorResult.resolved_answer || studentMessage,
@@ -363,7 +370,7 @@ async function processTurn({
   const gradedThisTurn = !terminal && !state.pendingAdvanceAfterExplanation && !state.awaitingAcademicQuestion &&
     intent === 'ANSWER' && isScored(state.phase) &&
     typeof evaluatorResult.is_correct === 'boolean' && evaluatorResult.evaluation_status !== 'unavailable';
-  const isAnswer = !terminal && !starting && !state.pendingAdvanceAfterExplanation && !state.awaitingAcademicQuestion &&
+  const isAnswer = nextState.response_mode !== 'offer_choice' && !terminal && !starting && !state.pendingAdvanceAfterExplanation && !state.awaitingAcademicQuestion &&
     intent === 'ANSWER' && typeof evaluatorResult.is_correct === 'boolean' && evaluatorResult.userCorrection !== null;
   const userCorrection = isAnswer ? {
     message_type: 'user_correction',

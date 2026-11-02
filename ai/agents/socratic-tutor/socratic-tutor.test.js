@@ -1,6 +1,18 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 
+// Keep the release checks offline even when the developer has API keys set.
+for (const name of ['../../providers', '../../../services/ai/deepseek-client']) {
+  const filename = require.resolve(name);
+  require.cache[filename] = { id: filename, filename, loaded: true, exports: {
+    invokeModel: async () => { throw new Error('Offline smoke-test fallback.'); },
+    extractJson: JSON.parse,
+  } };
+}
+const inspector = require.resolve('./inspector/inspector-store');
+require.cache[inspector] = { id: inspector, filename: inspector, loaded: true,
+  exports: { recordInspectorTurn: async () => {} } };
+
 const {
   processTurn,
   initialState,

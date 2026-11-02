@@ -9,7 +9,8 @@
     "prisma:migrate": "prisma migrate deploy",
     "deploy": "npm run prisma:generate && npm run prisma:migrate && npm start",
     "test": "bash scripts/test-tutor-core.sh",
-    "test:tutor-repair": "node scripts/test-tutor-repair.js"
+    "test:tutor-repair": "node scripts/test-tutor-repair.js",
+    "test:final-ncert-runtime": "bash scripts/test-final-ncert-runtime.sh"
   },
   "keywords": [],
   "author": "",

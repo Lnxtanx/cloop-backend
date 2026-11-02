@@ -325,8 +325,9 @@ function advance(state, event = {}) {
 
   // ── Route explicit control requests before academic handling ─────────────
   const rawStudentText = String(event.answerText || '').trim();
-  const requestKind = teachingRequest(rawStudentText) || event.requestKind || event.request_kind || null;
-  if (isExplicitExitCommand(rawStudentText)) {
+  const requestKind = event.isAcademicOption ? null
+    : teachingRequest(rawStudentText) || event.requestKind || event.request_kind || null;
+  if (!event.isAcademicOption && isExplicitExitCommand(rawStudentText)) {
     s.phase = 'WRAP';
     s.endedReason = 'user_requested';
     return finish();
@@ -417,8 +418,8 @@ function advance(state, event = {}) {
   }
 
   // ── Explicit session exit command ends the session gracefully ─────────────
-  const isExplicitExit = isExplicitExitCommand(rawStudentText) ||
-    ((event.requestKind === 'end_session' || event.request_kind === 'end_session') && isExplicitExitCommand(rawStudentText));
+  const isExplicitExit = !event.isAcademicOption && (isExplicitExitCommand(rawStudentText) ||
+    ((event.requestKind === 'end_session' || event.request_kind === 'end_session') && isExplicitExitCommand(rawStudentText)));
   if (isExplicitExit) {
     s.phase = "WRAP";
     s.endedReason = "user_requested";

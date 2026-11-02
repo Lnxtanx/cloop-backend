@@ -115,11 +115,13 @@ for (const filename of ['./validate', '../../ai/agents/socratic-tutor/formatters
 
 for (const filename of ['./tutor-generator', '../../ai/agents/socratic-tutor/generators/dialogue-generator']) {
   const G = require(filename);
-  test(`${filename}: the statement reaches DeepSeek as key facts, with the copy-verbatim rule`, () => {
+  test(`${filename}: the statement reaches DeepSeek with explicit written-task scope and equivalent wording allowed`, () => {
     const prompt = G.buildTutorPrompt({ topicTitle: 'Introduction to Scientific Inquiry', currentGoalTitle: goal.title,
       currentGoalDescription: goal.description, goals: [goal], phase: 'ROUNDUP', stateInstruction: 'roundup_recall',
       academicNotes: buildAcademicNotes(goal, ''), classLevel: 'Class 6 CBSE', evaluatorResult: {} });
     assert.match(prompt, /An observation is information gathered directly through the senses or instruments/);
-    assert.match(prompt, /must copy each of those facts word for word/);
+    assert.match(prompt, /For written ROUNDUP, require every core fact explicitly requested/);
+    assert.match(prompt, /Accept conceptually equivalent student wording/);
+    assert.doesNotMatch(prompt, /must copy each of those facts word for word/);
   });
 }

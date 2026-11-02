@@ -403,6 +403,16 @@ function isGoalHeadingQuestion(text) {
   return /(?:\b(?:goal|topic|chapter)\s*\d+\s*:|\bwhat is (?:identify|describe|explain|demonstrate|analy[sz]e)\b|\bin simple terms,? what is .+ and how does it work\?|\bin an everyday situation,? how would you analy[sz]e)/i.test(String(text || ''));
 }
 
+// Preserve button order when the server re-delivers the same saved task.
+function orderQuestionOptions(options, rubric, questionText, context) {
+  const normalize = text => cleanProse(text).toLowerCase().replace(/[.!?？]+$/, '').trim();
+  const previous = normalizeOptions(context.lastQuestionOptions, context.lastQuestionRubric?.correct_option_text);
+  if (context.sameAssessment && normalize(questionText) === normalize(context.lastQuestionText) && previous &&
+      previous.length === options.length && previous.every(option => options.some(candidate => candidate.text === option.text)) &&
+      previous.some(option => normalize(option.text) === normalize(rubric.correct_option_text))) return previous;
+  return context.shuffleOptions ? shuffleOptions(options) : options;
+}
+
 function sourceFactsFor(context = {}) {
   const notes = context.academicNotes || {};
   // A goal's knowledge statement is its curated full-mark answer, so it outranks
@@ -720,7 +730,7 @@ function enforce(rawOutput, context = {}) {
   // A valid generated recall task must survive formatting, including when
   // stored goals contain objectives rather than canonical factual sentences.
   // A source-backed full rubric still cannot be reduced to an easier subset.
-  if (phase === 'ROUNDUP' && context.currentGoalDescription) {
+  if (phase === 'ROUNDUP' && actualQuestionType !== 'mcq' && context.currentGoalDescription) {
     const assistanceDirective = ['correct_and_reask', 'reteach_new_angle', 'hint_then_easier',
       'explain_differently', 'give_starter', 'reveal_and_move_on'].includes(context.stateInstruction);
     // Re-presenting the same task after an infrastructure failure is not a hint.
@@ -801,7 +811,12 @@ function enforce(rawOutput, context = {}) {
     const hasAdaptiveRubric = Boolean(rubric);
 
     if (hasAdaptiveQuestion) {
-      if (!rubric) rubric = priorRubric;
+      if (!rubric) {
+        if (candidateQuestion !== cleanProse(context.lastQuestionText)) {
+          return enforce(repairFallback('invalid_question_contract'), { ...context, questionType: 'none' });
+        }
+        rubric = priorRubric;
+      }
       actualQuestionType = 'open';
       questionAssisted = true;
     } else {
@@ -831,22 +846,13 @@ function enforce(rawOutput, context = {}) {
     (wordCount(originalFinal) <= MAX_WORDS_PER_BUBBLE ||
       (endsWithQuestion(originalTerminalQuestion) && wordCount(originalTerminalQuestion) <= MAX_WORDS_PER_BUBBLE &&
        originalTerminalQuestion === retainedTerminalQuestion));
-  const validOptions = phase === 'CHECK' && actualQuestionType === 'mcq'
+  const validOptions = ['CHECK', 'ROUNDUP'].includes(phase) && actualQuestionType === 'mcq'
     ? normalizeOptions(final?.options, rubric?.correct_option_text) : null;
   const missingContract = !rubric && Boolean(context.currentGoalDescription || context.currentGoalTitle);
   if (!wholeQuestion || isGoalHeadingQuestion(final?.message) || missingContract || (actualQuestionType === 'mcq' && !validOptions)) {
     let fallback = buildFocusedFallback(context);
     if (fallback.fallbackQuestionType === 'none' && !context.fallbackQuestion) {
-      if (final?.message && !isGoalHeadingQuestion(final.message) && !explanationOnly) {
-        if (!endsWithQuestion(final.message)) final.message = final.message.replace(/[.!?]*$/, '') + '?';
-        rubric = {
-          criteria: [{ id: 'fact_1', description: cleanObjectiveText(context.currentGoalDescription || context.currentGoalTitle || final.message), required: true }],
-          model_answer: cleanProse(final.message)
-        };
-        actualQuestionType = 'open';
-      } else {
-        return enforce(fallback, { ...context, questionType: 'none' });
-      }
+      return enforce({ ...fallback, fallbackReason: 'invalid_question_contract' }, { ...context, questionType: 'none' });
     } else {
       // Legacy callers can provide a focused fallback until all question contracts are migrated.
       if (!fallback.lastQuestionRubric && context.fallbackQuestion && wordCount(cleanProse(context.fallbackQuestion)) <= MAX_WORDS_PER_BUBBLE && endsWithQuestion(cleanProse(context.fallbackQuestion))) {
@@ -860,7 +866,7 @@ function enforce(rawOutput, context = {}) {
       questionReplaced = true;
     }
   } else if (validOptions) {
-    final.options = context.shuffleOptions ? shuffleOptions(validOptions) : validOptions;
+    final.options = orderQuestionOptions(validOptions, rubric, final.message, context);
     if (rubric?.correct_option_text) {
       const norm = s => String(s || '').trim().replace(/[.?!,;:]+$/, '').toLowerCase().replace(/\s+/g, ' ');
       const match = validOptions.find(o => norm(o.text) === norm(rubric.correct_option_text));
@@ -875,12 +881,7 @@ function enforce(rawOutput, context = {}) {
     if (!validateScenarioConsistency(explanationBubble.message, questionBubble.message, rubric)) {
       let fallback = buildFocusedFallback(context);
       if (fallback.fallbackQuestionType === 'none') {
-        if (!rubric) {
-          rubric = {
-            criteria: [{ id: 'fact_1', description: cleanObjectiveText(context.currentGoalDescription || context.currentGoalTitle || questionBubble.message), required: true }],
-            model_answer: cleanProse(questionBubble.message)
-          };
-        }
+        return enforce({ ...fallback, fallbackReason: 'scenario_contract_mismatch' }, { ...context, questionType: 'none' });
       } else {
         messages = [explanationBubble, fallback.messages[0]];
         rubric = fallback.lastQuestionRubric;
@@ -894,7 +895,7 @@ function enforce(rawOutput, context = {}) {
   messages.forEach((b, i) => {
     if ((phase !== 'CHECK' && !(phase === 'ROUNDUP' && actualQuestionType === 'mcq')) || actualQuestionType !== 'mcq' || i !== messages.length - 1) delete b.options;
   });
-  if (phase !== 'CHECK') actualQuestionType = 'open';
+  if (!['CHECK', 'ROUNDUP'].includes(phase)) actualQuestionType = 'open';
   if (rubric && actualQuestionType !== 'mcq') delete rubric.correct_option_text;
 
   const deliveredFinalBubble = messages[messages.length - 1];

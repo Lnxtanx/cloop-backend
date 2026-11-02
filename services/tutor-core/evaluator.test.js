@@ -233,7 +233,7 @@ test('known MCQ option keys are graded by code even when the model is down', asy
 
 test('ambiguous MCQ key gives no credit and written phases ignore stale options', async () => {
   setOutput(outputFor(forceRubric, [false, true, false, true]));
-  const result = await evaluateStudentTurn({ ...params, studentMessage: 'A', lastQuestionOptions: ['Changing shape', 'Changing speed'] });
+  const result = await evaluateStudentTurn({ ...params, lastQuestionType: 'open', studentMessage: 'A', lastQuestionOptions: ['Changing shape', 'Changing speed'] });
   assert.equal(result.resolved_answer, null);
   const data = JSON.parse(modelCalls[0].messages[0].content);
   assert.equal(data.student_answer, 'A');
