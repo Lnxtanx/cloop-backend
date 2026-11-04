@@ -385,9 +385,17 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 			}
 		})
 
-		// ENRICHMENT source: learning_turns — provides diff_html and feedback for user messages
+		const chatMessageIds = adminChatMessages.map(m => m.id)
+
+		// ENRICHMENT source 1: learning_turns — provides diff_html, correctness, and feedback for user messages
 		const learningTurns = await prisma.learning_turns.findMany({
-			where: { topic_id: parseInt(topicId), user_id: user_id },
+			where: {
+				user_id: user_id,
+				OR: [
+					{ topic_id: parseInt(topicId) },
+					{ chat_id: { in: chatMessageIds } }
+				]
+			},
 			select: {
 				chat_id: true,
 				diff_html: true,
@@ -396,6 +404,19 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 				error_type: true,
 				corrected_answer: true,
 				feedback_text: true,
+				feedback_json: true,
+			}
+		})
+
+		// ENRICHMENT source 2: chat_process — provides corrected_message and feedback for user messages
+		const chatProcesses = await prisma.chat_process.findMany({
+			where: {
+				chat_id: { in: chatMessageIds }
+			},
+			select: {
+				chat_id: true,
+				corrected_message: true,
+				feedback: true,
 			}
 		})
 
@@ -405,10 +426,17 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 			if (turn.chat_id) turnByMessageId.set(turn.chat_id, turn)
 		}
 
+		// Build lookup map: admin_chat.id → chat_process enrichment data
+		const processByMessageId = new Map()
+		for (const proc of chatProcesses) {
+			if (proc.chat_id) processByMessageId.set(proc.chat_id, proc)
+		}
+
 		console.log('💬 Admin Chat Messages Found:', adminChatMessages.length)
 		console.log('📊 Learning Turns Found:', learningTurns.length)
+		console.log('⚙️ Chat Processes Found:', chatProcesses.length)
 
-		// Build final message list from admin_chat, enriching user messages with learning_turn data
+		// Build final message list from admin_chat, enriching user messages with learning_turn & chat_process data
 		const seenIds = new Set()
 		const chatMessages = []
 
@@ -448,28 +476,102 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 				return item
 			})
 
-			// Check if this is a user message that has correction data
-			const turn = turnByMessageId.get(msg.id)
-			
+			// Check if this message has meta stored in options (e.g. __correction__:{...})
+			let metaFromOptions = null
+			const cleanOptions = []
+			for (const opt of (msg.options || [])) {
+				if (typeof opt === 'string' && opt.startsWith('__correction__:')) {
+					try {
+						metaFromOptions = JSON.parse(opt.substring('__correction__:'.length))
+					} catch (e) {}
+				} else {
+					cleanOptions.push(opt)
+				}
+			}
+
 			if (msg.sender === 'user') {
-				if (turn && (turn.diff_html || turn.is_correct !== undefined)) {
-					const emoji = msg.emoji || turn.emoji || (turn.is_correct ? '😊' :
-						'😢')
-					
+				const turn = turnByMessageId.get(msg.id)
+				const proc = processByMessageId.get(msg.id)
+
+				// Determine if this user message is a correction turn
+				const isCorrectionTurn = !!(
+					turn ||
+					proc?.corrected_message ||
+					proc?.feedback ||
+					metaFromOptions ||
+					msg.diff_html ||
+					msg.message_type === 'user_correction' ||
+					msg.emoji
+				)
+
+				if (isCorrectionTurn) {
+					// 1. Resolve complete_answer (verified answer)
+					const completeAnswer = (
+						turn?.corrected_answer ||
+						proc?.corrected_message ||
+						metaFromOptions?.complete_answer ||
+						null
+					)
+
+					// 2. Resolve diff_html
+					const diffHtml = turn?.diff_html || msg.diff_html || null
+
+					// 3. Resolve feedback json
+					const feedbackObj = turn?.feedback_json || proc?.feedback || metaFromOptions?.feedback || null
+
+					// 4. Resolve correctness (boolean)
+					let isCorrect = undefined
+					if (turn?.is_correct !== undefined && turn?.is_correct !== null) {
+						isCorrect = Boolean(turn.is_correct)
+					} else if (feedbackObj?.is_correct !== undefined && feedbackObj?.is_correct !== null) {
+						isCorrect = Boolean(feedbackObj.is_correct)
+					} else if (metaFromOptions?.is_correct !== undefined && metaFromOptions?.is_correct !== null) {
+						isCorrect = Boolean(metaFromOptions.is_correct)
+					} else if (msg.emoji === '😊' || (typeof msg.emoji === 'string' && msg.emoji.includes('😊'))) {
+						isCorrect = true
+					} else if (msg.emoji === '😢' || msg.emoji === '😓' || msg.emoji === '😔' || (typeof msg.emoji === 'string' && msg.emoji.includes('😢'))) {
+						isCorrect = false
+					}
+
+					// 5. Resolve score percent
+					const scorePercent = (
+						turn?.score_percent ??
+						feedbackObj?.score_percent ??
+						metaFromOptions?.score_percent ??
+						(isCorrect === true ? 100 : isCorrect === false ? 10 : null)
+					)
+
+					// 6. Resolve emoji
+					let emoji = msg.emoji || turn?.emoji || metaFromOptions?.emoji || null
+					if (!emoji) {
+						emoji = isCorrect === true ? '😊' : isCorrect === false ? '😢' : null
+					} else if (isCorrect === false && (emoji === '😊' || emoji === '😅' || emoji === '😂' || emoji === '😆' || emoji === '🙂')) {
+						emoji = '😢'
+					}
+
+					const errorType = turn?.error_type || feedbackObj?.error_type || (isCorrect === false ? 'Conceptual' : null)
+					const explanation = turn?.feedback_text || feedbackObj?.explanation || (isCorrect === true ? 'Your answer meets the question requirements.' : 'Review the corrected concept.')
+
 					chatMessages.push({
 						...msg,
 						videos,
 						images,
 						links,
+						options: optionsFromDb(cleanOptions),
 						message_type: 'user_correction', // Force this type for corrected bubbles
-						diff_html: turn.diff_html || msg.diff_html || null,
+						diff_html: diffHtml,
 						emoji: emoji,
+						is_correct: isCorrect !== undefined ? isCorrect : null, // 🌟 Top-level is_correct
+						score_percent: scorePercent,                           // 🌟 Top-level score_percent
+						complete_answer: completeAnswer,                       // 🌟 Top-level complete_answer
 						feedback: {
-							is_correct: turn.is_correct,
-							error_type: turn.error_type || null,
-							explanation: turn.feedback_text || (turn.is_correct ? 'Your answer meets the question requirements.' : 'Review the corrected concept.'),
-						},
-						complete_answer: turn.corrected_answer || null
+							is_correct: isCorrect !== undefined ? isCorrect : null,
+							score_percent: scorePercent,
+							bubble_color: isCorrect === true ? 'green' : isCorrect === false ? 'red' : 'purple',
+							error_type: errorType,
+							explanation: explanation,
+							complete_answer: completeAnswer
+						}
 					})
 				} else {
 					// Plain user message
@@ -478,6 +580,7 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 						videos,
 						images,
 						links,
+						options: optionsFromDb(cleanOptions),
 						message_type: msg.message_type || 'text'
 					})
 				}
@@ -1409,32 +1512,48 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 		let userCorrection = null;
 		if (aiResponse.user_correction) {
 			userCorrection = aiResponse.user_correction;
+			const correctionFeedback = userCorrection.feedback || aiResponse.feedback || null;
 
 			// Update chat_process with AI-corrected details
-			await prisma.chat_process.update({
-				where: { id: newChatProcess.id },
-				data: {
-					corrected_message: userCorrection.complete_answer || null,
-					ai_response: (aiResponse.messages && aiResponse.messages.length > 0) ? (aiResponse.messages[0].message || null) : null,
-					wrong_message: null,
-					feedback: aiResponse.feedback || null
-				}
-			})
+			try {
+				await prisma.chat_process.update({
+					where: { id: newChatProcess.id },
+					data: {
+						corrected_message: userCorrection.complete_answer || null,
+						ai_response: (aiResponse.messages && aiResponse.messages.length > 0) ? (aiResponse.messages[0].message || null) : null,
+						wrong_message: null,
+						feedback: correctionFeedback
+					}
+				})
+			} catch (e) {
+				console.error('Failed to update chat_process with user_correction:', e.message);
+			}
+
+			// Serialize correction metadata into admin_chat.options as __correction__ fallback
+			const correctionMetaTag = '__correction__:' + JSON.stringify({
+				is_correct: correctionFeedback?.is_correct,
+				complete_answer: userCorrection.complete_answer || null,
+				feedback: correctionFeedback,
+				score_percent: correctionFeedback?.score_percent,
+				emoji: userCorrection.emoji || null
+			});
 
 			// Update the admin_chat placeholder to contain the corrected user bubble. Keep the
 			// user's OWN words as `message`; the AI's rewritten answer lives in diff_html.
-			await prisma.admin_chat.update({
-				where: { id: userMessage.id },
-				data: {
-					diff_html: userCorrection.diff_html,
-					message: message,
-					message_type: 'user_correction',
-					emoji: userCorrection.emoji || null,
-					options: []
-				}
-			});
-
-
+			try {
+				await prisma.admin_chat.update({
+					where: { id: userMessage.id },
+					data: {
+						diff_html: userCorrection.diff_html,
+						message: message,
+						message_type: 'user_correction',
+						emoji: userCorrection.emoji || null,
+						options: [correctionMetaTag]
+					}
+				});
+			} catch (e) {
+				console.error('Failed to update admin_chat placeholder with user_correction:', e.message);
+			}
 
 			// Refresh the userMessage object to reflect changes (message stays the user's raw text)
 			userMessage.diff_html = userCorrection.diff_html;
@@ -1442,6 +1561,10 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 			userMessage.message_type = 'user_correction';
 			userMessage.options = [];
 			userMessage.emoji = userCorrection.emoji || null;
+			userMessage.is_correct = correctionFeedback?.is_correct;
+			userMessage.complete_answer = userCorrection.complete_answer || null;
+			userMessage.score_percent = correctionFeedback?.score_percent;
+			userMessage.feedback = correctionFeedback;
 		} else {
 			// No explicit user_correction returned: still update chat_process with AI response if present
 			if (aiResponse.feedback || (aiResponse.messages && aiResponse.messages.length > 0)) {
@@ -1803,29 +1926,33 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 		let justCompletedGoal = null // Captured when AI signals predict_score
 		let scorePrediction = null // Computed after goal progress update
 		let aiSignalsGoalComplete = false // Hoisted so auto-continue block can access it
-		if (userCorrection && userCorrection.feedback && currentGoal) {
+		if (userCorrection && userCorrection.feedback) {
 			// Update chat_process with feedback
-			await prisma.chat_process.update({
-				where: { id: newChatProcess.id },
-				data: {
-					feedback: userCorrection.feedback,
-					corrected_message: userCorrection.complete_answer || null
-				}
-			})
+			try {
+				await prisma.chat_process.update({
+					where: { id: newChatProcess.id },
+					data: {
+						feedback: userCorrection.feedback,
+						corrected_message: userCorrection.complete_answer || null
+					}
+				})
+			} catch (e) {
+				console.error('Failed to update chat_process in learning block:', e.message);
+			}
+
+			const activeOrFallbackGoal = currentGoal || linkGoal || null;
 
 			// Fetch or find existing progress for this goal
-			const existingProgress = await prisma.chat_goal_progress.findFirst({
+			const existingProgress = activeOrFallbackGoal ? await prisma.chat_goal_progress.findFirst({
 				where: {
 					user_id: user_id,
-					goal_id: currentGoal.id
+					goal_id: activeOrFallbackGoal.id
 				},
 				orderBy: {
 					updated_at: 'desc'
 				}
-			})
+			}) : null;
 
-			// ALL answers count as questions, including "I don't know" (No Answer Provided)
-			// This ensures goal progression isn't blocked when students don't know the answer
 			const isActualAnswer = true // Always count as a question
 			const isCorrectAnswer = !!(userCorrection.feedback.is_correct && (userCorrection.feedback.score_percent || 0) >= 50)
 
@@ -1847,7 +1974,7 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 				}
 
 				// Calculate mastery score based on recent performance
-				const masteryScore = await calculateMasteryScore(user_id, currentGoal.id);
+				const masteryScore = activeOrFallbackGoal ? await calculateMasteryScore(user_id, activeOrFallbackGoal.id) : 50;
 
 				// Calculate progress percentages
 				const progressBefore = existingProgress && existingProgress.num_questions > 0
@@ -1874,7 +2001,7 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 				await createLearningTurn({
 					user_id: user_id,
 					chat_id: userMessage.id,
-					goal_id: currentGoal.id,
+					goal_id: activeOrFallbackGoal ? activeOrFallbackGoal.id : null,
 					topic_id: parseInt(topicId),
 					subject_id: topic.subject_id,
 					user_name: user?.name || null,
@@ -1949,7 +2076,8 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 				}
 			}
 
-			// 🔧 FIX: Update the progress record specifically for THIS user message
+			if (currentGoal) {
+				// 🔧 FIX: Update the progress record specifically for THIS user message
 			// We already created it above in the message receiving block, now we update it with the feedback results
 			const newNumQuestions = (existingProgress?.num_questions || 0) + (isActualAnswer ? 1 : 0)
 			const newNumCorrect = (existingProgress?.num_correct || 0) + (isCorrectAnswer ? 1 : 0)
@@ -1976,6 +2104,7 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 
 			const accuracyPercent = newNumQuestions > 0 ? Math.round((newNumCorrect / newNumQuestions) * 100) : 0
 			console.log(`📊 Goal Progress Updated for Message ${userMessage.id} | Goal: ${currentGoal.title} | Questions: ${newNumQuestions} | Correct: ${newNumCorrect} | Accuracy: ${accuracyPercent}% | Completed: ${shouldComplete} | AI Signal: ${aiSignalsGoalComplete}`)
+			}
 
 			// Update topic completion based on completed goals
 			const completedGoals = await prisma.chat_goal_progress.findMany({
