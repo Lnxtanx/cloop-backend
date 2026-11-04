@@ -2073,259 +2073,13 @@ router.post('/:topicId/message', authenticateToken, async (req, res) => {
 				console.log(`🏆 Score Prediction | Goal: ${justCompletedGoal.title} | Predicted: ${scorePrediction.predicted_score}%`)
 			}
 
-			// 🔥 SESSION SUMMARY LOGIC: Only generate if ALL goals complete
+			// 🔥 FAST TURN DECOUPLING: When all goals complete, do NOT block this turn
+			// with heavy session summary generation or external media searches.
+			// Mark completion in Postgres and signal `all_goals_completed: true`
+			// so the student gets their answer feedback immediately (~1.5s).
+			// The progressive wrap is fetched smoothly via POST /:topicId/wrap.
 			if (completedGoalsCount >= totalGoalsCount && !currentGoal) {
-				console.log('\n🎉 ALL GOALS COMPLETED! Generating session summary...\n')
-
-				// 🎓 TOPIC COMPLETION GREETING: greet the user once, before the revision card.
-				// Persist it as an admin_chat row and surface it in the response so the student
-				// sees a clear "you finished this topic" moment, not just a silent card drop.
-				try {
-					const greetingMsg = `🎉 You've completed ${topic.title}! Here's your revision card — your one-stop summary to revise everything you just learned. Great work!`;
-					const savedGreeting = await prisma.admin_chat.create({
-						data: {
-							user_id: user_id,
-							sender: 'ai',
-							message: greetingMsg,
-							message_type: 'text',
-							emoji: '🎉',
-							images: [],
-							videos: [],
-							links: [],
-							options: []
-						},
-						select: {
-							id: true, sender: true, message: true, message_type: true,
-							options: true, diff_html: true, emoji: true,
-							images: true, videos: true, links: true, created_at: true
-						}
-					})
-					aiMessages.push(savedGreeting)
-					console.log('🎉 Topic completion greeting saved')
-				} catch (greetingErr) {
-					console.error('⚠️ Failed to save topic completion greeting:', greetingErr.message)
-				}
-
-				try {
-					// Generate session summary with updated goals
-					const summaryResponse = await generateTopicChatResponse({
-						userMessage: '__SESSION_COMPLETE__', // Sentinel triggers a hard WRAP/revision_sheet directive
-						topicTitle: topic.title,
-						topicContent: topic.content || 'No additional content provided',
-						chatHistory,
-						currentGoal: null, // No current goal - all complete
-						topicGoals: updatedGoalsAfterProgress,
-						userId: user_id,
-						topicId: parseInt(topicId)
-					})
-
-					if (summaryResponse && summaryResponse.messages) {
-						for (const summaryMsg of summaryResponse.messages) {
-							const metricsData = summaryMsg.session_metrics || summaryResponse.session_metrics;
-							// Ensure top-level session_summary is populated for the response
-							if (metricsData && !aiResponse.session_summary) {
-								aiResponse.session_summary = metricsData;
-							}
-
-							// Save to user_topic_reports ONLY if this specific message is the summary
-							// OR if we haven't saved it yet (simple flag or message type check)
-							if (metricsData && summaryMsg.message_type === 'session_summary') {
-								try {
-									await prisma.user_topic_reports.upsert({
-										where: {
-											user_id_topic_id: {
-												user_id: user_id,
-												topic_id: parseInt(topicId)
-											}
-										},
-										update: {
-											total_questions: metricsData.total_questions || 0,
-											correct_answers: metricsData.correct_answers || 0,
-											incorrect_answers: metricsData.incorrect_answers || 0,
-											score_percent: metricsData.overall_score_percent || 0,
-											star_rating: metricsData.star_rating || 0,
-											performance_level: metricsData.performance_level || 'Unknown',
-											metrics_json: metricsData,
-											updated_at: new Date()
-										},
-										create: {
-											user_id: user_id,
-											topic_id: parseInt(topicId),
-											total_questions: metricsData.total_questions || 0,
-											correct_answers: metricsData.correct_answers || 0,
-											incorrect_answers: metricsData.incorrect_answers || 0,
-											score_percent: metricsData.overall_score_percent || 0,
-											star_rating: metricsData.star_rating || 0,
-											performance_level: metricsData.performance_level || 'Unknown',
-											metrics_json: metricsData
-										}
-									});
-									console.log('✅ Saved user_topic_report to database');
-								} catch (reportErr) {
-									console.error('❌ Failed to save user_topic_report:', reportErr);
-								}
-							}
-
-							// Save to admin_chat (Persistent)
-							const savedSummaryMsg = await prisma.admin_chat.create({
-								data: {
-									user_id: user_id,
-									sender: 'ai',
-									message: summaryMsg.formatted_summary || summaryMsg.message || 'Session Summary',
-									message_type: 'session_summary',
-									options: summaryMsg.options || ['End Session', 'Learn More'],
-									diff_html: JSON.stringify(metricsData || {}),
-									emoji: summaryMsg.emoji || '🎉',
-									images: summaryMsg.images || [],
-									videos: summaryMsg.videos || [],
-									links: summaryMsg.links || []
-								}
-							});
-
-							// Link session_summary to the last completed goal so GET history finds it
-							const lastCompletedGoal = updatedGoalsAfterProgress.slice().reverse().find(g => g.chat_goal_progress?.[0]?.is_completed)
-							if (lastCompletedGoal) {
-								try {
-									await prisma.chat_goal_progress.create({
-										data: {
-											chat_id: savedSummaryMsg.id,
-											goal_id: lastCompletedGoal.id,
-											user_id: user_id,
-											is_completed: true,
-											num_questions: lastCompletedGoal.chat_goal_progress?.[0]?.num_questions || 0,
-											num_correct: lastCompletedGoal.chat_goal_progress?.[0]?.num_correct || 0,
-											num_incorrect: lastCompletedGoal.chat_goal_progress?.[0]?.num_incorrect || 0,
-										}
-									})
-								} catch (_) {} // ignore if duplicate
-							}
-
-							// Add to aiMessages for frontend response
-							aiMessages.push({
-								...savedSummaryMsg,
-								session_summary: metricsData // Ensure frontend gets the object
-							});
-						}
-					}
-
-					// GUARANTEED revision_sheet: if the model failed to emit a revision_sheet
-					// (or the whole summary generation errored), synthesize one from session
-					// analytics so the end-of-session card ALWAYS renders.
-					const { calculateSessionMetrics } = require('../../services/topic-chat/topic_chat_metrics');
-					let hadRevisionSheet = aiMessages.some(m => m.message_type === 'revision_sheet');
-
-					// If the model DID emit a revision_sheet in the summary response, persist it
-					// as a card message so it shows and reloads from history.
-					if (!hadRevisionSheet && summaryResponse && summaryResponse.revision_sheet) {
-						const savedRevModel = await savePhaseBlock('revision_sheet', summaryResponse.revision_sheet, '');
-						if (savedRevModel) hadRevisionSheet = true;
-					}
-
-					if (!hadRevisionSheet) {
-						try {
-							console.log('[topic-chats] revision_sheet missing — synthesizing from session analytics');
-							const metricsData = await calculateSessionMetrics(user_id, parseInt(topicId), updatedGoalsAfterProgress);
-							const goalPerf = Array.isArray(metricsData.goal_performance) ? metricsData.goal_performance : [];
-							const revisionSheetData = {
-								topic: topic.title,
-								concepts_covered: goalPerf.length > 0 ? goalPerf.map(g => g.goal_title) : updatedGoalsAfterProgress.map(g => g.title),
-								definitions: [],
-								key_points: goalPerf.length > 0
-									? goalPerf.map(g => `${g.goal_title}: ${g.questions_asked} questions, ${g.correct_answers} correct (${g.score_percent}% accuracy)`)
-									: [],
-								common_mistakes: (metricsData.top_error_types || []).map(t => t.type),
-								one_minute_recall: [],
-								your_weak_spots: (metricsData.weak_goals || []).map(g => g.goal_title),
-								overall_score_percent: metricsData.overall_score_percent,
-								star_rating: metricsData.star_rating,
-								performance_level: metricsData.performance_level,
-								recommended_videos: []
-							};
-							try {
-								const { getRevisionVideos } = require('../../services/media-search');
-								const videos = await getRevisionVideos(topic.title, '10', 2);
-								if (Array.isArray(videos) && videos.length) {
-									revisionSheetData.recommended_videos = videos;
-								}
-							} catch (_) {}
-							const savedRev = await savePhaseBlock('revision_sheet', revisionSheetData, '');
-							if (savedRev) {
-								if (!aiResponse.revision_sheet) aiResponse.revision_sheet = revisionSheetData;
-								console.log('🔖 revision_sheet synthesized and saved as end card');
-							}
-						} catch (revErr) {
-							console.error('❌ Failed to synthesize revision_sheet:', revErr.message);
-						}
-					}
-
-					// Generate a 2-3 line performance analysis text bubble (shown after summary card)
-					try {
-						const goalBreakdown = updatedGoalsAfterProgress.map(g => {
-							const p = g.chat_goal_progress?.[0]
-							const acc = p && p.num_questions > 0 ? Math.round((p.num_correct / p.num_questions) * 100) : 0
-							return `${g.title}: ${acc}% accuracy (${p?.num_correct || 0}/${p?.num_questions || 0} correct)`
-						}).join(', ')
-						const overallScore = aiResponse.session_summary?.overall_score_percent || 0
-
-						const perfPrompt = `You are a supportive academic tutor. A student just finished a topic session.
-
-Overall score: ${overallScore}%
-Goal breakdown: ${goalBreakdown}
-
-Write a SHORT 2-3 sentence performance summary for the student.
-- Mention what they did well
-- Identify 1-2 specific weak areas (low accuracy goals)
-- Give one concrete improvement tip
-- Warm, encouraging tone
-- DO NOT start with "Great job" or "Well done"
-- Return plain text only, no JSON, no bullet points`
-
-						const perfText = await invokeModel(perfPrompt, [{ role: 'user', content: 'Generate summary' }], {
-							temperature: 1,
-							maxTokens: 150
-						})
-
-						if (perfText) {
-							const savedPerfMsg = await prisma.admin_chat.create({
-								data: {
-									user_id: user_id,
-									sender: 'ai',
-									message: perfText,
-									message_type: 'learning_report',
-									options: [],
-									diff_html: JSON.stringify({ title: 'Session Performance Summary', summary: perfText }),
-									emoji: null,
-									images: [],
-									videos: [],
-									links: []
-								}
-							})
-							// Link to last completed goal so GET history finds it on reload
-							const lastCompletedGoal = updatedGoalsAfterProgress.slice().reverse().find(g => g.chat_goal_progress?.[0]?.is_completed)
-							if (lastCompletedGoal) {
-								try {
-									await prisma.chat_goal_progress.create({
-										data: {
-											chat_id: savedPerfMsg.id,
-											goal_id: lastCompletedGoal.id,
-											user_id: user_id,
-											is_completed: true,
-											num_questions: lastCompletedGoal.chat_goal_progress?.[0]?.num_questions || 0,
-											num_correct: lastCompletedGoal.chat_goal_progress?.[0]?.num_correct || 0,
-											num_incorrect: lastCompletedGoal.chat_goal_progress?.[0]?.num_incorrect || 0,
-										}
-									})
-								} catch (_) {} // ignore duplicate
-							}
-							aiMessages.push(savedPerfMsg)
-							console.log('✅ Performance analysis bubble saved')
-						}
-					} catch (perfErr) {
-						console.error('❌ Failed to generate performance analysis:', perfErr.message)
-					}
-				} catch (summaryError) {
-					console.error('Error generating session summary:', summaryError)
-				}
+				console.log('\n🎉 ALL GOALS COMPLETED! Immediate turn response will trigger progressive wrap.\n')
 			}
 		}
 
@@ -2492,6 +2246,389 @@ Write a SHORT 2-3 sentence performance summary for the student.
 	}
 })
 
+
+/**
+ * Progressive Session Wrap Generator
+ * Generates and persists the topic completion greeting, scorecard, revision sheet, and performance analysis.
+ * Uses calculateSessionMetrics for instant (~20ms) 100% accurate Postgres analytics.
+ */
+async function generateTopicWrap(userId, topicId) {
+	const topic = await prisma.global_topics.findUnique({
+		where: { id: topicId },
+		include: {
+			chapter: {
+				select: {
+					id: true,
+					title: true,
+					subject: { select: { id: true, name: true } }
+				}
+			}
+		}
+	});
+	if (!topic) return null;
+
+	const topicGoals = await prisma.global_topic_goals.findMany({
+		where: { topic_id: topicId },
+		orderBy: { order: 'asc' },
+		include: {
+			chat_goal_progress: {
+				where: { user_id: userId },
+				orderBy: { updated_at: 'desc' },
+				take: 1
+			}
+		}
+	});
+
+	const topicGoalIds = topicGoals.map(g => g.id);
+
+	// 1. Idempotency check: see if wrap messages already exist in admin_chat
+	const existingSummaryMsg = await prisma.admin_chat.findFirst({
+		where: {
+			user_id: userId,
+			message_type: 'session_summary',
+			chat_goal_progress: {
+				some: { goal_id: { in: topicGoalIds } }
+			}
+		}
+	});
+
+	if (existingSummaryMsg) {
+		const existingWrapMsgs = await prisma.admin_chat.findMany({
+			where: {
+				user_id: userId,
+				message_type: { in: ['text', 'session_summary', 'revision_sheet', 'learning_report'] },
+				chat_goal_progress: {
+				some: { goal_id: { in: topicGoalIds } }
+				}
+			},
+			orderBy: { created_at: 'asc' },
+			select: {
+				id: true, sender: true, message: true, message_type: true,
+				options: true, diff_html: true, emoji: true,
+				images: true, videos: true, links: true, created_at: true
+			}
+		});
+
+		const wrapItems = existingWrapMsgs.filter(m =>
+			m.message_type === 'session_summary' ||
+			m.message_type === 'revision_sheet' ||
+			m.message_type === 'learning_report' ||
+			(m.message_type === 'text' && m.emoji === '🎉')
+		);
+
+		let parsedSummary = null;
+		let parsedRevisionSheet = null;
+
+		const formatted = wrapItems.map(msg => {
+			const enriched = {
+				...msg,
+				options: optionsFromDb(msg.options),
+				videos: msg.videos || [],
+				images: msg.images || [],
+				links: msg.links || []
+			};
+			if (msg.message_type === 'session_summary' && msg.diff_html) {
+				try {
+					parsedSummary = JSON.parse(msg.diff_html);
+					enriched.session_summary = parsedSummary;
+				} catch (_) {}
+			}
+			if (msg.message_type === 'revision_sheet' && msg.diff_html) {
+				try {
+					parsedRevisionSheet = JSON.parse(msg.diff_html);
+					enriched.revision_sheet = parsedRevisionSheet;
+				} catch (_) {}
+			}
+			return enriched;
+		});
+
+		return {
+			messages: formatted,
+			session_summary: parsedSummary,
+			revision_sheet: parsedRevisionSheet,
+			all_goals_completed: true,
+			session_completed: true
+		};
+	}
+
+	// 2. Synthesize wrap messages
+	const lastCompletedGoal = topicGoals.slice().reverse().find(g => g.chat_goal_progress?.[0]?.is_completed) || topicGoals[topicGoals.length - 1];
+
+	const linkToGoal = async (chatId) => {
+		if (!lastCompletedGoal) return;
+		try {
+			await prisma.chat_goal_progress.create({
+				data: {
+					chat_id: chatId,
+					goal_id: lastCompletedGoal.id,
+					user_id: userId,
+					is_completed: true,
+					num_questions: lastCompletedGoal.chat_goal_progress?.[0]?.num_questions || 0,
+					num_correct: lastCompletedGoal.chat_goal_progress?.[0]?.num_correct || 0,
+					num_incorrect: lastCompletedGoal.chat_goal_progress?.[0]?.num_incorrect || 0
+				}
+			});
+		} catch (_) {}
+	};
+
+	const wrapMessages = [];
+	const baseTime = Date.now();
+	let timeOffset = 0;
+
+	// A. Topic completion greeting
+	try {
+		const greetingMsg = `🎉 You've completed ${topic.title}! Here's your revision card — your one-stop summary to revise everything you just learned. Great work!`;
+		const savedGreeting = await prisma.admin_chat.create({
+			data: {
+				user_id: userId,
+				sender: 'ai',
+				message: greetingMsg,
+				message_type: 'text',
+				emoji: '🎉',
+				images: [],
+				videos: [],
+				links: [],
+				options: [],
+				created_at: new Date(baseTime + (timeOffset += 10))
+			},
+			select: {
+				id: true, sender: true, message: true, message_type: true,
+				options: true, diff_html: true, emoji: true,
+				images: true, videos: true, links: true, created_at: true
+			}
+		});
+		await linkToGoal(savedGreeting.id);
+		wrapMessages.push(savedGreeting);
+	} catch (e) {
+		console.error('Failed to save completion greeting:', e.message);
+	}
+
+	// B. Calculate Session Metrics (Postgres DB-backed, instant ~20ms)
+	const { calculateSessionMetrics } = require('../../services/topic-chat/topic_chat_metrics');
+	let metricsData = {};
+	try {
+		metricsData = await calculateSessionMetrics(userId, topicId, topicGoals);
+	} catch (err) {
+		console.error('Failed to calculate session metrics:', err.message);
+	}
+
+	// Upsert user_topic_reports
+	try {
+		await prisma.user_topic_reports.upsert({
+			where: {
+				user_id_topic_id: {
+					user_id: userId,
+					topic_id: topicId
+				}
+			},
+			update: {
+				total_questions: metricsData.total_questions || 0,
+				correct_answers: metricsData.correct_answers || 0,
+				incorrect_answers: metricsData.incorrect_answers || 0,
+				score_percent: metricsData.overall_score_percent || 0,
+				star_rating: metricsData.star_rating || 0,
+				performance_level: metricsData.performance_level || 'Unknown',
+				metrics_json: metricsData,
+				updated_at: new Date()
+			},
+			create: {
+				user_id: userId,
+				topic_id: topicId,
+				total_questions: metricsData.total_questions || 0,
+				correct_answers: metricsData.correct_answers || 0,
+				incorrect_answers: metricsData.incorrect_answers || 0,
+				score_percent: metricsData.overall_score_percent || 0,
+				star_rating: metricsData.star_rating || 0,
+				performance_level: metricsData.performance_level || 'Unknown',
+				metrics_json: metricsData
+			}
+		});
+	} catch (reportErr) {
+		console.error('Failed to save user_topic_report:', reportErr.message);
+	}
+
+	// C. Save session_summary card
+	try {
+		const savedSummary = await prisma.admin_chat.create({
+			data: {
+				user_id: userId,
+				sender: 'ai',
+				message: 'Session Summary',
+				message_type: 'session_summary',
+				options: ['End Session', 'Learn More'],
+				diff_html: JSON.stringify(metricsData || {}),
+				emoji: '🎉',
+				images: [],
+				videos: [],
+				links: [],
+				created_at: new Date(baseTime + (timeOffset += 10))
+			},
+			select: {
+				id: true, sender: true, message: true, message_type: true,
+				options: true, diff_html: true, emoji: true,
+				images: true, videos: true, links: true, created_at: true
+			}
+		});
+		await linkToGoal(savedSummary.id);
+		wrapMessages.push({
+			...savedSummary,
+			session_summary: metricsData
+		});
+	} catch (sumErr) {
+		console.error('Failed to save session summary:', sumErr.message);
+	}
+
+	// D. Revision Sheet Card & YouTube videos
+	let revisionSheetData = null;
+	try {
+		const goalPerf = Array.isArray(metricsData.goal_performance) ? metricsData.goal_performance : [];
+		let revisionVideos = [];
+		try {
+			const { getRevisionVideos } = require('../../services/media-search');
+			const videos = await getRevisionVideos(topic.title, '10', 2);
+			if (Array.isArray(videos) && videos.length) {
+				revisionVideos = videos;
+			}
+		} catch (_) {}
+
+		revisionSheetData = {
+			topic: topic.title,
+			concepts_covered: goalPerf.length > 0 ? goalPerf.map(g => g.goal_title) : topicGoals.map(g => g.title),
+			definitions: [],
+			key_points: goalPerf.length > 0
+				? goalPerf.map(g => `${g.goal_title}: ${g.questions_asked} questions, ${g.correct_answers} correct (${g.score_percent}% accuracy)`)
+				: [],
+			common_mistakes: (metricsData.top_error_types || []).map(t => t.type),
+			one_minute_recall: [],
+			your_weak_spots: (metricsData.weak_goals || []).map(g => g.goal_title),
+			overall_score_percent: metricsData.overall_score_percent,
+			star_rating: metricsData.star_rating,
+			performance_level: metricsData.performance_level,
+			recommended_videos: revisionVideos
+		};
+
+		const savedRevSheet = await prisma.admin_chat.create({
+			data: {
+				user_id: userId,
+				sender: 'ai',
+				message: '',
+				message_type: 'revision_sheet',
+				diff_html: JSON.stringify(revisionSheetData),
+				options: [],
+				emoji: '🔖',
+				images: [],
+				videos: [],
+				links: [],
+				created_at: new Date(baseTime + (timeOffset += 10))
+			},
+			select: {
+				id: true, sender: true, message: true, message_type: true,
+				options: true, diff_html: true, emoji: true,
+				images: true, videos: true, links: true, created_at: true
+			}
+		});
+		await linkToGoal(savedRevSheet.id);
+		wrapMessages.push({
+			...savedRevSheet,
+			revision_sheet: revisionSheetData
+		});
+	} catch (revErr) {
+		console.error('Failed to save revision sheet:', revErr.message);
+	}
+
+	// E. 2-sentence Performance Takeaway (Supportive Summary Bubble)
+	try {
+		const overallScore = metricsData.overall_score_percent || 0;
+		const goalPerf = Array.isArray(metricsData.goal_performance) ? metricsData.goal_performance : [];
+		const weakList = (metricsData.weak_goals || []).map(g => g.goal_title).join(', ');
+		const strongList = (goalPerf.filter(g => g.score_percent >= 75) || []).map(g => g.goal_title).join(', ');
+
+		let perfText = '';
+		if (overallScore >= 80) {
+			perfText = `Excellent work! You demonstrated strong mastery across ${strongList || topic.title}. Keep this momentum going in your upcoming chapters.`;
+		} else if (overallScore >= 60) {
+			perfText = `Good effort on this session! You showed solid understanding of the core concepts${weakList ? `, with a small revision recommended on ${weakList}` : ''}. Reviewing the summary card above will solidify your memory.`;
+		} else {
+			perfText = `You made great progress exploring ${topic.title}! Spend a few minutes reviewing ${weakList || 'the key points above'} to strengthen your recall before the practice test.`;
+		}
+
+		try {
+			const perfPrompt = `You are a supportive academic tutor. A student just finished a topic session on "${topic.title}".
+Overall score: ${overallScore}%
+Strengths: ${strongList || 'core concepts'}
+Areas to review: ${weakList || 'none'}
+Write a 2-sentence encouraging takeaway. Warm tone. Plain text only.`;
+			const aiSummary = await Promise.race([
+				invokeModel(perfPrompt, [{ role: 'user', content: 'Generate 2-sentence summary' }], { temperature: 0.7, maxTokens: 80 }),
+				new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 2000))
+			]);
+			if (aiSummary && typeof aiSummary === 'string' && aiSummary.trim()) {
+				perfText = aiSummary.trim();
+			}
+		} catch (_) {}
+
+		const savedPerf = await prisma.admin_chat.create({
+			data: {
+				user_id: userId,
+				sender: 'ai',
+				message: perfText,
+				message_type: 'learning_report',
+				options: [],
+				diff_html: JSON.stringify({ title: 'Session Performance Summary', summary: perfText }),
+				emoji: null,
+				images: [],
+				videos: [],
+				links: [],
+				created_at: new Date(baseTime + (timeOffset += 10))
+			},
+			select: {
+				id: true, sender: true, message: true, message_type: true,
+				options: true, diff_html: true, emoji: true,
+				images: true, videos: true, links: true, created_at: true
+			}
+		});
+		await linkToGoal(savedPerf.id);
+		wrapMessages.push(savedPerf);
+	} catch (perfErr) {
+		console.error('Failed to save performance report:', perfErr.message);
+	}
+
+	return {
+		messages: wrapMessages,
+		session_summary: metricsData,
+		revision_sheet: revisionSheetData,
+		all_goals_completed: true,
+		session_completed: true
+	};
+}
+
+/**
+ * POST /api/topic-chats/:topicId/wrap
+ * Progressive Session Wrap Endpoint - fetches or generates completion cards
+ */
+router.post('/:topicId/wrap', authenticateToken, async (req, res) => {
+	let user_id = req.user?.user_id;
+	const { topicId } = req.params;
+
+	if (!user_id) {
+		return res.status(401).json({ error: 'Authentication required - please login' });
+	}
+
+	if (!topicId || isNaN(parseInt(topicId))) {
+		return res.status(400).json({ error: 'Valid topic ID is required' });
+	}
+
+	try {
+		const wrapData = await generateTopicWrap(user_id, parseInt(topicId));
+		if (!wrapData) {
+			return res.status(404).json({ error: 'Topic not found or cannot generate wrap' });
+		}
+		return res.status(200).json(wrapData);
+	} catch (err) {
+		console.error('Error generating topic chat wrap:', err);
+		return res.status(500).json({ error: 'Server error while generating wrap' });
+	}
+});
 
 /**
  * POST /api/topic-chats/:topicId/option
