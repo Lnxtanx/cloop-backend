@@ -23,6 +23,9 @@ const DEFAULT_YT_CHANNELS = [
   'CrashCourse', 'Crash Course', 'TED-Ed', 'TED Ed', 'Amoeba Sisters', 'Bozeman Science',
   'National Geographic', 'Peekaboo Kidz', 'Dr. Binocs', 'Dr Binocs', 'Free Animated Education',
   'Science ABC', 'FuseSchool', 'Kurzgesagt', 'SciShow', "It's AumSum", 'AumSum', 'Sprouts',
+  'Tyler DeWitt', 'Najam Academy', 'PiMentor', 'Aasoka', 'TicTacLearn', 'PuStack',
+  'Next Education', 'Visual Learning', 'Digital Guruji', 'Tidlybit', 'English Chatterbox',
+  'Virtual Lab', 'Science Online', 'EduRev', 'LearnNext', 'Edusmart',
 ];
 
 // Trusted image domains (matched as case-insensitive substrings of the source host).

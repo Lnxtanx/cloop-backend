@@ -42,7 +42,7 @@ async function getCached(key, fetchFn) {
  * @param {number} maxResults - Maximum results to return (default 3)
  * @returns {Array} Array of video objects
  */
-async function searchYouTube(query, maxResults = 3) {
+async function searchYouTube(query, maxResults = 3, options = {}) {
   // Read key at runtime from process.env
   const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 
@@ -51,32 +51,37 @@ async function searchYouTube(query, maxResults = 3) {
     return [
       {
         id: `yt-fallback-${Date.now()}`,
-        title: `${query} — Khan Academy / Educational Explanation`,
+        title: `${query} — Educational Concept Lesson`,
         description: `Watch video explanations for ${query}`,
         thumbnail: `https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=500&auto=format&fit=crop&q=60`,
-        channel: 'Khan Academy / Educational',
+        channel: 'Educational Explanation',
         publishedAt: new Date().toISOString(),
         duration: '5:00',
         viewCount: 50000,
-        url: `https://www.youtube.com/results?search_query=${encodeURIComponent(query + ' educational explanation')}`,
-        embedUrl: `https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(query + ' educational explanation')}`,
+        url: `https://www.youtube.com/results?search_query=${encodeURIComponent(query + ' animation')}`,
+        embedUrl: `https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(query + ' animation')}`,
       }
     ];
   }
 
-  const cacheKey = `youtube:${query}:${maxResults}`;
+  const cacheKey = `youtube:${query}:${maxResults}:${options.videoDuration || 'medium'}`;
 
   return getCached(cacheKey, async () => {
     try {
       console.log(`[media-search] 📺 Searching YouTube for: "${query}"`);
 
-      // Educational-friendly search parameters. Keep the appended words minimal so
-      // the caller's topic terms dominate ranking (avoids generic "education" videos).
+      const lowerQuery = query.toLowerCase();
+      let queryParam = query;
+      if (!lowerQuery.includes('animation') && !lowerQuery.includes('explained') && !lowerQuery.includes('lesson')) {
+        queryParam = `${query} animation`;
+      }
+
       const params = {
         part: 'snippet',
-        q: `${query} explained`,
+        q: queryParam,
         type: 'video',
-        maxResults: 10, // Fetch a pool so the trusted-channel filter has candidates
+        maxResults: 15, // Fetch a pool so relevance & trusted-channel filters have candidates
+        videoDuration: options.videoDuration || 'medium', // 4 to 20 mins: strictly eliminates 1-2h coaching marathons!
         key: YOUTUBE_API_KEY,
         videoEmbeddable: 'true',
         safeSearch: 'strict',
@@ -95,17 +100,40 @@ async function searchYouTube(query, maxResults = 3) {
         return [];
       }
 
-      // ── Trusted-channel whitelist: only reputable education channels appear ──
-      let trusted = allVideos.filter(v => isTrustedChannel(v.snippet?.channelTitle));
-      if (trusted.length === 0) {
-        if (ytStrict()) {
-          console.log('[media-search] ⚠️ No video from a trusted channel — showing none (whitelist strict).');
-          return [];
+      // Keyword relevance scoring: ensure the video title actually relates to the topic
+      const stopWords = new Set(['class', 'ncert', 'cbse', 'science', 'animation', 'video', 'explained', 'chapter', 'lesson', 'part', 'complete']);
+      const queryKeywords = query.toLowerCase().split(/[^a-z0-9]+/).filter(w => w.length >= 3 && !stopWords.has(w));
+
+      const scoredVideos = allVideos.map(v => {
+        const title = (v.snippet?.title || '').toLowerCase();
+        const desc = (v.snippet?.description || '').toLowerCase();
+        let matches = 0;
+        for (const kw of queryKeywords) {
+          if (title.includes(kw)) matches += 3;
+          else if (desc.includes(kw)) matches += 1;
         }
-        console.log('[media-search] No trusted-channel match — relaxed fallback to general results.');
-        trusted = allVideos;
+        const isTrusted = isTrustedChannel(v.snippet?.channelTitle);
+        return { video: v, score: matches + (isTrusted ? 5 : 0), isTrusted, matches };
+      });
+
+      // Prefer videos that have at least 1 keyword match
+      const relevant = queryKeywords.length > 0
+        ? scoredVideos.filter(item => item.matches > 0)
+        : scoredVideos;
+
+      const candidates = relevant.length > 0 ? relevant : scoredVideos;
+      candidates.sort((a, b) => b.score - a.score);
+
+      // Prioritize trusted channels among relevant results
+      let selected = candidates.filter(item => item.isTrusted).map(item => item.video);
+      if (selected.length < maxResults) {
+        const others = candidates.filter(item => !item.isTrusted).map(item => item.video);
+        selected.push(...others);
       }
-      const videos = trusted.slice(0, maxResults);
+      if (selected.length === 0) {
+        selected = allVideos;
+      }
+      const videos = selected.slice(0, maxResults);
 
       // Get video IDs to fetch additional details (duration, view count)
       const videoIds = videos.map(v => v.id.videoId).join(',');
@@ -132,10 +160,10 @@ async function searchYouTube(query, maxResults = 3) {
 
         return {
           id: videoId,
-          title: snippet.title || 'Untitled',
+          title: snippet.title || 'Educational Lesson',
           description: (snippet.description || '').substring(0, 200),
           thumbnail: snippet.thumbnails?.medium?.url || snippet.thumbnails?.default?.url || '',
-          channel: snippet.channelTitle || 'Unknown',
+          channel: snippet.channelTitle || 'Educational Lesson',
           publishedAt: snippet.publishedAt,
           duration: details.contentDetails?.duration || '',
           viewCount: parseInt(details.statistics?.viewCount || '0'),
@@ -144,98 +172,13 @@ async function searchYouTube(query, maxResults = 3) {
         };
       });
 
-      console.log(`[media-search] ✅ YouTube search returned ${results.length} videos`);
+      console.log(`[media-search] ✅ YouTube search returned ${results.length} relevant educational videos`);
       return results;
     } catch (error) {
       console.error('[media-search] ❌ YouTube search error:', error.message);
-      return [
-        {
-          id: `yt-fallback-${Date.now()}`,
-          title: `${query} — Educational Video`,
-          description: `Watch video explanations for ${query}`,
-          thumbnail: `https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=500&auto=format&fit=crop&q=60`,
-          channel: 'Educational Explanation',
-          publishedAt: new Date().toISOString(),
-          duration: '5:00',
-          viewCount: 15000,
-          url: `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`,
-          embedUrl: `https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(query)}`,
-        }
-      ];
+      return [];
     }
   });
-}
-
-/**
- * Search Google Custom Search for educational images
- * @param {string} query - Search query
- * @param {number} maxResults - Maximum results to return (default 3)
- * @returns {Array} Array of image objects
- */
-/**
- * Search Wikimedia Commons for educational images (no API key required fallback)
- * @param {string} query - Search query
- * @param {number} maxResults - Maximum results to return
- * @returns {Array} Array of image objects
- */
-async function searchWikimediaImages(query, maxResults = 3) {
-  try {
-    console.log(`[media-search] 🌐 Querying Wikimedia Commons search for: "${query}"`);
-    
-    const response = await axios.get('https://commons.wikimedia.org/w/api.php', {
-      params: {
-        action: 'query',
-        generator: 'search',
-        gsrsearch: query,
-        gsrnamespace: 6, // File/media namespace
-        prop: 'imageinfo',
-        iiprop: 'url|size',
-        iiurlwidth: 600, // Request generated thumbnail URL with 600px width
-        format: 'json',
-        origin: '*',
-        gsrlimit: maxResults * 2, // Fetch extra results to allow filtering
-      },
-      timeout: 10000,
-      headers: {
-        'User-Agent': 'CloopEducationalApp/1.0 (contact@cloop.edu; contact via app)'
-      }
-    });
-
-    const pages = response.data?.query?.pages || {};
-    const results = [];
-    
-    for (const pageId in pages) {
-      const page = pages[pageId];
-      const imageinfo = page.imageinfo?.[0];
-      if (!imageinfo || !imageinfo.url) continue;
-
-      const url = imageinfo.url;
-      const lowerUrl = url.toLowerCase();
-      // Only include common raster image formats (exclude SVG — causes CORS/rendering issues, and audio/video/pdf)
-      if (!lowerUrl.endsWith('.jpg') && !lowerUrl.endsWith('.jpeg') && !lowerUrl.endsWith('.png') && !lowerUrl.endsWith('.gif')) {
-        continue;
-      }
-
-      results.push({
-        id: `wiki-${pageId}`,
-        title: page.title ? page.title.replace(/^File:/i, '') : 'Untitled',
-        url: url,
-        thumbnail: imageinfo.thumburl || url, // Use actual thumbnail URL or fall back to full image URL
-        width: imageinfo.width,
-        height: imageinfo.height,
-        sourceUrl: imageinfo.descriptionurl || 'https://commons.wikimedia.org',
-        source: 'Wikimedia Commons',
-      });
-
-      if (results.length >= maxResults) break;
-    }
-
-    console.log(`[media-search] ✅ Wikimedia search returned ${results.length} images`);
-    return results;
-  } catch (error) {
-    console.error('[media-search] ❌ Wikimedia search error:', error.message);
-    return [];
-  }
 }
 
 /**
@@ -363,14 +306,60 @@ function formatViewCount(count) {
  * @param {number} max - Maximum videos (default 2)
  * @returns {Promise<Array>} Array of video objects with clean fields
  */
-async function getRevisionVideos(topicTitle, classLevel = '10', max = 2) {
+async function getRevisionVideos(topicTitle, options = {}, max = 2) {
   try {
     const cleanTopic = String(topicTitle || '').trim();
     if (!cleanTopic) return [];
-    const query = `${cleanTopic} Class ${classLevel} CBSE NCERT`;
-    const videos = await searchYouTube(query, max);
-    if (!Array.isArray(videos)) return [];
-    return videos.slice(0, max).map(v => {
+
+    let customQueries = [];
+    let grade = '9';
+    let chapterTitle = '';
+
+    if (typeof options === 'string' || typeof options === 'number') {
+      grade = String(options);
+    } else if (typeof options === 'object' && options !== null) {
+      grade = options.grade || '9';
+      chapterTitle = options.chapterTitle || '';
+      customQueries = Array.isArray(options.customQueries) ? options.customQueries : [];
+    }
+
+    const videos = [];
+
+    // 1. Try AI-generated custom queries first (highest pedagogical relevance)
+    for (const q of customQueries) {
+      if (q && typeof q === 'string' && q.trim()) {
+        const found = await searchYouTube(q.trim(), max, { videoDuration: 'medium' });
+        if (Array.isArray(found) && found.length > 0) {
+          videos.push(...found);
+          if (videos.length >= max) break;
+        }
+      }
+    }
+
+    // 2. If needed, search with targeted curriculum query using real chapter and grade
+    if (videos.length < max) {
+      const needed = max - videos.length;
+      const cleanGrade = grade.toLowerCase().includes('class') ? grade : `Class ${grade}`;
+      const query = chapterTitle
+        ? `${cleanTopic} ${chapterTitle} ${cleanGrade} animation`
+        : `${cleanTopic} ${cleanGrade} Science concept animation`;
+      const fallbackFound = await searchYouTube(query, needed, { videoDuration: 'medium' });
+      if (Array.isArray(fallbackFound)) {
+        videos.push(...fallbackFound);
+      }
+    }
+
+    // Deduplicate by video ID
+    const seen = new Set();
+    const unique = [];
+    for (const v of videos) {
+      if (v && v.id && !seen.has(v.id)) {
+        seen.add(v.id);
+        unique.push(v);
+      }
+    }
+
+    return unique.slice(0, max).map(v => {
       let durationStr = '';
       if (v.duration) {
         durationStr = /^\d+:\d+(:\d+)?$/.test(v.duration) ? v.duration : (formatDuration(v.duration) || v.duration);
@@ -378,7 +367,7 @@ async function getRevisionVideos(topicTitle, classLevel = '10', max = 2) {
       return {
         id: v.id || `yt-${Date.now()}`,
         title: v.title || `${cleanTopic} — Video Lesson`,
-        url: v.url || `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`,
+        url: v.url || `https://www.youtube.com/results?search_query=${encodeURIComponent(cleanTopic)}`,
         thumbnail: v.thumbnail || '',
         channel: v.channel || 'Educational Lesson',
         duration: durationStr

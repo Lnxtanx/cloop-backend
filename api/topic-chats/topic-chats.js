@@ -2260,7 +2260,7 @@ async function generateTopicWrap(userId, topicId) {
 				select: {
 					id: true,
 					title: true,
-					subject: { select: { id: true, name: true } }
+					subject: { select: { id: true, name: true, grade: true, board: true } }
 				}
 			}
 		}
@@ -2280,6 +2280,22 @@ async function generateTopicWrap(userId, topicId) {
 	});
 
 	const topicGoalIds = topicGoals.map(g => g.id);
+
+	// Fetch student's learning turns from this session so AI can analyze student answers & mistakes
+	const learningTurns = await prisma.learning_turns.findMany({
+		where: { user_id: userId, topic_id: topicId },
+		orderBy: { created_at: 'asc' },
+		select: {
+			question_text: true,
+			user_answer_raw: true,
+			corrected_answer: true,
+			is_correct: true,
+			error_type: true,
+			feedback_text: true,
+			score_percent: true,
+			created_at: true
+		}
+	});
 
 	// 1. Idempotency check: see if wrap messages already exist in admin_chat
 	const existingSummaryMsg = await prisma.admin_chat.findFirst({
@@ -2478,28 +2494,41 @@ async function generateTopicWrap(userId, topicId) {
 		console.error('Failed to save session summary:', sumErr.message);
 	}
 
-	// D. Revision Sheet Card & YouTube videos
+	// D. AI-Powered Revision Sheet Card & High-Relevance YouTube videos
 	let revisionSheetData = null;
 	try {
-		const goalPerf = Array.isArray(metricsData.goal_performance) ? metricsData.goal_performance : [];
+		// Call dedicated AI Revision Sheet Agent with student chat turns & mistakes
+		const { generateRevisionSheetWithAI } = require('../../services/topic-chat/revision-sheet-generator');
+		const aiRevision = await generateRevisionSheetWithAI({
+			topic,
+			topicGoals,
+			learningTurns,
+			metricsData
+		});
+
+		// Search YouTube with AI-generated queries and actual grade & chapter
 		let revisionVideos = [];
 		try {
 			const { getRevisionVideos } = require('../../services/media-search');
-			const videos = await getRevisionVideos(topic.title, '10', 2);
-			if (Array.isArray(videos) && videos.length) {
-				revisionVideos = videos;
-			}
-		} catch (_) {}
+			revisionVideos = await getRevisionVideos(topic.title, {
+				chapterTitle: topic.chapter?.title || '',
+				grade: topic.chapter?.subject?.grade || '9',
+				customQueries: aiRevision.recommended_video_queries || []
+			}, 2);
+		} catch (vErr) {
+			console.warn('Failed to retrieve revision videos:', vErr.message);
+		}
 
+		const goalPerf = Array.isArray(metricsData.goal_performance) ? metricsData.goal_performance : [];
 		revisionSheetData = {
 			topic: topic.title,
 			concepts_covered: goalPerf.length > 0 ? goalPerf.map(g => g.goal_title) : topicGoals.map(g => g.title),
-			definitions: [],
-			key_points: goalPerf.length > 0
-				? goalPerf.map(g => `${g.goal_title}: ${g.questions_asked} questions, ${g.correct_answers} correct (${g.score_percent}% accuracy)`)
-				: [],
+			key_concepts: aiRevision.key_concepts || [],
+			key_points: aiRevision.key_concepts || [],
+			definitions: aiRevision.definitions || [],
 			common_mistakes: (metricsData.top_error_types || []).map(t => t.type),
-			one_minute_recall: [],
+			quick_recall_tips: aiRevision.quick_recall_tips || [],
+			practice_next_time: aiRevision.practice_next_time || '',
 			your_weak_spots: (metricsData.weak_goals || []).map(g => g.goal_title),
 			overall_score_percent: metricsData.overall_score_percent,
 			star_rating: metricsData.star_rating,
