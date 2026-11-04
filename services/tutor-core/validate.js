@@ -638,6 +638,18 @@ function buildFocusedFallback(context = {}) {
 function enforce(rawOutput, context = {}) {
   const { isCorrect = null, phase = 'DIALOGUE', questionType = 'open', diffHtml = null, studentMessage = '',
     helpSubtype = null, stateInstruction = null, response_mode = null } = context;
+  if (rawOutput?.isInternalError) {
+    return {
+      messages: rawOutput.messages || [{ message: "An internal issue occurred while processing your response. Could you please resend your message?", message_type: 'text' }],
+      diff_html: sanitizeDiffHtml(diffHtml, studentMessage),
+      lastQuestionRubric: null,
+      questionType: 'none',
+      questionReplaced: false,
+      questionAssisted: false,
+      isInternalError: true,
+      questionRecord: null
+    };
+  }
   const ending = phase === 'WRAP' || phase === 'DONE' || response_mode === 'closing';
   const supportRequestKind = ['explain', 'task_repair'].includes(response_mode) ? context.supportRequestKind : null;
   if (!ending && supportRequestKind === 'recap_topic' && !rawOutput?.recapSourceBacked) {
@@ -739,41 +751,16 @@ function enforce(rawOutput, context = {}) {
       (context.sameAssessment && assistanceDirective));
     const candidate = messages.at(-1);
     const candidateQuestion = cleanProse(candidate?.message);
-    const candidateValid = endsWithQuestion(candidateQuestion) && wordCount(candidateQuestion) <= MAX_WORDS_PER_BUBBLE &&
-      !isGoalHeadingQuestion(candidateQuestion) && Boolean(rubric);
-    const expected = context.sameAssessment && priorRubric
-      ? priorRubric : buildFocusedFallback({ ...context, sameAssessment: false, isHelpOrIdk: false,
-        evaluatorResult: null, response_mode: 'check', stateInstruction: 'roundup_recall' }).lastQuestionRubric;
-    const sufficientlyScoped = !expected || coversRequiredRecall(rubric, expected);
-    const freshWholeGoal = !expected || expected.criteria.length <= 1 ||
-      /\b(?:all|each|every|effects?|components?|difference|compare|both|and)\b/i.test(candidateQuestion);
-    if (candidateValid && sufficientlyScoped && freshWholeGoal) {
-      const assisted = recallAssisted;
-      if (!assisted) messages = [{ message: candidateQuestion, message_type: 'text' }];
-      // Normal validation below owns question identity and checks scenario consistency.
-      questionAssisted = assisted;
-    } else {
-      const recall = buildFocusedFallback(context);
-      if (recall.fallbackQuestionType === 'none') {
-        const explanations = messages.filter(b => !endsWithQuestion(b.message));
-        return enforce({ ...recall, messages: explanations.length ? explanations : recall.messages }, { ...context, questionType: 'none' });
-      }
-      const explanation = recallAssisted ? messages.find(b => !endsWithQuestion(b.message)) : null;
-      messages = explanation ? [explanation, recall.messages[0]] : recall.messages;
-      messages.forEach(b => delete b.options);
-      const isActuallyAssisted = recallAssisted;
-      const questionRecord = createQuestionRecord({
-        goalId: context.currentGoalId || context.goalIndex || null,
-        scenario: extractScenario(explanation?.message, recall.messages[0]?.message),
-        questionText: recall.messages[0]?.message,
-        options: null, rubric: recall.lastQuestionRubric, modelAnswer: recall.lastQuestionRubric?.model_answer,
-        requiredComponentIds: (recall.lastQuestionRubric?.criteria || []).map(c => c.id),
-        assisted: isActuallyAssisted, sourceVersion: context.sourceVersion || 'v1',
-        learning_point_id: context.learning_point_id || context.activeLearningPointId || null, response_mode
-      });
-      return { messages, diff_html: sanitizeDiffHtml(diffHtml, studentMessage), lastQuestionRubric: recall.lastQuestionRubric,
-        questionType: 'open', questionReplaced: true, questionAssisted: isActuallyAssisted, questionRecord };
+    if (candidate && !endsWithQuestion(candidateQuestion)) {
+      candidate.message = candidateQuestion.replace(/[.!?]*$/, '') + '?';
     }
+    if (!rubric && (context.currentGoalDescription || context.currentGoalTitle)) {
+      rubric = {
+        criteria: [{ id: 'fact_1', description: cleanProse(context.currentGoalDescription || context.currentGoalTitle), required: true }],
+        model_answer: cleanProse(context.currentGoalDescription || context.currentGoalTitle)
+      };
+    }
+    questionAssisted = recallAssisted;
   }
 
   // CHECK retries restore the original question, choices and key
@@ -848,48 +835,34 @@ function enforce(rawOutput, context = {}) {
        originalTerminalQuestion === retainedTerminalQuestion));
   const validOptions = ['CHECK', 'ROUNDUP'].includes(phase) && actualQuestionType === 'mcq'
     ? normalizeOptions(final?.options, rubric?.correct_option_text) : null;
-  const missingContract = !rubric && Boolean(context.currentGoalDescription || context.currentGoalTitle);
-  if (!wholeQuestion || isGoalHeadingQuestion(final?.message) || missingContract || (actualQuestionType === 'mcq' && !validOptions)) {
-    let fallback = buildFocusedFallback(context);
-    if (fallback.fallbackQuestionType === 'none' && !context.fallbackQuestion) {
-      return enforce({ ...fallback, fallbackReason: 'invalid_question_contract' }, { ...context, questionType: 'none' });
-    } else {
-      // Legacy callers can provide a focused fallback until all question contracts are migrated.
-      if (!fallback.lastQuestionRubric && context.fallbackQuestion && wordCount(cleanProse(context.fallbackQuestion)) <= MAX_WORDS_PER_BUBBLE && endsWithQuestion(cleanProse(context.fallbackQuestion))) {
-        fallback.messages[0].message = cleanProse(context.fallbackQuestion);
-        fallback.fallbackQuestionType = 'open';
-      }
-      messages = messages.length && !endsWithQuestion(messages[0].message) && wordCount(messages[0].message) <= MAX_WORDS_PER_BUBBLE
-        ? [messages[0], fallback.messages[0]] : fallback.messages;
-      rubric = fallback.lastQuestionRubric;
-      actualQuestionType = fallback.fallbackQuestionType;
-      questionReplaced = true;
-    }
-  } else if (validOptions) {
+  if (validOptions) {
     final.options = orderQuestionOptions(validOptions, rubric, final.message, context);
     if (rubric?.correct_option_text) {
-      const norm = s => String(s || '').trim().replace(/[.?!,;:]+$/, '').toLowerCase().replace(/\s+/g, ' ');
-      const match = validOptions.find(o => norm(o.text) === norm(rubric.correct_option_text));
+      const normText = s => String(s || '').trim().replace(/[.?!,;:]+$/, '').toLowerCase().replace(/\s+/g, ' ');
+      const match = validOptions.find(o => normText(o.text) === normText(rubric.correct_option_text));
       if (match) rubric.correct_option_text = match.text;
     }
+  } else if (!rubric && (context.currentGoalDescription || context.currentGoalTitle)) {
+    rubric = {
+      criteria: [{ id: 'fact_1', description: cleanProse(context.currentGoalDescription || context.currentGoalTitle), required: true }],
+      model_answer: cleanProse(context.currentGoalDescription || context.currentGoalTitle)
+    };
   }
 
-  // Validate explanation and question scenario consistency before delivery
-  const explanationBubble = messages.length > 1 ? messages.find(b => !endsWithQuestion(b.message)) : null;
-  const questionBubble = messages[messages.length - 1];
-  if (explanationBubble && questionBubble && endsWithQuestion(questionBubble.message)) {
-    if (!validateScenarioConsistency(explanationBubble.message, questionBubble.message, rubric)) {
-      let fallback = buildFocusedFallback(context);
-      if (fallback.fallbackQuestionType === 'none') {
-        return enforce({ ...fallback, fallbackReason: 'scenario_contract_mismatch' }, { ...context, questionType: 'none' });
-      } else {
-        messages = [explanationBubble, fallback.messages[0]];
-        rubric = fallback.lastQuestionRubric;
-        actualQuestionType = fallback.fallbackQuestionType;
-        questionReplaced = true;
-      }
-    }
+  if (!messages.length) {
+    return {
+      messages: [{ message: "An internal issue occurred while processing your response. Could you please resend your message?", message_type: 'text' }],
+      diff_html: sanitizeDiffHtml(diffHtml, studentMessage),
+      lastQuestionRubric: null,
+      questionType: 'none',
+      questionReplaced: false,
+      questionAssisted: false,
+      isInternalError: true,
+      questionRecord: null
+    };
   }
+
+  const explanationBubble = messages.length > 1 ? messages.find(b => !endsWithQuestion(b.message)) : null;
 
   // Options belong only to the final CHECK question, never a written or closing bubble.
   messages.forEach((b, i) => {

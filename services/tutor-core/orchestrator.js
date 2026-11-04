@@ -250,6 +250,12 @@ async function processTutorTurn(params) {
     isCorrect: evaluatorResult.is_correct, diffHtml: evaluatorResult.diff_html,
     studentMessage: evaluatorResult.resolved_answer || studentMessage });
   questionType = validated.questionType;
+  if (validated.isInternalError) {
+    evaluatorResult.is_correct = null;
+    evaluatorResult.evaluation_status = 'not_applicable';
+    nextState.phase = state.phase;
+    nextState.goalIndex = state.goalIndex;
+  }
   persistQuestionContract(state, nextState, validated, ending, evaluatorResult.evaluation_status === 'repair_needed');
   nextState.supportContinuation = validated.supportContinuation || [];
   if (validated.taskRepair && !ending && !nextState.pendingAdvanceAfterExplanation) {
@@ -271,7 +277,7 @@ async function processTutorTurn(params) {
   const gradedThisTurn = !terminal && !state.pendingAdvanceAfterExplanation && !state.awaitingAcademicQuestion &&
     intent === 'ANSWER' && isScored(state.phase) &&
     typeof evaluatorResult.is_correct === 'boolean' && evaluatorResult.evaluation_status !== 'unavailable';
-  const isAnswer = nextState.response_mode !== 'offer_choice' && !terminal && !starting && !state.pendingAdvanceAfterExplanation && !state.awaitingAcademicQuestion &&
+  const isAnswer = !validated.isInternalError && nextState.response_mode !== 'offer_choice' && !terminal && !starting && !state.pendingAdvanceAfterExplanation && !state.awaitingAcademicQuestion &&
     intent === 'ANSWER' && typeof evaluatorResult.is_correct === 'boolean' && evaluatorResult.userCorrection !== null;
   const userCorrection = isAnswer ? {
     message_type: 'user_correction', diff_html: validated.diff_html || null,

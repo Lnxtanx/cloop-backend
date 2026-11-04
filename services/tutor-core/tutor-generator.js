@@ -512,17 +512,17 @@ async function generateTutorResponse(params) {
         lastQuestionRubric: null
       };
     }
-    const fallback = buildFocusedFallback(params);
-    // When the model is down, teach from the stored previous answer rather than inventing a correction.
-    const helpDirectives = ['correct_and_reask', 'reteach_new_angle', 'hint_then_easier', 'explain_differently', 'give_starter', 'reveal_and_move_on'];
-    if (!fallback.taskRepair && (params.phase !== 'ROUNDUP' || params.sameAssessment || params.isHelpOrIdk) && helpDirectives.includes(params.stateInstruction)) {
-      const answerCandidates = [params.evaluatorResult?.complete_answer, params.lastQuestionRubric?.model_answer,
-        params.previousGoalDescription, ...(params.lastQuestionRubric?.criteria || []).map(c => c.description)];
-      const shortFact = answerCandidates.flatMap(answer => String(answer || '').split(/;|(?<=[.!?])\s+/))
-        .map(cleanProse).find(fact => fact && wordCount(fact) <= 19);
-      if (shortFact) fallback.messages.unshift({ message: shortFact, message_type: 'text' });
-    }
-    return fallback;
+    return {
+      messages: [{
+        message: "An internal issue occurred while processing your response. Could you please resend your message?",
+        message_type: 'text'
+      }],
+      lastQuestionRubric: null,
+      questionType: 'none',
+      fallbackQuestionType: 'none',
+      taskRepair: true,
+      isInternalError: true
+    };
   }
 }
 

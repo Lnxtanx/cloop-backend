@@ -32,6 +32,11 @@ function persistQuestionContract(state, next, validated, ending = false, retireI
       lastQuestionRecord: null, lastQuestionType: null, awaitingAcademicQuestion: false });
     return;
   }
+  if (validated.isInternalError) {
+    for (const field of FIELDS) next[field] = state[field] ?? (field === 'lastQuestionText' ? '' : null);
+    next.awaitingAcademicQuestion = Boolean(state.lastQuestionRubric || state.lastQuestionText);
+    return;
+  }
   const final = validated.messages?.at(-1);
   const hasReplacement = isAcademicQuestionContract(final?.message, validated.lastQuestionRubric, final?.options, validated.questionType);
   if (retireInvalid && !hasReplacement) {
