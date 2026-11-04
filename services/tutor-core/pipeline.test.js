@@ -224,7 +224,7 @@ test('a hinted retry teaches without increasing earned score or duplicating ques
   });
   assert.strictEqual(r.nextState.perGoal[0].total, 1);
   assert.strictEqual(r.nextState.questionAssisted, true);
-  assert.strictEqual(r.userCorrection.emoji, '😅');
+  assert.strictEqual(r.userCorrection.emoji, '😢');
   assert.match(r.userCorrection.feedback.explanation, /characteristic/);
   r = await turn(r.nextState, 'the correct answer after the explanation');
   assert.strictEqual(r.nextState.phase, 'CHECK');

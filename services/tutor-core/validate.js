@@ -678,7 +678,7 @@ function enforce(rawOutput, context = {}) {
     : expanded;
 
   if (ending) {
-    messages = messages.filter(b => !endsWithQuestion(b.message)).slice(0, 1);
+    messages = messages.filter(b => !endsWithQuestion(b.message)).slice(0, 2);
     if (!messages.length) messages = [{ message: 'Your session report and revision sheet are ready.', message_type: 'text' }];
     messages.forEach(b => delete b.options);
     return { messages, diff_html: sanitizeDiffHtml(diffHtml, studentMessage), lastQuestionRubric: null, questionType: null, questionReplaced: false, questionRecord: null };

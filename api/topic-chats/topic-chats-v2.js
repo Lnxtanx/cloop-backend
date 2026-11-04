@@ -70,7 +70,7 @@ function correctionForStudent(turnResult) {
     message_type: 'user_correction',
     diff_html: correction.diff_html || null,
     complete_answer: correction.complete_answer || null,
-    emoji: verdict === true ? '😊' : verdict === false ? '😅' : null,
+    emoji: verdict === true ? '😊' : verdict === false ? '😢' : null,
     feedback: {
       is_correct: typeof verdict === 'boolean' ? verdict : null,
       error_type: correction.feedback?.error_type || null,

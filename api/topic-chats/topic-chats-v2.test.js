@@ -314,7 +314,7 @@ test('a graded wrong answer keeps false verdict and useful feedback without a sc
     userCorrection: { emoji: '😊', complete_answer: 'Force changes motion and shape.', diff_html: '<del>stretch</del><ins>direction</ins>', feedback: { error_type: 'Incomplete', score_percent: 50 } }
   }));
   const response = await f.send('stretch, speed, shape');
-  assert.equal(response.userCorrection.emoji, '😅');
+  assert.equal(response.userCorrection.emoji, '😢');
   assert.equal(response.feedback.is_correct, false);
   assert.equal(response.feedback.explanation, 'Direction is still missing.');
   assert.equal(f.calls['learning_turns.create'][0].data.is_correct, false);

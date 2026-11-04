@@ -454,7 +454,7 @@ router.get('/:topicId', authenticateToken, async (req, res) => {
 			if (msg.sender === 'user') {
 				if (turn && (turn.diff_html || turn.is_correct !== undefined)) {
 					const emoji = msg.emoji || turn.emoji || (turn.is_correct ? '😊' :
-						'😅')
+						'😢')
 					
 					chatMessages.push({
 						...msg,

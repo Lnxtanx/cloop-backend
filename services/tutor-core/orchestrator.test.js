@@ -109,3 +109,32 @@ test('explicit written question never inherits an earlier MCQ', () => {
   assert.strictEqual(findLastQuestionOptions(history, { lastQuestionOptions: null }), null);
   assert.strictEqual(findLastQuestionOptions(history, null), null);
 });
+const { buildEndingMessages } = require('./orchestrator');
+
+test('buildEndingMessages includes feedback validating correct final answer', () => {
+  const report = { total_questions: 3, overall_mastery_percent: 100, ended_reason: 'complete', mastery_confirmed: true };
+  const evaluatorResult = { is_correct: true, feedback: 'Spot on — force perpendicular to motion does zero work.', evaluation_status: 'available' };
+  const messages = buildEndingMessages(report, evaluatorResult);
+  assert.strictEqual(messages.length, 1);
+  assert.match(messages[0].message, /Spot on/);
+  assert.match(messages[0].message, /100%/);
+});
+
+test('buildEndingMessages includes constructive feedback on incorrect final answer', () => {
+  const report = { total_questions: 3, overall_mastery_percent: 67, ended_reason: 'complete', recall_completed: true, assessment_coverage_percent: 100 };
+  const evaluatorResult = { is_correct: false, complete_answer: 'Work requires displacement in direction of force.', evaluation_status: 'available' };
+  const messages = buildEndingMessages(report, evaluatorResult);
+  assert.strictEqual(messages.length, 1);
+  assert.match(messages[0].message, /Good effort/);
+  assert.match(messages[0].message, /Work requires displacement/);
+  assert.match(messages[0].message, /67%/);
+});
+
+test('buildEndingMessages provides closing message without answer feedback when no answer was given', () => {
+  const report = { overall_mastery_percent: 80, ended_reason: 'user_requested' };
+  const evaluatorResult = { is_correct: null, evaluation_status: 'not_applicable' };
+  const messages = buildEndingMessages(report, evaluatorResult);
+  assert.strictEqual(messages.length, 1);
+  assert.match(messages[0].message, /wrap up here as requested/);
+  assert.doesNotMatch(messages[0].message, /Spot on/);
+});

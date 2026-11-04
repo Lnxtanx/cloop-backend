@@ -76,6 +76,30 @@ function closingMessage(report) {
   return `Your score is ${report.overall_mastery_percent}%. Review the goals needing independent recall in your revision sheet.`;
 }
 
+function buildEndingMessages(report, evaluatorResult) {
+  const hadAnswer = typeof evaluatorResult?.is_correct === 'boolean' && evaluatorResult.evaluation_status !== 'not_applicable';
+  const close = closingMessage(report);
+
+  if (hadAnswer) {
+    const isCorrect = evaluatorResult.is_correct;
+    let feedback = (evaluatorResult.feedback || '').trim();
+
+    if (!feedback) {
+      if (isCorrect) {
+        feedback = 'Spot on — you explained that clearly!';
+      } else {
+        const correctionNote = evaluatorResult.complete_answer ? ` Remember: ${evaluatorResult.complete_answer}` : '';
+        feedback = `Good effort on that final question.${correctionNote}`;
+      }
+    }
+
+    feedback = feedback.replace(/[?？]+$/, '.');
+    return [{ message: `${feedback} ${close}`, message_type: 'text' }];
+  }
+
+  return [{ message: close, message_type: 'text' }];
+}
+
 let socraticAgent = null;
 try {
   socraticAgent = require('../../ai/agents/socratic-tutor/agent');
@@ -171,15 +195,19 @@ async function processTutorTurn(params) {
     revisionSheet = state.wrapArtifacts?.revisionSheet || null;
     if (!revisionSheet) {
       try {
-        revisionSheet = await generateRevisionSheet({ topicTitle: topic.title, goals,
+        const sheetPromise = generateRevisionSheet({ topicTitle: topic.title, goals,
           keyErrors: masteryReport.key_errors, classLevel, masteryReport, userId });
+        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 3000));
+        revisionSheet = await Promise.race([sheetPromise, timeoutPromise]);
       } catch {
         revisionSheet = buildFallbackRevisionSheet({ topicTitle: topic.title, goals,
           keyErrors: masteryReport.key_errors, masteryReport });
       }
       try {
         const { getRevisionVideos } = require('../media-search');
-        const videos = await getRevisionVideos(topic.title, classLevel, 2);
+        const videoPromise = getRevisionVideos(topic.title, classLevel, 2);
+        const videoTimeout = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 1800));
+        const videos = await Promise.race([videoPromise, videoTimeout]);
         if (Array.isArray(videos) && videos.length) {
           revisionSheet.recommended_videos = videos;
         }
@@ -213,7 +241,7 @@ async function processTutorTurn(params) {
     akgContext, goals, goalIndex: currentGoalIdx, totalGoals: goalTotal, goalMap, userId };
   // Code owns closing figures and claims. DONE reuses artifacts without model calls.
   const rawTutorOutput = ending
-    ? { messages: [{ message: closingMessage(masteryReport), message_type: 'text' }] }
+    ? { messages: buildEndingMessages(masteryReport, evaluatorResult) }
     : continuingRecap
       ? { ...paginateSupportBubbles(state.supportContinuation), recapSourceBacked: true, taskRepair: true, fallbackQuestionType: 'none' }
       : await generateTutorResponse(generationContext);
@@ -248,7 +276,7 @@ async function processTutorTurn(params) {
   const userCorrection = isAnswer ? {
     message_type: 'user_correction', diff_html: validated.diff_html || null,
     complete_answer: evaluatorResult.complete_answer || null,
-    emoji: evaluatorResult.is_correct === true ? '😊' : '😅',
+    emoji: evaluatorResult.is_correct === true ? '😊' : '😢',
     feedback: { is_correct: evaluatorResult.is_correct, error_type: evaluatorResult.error_type || null,
       explanation: evaluatorResult.feedback || (evaluatorResult.is_correct === true
         ? 'Your answer meets the question requirements.' : evaluatorResult.is_correct === false
@@ -303,4 +331,4 @@ async function processTutorTurn(params) {
     thought_meta: thoughtMeta };
 }
 
-module.exports = { processTutorTurn, findLastQuestion, findLastQuestionOptions, closingMessage };
+module.exports = { processTutorTurn, findLastQuestion, findLastQuestionOptions, closingMessage, buildEndingMessages };
