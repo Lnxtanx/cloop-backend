@@ -63,18 +63,24 @@ function incorrectFor(stats) {
 /** Student feedback never exposes a per-answer score or private evaluator rationale. */
 function correctionForStudent(turnResult) {
   const correction = turnResult.userCorrection;
-  if (!correction) return null;
   const verdict = turnResult.evaluatorResult?.is_correct;
-  if (typeof verdict !== 'boolean') return null;
+  if (!correction && typeof verdict !== 'boolean') return null;
+
+  const isCorrect = typeof verdict === 'boolean' ? verdict : (correction?.feedback?.is_correct ?? null);
+  const completeAnswer = correction?.complete_answer || turnResult.evaluatorResult?.complete_answer || null;
+  const diffHtml = correction?.diff_html || turnResult.evaluatorResult?.diff_html || null;
+  const explanation = correction?.feedback?.explanation || turnResult.evaluatorResult?.feedback || null;
+  const errorType = correction?.feedback?.error_type || turnResult.evaluatorResult?.error_type || null;
+
   return {
     message_type: 'user_correction',
-    diff_html: correction.diff_html || null,
-    complete_answer: correction.complete_answer || null,
-    emoji: verdict === true ? '😊' : verdict === false ? '😢' : null,
+    diff_html: diffHtml,
+    complete_answer: completeAnswer,
+    emoji: isCorrect === true ? '😊' : isCorrect === false ? '😢' : (correction?.emoji || null),
     feedback: {
-      is_correct: typeof verdict === 'boolean' ? verdict : null,
-      error_type: correction.feedback?.error_type || null,
-      explanation: correction.feedback?.explanation || turnResult.evaluatorResult?.feedback || null
+      is_correct: typeof isCorrect === 'boolean' ? isCorrect : null,
+      error_type: errorType,
+      explanation: explanation
     }
   };
 }
@@ -290,7 +296,8 @@ async function handleTopicChatMessageV2(req, res) {
         message: effectiveMessage || '',
         message_type: publicCorrection ? 'user_correction' : 'text',
         diff_html: publicCorrection?.diff_html || null,
-        emoji: publicCorrection?.emoji || null
+        emoji: publicCorrection?.emoji || null,
+        options: publicCorrection ? [`__correction__:${JSON.stringify(publicCorrection)}`] : []
       },
       select: {
         id: true,
@@ -303,6 +310,17 @@ async function handleTopicChatMessageV2(req, res) {
         created_at: true
       }
     });
+
+    const userMsgPayload = {
+      ...updatedUserMsg,
+      message_type: publicCorrection ? 'user_correction' : updatedUserMsg.message_type,
+      diff_html: publicCorrection?.diff_html || updatedUserMsg.diff_html || null,
+      emoji: publicCorrection?.emoji || updatedUserMsg.emoji || null,
+      is_correct: publicCorrection ? publicCorrection.feedback?.is_correct : undefined,
+      score_percent: publicCorrection ? (publicCorrection.feedback?.is_correct ? 100 : 10) : undefined,
+      complete_answer: publicCorrection ? publicCorrection.complete_answer : undefined,
+      feedback: publicCorrection ? publicCorrection.feedback : undefined
+    };
 
     // Link user message to goal progress
     if (activeGoal) {
@@ -374,9 +392,8 @@ async function handleTopicChatMessageV2(req, res) {
       });
     }
 
-    // 9b. If Session is wrapping or done, persist Session Summary & Revision Sheet cards
+    // 9b. If Session is wrapping or done, record user_topic_reports in background (decoupled wrap)
     if (isSessionWrapping && turnResult.masteryReport && !closingAlreadyPersisted) {
-      // Preserve coverage, incomplete recall and assisted evidence on refresh.
       const summaryPayload = {
         ...turnResult.masteryReport,
         session_completed: sessionCompleted,
@@ -384,107 +401,6 @@ async function handleTopicChatMessageV2(req, res) {
         mastery_confirmed: masteryConfirmed
       };
 
-      const summaryRecord = await prisma.admin_chat.create({
-        data: {
-          user_id,
-          sender: 'ai',
-          message: 'Session Summary',
-          message_type: 'session_summary',
-          diff_html: JSON.stringify(summaryPayload),
-          options: [],
-          created_at: new Date()
-        },
-        select: {
-          id: true,
-          sender: true,
-          message: true,
-          message_type: true,
-          options: true,
-          diff_html: true,
-          emoji: true,
-          created_at: true
-        }
-      });
-
-      // Helper to link supplementary records to goal progress so they persist on refresh
-      const linkToGoal = async (chatId) => {
-        if (!currentGoalRecord) return;
-        try {
-          await prisma.chat_goal_progress.create({
-            data: {
-              chat_id: chatId,
-              goal_id: currentGoalRecord.id,
-              user_id,
-              num_questions: 0,
-              num_correct: 0,
-              num_incorrect: 0,
-              is_completed: goalCompletion(turnResult.nextState, currentGoalIndex)
-            }
-          });
-        } catch (e) {}
-      };
-
-      await linkToGoal(summaryRecord.id);
-
-      savedAiMessages.push({
-        ...summaryRecord,
-        session_summary: summaryPayload,
-        options: []
-      });
-
-      const revisionPayload = turnResult.revisionSheet || {
-        topic: topic.title,
-        key_concepts: topicGoals.map(g => `${g.title}: ${g.description || 'Key concept to revise.'}`),
-        definitions: topicGoals.map(g => ({ term: g.title, definition: g.description || `Key concept in ${topic.title}` })),
-        quick_recall_tips: (turnResult.masteryReport?.key_errors || []).map(e => `Common mistake to avoid: ${e.type}`),
-        practice_next_time: `Notice how ${topic.title} applies in everyday technology and science.`,
-        key_points: topicGoals.map(g => `${g.title}: ${g.description || 'Key concept to revise.'}`),
-        common_mistakes: (turnResult.masteryReport?.key_errors || []).map(e => `${e.type} (${e.count}x)`),
-        your_weak_spots: (turnResult.masteryReport?.areas_to_improve || []).map(a => a.goal),
-        recommended_videos: []
-      };
-
-      if (!revisionPayload.recommended_videos || !revisionPayload.recommended_videos.length) {
-        try {
-          const { getRevisionVideos } = require('../../services/media-search');
-          const videos = await getRevisionVideos(topic.title, studentClass || '10', 2);
-          if (Array.isArray(videos) && videos.length) {
-            revisionPayload.recommended_videos = videos;
-          }
-        } catch (_) {}
-      }
-
-      const revisionRecord = await prisma.admin_chat.create({
-        data: {
-          user_id,
-          sender: 'ai',
-          message: 'Revision Sheet',
-          message_type: 'revision_sheet',
-          diff_html: JSON.stringify(revisionPayload),
-          options: [],
-          created_at: new Date()
-        },
-        select: {
-          id: true,
-          sender: true,
-          message: true,
-          message_type: true,
-          options: true,
-          diff_html: true,
-          emoji: true,
-          created_at: true
-        }
-      });
-
-      await linkToGoal(revisionRecord.id);
-
-      savedAiMessages.push({
-        ...revisionRecord,
-        revision_sheet: revisionPayload,
-        options: []
-      });
-
-      // Save user topic report record
       try {
         await prisma.user_topic_reports.upsert({
           where: {
@@ -496,21 +412,21 @@ async function handleTopicChatMessageV2(req, res) {
           create: {
             user_id,
             topic_id: parseInt(topicId),
-            total_questions: turnResult.masteryReport.total_questions,
-            correct_answers: turnResult.masteryReport.correct_answers,
-            incorrect_answers: turnResult.masteryReport.incorrect_answers,
-            score_percent: turnResult.masteryReport.score_percent,
-            star_rating: turnResult.masteryReport.star_rating,
-            performance_level: turnResult.masteryReport.performance_level,
+            total_questions: turnResult.masteryReport.total_questions || 0,
+            correct_answers: turnResult.masteryReport.correct_answers || 0,
+            incorrect_answers: turnResult.masteryReport.incorrect_answers || 0,
+            score_percent: turnResult.masteryReport.score_percent || 0,
+            star_rating: turnResult.masteryReport.star_rating || 0,
+            performance_level: turnResult.masteryReport.performance_level || 'Proficient',
             metrics_json: summaryPayload
           },
           update: {
-            total_questions: turnResult.masteryReport.total_questions,
-            correct_answers: turnResult.masteryReport.correct_answers,
-            incorrect_answers: turnResult.masteryReport.incorrect_answers,
-            score_percent: turnResult.masteryReport.score_percent,
-            star_rating: turnResult.masteryReport.star_rating,
-            performance_level: turnResult.masteryReport.performance_level,
+            total_questions: turnResult.masteryReport.total_questions || 0,
+            correct_answers: turnResult.masteryReport.correct_answers || 0,
+            incorrect_answers: turnResult.masteryReport.incorrect_answers || 0,
+            score_percent: turnResult.masteryReport.score_percent || 0,
+            star_rating: turnResult.masteryReport.star_rating || 0,
+            performance_level: turnResult.masteryReport.performance_level || 'Proficient',
             metrics_json: summaryPayload,
             updated_at: new Date()
           }
@@ -616,7 +532,7 @@ async function handleTopicChatMessageV2(req, res) {
     });
 
     // 12. Record learning_turns analytics for Mastery Engine
-    if (turnResult.gradedThisTurn && typeof turnResult.evaluatorResult.is_correct === 'boolean') {
+    if (typeof turnResult.evaluatorResult?.is_correct === 'boolean') {
       try {
         await prisma.learning_turns.create({
           data: {
@@ -627,11 +543,11 @@ async function handleTopicChatMessageV2(req, res) {
             question_text: previousState?.lastQuestionText || null,
             user_answer_raw: effectiveMessage,
             is_correct: turnResult.evaluatorResult.is_correct,
-            score_percent: turnResult.evaluatorResult.score_percent ?? null,
+            score_percent: turnResult.evaluatorResult.score_percent ?? (turnResult.evaluatorResult.is_correct ? 100 : 10),
             error_type: turnResult.evaluatorResult.error_type || null,
-            corrected_answer: turnResult.evaluatorResult.complete_answer || null,
-            diff_html: publicCorrection?.diff_html || null,
-            feedback_text: publicCorrection?.feedback.explanation || null,
+            corrected_answer: publicCorrection?.complete_answer || turnResult.evaluatorResult.complete_answer || null,
+            diff_html: publicCorrection?.diff_html || turnResult.evaluatorResult.diff_html || null,
+            feedback_text: publicCorrection?.feedback?.explanation || turnResult.evaluatorResult.feedback || null,
             feedback_json: publicCorrection?.feedback || null
           }
         });
@@ -902,13 +818,23 @@ async function handleTopicChatMessageV2(req, res) {
 
     console.log(`[Tutor-Core V2] ✅ Turn complete. Sent ${savedAiMessages.length} AI items. Phase: ${turnResult.nextState.phase}, Goal: ${nextGoalIndex + 1}/${topicGoals.length}`);
 
+    const isWrapTurn = Boolean(
+      isSessionWrapping ||
+      allGoalsCovered ||
+      allGoalsCompleted ||
+      turnResult.all_goals_completed ||
+      turnResult.session_completed ||
+      turnResult.nextState.phase === 'WRAP' ||
+      turnResult.nextState.phase === 'DONE'
+    );
+
     // 16. Deliver SendMessageResponse to frontend
     return res.status(201).json({
-      userMessage: updatedUserMsg,
+      userMessage: userMsgPayload,
       aiMessages: savedAiMessages,
       feedback: publicCorrection?.feedback || null,
       userCorrection: publicCorrection,
-      all_goals_completed: allGoalsCovered,
+      all_goals_completed: isWrapTurn,
       session_completed: sessionCompleted,
       session_closed: sessionClosed,
       mastery_confirmed: masteryConfirmed,
