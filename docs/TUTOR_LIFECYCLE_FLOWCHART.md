@@ -133,3 +133,15 @@ sequenceDiagram
     
     Note over Browser: Browser appends Scorecard & Revision Sheet ONCE (with duplicate guards)!
 ```
+
+---
+
+## 5. Related Documentation Links
+
+- [**Cloop AI Tutor Architecture**](file:///c:/cloop/backend/docs/TUTOR_ARCHITECTURE.md)
+- [**Socratic Pedagogy & Prompt Engineering Specification**](file:///c:/cloop/backend/docs/SOCRATIC_METHOD_AND_PROMPTS.md)
+- [**Complete Codebase Module Map**](file:///c:/cloop/backend/docs/CODEBASE_MODULE_MAP.md)
+- [**Curriculum Seeding & Database Schema**](file:///c:/cloop/backend/docs/CURRICULUM_AND_DATABASE.md)
+- [**Contributing Guidelines & Architectural Invariants**](file:///c:/cloop/backend/docs/CONTRIBUTING_GUIDELINES.md)
+
+

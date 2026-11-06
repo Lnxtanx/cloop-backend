@@ -12,6 +12,8 @@ To ensure all developers and contributors maintain architectural integrity and u
 | Document | Description |
 |---|---|
 | 📖 **[Tutor Architecture Specification](docs/TUTOR_ARCHITECTURE.md)** | Master specification: Deterministic state engine, dual-model separation (Evaluator vs Generator), AKG perimeter control, and decoupled wrap engine. |
+| 🧠 **[Socratic Pedagogy & Prompt Engineering](docs/SOCRATIC_METHOD_AND_PROMPTS.md)** | Deep pedagogical analysis: Socratic inquiry cycle, cognitive foundations, assistance ladders, prompt templates, and evaluation rubrics. |
+| 🗺️ **[Complete Codebase Module Map](docs/CODEBASE_MODULE_MAP.md)** | Comprehensive directory and file reference mapping functions, signatures, inputs, and outputs across the tutor ecosystem. |
 | 🗄️ **[Curriculum & Database Persistence](docs/CURRICULUM_AND_DATABASE.md)** | Relational curriculum hierarchy (`global_subjects` → `global_chapters` → `global_topics` → `global_topic_goals`), content seeding model, and the 5 dynamic session tables. |
 | 📊 **[Tutor Lifecycle & Flowcharts](docs/TUTOR_LIFECYCLE_FLOWCHART.md)** | Mermaid diagrams: End-to-end turn processing, the 6 teaching phases (`PROBE` → `WRAP`), the assistance ladder, and decoupled wrap sequence. |
 | 🛡️ **[Developer Contributing Guidelines](docs/CONTRIBUTING_GUIDELINES.md)** | Architectural guardrails, non-negotiable invariants, and the protocol for safe curriculum updates. |

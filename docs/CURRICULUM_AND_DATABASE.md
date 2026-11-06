@@ -202,3 +202,4 @@ If a textbook is updated or topic goals need refinement:
    This generates `catalog.csv` (subject/chapter/topic/goal IDs) and `goal-usage.csv` (student progress counts).
 5. **Map Draft Goals to Existing IDs**: The curriculum team maps new definitions to existing IDs so existing student completion records are preserved.
 6. **Apply Database Migration via SQL script**.
+
