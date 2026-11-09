@@ -70,11 +70,16 @@ ${turnsText || 'All questions completed successfully.'}
 Generate the personalized Revision Sheet JSON now.`;
 
   try {
-    console.log(`[revision-sheet-generator] 🧠 Invoking AI Revision Agent for "${topicTitle}" with ${learningTurns.length} student turns...`);
+    console.log(`[revision-sheet-generator] 🧠 Invoking AI Revision Agent for "${topicTitle}" with ${learningTurns.length} student turns (fast-path)...`);
     const rawResponse = await invokeModel(systemPrompt, [{ role: 'user', content: userPrompt }], {
-      temperature: 0.4,
-      maxTokens: 1500,
-      jsonFormat: true
+      model: 'deepseek-flash',
+      reasoningEffort: 'low',
+      subFeature: 'revision-generator',
+      featureArea: 'tutor-core',
+      temperature: 0.3,
+      maxTokens: 2048,
+      jsonFormat: true,
+      timeoutMs: 12000
     });
 
     let parsed = null;

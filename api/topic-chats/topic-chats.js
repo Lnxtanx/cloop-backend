@@ -2626,26 +2626,41 @@ async function generateTopicWrap(userId, topicId) {
 	// D. AI-Powered Revision Sheet Card & High-Relevance YouTube videos
 	let revisionSheetData = null;
 	try {
-		// Call dedicated AI Revision Sheet Agent with student chat turns & mistakes
+		// Call dedicated AI Revision Sheet Agent with student chat turns & mistakes in parallel with video search
 		const { generateRevisionSheetWithAI } = require('../../services/topic-chat/revision-sheet-generator');
-		const aiRevision = await generateRevisionSheetWithAI({
-			topic,
-			topicGoals,
-			learningTurns,
-			metricsData
-		});
+		const { getRevisionVideos } = require('../../services/media-search');
+		const cleanGrade = topic.chapter?.subject?.grade || '9';
+		const chapterTitle = topic.chapter?.title || '';
 
-		// Search YouTube with AI-generated queries and actual grade & chapter
-		let revisionVideos = [];
-		try {
-			const { getRevisionVideos } = require('../../services/media-search');
-			revisionVideos = await getRevisionVideos(topic.title, {
-				chapterTitle: topic.chapter?.title || '',
-				grade: topic.chapter?.subject?.grade || '9',
-				customQueries: aiRevision.recommended_video_queries || []
-			}, 2);
-		} catch (vErr) {
-			console.warn('Failed to retrieve revision videos:', vErr.message);
+		const [aiRevision, initialVideos] = await Promise.all([
+			generateRevisionSheetWithAI({
+				topic,
+				topicGoals,
+				learningTurns,
+				metricsData
+			}),
+			getRevisionVideos(topic.title, {
+				chapterTitle,
+				grade: cleanGrade,
+			}, 2).catch(vErr => {
+				console.warn('[topic-chats] Video search fallback:', vErr.message);
+				return [];
+			})
+		]);
+
+		let revisionVideos = Array.isArray(initialVideos) ? initialVideos : [];
+		// If AI revision generated more specific custom queries and initial search had fewer than 2 videos, fetch matching
+		if (revisionVideos.length < 2 && Array.isArray(aiRevision.recommended_video_queries) && aiRevision.recommended_video_queries.length > 0) {
+			try {
+				const specificVideos = await getRevisionVideos(topic.title, {
+					chapterTitle,
+					grade: cleanGrade,
+					customQueries: aiRevision.recommended_video_queries
+				}, 2);
+				if (Array.isArray(specificVideos) && specificVideos.length > 0) {
+					revisionVideos = specificVideos;
+				}
+			} catch (_) {}
 		}
 
 		const goalPerf = Array.isArray(metricsData.goal_performance) ? metricsData.goal_performance : [];
@@ -2709,21 +2724,6 @@ async function generateTopicWrap(userId, topicId) {
 		} else {
 			perfText = `You made great progress exploring ${topic.title}! Spend a few minutes reviewing ${weakList || 'the key points above'} to strengthen your recall before the practice test.`;
 		}
-
-		try {
-			const perfPrompt = `You are a supportive academic tutor. A student just finished a topic session on "${topic.title}".
-Overall score: ${overallScore}%
-Strengths: ${strongList || 'core concepts'}
-Areas to review: ${weakList || 'none'}
-Write a 2-sentence encouraging takeaway. Warm tone. Plain text only.`;
-			const aiSummary = await Promise.race([
-				invokeModel(perfPrompt, [{ role: 'user', content: 'Generate 2-sentence summary' }], { temperature: 0.7, maxTokens: 80 }),
-				new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 2000))
-			]);
-			if (aiSummary && typeof aiSummary === 'string' && aiSummary.trim()) {
-				perfText = aiSummary.trim();
-			}
-		} catch (_) {}
 
 		const savedPerf = await prisma.admin_chat.create({
 			data: {

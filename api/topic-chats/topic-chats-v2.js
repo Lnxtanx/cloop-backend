@@ -828,6 +828,20 @@ async function handleTopicChatMessageV2(req, res) {
       turnResult.nextState.phase === 'DONE'
     );
 
+    // Background pre-compute wrap so cards are ready instantly when client calls POST /wrap
+    if (isWrapTurn) {
+      setImmediate(async () => {
+        try {
+          const { generateTopicWrap } = require('./topic-chats');
+          if (typeof generateTopicWrap === 'function') {
+            await generateTopicWrap(user_id, parseInt(topicId));
+          }
+        } catch (bgWrapErr) {
+          console.warn('[topic-chats-v2] Background wrap pre-compute non-fatal:', bgWrapErr.message);
+        }
+      });
+    }
+
     // 16. Deliver SendMessageResponse to frontend
     return res.status(201).json({
       userMessage: userMsgPayload,

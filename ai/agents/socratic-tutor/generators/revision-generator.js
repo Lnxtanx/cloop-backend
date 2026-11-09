@@ -142,9 +142,15 @@ Return STRICT JSON with all these keys:
 {"topic": ${JSON.stringify(fallback.topic)}, "key_concepts": ["one concise idea per goal"], "definitions": [{"term": "term", "definition": "verified definition"}], "formulas": ["verified formula with units"], "quick_recall_tips": ["recall aid", "common mistake to avoid", "Think about: self-check?"], "practice_next_time": "1-2 topic-related everyday applications, under 30 words"}`;
   try {
     const raw = await invokeModel(systemPrompt, [{ role: 'user', content: 'Create the grounded revision sheet.' }], {
-      temperature: 0.3, maxTokens: 800, jsonFormat: true,
-      featureArea: 'tutor-core', subFeature: 'revision-sheet',
+      model: 'deepseek-flash',
+      reasoningEffort: 'low',
+      temperature: 0.3,
+      maxTokens: 1200,
+      jsonFormat: true,
+      featureArea: 'tutor-core',
+      subFeature: 'revision-sheet',
       userId: userId || null,
+      timeoutMs: 10000,
     });
     const parsed = extractJson(typeof raw === 'string' ? raw : raw?.text);
     if (!isValidSheet(parsed, fallback)) throw new Error('Invalid or ungrounded revision sheet');

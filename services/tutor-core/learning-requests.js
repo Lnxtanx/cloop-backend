@@ -34,7 +34,25 @@ function teachingRequest(text) {
   const value = String(text || '').trim();
   const control = controlRequest(value);
   if (control) return control;
-  if (/^(?:please\s+|pls\s+)?explain(?:\s+(?:it|this|that|again))?[.!?]*$/i.test(value)) return 'explain_answer';
+
+  // 1. Explicit request to explain the answer or concept (fast-path bypasses evaluator LLM)
+  if (/^(?:(?:please|pls|plz|can\s+you|could\s+you)\s+)?(?:explain(?:\s+(?:it|this|that|again|to\s+me|me))?|(?:tell|show|give)\s+(?:me\s+)?(?:the\s+)?answer|what\s+is\s+the\s+answer|just\s+tell\s+me(?:\s+the\s+answer)?|reveal\s+(?:the\s+)?answer)[.!?]*$/i.test(value) ||
+      /^(?:explain\s+more|tell\s+me\s+more|more\s+detail|elaborate)[.!?]*$/i.test(value)) {
+    return 'explain_answer';
+  }
+
+  // 2. Student expressing lack of knowledge / confusion / IDK (fast-path bypasses evaluator LLM)
+  if (/^(?:i\s+)?(?:don['’]?t\s+know|dont\s+know|idk|idnt|i\s*dnt|no\s+idea|not\s+sure|dunno|pass|\?+)[.!?]*$/i.test(value) ||
+      /^(?:i\s+)?(?:don['’]?t\s+understand|didn['’]?t\s+understand|not\s+understood|couldn['’]?t\s+understand|haven['’]?t\s+understood|not\s+getting\s+it)[.!?]*$/i.test(value) ||
+      /^(?:samajh|samjh)\s+n(?:ah)?i\s*(?:aaya|aya|aa\s*raha)[.!?]*$/i.test(value)) {
+    return 'student_idk';
+  }
+
+  // 3. Hint or direct help requests
+  if (/^(?:(?:please\s+|pls\s+)?(?:give\s+(?:me\s+)?(?:a\s+)?hint|hint(?:\s+please|\s+pls)?|need\s+(?:a\s+)?hint)|i\s+need\s+help|help\s+me)[.!?]*$/i.test(value)) {
+    return 'give_hint';
+  }
+
   if (/\b(?:recap|summari[sz]e|summary|revise\s+(?:all|the\s+topic))\b/i.test(value) ||
       /\b(?:list|show|give|tell)\b.{0,70}\b(?:all\s+)?(?:concepts?|definitions?|key\s+terms?)\b/i.test(value) ||
       /\b(?:list|show|give|tell|summari[sz]e|review)\b.{0,100}\b(?:taught|learn(?:ed|t)|covered|so\s+far)\b/i.test(value)) return 'recap_topic';
@@ -44,13 +62,38 @@ function teachingRequest(text) {
 }
 
 function requestEvaluation(kind) {
-  const action = { end_session: 'END_SESSION', move_on: 'MOVE_ON', try_again: 'RETRY',
-    explain_answer: 'EXPLAIN_ANSWER', media_request: 'PROVIDE_MEDIA' }[kind] || 'CLARIFY_TASK';
+  const action = {
+    end_session: 'END_SESSION',
+    move_on: 'MOVE_ON',
+    try_again: 'RETRY',
+    explain_answer: 'EXPLAIN_ANSWER',
+    student_idk: 'GIVE_HINT',
+    give_hint: 'GIVE_HINT',
+    media_request: 'PROVIDE_MEDIA'
+  }[kind] || 'CLARIFY_TASK';
+
+  let intent = 'HELP';
+  if (['end_session', 'move_on', 'try_again'].includes(kind)) {
+    intent = 'ACK';
+  } else if (kind === 'student_idk') {
+    intent = 'IDK';
+  }
+
   return {
-    intent: ['end_session', 'move_on', 'try_again'].includes(kind) ? 'ACK' : 'HELP', is_correct: null, score_percent: null, error_type: null,
-    diff_html: null, complete_answer: null, feedback: null, criterion_results: [], contradictions: [],
-    evaluation_status: 'not_applicable', graded_by: null, userCorrection: null,
-    request_kind: kind, requestKind: kind,
+    intent,
+    is_correct: null,
+    score_percent: null,
+    error_type: null,
+    diff_html: null,
+    complete_answer: null,
+    feedback: null,
+    criterion_results: [],
+    contradictions: [],
+    evaluation_status: 'not_applicable',
+    graded_by: null,
+    userCorrection: null,
+    request_kind: kind,
+    requestKind: kind,
     suggested_action: action,
   };
 }
