@@ -720,10 +720,17 @@ function enforce(rawOutput, context = {}) {
   }
 
   if (explanationOnly) {
-    messages = messages.filter(b => !endsWithQuestion(b.message));
+    const isComprehensionCheck = (text) => /\b(got it|ready to move|should we (?:move|continue)|makes? sense|shall we)\b/i.test(text || '');
+    messages = messages.filter(b => !endsWithQuestion(b.message) || isComprehensionCheck(b.message));
     if (!messages.length) {
       const repair = buildFocusedFallback({ ...context, response_mode: 'task_repair' });
       messages = repair.messages;
+    }
+    const isExplainMode = context.response_mode === 'explain' || context.stateInstruction === 'explain_answer';
+    if (isExplainMode && messages.length > 0 && !messages.some(b => isComprehensionCheck(b.message))) {
+      if (messages.length < effectiveMaxBubbles) {
+        messages.push({ message: 'Got it? Ready to move forward?', message_type: 'text' });
+      }
     }
     messages.forEach(b => delete b.options);
     return {

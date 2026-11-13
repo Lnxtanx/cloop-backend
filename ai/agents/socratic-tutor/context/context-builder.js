@@ -495,7 +495,7 @@ function getPhaseGuidance(phase, stateInstruction, reportBrief) {
     case 'THEORY':
       return {
         phase_purpose: 'Explicit concept breakdown. Teach the core concept before any assessment question.',
-        bubble_structure: 'Up to 3 micro-bubbles (under 30 words each):\n• Bubble 1: Precise definition / core idea.\n• Bubble 2: Mechanism / logic with familiar everyday analogy.\n• Bubble 3: A focused check question, unless the student requested explanation only.',
+        bubble_structure: 'Up to 3 micro-bubbles (under 30 words each):\n• Bubble 1: Precise definition / core idea.\n• Bubble 2: Mechanism / logic with familiar everyday analogy.\n• Bubble 3: A focused check question for active learning, or a warm comprehension check ("Got it? Ready to move forward?") if the student requested explanation.',
         rules: 'Teach one concept completely. Each bubble must have 30 words or fewer. Do not cram everything into one bubble.'
       };
 

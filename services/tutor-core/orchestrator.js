@@ -143,9 +143,13 @@ async function processTutorTurn(params) {
     typeof resolveOptionAnswer === 'function' && resolveOptionAnswer(studentMessage, lastQuestionOptions).isOption;
   const learningRequest = continuingRecap ? 'recap_topic' : isAcademicOption ? null : teachingRequest(studentMessage) ||
     ((explicitMedia.video || explicitMedia.diagram) ? 'media_request' : null);
+  const isExplanationAck = Boolean(state.pendingAdvanceAfterExplanation &&
+    /^(?:ok(?:ay)?|got it|understood|continue|yes|next|yeah|yep|yup|sure|done|samajh gaya|haan?)[.!?]*$/i.test(studentMessage.trim()));
+  const isExplanationDecline = Boolean(state.pendingAdvanceAfterExplanation &&
+    /^(?:no|nope|not yet|not really|nah|nahi|samajh nahi aaya|didn't get it|still confused)[.!?]*$/i.test(studentMessage.trim()));
   if (learningRequest) evaluatorResult = requestEvaluation(learningRequest);
-  else if (!starting && !terminal && !state.awaitingAcademicQuestion &&
-      !(state.pendingAdvanceAfterExplanation && /^(?:ok(?:ay)?|got it|understood|continue|yes|next)[.!?]*$/i.test(studentMessage.trim()))) {
+  else if (isExplanationDecline) evaluatorResult = requestEvaluation('student_idk');
+  else if (!starting && !terminal && !state.awaitingAcademicQuestion && !isExplanationAck) {
     const isAwaitingChoice = Boolean(state.response_mode === 'offer_choice' || (state.active_learning_point_id && state.learning_support?.[state.active_learning_point_id]?.awaiting_choice));
     evaluatorResult = await evaluateStudentTurn({ studentMessage, lastQuestionText, lastQuestionOptions,
       lastQuestionRubric: state.lastQuestionRubric || null,

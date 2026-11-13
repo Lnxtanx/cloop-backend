@@ -143,7 +143,7 @@ test('active agent: explanation holds phase, preserves the task, and resumes onl
   assert.equal(explanation.nextState.phase, 'DIALOGUE');
   assert.equal(explanation.nextState.pendingAdvanceAfterExplanation, true);
   assert.equal(explanation.questionType, 'none');
-  assert.ok(explanation.messages.every(message => !/[?？]$/.test(message.message)));
+  assert.ok(explanation.messages.every(message => !/[?？]$/.test(message.message) || /got it|ready|move forward/i.test(message.message)));
   assert.equal(explanation.userCorrection, null);
   assert.equal(explanation.gradedThisTurn, false);
   assert.equal(explanation.nextState.totalQuestions, 0);
@@ -220,7 +220,7 @@ test('active agent: revealing the last recall answer does not bypass explanation
   assert.equal(explanation.nextState.pendingAdvanceAfterExplanation, true);
   assert.equal(explanation.masteryReport, null);
   assert.equal(explanation.nextState.totalQuestions, totalBefore);
-  assert.ok(explanation.messages.every(message => !/[?？]$/.test(message.message)));
+  assert.ok(explanation.messages.every(message => !/[?？]$/.test(message.message) || /got it|ready|move forward/i.test(message.message)));
   const wrapped = await turn(explanation.nextState, 'ok');
   assert.equal(wrapped.nextState.phase, 'WRAP');
   assert.ok(wrapped.masteryReport);
