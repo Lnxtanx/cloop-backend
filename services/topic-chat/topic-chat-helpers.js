@@ -473,7 +473,7 @@ function sourceGoalFallback(topicTitle, content) {
 async function generateTopicGreeting(topicTitle, topicContent, topicGoals = [], user = null, akgContext = null, topicTextbook = '') {
   const { enforce, wordCount } = require('../tutor-core/validate');
   const context = academicContext(user || {});
-  const shortTitle = String(topicTitle || '').trim();
+  const shortTitle = String(topicTitle || '').replace(/^Topic\s*\d+\s*:\s*/i, '').trim();
   const fallbackQuestion = shortTitle && wordCount(shortTitle) <= 8
     ? `What do you already know about ${shortTitle}?`
     : 'What do you already know about this topic?';
