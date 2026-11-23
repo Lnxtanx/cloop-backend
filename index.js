@@ -66,6 +66,7 @@ app.use('/inspector', express.static(path.join(__dirname, 'public/inspector')))
 app.use('/api/signup', require('./api/signup/signup'))
 app.use('/api/signup/options', require('./api/signup/options'))
 app.use('/api/login', require('./api/login/login'))
+app.use('/api/demo', require('./api/demo/demo'))
 
 // Feedback routes
 app.use('/api/feedback', require('./api/feedback/feedback'))
