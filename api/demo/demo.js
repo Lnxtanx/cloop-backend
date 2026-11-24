@@ -4,21 +4,78 @@ const router = express.Router();
 const prisma = require('../../lib/prisma');
 const { JWT_SECRET } = require('../../middleware/auth');
 
+// Master showcase account containing the completed 61-turn tutor conversation
+const DEMO_MASTER_EMAIL = 'GUEST-52233';
+
 /**
  * POST /api/demo/session
  * 
- * Auto-creates a unique, independent demo learner account with zero friction.
- * Returns a JWT token and pre-configured metadata for the demo showcase:
- * Topic 3474 ("Concept 1: What Is a Force: Push and Pull", Class 8 Science).
+ * By default, serves the master demo showcase session from GUEST-52233,
+ * providing the full conversation history, concept animation, feedback cards,
+ * definitions, formulas, and completed session summary.
+ * 
+ * If { fresh: true } is sent, creates a new isolated guest account for fresh chatting.
  */
 router.post('/session', async (req, res) => {
 	try {
-		// Generate an isolated, random demo guest ID
+		const isFreshRequested = Boolean(req.body?.fresh);
+
+		// 1. Unless explicit fresh reset is requested, serve the master showcase account GUEST-52233
+		if (!isFreshRequested) {
+			try {
+				const masterUser = await prisma.users.findFirst({
+					where: { email: { equals: DEMO_MASTER_EMAIL, mode: 'insensitive' } },
+					select: {
+						user_id: true,
+						name: true,
+						email: true,
+						created_at: true,
+					}
+				});
+
+				if (masterUser) {
+					console.log(`[Demo] Serving showcase chat from master account ${masterUser.email} (User ID ${masterUser.user_id})`);
+
+					const tokenPayload = {
+						user_id: masterUser.user_id,
+						email: masterUser.email,
+						name: masterUser.name,
+						is_demo: true,
+					};
+					const token = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: '30d' });
+
+					return res.status(200).json({
+						success: true,
+						token,
+						user: {
+							id: String(masterUser.user_id),
+							user_id: masterUser.user_id,
+							name: masterUser.name,
+							email: masterUser.email,
+							is_demo: true,
+						},
+						guestId: masterUser.email,
+						demoTopic: {
+							topicId: 3474,
+							topicTitle: 'Concept 1: What Is a Force: Push and Pull',
+							chapterTitle: 'Chapter 5: Exploring Forces',
+							subjectName: 'Science',
+						}
+					});
+				} else {
+					console.warn(`[Demo] Master account ${DEMO_MASTER_EMAIL} not found, provisioning fresh demo session.`);
+				}
+			} catch (findErr) {
+				console.error(`[Demo] Error querying master account ${DEMO_MASTER_EMAIL}:`, findErr.message);
+			}
+		}
+
+		// 2. Fresh session creation (or fallback)
 		const randomSuffix = Math.floor(100000 + Math.random() * 900000);
 		const guestId = `DEMO-${randomSuffix}`;
 		const studentName = req.body?.name || `Demo Guest ${randomSuffix.toString().slice(-4)}`;
 
-		console.log(`[Demo] Creating fresh demo session for ${guestId}...`);
+		console.log(`[Demo] Creating fresh isolated demo session for ${guestId}...`);
 
 		// Create user record in Postgres with Grade 8 Science pre-assigned
 		const user = await prisma.users.create({
@@ -106,7 +163,12 @@ router.post('/session', async (req, res) => {
  * Quick endpoint to verify demo service status
  */
 router.get('/health', (req, res) => {
-	res.status(200).json({ status: 'ok', service: 'demo-launcher', targetTopicId: 3474 });
+	res.status(200).json({
+		status: 'ok',
+		service: 'demo-launcher',
+		targetTopicId: 3474,
+		masterAccount: DEMO_MASTER_EMAIL
+	});
 });
 
 module.exports = router;
